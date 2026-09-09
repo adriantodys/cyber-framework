@@ -1,0 +1,20 @@
+/*
+Theme Name:  Cyber Framework
+Theme URI:   https://cyber.pl/
+Author:      Cyber
+Description: Customowy motyw WordPress budowany od zera. Czysty PHP + ACF PRO jako
+             jedyny system zarzadzania danymi. Bez page buildera.
+Version:     0.1.0
+Requires at least: 6.4
+Tested up to:      6.6
+Requires PHP:      8.0
+License:     GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: cyber-framework
+Tags:        custom-theme, acf
+*/
+
+/*
+ * Ten plik zawiera WYLACZNIE naglowek motywu wymagany przez WordPress.
+ * Wszystkie style znajduja sie w assets/css/ i sa rejestrowane w inc/enqueue.php.
+ */

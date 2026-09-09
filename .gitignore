@@ -1,0 +1,20 @@
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Edytory
+.idea/
+.vscode/
+*.swp
+*~
+
+# Zależności / build (obecnie nieużywane — motyw nie ma toolchainu)
+node_modules/
+vendor/
+
+# Logi
+*.log
+
+# UWAGA: acf-json/ jest wersjonowany celowo — to źródło prawdy dla pól ACF
+# (CLAUDE.md sekcja 5). Nie dodawaj go tutaj.

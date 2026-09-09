@@ -1,0 +1,240 @@
+# CLAUDE.md — Cyber Framework
+
+Ten plik jest instrukcją operacyjną dla Claude (i każdego dewelopera) pracującego nad
+customowym motywem WordPress **cyber-framework**. Obowiązuje przy każdej pracy nad
+projektem — również po długiej przerwie. Pamięć konwersacji nie jest źródłem prawdy.
+Źródłem prawdy są pliki w repozytorium: ten dokument, `acf-json/` oraz `docs/acf-schema.md`.
+
+---
+
+## 1. Przegląd projektu
+
+- Customowy motyw WordPress budowany od zera, bez motywu nadrzędnego.
+- Nazwa: `cyber-framework`.
+- Czysty PHP + **ACF PRO** jako jedyny system zarządzania danymi.
+- **Brak page buildera** (Elementor, Divi, Beaver Builder itp.).
+- Gutenberg dopuszczalny wyłącznie dla treści edytorskich (np. wpisy blogowe) —
+  nigdy jako narzędzie do budowania layoutu stron.
+- Cel: architektura czysta, bezpieczna, wydajna, zgodna z WordPress Coding Standards (WPCS).
+
+## 2. Stack technologiczny i ograniczenia
+
+- PHP zgodny z WPCS (docelowo weryfikowany przez PHPCS + ruleset `WordPress`).
+- ACF PRO: pola, Options Pages, Flexible Content, Repeater, Blocks (jeśli kiedyś potrzebne
+  — decyzja wymaga wyraźnej zgody, patrz sekcja 15).
+- **Brak zbędnych bibliotek.** Każda dodana zależność (JS, PHP, Composer) musi być
+  uzasadniona i zaakceptowana — Claude nie dodaje niczego "na wszelki wypadek".
+- Brak jQuery, jeśli zadanie da się zrealizować czystym JS (chyba że coś w rdzeniu WP
+  tego wymaga).
+
+## 3. Struktura katalogów
+
+```
+cyber-framework/
+├── CLAUDE.md
+├── README.md
+├── style.css
+├── functions.php
+│
+├── acf-json/                      ← Local JSON, źródło prawdy dla pól ACF, wersjonowane w Git
+│   └── group_global_options.json
+│
+├── docs/
+│   ├── acf-schema.md              ← mapa wszystkich pól ACF (ten plik jest ŻYWYM dokumentem)
+│   ├── architecture.md
+│   ├── security.md
+│   └── components.md
+│
+├── inc/
+│   ├── setup.php                  ← theme supports, menus, image sizes
+│   ├── enqueue.php                ← rejestracja/wersjonowanie assetów
+│   ├── acf.php                    ← ustawienia ACF (json save/load path)
+│   ├── options.php                ← rejestracja Options Page(s)
+│   └── helpers.php                ← funkcje pomocnicze (np. cyber_get_option())
+│
+├── template-parts/
+│   ├── header/
+│   ├── footer/
+│   ├── components/                ← drobne, reużywalne elementy UI (przycisk, karta, badge)
+│   └── sections/                  ← sekcje flexible content (1 layout ACF = 1 plik)
+│
+├── templates/                     ← page templates, front-page.php, single.php, archive.php...
+│
+└── assets/
+    ├── css/
+    ├── js/
+    └── images/
+```
+
+## 4. Separacja danych / logiki / widoku
+
+- **Dane** → ACF (pola, Options Pages, Flexible Content).
+- **Logika** → `inc/` (pobieranie, przetwarzanie, walidacja, cache).
+- **Widok** → `template-parts/` i `templates/` — wyłącznie wyświetlanie, zero logiki biznesowej.
+- Widoki **nigdy** nie wywołują `get_field()` / `get_option()` bezpośrednio dla danych
+  globalnych — zawsze przez dedykowany helper (np. `cyber_get_option( $key )`).
+- Template part nie "sięga" samodzielnie po globalny stan aplikacji — dane powinny
+  być przekazywane do niego jawnie (argumenty / `$args` w `get_template_part()`
+  lub własny wrapper), żeby komponent dało się przetestować i użyć w innym kontekście.
+
+## 5. ACF jako system danych — zasady
+
+1. Wszystkie grupy pól synchronizowane jako **Local JSON** w `acf-json/` i commitowane do Git.
+2. **`docs/acf-schema.md` jest obowiązkowym, żywym dokumentem.** Każda nowa grupa pól,
+   layout czy field musi zostać tam opisany w tym samym commicie, w którym powstał.
+3. Przed utworzeniem lub modyfikacją template'u zależnego od ACF — **najpierw** sprawdź
+   `acf-json/` oraz `docs/acf-schema.md`.
+4. **Claude nigdy nie zgaduje nazw pól.** Jeśli pole, którego potrzebuje logika, nie
+   istnieje w schemacie — należy to zgłosić i zaproponować dodanie pola, a nie zakładać
+   jego istnienia czy nazwy.
+5. Pola grupowane w zakładki (Tab field) tam, gdzie poprawia to czytelność panelu.
+6. Konwencja nazewnictwa pól: `cyber_[kontekst]_[nazwa]`, np. `cyber_page_width_type`.
+7. Prefiks `cyber_` jest obowiązkowy dla **wszystkich** pól na Options Page — tam nazwa
+   pola staje się bezpośrednio kluczem w `wp_options`, więc ryzyko kolizji z inną
+   wtyczką jest realne.
+8. Options Page **nie da się utworzyć przez UI ACF** — wymaga rejestracji w PHP
+   (`acf_add_options_page()`, patrz `inc/options.php` i `docs/acf-schema.md`).
+
+## 6. Global Options — moduł nr 1
+
+Pierwszy moduł projektu. Pełna specyfikacja pól znajduje się w `docs/acf-schema.md`
+i musi być tam aktualizowana przy każdej zmianie.
+
+Zasada dostępu w kodzie:
+
+```php
+cyber_get_option( 'page_width_type' );
+```
+
+Widoki nie wołają `get_field( $key, 'option' )` bezpośrednio — zawsze przez helper
+z `inc/helpers.php`, żeby w jednym miejscu móc dodać cache/transient bez zmiany
+dziesiątek plików szablonów.
+
+## 7. Komponenty i template parts
+
+- `template-parts/sections/` — jeden plik = jeden layout Flexible Content.
+- `template-parts/components/` — drobne, reużywalne elementy (przycisk, karta, badge, ikona).
+- Każdy nowy layout ACF musi mieć swój odpowiednik pliku i musi być opisany
+  w `docs/components.md` (nazwa layoutu → plik → pola, których używa).
+- Relacja jest zawsze jednokierunkowa i jawna:
+
+```
+ACF layout → template-part → HTML → CSS
+```
+
+## 8. WordPress Coding Standards
+
+- Docelowo weryfikacja przez PHPCS z ruleset `WordPress` / `WordPress-Extra`.
+- Nazwy funkcji, hooków, klas — zawsze z prefiksem `cyber_` / `Cyber_`.
+- Escaping wykonywany **bezpośrednio przy outpucie**, nigdy wcześniej i nigdy "na zapas".
+- Spacing, wcięcia, dokumentacja funkcji (DocBlock) zgodnie z WPCS.
+
+## 9. Bezpieczeństwo — zasada nadrzędna
+
+Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
+
+- **Escaping** (przy każdym wyjściu danych): `esc_html()`, `esc_attr()`, `esc_url()`,
+  `wp_kses_post()` — dobrane do kontekstu, nigdy generyczne "na oko".
+- **Sanitization** (przy każdym wejściu/zapisie): `sanitize_text_field()`,
+  `sanitize_email()`, `absint()`, itd.
+- **Validation**: sprawdzanie typu, zakresu i sensowności danych zanim zostaną użyte
+  (np. czy liczba mieści się w rozsądnym zakresie px, czy wartość select istnieje
+  wśród dozwolonych opcji).
+- **Nonce**: `wp_nonce_field()` / `check_admin_referer()` / `wp_verify_nonce()`
+  w każdym formularzu i każdym żądaniu AJAX.
+- **Capabilities**: `current_user_can()` przed każdą akcją administracyjną lub zapisem.
+- **AJAX**: nonce + capability check + sanitizacja wejścia + escaping wyjścia — zawsze
+  wszystkie cztery elementy, nigdy część.
+- **REST API**: `permission_callback` jest obowiązkowy. `__return_true` tylko dla
+  endpointów jawnie i świadomie publicznych, z komentarzem wyjaśniającym dlaczego.
+- Zero zaufania do `$_POST` / `$_GET` / `$_REQUEST` bez sanitizacji i walidacji.
+
+## 10. Wydajność
+
+- Minimalizacja liczby zapytań (rozważ cache/transient dla kosztownych operacji).
+- Enqueue warunkowy — assets ładowane tylko tam, gdzie faktycznie są potrzebne,
+  nie globalnie na każdej podstronie.
+- Optymalizacja obrazów, `loading="lazy"` tam gdzie zasadne.
+- Brak zbędnych bibliotek (patrz sekcja 2) — każdy dodatkowy plik JS/CSS to koszt.
+
+## 11. Accessibility i SEO
+
+- Semantyczny HTML5, poprawna hierarchia nagłówków (jeden `<h1>` na stronę, bez
+  przeskakiwania poziomów).
+- Stany focus widoczne, obsługa klawiatury, `alt` dla obrazów, `aria-*` tam gdzie
+  natywny HTML nie wystarcza.
+- Skip-link do treści głównej.
+- Podstawowe meta tagi (title, description), przygotowanie pod strukturalne dane
+  (Schema.org) tam, gdzie ma to sens biznesowy.
+
+## 12. Wersjonowanie assetów
+
+- Wersja pliku w `wp_enqueue_style()` / `wp_enqueue_script()` generowana przez
+  `filemtime()`, nie przez sztywno wpisany numer wersji — eliminuje problemy z cache
+  po każdej zmianie pliku.
+
+## 13. Prefiksowanie
+
+| Element | Prefiks |
+|---|---|
+| Funkcje | `cyber_` |
+| Klasy | `Cyber_` |
+| Hooki (actions/filters) | `cyber_` |
+| Stałe | `CYBER_` |
+| Pola ACF (Options Page) | `cyber_` |
+| Text domain | `cyber-framework` |
+
+## 14. Dokumentacja
+
+- `docs/architecture.md` — opis architektury i przepływu danych.
+- `docs/acf-schema.md` — pełna, aktualna mapa wszystkich pól ACF (patrz sekcja 5, pkt 2).
+- `docs/components.md` — mapa layoutów Flexible Content → pliki → pola.
+- `docs/security.md` — checklisty bezpieczeństwa dla formularzy/AJAX/REST.
+- Każda zmiana w ACF **musi** iść w parze ze zmianą w `docs/acf-schema.md` w tym samym commicie.
+
+## 15. Zasady podejmowania decyzji przez Claude
+
+- Zawsze sprawdź `acf-json/` i `docs/acf-schema.md` **przed** pracą z polami — nie
+  zakładaj struktury na podstawie nazwy czy kontekstu.
+- Jeśli specyfikacja w zadaniu jest niejasna lub niekompletna — zaproponuj rozsądne,
+  jawnie nazwane założenie i działaj, chyba że błędne założenie oznaczałoby przebudowę
+  architektury lub dotyczy bezpieczeństwa/danych — wtedy zapytaj, zanim zaczniesz.
+- Nie dodawaj nowych bibliotek/zależności bez wyraźnej zgody.
+- Jeśli `docs/acf-schema.md` i rzeczywisty kod/ACF się rozjeżdżają — zgłoś rozbieżność
+  wprost, nie "napraw" jej cicho po swojemu.
+- Trzymaj się kolejności budowy z sekcji 16. Nie przeskakuj etapów bez wyraźnego
+  potwierdzenia, nawet jeśli technicznie dałoby się to zrobić szybciej w innej kolejności.
+
+## 16. Obowiązkowy output po każdej pracy z ACF
+
+Za każdym razem, gdy Claude tworzy lub zmienia moduł związany z ACF (nowa grupa pól,
+nowy layout, nowe pole w istniejącej grupie), musi dostarczyć **wszystkie trzy**
+poniższe elementy — nie wystarczy sam kod/JSON bez opisu:
+
+1. **Plik `acf-json/*.json`** gotowy do wgrania i zsynchronizowania w ACF
+   (jeśli moduł tego wymaga), **albo** jawna informacja, że pola trzeba dodać
+   ręcznie w UI (z podaniem powodu, np. brak jeszcze zarejestrowanej lokalizacji).
+2. **Zaktualizowany `docs/acf-schema.md`** — tabela z Field Label / Field Name /
+   Typ / Default / Przeznaczenie dla każdego nowego/zmienionego pola, w tym samym
+   kroku, w którym powstał kod (nie "później").
+3. **Czytelne podsumowanie w odpowiedzi dla użytkownika** — krótka lista "co się
+   zmieniło i co musisz zrobić w adminie WP" (np. "wgraj plik X do acf-json/,
+   kliknij Sync" albo "nic nie musisz robić ręcznie, JSON zrobi to sam po synchronizacji").
+
+Zasada nadrzędna: użytkownik nigdy nie powinien się domyślać, jakie pola istnieją
+ani co ma zrobić w panelu WordPress — ta informacja ma być podana wprost, za każdym
+razem, bez pytania o to.
+
+## 17. Kolejność budowy motywu
+
+1. Szkielet motywu: `style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`.
+2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
+   "Szerokość strony" (patrz `docs/acf-schema.md`).
+3. Header / Footer (ACF + template-parts).
+4. System komponentów / Flexible Content dla stron podstawowych.
+5. Szablony kluczowych widoków: front page, page, single, archive, 404, search.
+6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
+7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).
+8. Audyt wydajności, dostępności i bezpieczeństwa + weryfikacja WPCS przed wdrożeniem.
+
+
