@@ -101,6 +101,12 @@
 	--cyber-footer-link-font-size: 16px;
 	--cyber-footer-link-color: #0057ff;
 
+	--cyber-copyright-bg: #111111;
+	--cyber-copyright-text-color: #ffffff;
+	--cyber-copyright-link-color: #ffffff;
+	--cyber-copyright-text-font-size: 14px;
+	--cyber-copyright-link-font-size: 14px;
+
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
 	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
@@ -753,6 +759,66 @@ h6 :is(a, span),
 	.cyber-footer__grid {
 		grid-template-columns: 1fr;
 	}
+}
+
+/* --- Copyright ------------------------------------------------------------- */
+
+/*
+ * Strukturalnie ten sam pasek co Top Header: kontener, inner z flexem
+ * i dwie strony (CLAUDE.md sekcja 16a). Padding i separator miedzy linkami
+ * sa stale — to proporcje paska, nie konfiguracja.
+ */
+
+.cyber-copyright {
+	padding-block: 16px;
+	background-color: var(--cyber-copyright-bg);
+}
+
+.cyber-copyright__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+.cyber-copyright__text {
+	font-size: var(--cyber-copyright-text-font-size);
+	color: var(--cyber-copyright-text-color);
+}
+
+.cyber-copyright__links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+}
+
+.cyber-copyright__links a {
+	font-size: var(--cyber-copyright-link-font-size);
+	color: var(--cyber-copyright-link-color);
+	text-decoration: none;
+}
+
+.cyber-copyright__links a:hover,
+.cyber-copyright__links a:focus-visible {
+	text-decoration: underline;
+}
+
+/*
+ * Separator miedzy linkami. Pseudoelement zamiast border-left na samym linku,
+ * zeby kreska nie pojawila sie przy pierwszej pozycji ani po zawinieciu
+ * do nowej linii nie wygladala jak wciecie.
+ */
+.cyber-copyright__links a + a::before {
+	content: "";
+	display: inline-block;
+	width: 1px;
+	height: 1em;
+	margin-right: 16px;
+	vertical-align: -0.15em;
+	background: currentColor;
+	opacity: 0.4;
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

@@ -23,6 +23,12 @@ get_template_part(
 		'content'   => cyber_get_option( 'footer_content' ),
 	)
 );
+
+$cyber_copyright = cyber_copyright_data();
+
+if ( cyber_copyright_has_content( $cyber_copyright ) ) {
+	get_template_part( 'template-parts/footer/copyright', null, $cyber_copyright );
+}
 ?>
 
 <?php wp_footer(); ?>

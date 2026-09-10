@@ -264,12 +264,30 @@ Zasada nadrzędna: użytkownik nigdy nie powinien się domyślać, jakie pola is
 ani co ma zrobić w panelu WordPress — ta informacja ma być podana wprost, za każdym
 razem, bez pytania o to.
 
+### Wzorzec paska dwustronnego
+
+Sekcja Copyright (`template-parts/footer/copyright.php`) jest strukturalnie tożsama
+z Top Header (cienki pasek, dwie strony flex) — każdy kolejny moduł o podobnym
+kształcie (pasek informacyjny podzielony na dwie części) powinien **reużywać ten sam
+wzorzec markupu i CSS**, zamiast tworzyć nowy.
+
 ## 17. Kolejność budowy motywu
 
 1. Szkielet motywu: `style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
+
+   **Stan: zakończone.** W praktyce moduł 1 rozrósł się do jedenastu zakładek:
+   Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
+   Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright.
+   To zamyka listę modułów podstawowych ustawień globalnych.
 3. Header / Footer (ACF + template-parts).
+
+   **Stan: zrealizowane przy okazji etapu 2.** Istnieją `template-parts/header/`
+   (`header.php`, `top-header.php`) i `template-parts/footer/` (`footer.php`,
+   `copyright.php`) wraz z logiką w `inc/header.php` i `inc/footer.php`.
+   Do uzupełnienia zostaje zawartość kolumn 2 i 3 stopki (sekcja 22) — czyli
+   drobne dopełnienie, nie praca od zera.
 4. System komponentów / Flexible Content dla stron podstawowych.
 5. Szablony kluczowych widoków: front page, page, single, archive, 404, search.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.

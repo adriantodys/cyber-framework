@@ -3069,6 +3069,212 @@
             "default_value": "#0057ff",
             "enable_opacity": 0,
             "return_format": "string"
+        },
+        {
+            "key": "field_cyber_tab_copyright",
+            "label": "Copyright",
+            "name": "cyber_tab_copyright",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_copyright_content",
+            "label": "Treść",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Cienki pasek pod stopką: tekst po lewej, linki po prawej. Jeśli wszystkie trzy pola zostaną puste, pasek nie wyświetli się wcale. Linki są niezależne — można wypełnić tylko jeden.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_copyright_text",
+            "label": "Tekst copyright (lewa kolumna)",
+            "name": "cyber_copyright_text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Wpisz {year} w miejscu roku, a motyw podstawi bieżący rok automatycznie. Bez tego znacznika tekst wyświetla się dokładnie tak, jak go wpiszesz.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "© {year} Nazwa firmy. Wszelkie prawa zastrzeżone.",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_copyright_privacy_link",
+            "label": "Link do polityki prywatności",
+            "name": "cyber_copyright_privacy_link",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "Pokazuje się tylko, gdy wskażesz adres.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_copyright_cookies_link",
+            "label": "Link do polityki cookies",
+            "name": "cyber_copyright_cookies_link",
+            "aria-label": "",
+            "type": "link",
+            "instructions": "Pokazuje się tylko, gdy wskażesz adres.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_msg_copyright_style",
+            "label": "Styl paska",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Padding paska i separator między linkami są stałe — spójnie z paskiem Top Header.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_copyright_bg_color",
+            "label": "Tło Copyright",
+            "name": "cyber_copyright_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_copyright_text_color",
+            "label": "Kolor treści",
+            "name": "cyber_copyright_text_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_copyright_link_color",
+            "label": "Kolor linków",
+            "name": "cyber_copyright_link_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_copyright_text_font_size",
+            "label": "Rozmiar czcionki treści",
+            "name": "cyber_copyright_text_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_copyright_link_font_size",
+            "label": "Rozmiar czcionki linków",
+            "name": "cyber_copyright_link_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
         }
     ],
     "location": [
@@ -3089,5 +3295,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998411
+    "modified": 1788998412
 }

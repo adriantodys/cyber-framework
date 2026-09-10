@@ -166,7 +166,8 @@ function cyber_font_weight_choices() {
  *              Picker z wlaczona przezroczystoscia), 'url' (adres pliku, np. logo
  *              z pola Image), 'bool' (pole True/False), 'text' / 'textarea'
  *              (tekst, opcjonalnie sprawdzany kluczem 'pattern'), 'email'
- *              albo 'html' (tresc z pola WYSIWYG).
+ *              'html' (tresc z pola WYSIWYG) albo 'link' (pole ACF Link,
+ *              tablica url / title / target).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
@@ -765,6 +766,45 @@ function cyber_option_schema() {
 			'type'    => 'color',
 			'default' => '#0057ff',
 		),
+		'copyright_text'              => array(
+			'type'     => 'text',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'copyright_privacy_link'      => array(
+			'type'     => 'link',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'copyright_cookies_link'      => array(
+			'type'     => 'link',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'copyright_bg_color'          => array(
+			'type'    => 'color',
+			'default' => '#111111',
+		),
+		'copyright_text_color'        => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'copyright_link_color'        => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'copyright_text_font_size'    => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 40,
+		),
+		'copyright_link_font_size'    => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 40,
+		),
 	);
 }
 
@@ -881,6 +921,31 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		 * nie zostanie podmienione na wartosc domyslna.
 		 */
 		return (bool) $value;
+	}
+
+	if ( 'link' === $config['type'] ) {
+		/*
+		 * Pole ACF Link zwraca tablice url / title / target albo pusty string.
+		 * Kazdy element sanitujemy osobno, a brak adresu traktujemy jak brak
+		 * linku — sam tytul bez URL nie ma czego wskazac.
+		 */
+		if ( ! is_array( $value ) ) {
+			return $fallback;
+		}
+
+		$url = isset( $value['url'] ) ? esc_url_raw( (string) $value['url'] ) : '';
+
+		if ( '' === $url ) {
+			return $fallback;
+		}
+
+		$target = isset( $value['target'] ) ? (string) $value['target'] : '';
+
+		return array(
+			'url'    => $url,
+			'title'  => isset( $value['title'] ) ? sanitize_text_field( (string) $value['title'] ) : '',
+			'target' => ( '_blank' === $target ) ? '_blank' : '',
+		);
 	}
 
 	if ( 'html' === $config['type'] ) {

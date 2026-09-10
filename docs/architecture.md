@@ -34,8 +34,9 @@ w ustalonej kolejności:
 | 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 | 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile, dane paska Top Header. Stała `CYBER_HEADER_MENU_LOCATION`. |
-| 8 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
-| 9 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
+| 8 | `inc/footer.php` | Dane paska Copyright (`cyber_copyright_data()`). Odpowiednik `inc/header.php` po stronie stopki. |
+| 9 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
+| 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 
 ## Stałe
 
@@ -75,7 +76,8 @@ cyber_header_mobile_css()     ← moduł „Header Mobile”
 cyber_button_css()            ← moduł „Przyciski”
 cyber_colors_css()            ← moduł „Kolory”
 cyber_top_header_css()        ← moduł „Top Header”
-cyber_footer_css()            ← moduł „Footer”                  (inc/enqueue.php)
+cyber_footer_css()            ← moduł „Footer”
+cyber_copyright_css()         ← moduł „Copyright”               (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
@@ -156,6 +158,22 @@ Pola cieni mają włączoną przezroczystość, więc zwracają `rgba()`. Obsłu
 osobny typ walidacji `color_alpha`, który przepuszcza HEX albo `rgb()`/`rgba()`
 o ścisłym wzorcu — `sanitize_hex_color()` odrzuciłby `rgba()`, a cień bez kanału
 alfa jest wizualnie bezużyteczny.
+
+## Copyright
+
+Pasek pod stopką, **strukturalnie tożsamy z Top Header** — ten sam układ kontener /
+inner / dwie strony i ta sama zasada „pusty pasek się nie renderuje"
+(CLAUDE.md sekcja 16a). Logika mieszka w `inc/footer.php`, odpowiedniku
+`inc/header.php` po stronie stopki.
+
+Dwie rzeczy specyficzne dla tego modułu:
+
+- **Pola typu Link, nie URL.** Typ schematu `link` sanityzuje każdy element tablicy
+  osobno; `target` przyjmuje wyłącznie `_blank` albo pustą wartość, a brak adresu
+  oznacza brak linku niezależnie od tytułu.
+- **Znacznik `{year}`** w tekście copyright podmieniany na bieżący rok
+  (`wp_date( 'Y' )`). Pole pozostaje statycznym tekstem — kto nie użyje znacznika,
+  dostaje dokładnie to, co wpisał.
 
 ## Footer
 

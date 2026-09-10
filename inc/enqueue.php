@@ -311,6 +311,50 @@ function cyber_header_css() {
 }
 
 /**
+ * Mapa pol paska Copyright na zmienne CSS.
+ *
+ * Jak w cyber_footer_css_map(): mapa jest jawna, bo nazwy nie przekladaja sie
+ * mechanicznie (copyright_bg_color => --cyber-copyright-bg).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_copyright_css_map() {
+	return array(
+		'copyright_bg_color'        => array( '--cyber-copyright-bg', '' ),
+		'copyright_text_color'      => array( '--cyber-copyright-text-color', '' ),
+		'copyright_link_color'      => array( '--cyber-copyright-link-color', '' ),
+		'copyright_text_font_size'  => array( '--cyber-copyright-text-font-size', 'px' ),
+		'copyright_link_font_size'  => array( '--cyber-copyright-link-font-size', 'px' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi paska Copyright.
+ *
+ * Padding paska i separator miedzy linkami sa stale w main.css — spojnie
+ * z paskiem Top Header, ktorego wzorzec ten modul powiela.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_copyright_css() {
+	$css = ':root{';
+
+	foreach ( cyber_copyright_css_map() as $option_key => $definition ) {
+		list( $css_var, $unit ) = $definition;
+
+		$value = cyber_get_option( $option_key );
+
+		if ( 'px' === $unit ) {
+			$value = sprintf( '%dpx', (int) $value );
+		}
+
+		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
+	}
+
+	return $css . '}';
+}
+
+/**
  * Mapa pol stylizacji stopki na zmienne CSS.
  *
  * Mapa jest jawna, bo nazwy nie przekladaja sie mechanicznie: pole
@@ -577,7 +621,8 @@ function cyber_print_inline_css() {
 		. cyber_button_css()
 		. cyber_colors_css()
 		. cyber_top_header_css()
-		. cyber_footer_css();
+		. cyber_footer_css()
+		. cyber_copyright_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

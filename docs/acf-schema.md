@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header” i „Footer”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer” i „Copyright”
 
 ---
 
@@ -773,6 +773,65 @@ kopii w każdym widoku (CLAUDE.md sekcja 22b).
 Gdy żaden adres nie jest wypełniony, komponent **nie generuje niczego** — pusty
 kontener flex zostawiałby w layoucie dziurę po odstępach.
 
+### Zakładka: „Copyright”
+
+Cienki pasek pod stopką: tekst po lewej, linki po prawej. **Strukturalnie ten sam
+pasek co Top Header** — ten sam układ kontener / inner / dwie strony
+(CLAUDE.md sekcja 16a).
+
+**Sekcja: Treść**
+
+| Field Label | Field Name | Typ ACF | Return format | Przeznaczenie |
+|---|---|---|---|---|
+| Tekst copyright (lewa kolumna) | `cyber_copyright_text` | Text | — | Tekst po lewej stronie paska. |
+| Link do polityki prywatności | `cyber_copyright_privacy_link` | **Link** | `array` | Renderowany tylko, gdy ma adres. |
+| Link do polityki cookies | `cyber_copyright_cookies_link` | **Link** | `array` | Renderowany tylko, gdy ma adres. |
+
+**Sekcja: Styl**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Tło Copyright | `cyber_copyright_bg_color` | Color Picker | `#111111` | `--cyber-copyright-bg` |
+| Kolor treści | `cyber_copyright_text_color` | Color Picker | `#ffffff` | `--cyber-copyright-text-color` |
+| Kolor linków | `cyber_copyright_link_color` | Color Picker | `#ffffff` | `--cyber-copyright-link-color` |
+| Rozmiar czcionki treści | `cyber_copyright_text_font_size` | Number (8–40 px) | `14` | `--cyber-copyright-text-font-size` |
+| Rozmiar czcionki linków | `cyber_copyright_link_font_size` | Number (8–40 px) | `14` | `--cyber-copyright-link-font-size` |
+
+> ### Znacznik `{year}` w tekście copyright
+>
+> Pole jest **statycznym tekstem**, z jednym wyjątkiem: ciąg `{year}` zamieniany
+> jest na bieżący rok (`wp_date( 'Y' )`, czyli strefa czasowa witryny).
+> Kto go nie użyje, dostaje dokładnie to, co wpisał.
+>
+> Powód: rok wpisany na sztywno zestarzeje się w każdy Nowy Rok, a redaktor rzadko
+> wraca do stopki. Stała `CYBER_COPYRIGHT_YEAR_TOKEN` w `inc/footer.php`;
+> usunięcie tego zachowania to skasowanie jednej linii.
+>
+> **To dodatek wykraczający poza specyfikację modułu** — zaproponowany świadomie,
+> nie założony po cichu.
+
+> **Pole Link, nie URL.** Typ Link daje adres, tytuł i `target` w jednej tablicy,
+> więc redaktor nie musi osobno wpisywać tekstu linku. Walidacja (typ schematu
+> `link`) sanityzuje każdy element osobno: adres przez `esc_url_raw()`, tytuł przez
+> `sanitize_text_field()`, a `target` przyjmuje **wyłącznie** `_blank` albo pustą
+> wartość. Brak adresu = brak linku, nawet jeśli tytuł jest wypełniony —
+> sam tytuł nie ma czego wskazać.
+>
+> Pusty tytuł przy wypełnionym adresie → w tekście linku pokazuje się adres,
+> żeby link nie był niewidoczny.
+>
+> `target="_blank"` automatycznie dokłada `rel="noopener noreferrer"`
+> (CLAUDE.md sekcja 9).
+
+**Gdy wszystkie trzy pola treści są puste, pasek nie renderuje się wcale** —
+`cyber_copyright_has_content()` sprawdza to przed `get_template_part()`, dokładnie
+jak `cyber_top_header_has_content()` w pasku górnym.
+
+**Wartości stałe, bez pól:** padding pionowy paska (`16px`), odstęp między linkami
+(`16px`) i separator między nimi (pionowa kreska jako pseudoelement). Separator jest
+`::before` na drugim i kolejnych linkach, nie `border-left` — dzięki temu nie pojawia
+się przy pierwszej pozycji ani jako wcięcie po zawinięciu do nowej linii.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -914,7 +973,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -1066,6 +1125,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Copyright”**: 3 pola treści (tekst + 2 pola typu Link) i 5 pól stylu. Nowy `inc/footer.php` i `template-parts/footer/copyright.php`, nowy typ schematu `link`, znacznik `{year}` w tekście. Zamyka listę modułów podstawowych Global Options.
 - 2026-09-10 — Footer: nowa sekcja **„Stylizacja Footer”** — 7 pól (tło + rozmiar/kolor dla tytułów, tekstu i linków). Wzorzec narzędziowy: stałe klasy `.cyber-footer-title` / `-text` / `-link`, ograniczone do stopki konwencją, nie techniką.
 - 2026-09-10 — Nowa zakładka **„Footer”**: 2 pola dla kolumny 1 (logo + WYSIWYG). Kolumny 2 i 3 zarezerwowane bez pól, kolumna 4 reużywa `cyber_social_*` bez wyłączników. Wydzielony wspólny komponent `cyber_social_icons()` — Top Header przestał mieć własną pętlę. Nowy typ schematu `html`.
 - 2026-09-10 — Nowa zakładka **„Top Header”**: 3 pola stylu + 8 przełączników widoczności. **Pierwszy moduł konsumujący pola z „Kontakt" i „Social Media"** przez `cyber_get_option()`. Nowy `template-parts/header/top-header.php`, `cyber_top_header_data()` w `inc/header.php`, własne inline SVG w `cyber_get_social_icon()`.

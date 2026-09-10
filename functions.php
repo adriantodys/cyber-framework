@@ -49,6 +49,7 @@ function cyber_load_modules() {
 		'inc/enqueue.php',
 		'inc/editor.php',
 		'inc/header.php',
+		'inc/footer.php',
 		'inc/components.php',
 		'inc/contact.php',
 	);
