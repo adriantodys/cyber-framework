@@ -35,6 +35,7 @@ w ustalonej kolejności:
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 | 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile. Stała `CYBER_HEADER_MENU_LOCATION`. |
 | 8 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
+| 9 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 
 ## Stałe
 
@@ -113,6 +114,22 @@ Moduł czcionek realizuje wariant B (CLAUDE.md sekcja 19): pola trzymają warto�
 wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę procentową
 danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
 dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
+
+## Kontakt — moduł bez frontu
+
+Jedyny moduł, który **celowo nie ma warstwy widoku**: żadnych zmiennych CSS, markupu
+ani wpisu w `cyber_print_inline_css()`. `inc/contact.php` zawiera wyłącznie walidację
+przy zapisie w panelu.
+
+Walidacja działa w dwóch warstwach, ale wzorce żyją raz — w `cyber_contact_patterns()`
+(`inc/helpers.php`). Warstwa panelu (`acf/validate_value/name=…`) blokuje zapis
+i tłumaczy redaktorowi, co jest nie tak; warstwa odczytu (typ `text` z kluczem
+`pattern`) odrzuca wartość, która mimo wszystko trafiłaby do bazy. Gdyby te dwie
+listy się rozjechały, redaktor zapisywałby wartość, której motyw nie przyjmuje,
+i nie zobaczyłby żadnego komunikatu.
+
+Wszystkie pola są tekstowe, nie liczbowe — typ Number zjadłby zera wiodące w REGON
+i znak `+` w numerze telefonu.
 
 ## Kolory
 

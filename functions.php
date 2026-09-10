@@ -50,6 +50,7 @@ function cyber_load_modules() {
 		'inc/editor.php',
 		'inc/header.php',
 		'inc/components.php',
+		'inc/contact.php',
 	);
 
 	foreach ( $modules as $module ) {

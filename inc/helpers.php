@@ -13,6 +13,41 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Wzorce walidacyjne pol kontaktowych.
+ *
+ * Jedno zrodlo dla dwoch warstw: walidacji przy zapisie w panelu
+ * (inc/contact.php) i walidacji przy odczycie (cyber_option_schema()).
+ * Rozjechanie sie tych dwoch list oznaczaloby, ze redaktor zapisuje wartosc,
+ * ktorej motyw potem nie przyjmuje.
+ *
+ * Wszystkie pola sa tekstowe, nie liczbowe — NIP, KRS i REGON moga miec
+ * wiodace zera, a telefon znak +, ktore typ Number by zjadl.
+ *
+ * @return array<string, string> Klucz opcji => wzorzec preg.
+ */
+function cyber_contact_patterns() {
+	return array(
+		// Cyfry, spacje i myslniki; opcjonalny + na poczatku, potem cyfra.
+		'contact_phone' => '/^\+?[0-9][0-9 \-]*$/',
+		'contact_nip'   => '/^[0-9]{10}$/',
+		'contact_krs'   => '/^[0-9]{10}$/',
+		'contact_regon' => '/^(?:[0-9]{9}|[0-9]{14})$/',
+	);
+}
+
+/**
+ * Zwraca wzorzec walidacyjny pojedynczego pola kontaktowego.
+ *
+ * @param string $key Klucz opcji bez prefiksu, np. 'contact_nip'.
+ * @return string Wzorzec preg albo pusty string, gdy pole go nie ma.
+ */
+function cyber_contact_pattern( $key ) {
+	$patterns = cyber_contact_patterns();
+
+	return isset( $patterns[ $key ] ) ? $patterns[ $key ] : '';
+}
+
+/**
  * Dozwolone wartosci font-weight — jedno zrodlo dla calego projektu.
  *
  * Uzywaja jej pola typografii, naglowka i przyciskow. Lista istnieje w kodzie
@@ -37,11 +72,14 @@ function cyber_font_weight_choices() {
  *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
  *              'color' (kolor HEX), 'color_alpha' (HEX albo rgb/rgba — pole Color
  *              Picker z wlaczona przezroczystoscia), 'url' (adres pliku, np. logo
- *              z pola Image) albo 'bool' (pole True/False).
+ *              z pola Image), 'bool' (pole True/False), 'text' / 'textarea'
+ *              (tekst, opcjonalnie sprawdzany kluczem 'pattern') albo 'email'.
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
- * - nullable  : true = pusta wartosc jest poprawna i znaczaca (brak limitu).
+ * - nullable  : true = pusta wartosc jest poprawna i znaczaca (brak limitu,
+ *              brak logo, niewypelnione pole kontaktowe).
+ * - pattern   : wzorzec preg dla typu 'text' — wartosc niepasujaca jest odrzucana.
  *
  * @return array<string, array<string, mixed>> Schemat opcji.
  */
@@ -475,6 +513,45 @@ function cyber_option_schema() {
 			'type'    => 'color_alpha',
 			'default' => 'rgba(0,0,0,0.2)',
 		),
+		'contact_address'             => array(
+			'type'     => 'textarea',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'contact_hours'               => array(
+			'type'     => 'textarea',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'contact_phone'               => array(
+			'type'     => 'text',
+			'default'  => '',
+			'pattern'  => cyber_contact_pattern( 'contact_phone' ),
+			'nullable' => true,
+		),
+		'contact_email'               => array(
+			'type'     => 'email',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'contact_nip'                 => array(
+			'type'     => 'text',
+			'default'  => '',
+			'pattern'  => cyber_contact_pattern( 'contact_nip' ),
+			'nullable' => true,
+		),
+		'contact_krs'                 => array(
+			'type'     => 'text',
+			'default'  => '',
+			'pattern'  => cyber_contact_pattern( 'contact_krs' ),
+			'nullable' => true,
+		),
+		'contact_regon'               => array(
+			'type'     => 'text',
+			'default'  => '',
+			'pattern'  => cyber_contact_pattern( 'contact_regon' ),
+			'nullable' => true,
+		),
 	);
 }
 
@@ -591,6 +668,32 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		 * nie zostanie podmienione na wartosc domyslna.
 		 */
 		return (bool) $value;
+	}
+
+	if ( 'textarea' === $config['type'] ) {
+		$value = sanitize_textarea_field( (string) $value );
+
+		return ( '' === $value ) ? $fallback : $value;
+	}
+
+	if ( 'email' === $config['type'] ) {
+		$value = sanitize_email( (string) $value );
+
+		return ( '' === $value || ! is_email( $value ) ) ? $fallback : $value;
+	}
+
+	if ( 'text' === $config['type'] ) {
+		$value = sanitize_text_field( (string) $value );
+
+		if ( '' === $value ) {
+			return $fallback;
+		}
+
+		if ( ! empty( $config['pattern'] ) && ! preg_match( $config['pattern'], $value ) ) {
+			return $fallback;
+		}
+
+		return $value;
 	}
 
 	if ( 'color' === $config['type'] ) {

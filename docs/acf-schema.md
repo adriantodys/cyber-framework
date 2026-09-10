@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski” i „Kolory”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory” i „Kontakt”
 
 ---
 
@@ -488,6 +488,51 @@ generatora nie ma między nimi różnicy, obie to zmienne. Nazwa zmiennej powsta
 mechanicznie z nazwy pola (`color_overtitle_1` → `--cyber-color-overtitle-1`),
 więc nie istnieje osobna mapa, która mogłaby się rozjechać z listą pól.
 
+### Zakładka: „Kontakt”
+
+> ### Pola przygotowane pod przyszłe wykorzystanie
+>
+> **Obecnie niepodłączone do żadnego widoku frontendowego.** Moduł nie ma zmiennych
+> CSS, markupu ani wpisu w `cyber_print_inline_css()` — to wyłącznie warstwa danych.
+> Brak wykorzystania jest zamierzony, nie jest niedopatrzeniem. Przewidywane
+> zastosowania: stopka, strona kontaktowa, dane strukturalne Schema.org/LocalBusiness,
+> ewentualne formularze. Szczegóły i zakaz usuwania przy refaktoryzacji:
+> CLAUDE.md sekcja 22.
+
+| Field Label | Field Name | Typ ACF | Walidacja | Przeznaczenie |
+|---|---|---|---|---|
+| Adres | `cyber_contact_address` | Textarea (3 wiersze) | — | Ulica, numer, kod, miasto. Wieloliniowy. |
+| Godziny otwarcia | `cyber_contact_hours` | Textarea (4 wiersze) | — | Np. „Pon–Pt: 9:00–17:00”, każdy zakres w osobnej linii. |
+| Telefon | `cyber_contact_phone` | **Text** | cyfry, spacje, myślniki; opcjonalny `+` na początku | Numer kontaktowy. |
+| Email | `cyber_contact_email` | **Email** | format adresu — wbudowana walidacja ACF + `is_email()` przy odczycie | Adres kontaktowy. |
+| NIP | `cyber_contact_nip` | **Text** (maxlength 10) | dokładnie 10 cyfr | Identyfikator podatkowy. |
+| KRS | `cyber_contact_krs` | **Text** (maxlength 10) | dokładnie 10 cyfr | Numer w rejestrze sądowym. |
+| REGON | `cyber_contact_regon` | **Text** (maxlength 14) | 9 albo 14 cyfr | Numer statystyczny. |
+
+> **Dlaczego Text, a nie Number.** Typ Number zjadłby **zera wiodące** (REGON
+> `012345678` stałby się `12345678`) oraz **znak `+`** w numerze telefonu.
+> To dane identyfikacyjne, nie liczby do liczenia — nikt ich nie dodaje ani
+> nie sortuje numerycznie.
+
+**Walidacja działa w dwóch warstwach, z jednego źródła wzorców:**
+
+| Warstwa | Gdzie | Co robi |
+|---|---|---|
+| Zapis w panelu | `cyber_contact_validate_value()` — `inc/contact.php`, filtr `acf/validate_value/name=…` | Blokuje zapis i pokazuje redaktorowi komunikat, np. „NIP musi mieć dokładnie 10 cyfr”. |
+| Odczyt w kodzie | `cyber_validate_option_value()` — typ `text` z kluczem `pattern` | Wartość niepasująca do wzorca wraca jako pusta. |
+
+Same wzorce żyją **raz**, w `cyber_contact_patterns()` (`inc/helpers.php`). Rozjechanie
+się tych dwóch list oznaczałoby, że redaktor zapisuje wartość, której motyw potem
+nie przyjmuje — a komunikat o błędzie nigdy by się nie pojawił.
+
+Wszystkie pola są **opcjonalne i `nullable`**: pusta wartość jest poprawna i znacząca
+(witryna, która nie podaje KRS, to normalny przypadek), więc `cyber_get_option()`
+zwraca dla nich `''`, a nie wartość domyślną.
+
+Nowe typy w schemacie wprowadzone przez ten moduł: **`text`** (z opcjonalnym kluczem
+`pattern`), **`textarea`** (`sanitize_textarea_field()`, zachowuje znaki nowej linii)
+i **`email`** (`sanitize_email()` + `is_email()`).
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -781,6 +826,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Kontakt”**: 7 pól danych kontaktowych (adres, godziny, telefon, email, NIP, KRS, REGON) — **bez logiki frontendowej**, świadomie zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Nowy `inc/contact.php` z walidacją przy zapisie, nowe typy schematu `text` / `textarea` / `email`.
 - 2026-09-10 — Nowa zakładka **„Kolory”**: 5 pól semantycznych (auto) i 5 narzędziowych (stałe klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover`). Nowy typ walidacji `color_alpha` dla pól cieni z `enable_opacity`.
 - 2026-09-10 — Nowa zakładka **„Przyciski”**: 3 rozmiary × 8 pól (geometria, grubość, 4 kolory) = 24 pola. Komponent `cyber_button()` w `inc/components.php` + `template-parts/components/button.php`, sekcja CSS w `main.css`. Lista grubości wydzielona do `cyber_font_weight_choices()` i reużyta przez wszystkie moduły.
 - 2026-09-10 — Nowa zakładka **„Header Mobile”**: jedno pole `cyber_header_mobile_breakpoint` (Number, default 980), świadomy wyjątek od kanonicznych breakpointów. Hamburger + panel mobilny w `template-parts/header/header.php`, blok `@media` generowany przez `cyber_header_mobile_css()`, obsługa w `assets/js/header.js` (czysty JS, enqueue warunkowy).

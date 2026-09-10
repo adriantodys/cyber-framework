@@ -366,3 +366,20 @@ Druga zarejestrowana lokalizacja to `footer` i dotyczy wyłącznie stopki.
 Nowa lokalizacja menu (np. menu boczne w panelu klienta) wymaga takiego samego
 jawnego uzasadnienia jak nowy breakpoint (sekcja 18) — inaczej redaktor dostaje
 listę lokalizacji, z których połowa nic nie robi.
+
+## 22. Pola zarezerwowane na przyszłość
+
+Moduł **Kontakt** (`cyber_contact_*`, zakładka Global Options → Kontakt) zawiera dane
+(adres, godziny otwarcia, telefon, email, NIP, KRS, REGON) świadomie przygotowane
+**bez obecnej logiki frontendowej**.
+
+Te pola będą kluczowe w dalszym rozwoju motywu. Przewidywane zastosowania: stopka,
+strona kontaktowa, dane strukturalne Schema.org/LocalBusiness, możliwe formularze.
+
+Przy planowaniu kolejnych modułów — zwłaszcza **stopki** i **danych strukturalnych** —
+sprawdź, czy dany moduł powinien konsumować te pola przez `cyber_get_option()`,
+zamiast tworzyć nowe, równoległe pola dla tych samych danych kontaktowych.
+
+**Nie usuwać tych pól przy porządkowaniu ani refaktoryzacji jako rzekomo
+„nieużywanych".** Ich brak wykorzystania na danym etapie jest zamierzony —
+nie jest błędem ani zaniedbaniem.

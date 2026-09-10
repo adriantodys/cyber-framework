@@ -2232,6 +2232,185 @@
             "default_value": "rgba(0,0,0,0.2)",
             "enable_opacity": 1,
             "return_format": "string"
+        },
+        {
+            "key": "field_cyber_tab_contact",
+            "label": "Kontakt",
+            "name": "cyber_tab_contact",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_contact",
+            "label": "Dane kontaktowe",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Pola przygotowane pod przyszłe wykorzystanie — obecnie nie są podłączone do żadnego widoku na froncie. Przewidywane zastosowania: stopka, strona kontaktowa, dane strukturalne Schema.org.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_contact_address",
+            "label": "Adres",
+            "name": "cyber_contact_address",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Ulica, numer, kod pocztowy, miasto. Każdy element w osobnej linii.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_cyber_contact_hours",
+            "label": "Godziny otwarcia",
+            "name": "cyber_contact_hours",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Np. „Pon–Pt: 9:00–17:00”. Każdy zakres w osobnej linii.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 4,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_cyber_contact_phone",
+            "label": "Telefon",
+            "name": "cyber_contact_phone",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Cyfry, spacje i myślniki; opcjonalny + na początku. Pole tekstowe, nie liczbowe — inaczej znak + i zera wiodące by przepadły.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_contact_email",
+            "label": "Email",
+            "name": "cyber_contact_email",
+            "aria-label": "",
+            "type": "email",
+            "instructions": "Format adresu sprawdza ACF.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_contact_nip",
+            "label": "NIP",
+            "name": "cyber_contact_nip",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Same cyfry, bez myślników.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 10,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_contact_krs",
+            "label": "KRS",
+            "name": "cyber_contact_krs",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Same cyfry.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 10,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_contact_regon",
+            "label": "REGON",
+            "name": "cyber_contact_regon",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Same cyfry — 9 lub 14 znaków, wiodące zera są istotne.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 14,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -2252,5 +2431,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998406
+    "modified": 1788998407
 }
