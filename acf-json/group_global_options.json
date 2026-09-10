@@ -1130,6 +1130,27 @@
             "return_format": "string"
         },
         {
+            "key": "field_cyber_header_submenu_indicator",
+            "label": "Wskaźnik podmenu",
+            "name": "cyber_header_submenu_indicator",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje strzałkę przy pozycji menu, która ma podmenu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_cyber_msg_header_submenu",
             "label": "Podmenu",
             "name": "",
@@ -1345,5 +1366,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998402
+    "modified": 1788998403
 }

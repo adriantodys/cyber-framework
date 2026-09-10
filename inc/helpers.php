@@ -22,7 +22,8 @@ defined( 'ABSPATH' ) || exit;
  * Znaczenie kluczy konfiguracji:
  * - type      : 'choice' (wartosc musi nalezec do 'choices'), 'px' albo 'percent'
  *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
- *              'color' (kolor HEX) albo 'url' (adres pliku, np. logo z pola Image).
+ *              'color' (kolor HEX), 'url' (adres pliku, np. logo z pola Image)
+ *              albo 'bool' (pole True/False).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
@@ -253,6 +254,10 @@ function cyber_option_schema() {
 			'type'    => 'color',
 			'default' => '#0057ff',
 		),
+		'header_submenu_indicator'    => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
 		'header_submenu_alignment'    => array(
 			'type'    => 'choice',
 			'default' => 'left',
@@ -400,6 +405,15 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		$value = sanitize_text_field( (string) $value );
 
 		return in_array( $value, $config['choices'], true ) ? $value : $fallback;
+	}
+
+	if ( 'bool' === $config['type'] ) {
+		/*
+		 * ACF zwraca dla pola True/False 1 albo 0 — zadna z tych wartosci nie jest
+		 * "pusta" w rozumieniu warunku wyzej, wiec swiadome wylaczenie toggle'a
+		 * nie zostanie podmienione na wartosc domyslna.
+		 */
+		return (bool) $value;
 	}
 
 	if ( 'color' === $config['type'] ) {

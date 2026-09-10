@@ -256,6 +256,7 @@ Dotyczy pozycji pierwszego poziomu w menu przypisanym do lokalizacji `primary`
 | Kolor linku | `cyber_header_menu_color` | Color Picker | `#1a1a1a` | Stan domyślny. |
 | Kolor po najechaniu | `cyber_header_menu_color_hover` | Color Picker | `#0057ff` | `:hover` oraz `:focus-visible`. |
 | Kolor aktywnej strony | `cyber_header_menu_color_active` | Color Picker | `#0057ff` | `.current-menu-item > a` i `.current-menu-ancestor > a`. |
+| Wskaźnik podmenu | `cyber_header_submenu_indicator` | True/False (toggle) | `true` | Strzałka przy pozycji, która ma podmenu. Włącza modyfikator `.cyber-menu--with-indicator`; strzałka to `::after` na `.menu-item-has-children > a`, kolor z `currentColor`. Pole leży w sekcji menu głównego, bo dotyczy pozycji pierwszego poziomu, mimo `submenu` w nazwie. |
 
 **Sekcja: Podmenu**
 
@@ -360,6 +361,7 @@ Zakładka „Header Desktop” (klucz pola = `field_` + nazwa pola):
 | `cyber_header_menu_font_size` | `field_cyber_header_menu_font_size` | Number |
 | `cyber_header_menu_font_weight` | `field_cyber_header_menu_font_weight` | Select |
 | `cyber_header_menu_color` / `_hover` / `_active` | `field_cyber_header_menu_color` / `_hover` / `_active` | Color Picker |
+| `cyber_header_submenu_indicator` | `field_cyber_header_submenu_indicator` | True/False |
 | `cyber_header_submenu_alignment` | `field_cyber_header_submenu_alignment` | Select |
 | `cyber_header_submenu_item_gap` | `field_cyber_header_submenu_item_gap` | Number |
 | `cyber_header_submenu_link_padding` | `field_cyber_header_submenu_link_padding` | Number |
@@ -487,11 +489,15 @@ Mapa pól na zmienne siedzi w `cyber_header_css_map()`. Żadna z tych wartości
 | `--cyber-header-submenu-font-weight` | `cyber_header_submenu_font_weight` |
 | `--cyber-header-submenu-color` / `-hover` / `-active` | `cyber_header_submenu_color` / `_hover` / `_active` |
 
-**Wyrównanie nie jest zmienną CSS.** `cyber_header_menu_alignment`
-i `cyber_header_submenu_alignment` trafiają do markupu jako modyfikator klasy
+**Wyrównanie i wskaźnik podmenu nie są zmiennymi CSS.** `cyber_header_menu_alignment`,
+`cyber_header_submenu_alignment` i `cyber_header_submenu_indicator`
+trafiają do markupu jako modyfikator klasy
 (`.cyber-menu--center`, `.cyber-submenu--right`) — uzasadnienie w CLAUDE.md sekcja 20.
 Modyfikator menu głównego nakłada `cyber_header_menu_args()`, modyfikator podmenu —
 filtr `nav_menu_submenu_css_class` w `inc/header.php` (zamiast własnego Walkera).
+Ta sama funkcja dokłada `.cyber-menu--with-indicator`, gdy toggle wskaźnika jest
+włączony — obecność pseudoelementu to obecność reguły, a nie jej wartość, więc
+zmienna CSS nic by tu nie dała.
 
 #### Mechanizm skalowania (wariant B)
 
@@ -566,6 +572,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Header Desktop: nowe pole `cyber_header_submenu_indicator` (True/False, default `true`) — strzałka przy pozycjach z podmenu. Nowy typ walidacji `bool` w `cyber_option_schema()`.
 - 2026-09-10 — Nowa zakładka **„Header Desktop”**: pole Image (logo, return format `url` — precedens dla pól obrazu), wyrównanie, paddingi kontenera, 7 pól menu głównego i 8 pól podmenu (Number / Select / Color Picker). Nowy `inc/header.php`, markup w `template-parts/header/header.php`, sekcja CSS w `main.css`. Menu korzysta z istniejącej lokalizacji `primary`.
 - 2026-09-10 — Rozszerzenie zakładki „Ustawienia czcionki” o sekcję **„Grubość czcionki”**: 4 pola Select (`cyber_font_weight_headings` / `_overtitle` / `_text` / `_links`). Grubość celowo bez skalowania responsywnego — jedna wartość dla wszystkich breakpointów.
 - 2026-09-10 — Nowa zakładka **„Ustawienia czcionki”** w `group_global_options`: 10 pól wielkości (desktop), 3 pola skalowania procentowego, 2 pola wyboru kroju. Wdrożona logika `cyber_font_css()`, wspólne `cyber_breakpoints()`, klasy `.cyber-overtitle` / `.cyber-overtitle--secondary`. Funkcja wypisująca przemianowana na `cyber_print_inline_css()`, znacznik `<style>` na `id="cyber-global-vars"`.

@@ -29,14 +29,24 @@ const CYBER_HEADER_MENU_LOCATION = 'primary';
  * do lokalizacji, header nie wyswietla listy wszystkich stron witryny, tylko
  * nie renderuje nawigacji w ogole.
  *
- * @param string $alignment Wyrownanie menu: left, center albo right.
+ * Wskaznik podmenu tez jest modyfikatorem klasy, a nie zmienna CSS: wlaczenie
+ * i wylaczenie pseudoelementu to obecnosc reguly, a nie jej wartosc.
+ *
+ * @param string $alignment      Wyrownanie menu: left, center albo right.
+ * @param bool   $with_indicator Czy pozycje z podmenu maja dostac strzalke.
  * @return array Argumenty dla wp_nav_menu().
  */
-function cyber_header_menu_args( $alignment ) {
+function cyber_header_menu_args( $alignment, $with_indicator = true ) {
+	$menu_class = 'cyber-menu cyber-menu--' . $alignment;
+
+	if ( $with_indicator ) {
+		$menu_class .= ' cyber-menu--with-indicator';
+	}
+
 	return array(
 		'theme_location' => CYBER_HEADER_MENU_LOCATION,
 		'container'      => false,
-		'menu_class'     => 'cyber-menu cyber-menu--' . $alignment,
+		'menu_class'     => $menu_class,
 		'depth'          => 0,
 		'fallback_cb'    => false,
 	);

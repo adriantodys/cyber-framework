@@ -259,6 +259,29 @@ h6 :is(a, span),
 	color: var(--cyber-header-menu-color-active);
 }
 
+/*
+ * Wskaznik rozwijalnego podmenu. Klasa .menu-item-has-children pochodzi z rdzenia
+ * WordPressa — motyw nie wykrywa dzieci menu wlasnym kodem.
+ *
+ * Strzalka rysowana jest dwoma krawedziami zamiast znakiem z fontu: nie zalezy
+ * od dostepnosci glifu w wybranym kroju. currentColor sprawia, ze dziedziczy
+ * kolor kazdego stanu linku (domyslny, hover, aktywna strona) bez osobnego pola.
+ *
+ * Widocznoscia steruje modyfikator .cyber-menu--with-indicator nakladany w PHP
+ * na podstawie pola cyber_header_submenu_indicator.
+ */
+
+.cyber-menu--with-indicator .menu-item-has-children > a::after {
+	content: "";
+	display: inline-block;
+	width: 0.4em;
+	height: 0.4em;
+	margin-left: 0.5em;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: translateY(-0.15em) rotate(45deg);
+}
+
 /* --- Podmenu -------------------------------------------------------------- */
 
 /*
