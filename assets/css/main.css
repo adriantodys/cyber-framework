@@ -77,6 +77,18 @@
 	--cyber-btn-small-bg-color: #0057ff;
 	--cyber-btn-small-bg-color-hover: #0041c2;
 
+	--cyber-color-headings: #111111;
+	--cyber-color-text: #333333;
+	--cyber-color-overtitle-1: #0057ff;
+	--cyber-color-overtitle-2: #666666;
+	--cyber-color-links: #0057ff;
+
+	--cyber-color-hover: #0041c2;
+	--cyber-color-border-1: #e0e0e0;
+	--cyber-color-border-2: #0057ff;
+	--cyber-color-shadow: rgba(0, 0, 0, 0.12);
+	--cyber-color-shadow-hover: rgba(0, 0, 0, 0.2);
+
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
 	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
@@ -117,6 +129,7 @@ body {
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-text);
 	font-weight: var(--cyber-font-weight-text);
+	color: var(--cyber-color-text);
 	line-height: 1.6;
 }
 
@@ -142,6 +155,7 @@ h5,
 h6 {
 	font-family: var(--cyber-font-family-headings);
 	font-weight: var(--cyber-font-weight-headings);
+	color: var(--cyber-color-headings);
 }
 
 .cyber-overtitle,
@@ -159,10 +173,12 @@ h6 { font-size: var(--cyber-font-size-h6); }
 
 .cyber-overtitle {
 	font-size: var(--cyber-font-size-overtitle-1);
+	color: var(--cyber-color-overtitle-1);
 }
 
 .cyber-overtitle--secondary {
 	font-size: var(--cyber-font-size-overtitle-2);
+	color: var(--cyber-color-overtitle-2);
 }
 
 p,
@@ -172,12 +188,19 @@ li {
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-text);
 	font-weight: var(--cyber-font-weight-text);
+	color: var(--cyber-color-text);
 }
 
+/*
+ * Selektor bazowy o najnizszej specyficznosci. Linki menu (.cyber-menu a)
+ * i przyciski (.btn-*) maja wlasne, bardziej specyficzne reguly z modulow
+ * Header i Przyciski — wygrywaja w kaskadzie bez zadnych wykluczen.
+ */
 a {
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-links);
 	font-weight: var(--cyber-font-weight-links);
+	color: var(--cyber-color-links);
 }
 
 /*
@@ -499,6 +522,39 @@ h6 :is(a, span),
 .btn-small:focus-visible {
 	color: var(--cyber-btn-small-color-hover);
 	background-color: var(--cyber-btn-small-bg-color-hover);
+}
+
+/* --- Kolory narzedziowe (utility) ------------------------------------------ */
+
+/*
+ * Te klasy NIE aplikuja sie same. Nazwa kazdej z nich jest stala i zapisana
+ * w kodzie — ACF ustawia wylacznie kolor. Zeby ich uzyc, trzeba dopisac klase
+ * recznie do elementu w markupie (CLAUDE.md sekcja 5, dwa wzorce kolorow).
+ *
+ * Wartosci nie-kolorystyczne (grubosc i styl obramowania, offset i rozmycie
+ * cienia) sa celowo stale — pole ACF steruje tylko barwa.
+ */
+
+.cyber-hover-color:hover,
+.cyber-hover-color:focus-visible {
+	color: var(--cyber-color-hover);
+}
+
+.cyber-border-1 {
+	border: 1px solid var(--cyber-color-border-1);
+}
+
+.cyber-border-2 {
+	border: 1px solid var(--cyber-color-border-2);
+}
+
+.cyber-shadow {
+	box-shadow: 0 4px 12px var(--cyber-color-shadow);
+}
+
+.cyber-shadow-hover:hover,
+.cyber-shadow-hover:focus-visible {
+	box-shadow: 0 4px 12px var(--cyber-color-shadow-hover);
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

@@ -100,6 +100,18 @@ cyber-framework/
 9. Pola responsywne projektujemy zgodnie z sekcją 18 (breakpointy) i sekcją 19
    (skalowanie procentowe zamiast pól per breakpoint).
 
+### Dwa wzorce kolorów
+
+Pola kolorystyczne występują w projekcie w dwóch wzorcach:
+
+- **semantyczne** — przypięte do tagów lub klas komponentów, aplikują się
+  automatycznie (np. `cyber_color_headings` → `h1`–`h6`),
+- **narzędziowe / utility** — stała nazwa klasy CSS, np. `.cyber-border-1`,
+  nakładana ręcznie na dowolny element.
+
+Kolejne pola kolorystyczne powinny być **jawnie zaklasyfikowane** do jednego
+z tych wzorców przed implementacją, zamiast zakładać domyślnie jeden z nich.
+
 ## 6. Global Options — moduł nr 1
 
 Pierwszy moduł projektu. Pełna specyfikacja pól znajduje się w `docs/acf-schema.md`

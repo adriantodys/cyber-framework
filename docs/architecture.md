@@ -71,7 +71,8 @@ cyber_container_css()         ← moduł „Główne ustawienia strony”
 cyber_font_css()              ← moduł „Ustawienia czcionki”
 cyber_header_css()            ← moduł „Header Desktop”
 cyber_header_mobile_css()     ← moduł „Header Mobile”
-cyber_button_css()            ← moduł „Przyciski”               (inc/enqueue.php)
+cyber_button_css()            ← moduł „Przyciski”
+cyber_colors_css()            ← moduł „Kolory”                  (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
@@ -112,6 +113,25 @@ Moduł czcionek realizuje wariant B (CLAUDE.md sekcja 19): pola trzymają warto�
 wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę procentową
 danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
 dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
+
+## Kolory
+
+Moduł realizuje dwa wzorce naraz (CLAUDE.md sekcja 5):
+
+| Wzorzec | Gdzie ląduje w CSS | Kiedy działa |
+|---|---|---|
+| Semantyczny | dopisany do **istniejących** reguł `h1`–`h6`, `p/span/ul/li`, `a`, `.cyber-overtitle*` | od razu po zapisaniu pola |
+| Narzędziowy | samodzielne klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover` | dopiero po ręcznym dodaniu klasy do elementu |
+
+Kolor linków jest selektorem bazowym `a` o specyficzności `(0,0,1)` i **nie ma
+żadnych wykluczeń**. Linki menu (`.cyber-menu a`) i przyciski (`.btn-*`) wygrywają
+kaskadą same z siebie. Konstrukcja `a:not(…)` byłaby krucha — każdy nowy komponent
+z własnym kolorem linku wymagałby dopisania kolejnego wyjątku.
+
+Pola cieni mają włączoną przezroczystość, więc zwracają `rgba()`. Obsługuje je
+osobny typ walidacji `color_alpha`, który przepuszcza HEX albo `rgb()`/`rgba()`
+o ścisłym wzorcu — `sanitize_hex_color()` odrzuciłby `rgba()`, a cień bez kanału
+alfa jest wizualnie bezużyteczny.
 
 ## Header Desktop
 

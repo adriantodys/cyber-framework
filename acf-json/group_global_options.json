@@ -1999,6 +1999,239 @@
             "default_value": "#0041c2",
             "enable_opacity": 0,
             "return_format": "string"
+        },
+        {
+            "key": "field_cyber_tab_colors",
+            "label": "Kolory",
+            "name": "cyber_tab_colors",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_colors_semantic",
+            "label": "Kolory semantyczne",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Aplikują się automatycznie do wskazanych elementów — nie trzeba nic dodawać w treści strony.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_color_headings",
+            "label": "Nagłówki h1–h6",
+            "name": "cyber_color_headings",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Bez overtitle — te mają własne pola poniżej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_text",
+            "label": "Tekst",
+            "name": "cyber_color_text",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Dotyczy p, span, ul, li oraz tekstu w body.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#333333",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_overtitle_1",
+            "label": "Overtitle 1",
+            "name": "cyber_color_overtitle_1",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa .cyber-overtitle.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_overtitle_2",
+            "label": "Overtitle 2",
+            "name": "cyber_color_overtitle_2",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa .cyber-overtitle--secondary.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#666666",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_links",
+            "label": "Linki",
+            "name": "cyber_color_links",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Dotyczy wszystkich linków w treści. Linki menu i przyciski mają własne kolory w swoich zakładkach i mają pierwszeństwo.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_msg_colors_utility",
+            "label": "Kolory narzędziowe (utility)",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Te kolory NIE aplikują się same. Każdy z nich jest przypisany do stałej klasy CSS, którą trzeba ręcznie dodać do elementu (np. w polu „Klasy CSS” bloku albo w kodzie szablonu). Nazwy klas są ustalone w kodzie i nie da się ich zmienić z panelu.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_color_hover",
+            "label": "Kolor tekstu po najechaniu",
+            "name": "cyber_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa: cyber-hover-color",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0041c2",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_border_1",
+            "label": "Obramowanie 1",
+            "name": "cyber_color_border_1",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa: cyber-border-1 — daje border 1px solid w tym kolorze.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#e0e0e0",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_border_2",
+            "label": "Obramowanie 2",
+            "name": "cyber_color_border_2",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa: cyber-border-2 — niezależny wariant, np. akcentowy.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_shadow",
+            "label": "Cień",
+            "name": "cyber_color_shadow",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa: cyber-shadow — box-shadow 0 4px 12px w tym kolorze. Ustaw przezroczystość suwakiem, cień bez alfy wygląda jak czarna plama.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "rgba(0,0,0,0.12)",
+            "enable_opacity": 1,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_color_shadow_hover",
+            "label": "Cień po najechaniu",
+            "name": "cyber_color_shadow_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa: cyber-shadow-hover — ten sam box-shadow, aplikowany na :hover.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "rgba(0,0,0,0.2)",
+            "enable_opacity": 1,
+            "return_format": "string"
         }
     ],
     "location": [
@@ -2019,5 +2252,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998405
+    "modified": 1788998406
 }

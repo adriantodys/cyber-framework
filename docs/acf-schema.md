@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile” i „Przyciski”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski” i „Kolory”
 
 ---
 
@@ -422,6 +422,72 @@ cyber_button(
 );
 ```
 
+### Zakładka: „Kolory”
+
+Zakładka zawiera **dwa różne wzorce** kolorów. Różnica jest praktyczna, nie kosmetyczna
+— decyduje o tym, czy redaktor musi cokolwiek zrobić, żeby kolor zadziałał
+(CLAUDE.md sekcja 5).
+
+| Wzorzec | Jak działa | Co musi zrobić redaktor |
+|---|---|---|
+| **Semantyczny** | Kolor przypięty do tagu lub klasy komponentu, aplikowany automatycznie. | Nic — działa po zapisaniu pola. |
+| **Narzędziowy (utility)** | Kolor przypięty do **stałej nazwy klasy CSS**. | Musi dodać tę klasę do elementu ręcznie. |
+
+**Sekcja: Kolory semantyczne**
+
+Wszystkie pola: **Color Picker**, bez przezroczystości.
+
+| Field Label | Field Name | Default | Stosowany do | Zmienna CSS |
+|---|---|---|---|---|
+| Nagłówki h1–h6 | `cyber_color_headings` | `#111111` | `h1`–`h6`. **Bez overtitle** — mają własne pola. | `--cyber-color-headings` |
+| Tekst | `cyber_color_text` | `#333333` | `body`, `p`, `span`, `ul`, `li` | `--cyber-color-text` |
+| Overtitle 1 | `cyber_color_overtitle_1` | `#0057ff` | `.cyber-overtitle` | `--cyber-color-overtitle-1` |
+| Overtitle 2 | `cyber_color_overtitle_2` | `#666666` | `.cyber-overtitle--secondary` | `--cyber-color-overtitle-2` |
+| Linki | `cyber_color_links` | `#0057ff` | `a` — selektor bazowy, globalnie | `--cyber-color-links` |
+
+> **Linki bez wykluczeń — i dlaczego to wystarcza.** Reguła `a { color: … }` ma
+> specyficzność `(0,0,1)`, czyli najniższą możliwą. Linki menu (`.cyber-menu a`,
+> `(0,1,1)`) i przyciski (`.btn-large`, `(0,1,0)`) mają własne reguły z modułów
+> Header i Przyciski i wygrywają w kaskadzie same z siebie. Konstrukcje typu
+> `a:not(.cyber-menu a)` byłyby nie tylko zbędne, ale i kruche — każdy nowy
+> komponent z własnym kolorem linku wymagałby dopisania kolejnego wyjątku.
+>
+> Skutek uboczny warty świadomości: **link wewnątrz nagłówka dostaje kolor linku**,
+> nie koloru nagłówka. Reguła dziedziczenia dla `h1 :is(a, span)` wyrównuje krój,
+> rozmiar i grubość, ale celowo **nie** kolor — inaczej link w nagłówku przestałby
+> wyglądać jak link.
+
+**Sekcja: Kolory narzędziowe (utility)**
+
+**Nazwy klas są ustalone w kodzie i nie da się ich zmienić z panelu.** Nie ma pola
+do wpisania nazwy klasy — takie pole prowadziłoby do literówek i klas bez
+odpowiadających im reguł CSS. ACF ustawia wyłącznie barwę.
+
+| Field Label | Field Name | Default | Klasa CSS do wpisania | Efekt |
+|---|---|---|---|---|
+| Kolor tekstu po najechaniu | `cyber_color_hover` | `#0041c2` | `cyber-hover-color` | `color` na `:hover` i `:focus-visible` |
+| Obramowanie 1 | `cyber_color_border_1` | `#e0e0e0` | `cyber-border-1` | `border: 1px solid …` |
+| Obramowanie 2 | `cyber_color_border_2` | `#0057ff` | `cyber-border-2` | `border: 1px solid …` |
+| Cień | `cyber_color_shadow` | `rgba(0, 0, 0, 0.12)` | `cyber-shadow` | `box-shadow: 0 4px 12px …` |
+| Cień po najechaniu | `cyber_color_shadow_hover` | `rgba(0, 0, 0, 0.2)` | `cyber-shadow-hover` | ten sam `box-shadow` na `:hover` |
+
+> **Co jest stałe, a co konfigurowalne.** Pole ACF steruje **wyłącznie barwą**.
+> Grubość i styl obramowania (`1px solid`) oraz offset i rozmycie cienia
+> (`0 4px 12px`) są zapisane w CSS i nie mają pól — świadomie, żeby zakładka
+> nie spuchła do zestawu suwaków do wszystkiego.
+
+> **Pola cieni mają włączoną przezroczystość** (`enable_opacity`), więc zwracają
+> `rgba()`, a nie HEX. Cień bez kanału alfa jest w praktyce bezużyteczny — wygląda
+> jak czarna plama pod elementem. Konsekwencja po stronie walidacji: te dwa pola
+> używają typu **`color_alpha`** w `cyber_option_schema()`, który przepuszcza HEX
+> **albo** `rgb()` / `rgba()` o ścisłym wzorcu. Pozostałe pola kolorystyczne
+> zostają przy typie `color` (sam HEX).
+
+Obie sekcje obsługuje jedna funkcja `cyber_colors_css()` — z punktu widzenia
+generatora nie ma między nimi różnicy, obie to zmienne. Nazwa zmiennej powstaje
+mechanicznie z nazwy pola (`color_overtitle_1` → `--cyber-color-overtitle-1`),
+więc nie istnieje osobna mapa, która mogłaby się rozjechać z listą pól.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -563,7 +629,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -715,6 +781,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Kolory”**: 5 pól semantycznych (auto) i 5 narzędziowych (stałe klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover`). Nowy typ walidacji `color_alpha` dla pól cieni z `enable_opacity`.
 - 2026-09-10 — Nowa zakładka **„Przyciski”**: 3 rozmiary × 8 pól (geometria, grubość, 4 kolory) = 24 pola. Komponent `cyber_button()` w `inc/components.php` + `template-parts/components/button.php`, sekcja CSS w `main.css`. Lista grubości wydzielona do `cyber_font_weight_choices()` i reużyta przez wszystkie moduły.
 - 2026-09-10 — Nowa zakładka **„Header Mobile”**: jedno pole `cyber_header_mobile_breakpoint` (Number, default 980), świadomy wyjątek od kanonicznych breakpointów. Hamburger + panel mobilny w `template-parts/header/header.php`, blok `@media` generowany przez `cyber_header_mobile_css()`, obsługa w `assets/js/header.js` (czysty JS, enqueue warunkowy).
 - 2026-09-10 — Header Desktop: nowe pole `cyber_header_submenu_indicator` (True/False, default `true`) — strzałka przy pozycjach z podmenu. Nowy typ walidacji `bool` w `cyber_option_schema()`.

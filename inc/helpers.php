@@ -35,8 +35,9 @@ function cyber_font_weight_choices() {
  * Znaczenie kluczy konfiguracji:
  * - type      : 'choice' (wartosc musi nalezec do 'choices'), 'px' albo 'percent'
  *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
- *              'color' (kolor HEX), 'url' (adres pliku, np. logo z pola Image)
- *              albo 'bool' (pole True/False).
+ *              'color' (kolor HEX), 'color_alpha' (HEX albo rgb/rgba — pole Color
+ *              Picker z wlaczona przezroczystoscia), 'url' (adres pliku, np. logo
+ *              z pola Image) albo 'bool' (pole True/False).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
@@ -434,6 +435,46 @@ function cyber_option_schema() {
 			'type'    => 'color',
 			'default' => '#0041c2',
 		),
+		'color_headings'              => array(
+			'type'    => 'color',
+			'default' => '#111111',
+		),
+		'color_text'                  => array(
+			'type'    => 'color',
+			'default' => '#333333',
+		),
+		'color_overtitle_1'           => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'color_overtitle_2'           => array(
+			'type'    => 'color',
+			'default' => '#666666',
+		),
+		'color_links'                 => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'color_hover'                 => array(
+			'type'    => 'color',
+			'default' => '#0041c2',
+		),
+		'color_border_1'              => array(
+			'type'    => 'color',
+			'default' => '#e0e0e0',
+		),
+		'color_border_2'              => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'color_shadow'                => array(
+			'type'    => 'color_alpha',
+			'default' => 'rgba(0,0,0,0.12)',
+		),
+		'color_shadow_hover'          => array(
+			'type'    => 'color_alpha',
+			'default' => 'rgba(0,0,0,0.2)',
+		),
 	);
 }
 
@@ -556,6 +597,24 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		$value = sanitize_hex_color( (string) $value );
 
 		return ( null === $value || '' === $value ) ? $fallback : $value;
+	}
+
+	if ( 'color_alpha' === $config['type'] ) {
+		$raw = trim( (string) $value );
+		$hex = sanitize_hex_color( $raw );
+
+		if ( null !== $hex && '' !== $hex ) {
+			return $hex;
+		}
+
+		/*
+		 * ACF z enable_opacity zwraca rgba(). sanitize_hex_color() takiej wartosci
+		 * nie przepusci, a cien bez kanalu alfa jest w praktyce bezuzyteczny —
+		 * stad osobny typ z wlasnym, scislym wzorcem.
+		 */
+		$pattern = '/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:0|1|0?\.\d+)\s*)?\)$/';
+
+		return preg_match( $pattern, $raw ) ? $raw : $fallback;
 	}
 
 	if ( 'url' === $config['type'] ) {

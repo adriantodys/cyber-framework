@@ -311,6 +311,61 @@ function cyber_header_css() {
 }
 
 /**
+ * Klucze pol modulu "Kolory".
+ *
+ * Nazwa zmiennej CSS powstaje mechanicznie: prefiks --cyber- i podkreslenia
+ * zamienione na myslniki (color_overtitle_1 => --cyber-color-overtitle-1).
+ * Dzieki temu nie ma osobnej mapy, ktora mogla by sie rozjechac z lista pol.
+ *
+ * Dwa wzorce w jednej tablicy (CLAUDE.md sekcja 5):
+ * - semantyczne  — aplikowane automatycznie do tagow i klas komponentow,
+ * - narzedziowe  — czekaja na klase nalozona recznie w markupie.
+ * Z punktu widzenia generatora nie ma miedzy nimi roznicy: obydwa to zmienne.
+ *
+ * @return string[] Klucze opcji bez prefiksu cyber_.
+ */
+function cyber_color_keys() {
+	return array(
+		// Semantyczne.
+		'color_headings',
+		'color_text',
+		'color_overtitle_1',
+		'color_overtitle_2',
+		'color_links',
+
+		// Narzedziowe.
+		'color_hover',
+		'color_border_1',
+		'color_border_2',
+		'color_shadow',
+		'color_shadow_hover',
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi kolorow na podstawie Global Options.
+ *
+ * Wartosci pochodza z pol typu 'color' i 'color_alpha', wiec cyber_get_option()
+ * przepuszcza wylacznie poprawny HEX albo rgb/rgba — do CSS nie trafi zaden
+ * inny ciag.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_colors_css() {
+	$css = ':root{';
+
+	foreach ( cyber_color_keys() as $option_key ) {
+		$css .= sprintf(
+			'--cyber-%1$s:%2$s;',
+			str_replace( '_', '-', $option_key ),
+			cyber_get_option( $option_key )
+		);
+	}
+
+	return $css . '}';
+}
+
+/**
  * Rozmiary przyciskow — jedno zrodlo dla CSS i dla komponentu.
  *
  * Kolejnosc odpowiada malejacej wadze wizualnej. Nazwa rozmiaru jest
@@ -449,7 +504,8 @@ function cyber_print_inline_css() {
 		. cyber_font_css()
 		. cyber_header_css()
 		. cyber_header_mobile_css()
-		. cyber_button_css();
+		. cyber_button_css()
+		. cyber_colors_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",
