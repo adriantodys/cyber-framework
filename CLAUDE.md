@@ -97,6 +97,8 @@ cyber-framework/
    wtyczką jest realne.
 8. Options Page **nie da się utworzyć przez UI ACF** — wymaga rejestracji w PHP
    (`acf_add_options_page()`, patrz `inc/options.php` i `docs/acf-schema.md`).
+9. Pola responsywne projektujemy zgodnie z sekcją 18 (breakpointy) i sekcją 19
+   (skalowanie procentowe zamiast pól per breakpoint).
 
 ## 6. Global Options — moduł nr 1
 
@@ -122,6 +124,8 @@ Wartości z Global Options, które wpływają na wygląd frontu, są wypisywane 
   `--cyber-container-margin`.
 - Elementy strukturalne (header, footer, kontener treści) konsumują te zmienne
   przez wspólną klasę `.cyber-container` — **nie** przez inline style w PHP.
+- Wartości responsywne wypisujemy na progach z sekcji 18; przy wielu powiązanych
+  wartościach obowiązuje skalowanie procentowe z sekcji 19.
 
 ## 7. Komponenty i template parts
 
@@ -250,4 +254,48 @@ razem, bez pytania o to.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).
 8. Audyt wydajności, dostępności i bezpieczeństwa + weryfikacja WPCS przed wdrożeniem.
 
+## 18. Kanoniczne breakpointy
 
+Projekt używa **jednego, wspólnego zestawu breakpointów dla wszystkich modułów** —
+marginesów, wielkości czcionek, odstępów i wszystkiego, co jeszcze powstanie:
+
+| Zakres | Warunek CSS | Nazwa w kodzie i w polach ACF |
+|---|---|---|
+| Desktop | powyżej 980px (brak media query — wartość bazowa) | `desktop` |
+| Tablet | 980px–767px | `tablet` |
+| Mobile | 767px–479px | `mobile` |
+| Mobile small | poniżej 479px | `mobile_small` |
+
+Każdy nowy moduł, który potrzebuje wartości responsywnych, **musi** używać tych samych
+czterech progów i nie definiuje własnych. Jeśli pojawi się uzasadniona potrzeba innego
+breakpointu — trzeba to **jawnie zgłosić i uzasadnić, zanim zostanie dodany**
+(patrz sekcja 15). Nowy próg dodany po cichu w jednym module rozjeżdża cały layout,
+bo moduły przestają się przełączać w tym samym momencie.
+
+W CSS progi zapisujemy jako granice domknięte od góry: `max-width: 980px`,
+`max-width: 767px`, `max-width: 479px`.
+
+## 19. Konwencja: skalowanie wartości responsywnych (wariant B)
+
+Dotyczy pól, które definiują **wiele powiązanych wartości liczbowych** na desktopie
+(np. wielkości czcionek `h1`–`h6`, `overtitle`, `text`, `links`).
+
+**Nie tworzymy osobnych pól per breakpoint dla każdego elementu** — 10 elementów
+× 4 breakpointy = 40 pól to panel nie do utrzymania i nie do wypełnienia.
+
+Zamiast tego:
+
+1. Pola z konkretnymi wartościami istnieją **wyłącznie dla desktopu**.
+2. Responsywność daje **jedno pole procentowe na breakpoint**, skalujące
+   **wszystkie** wartości desktopowe danego modułu naraz:
+
+   - `cyber_[moduł]_scale_tablet`
+   - `cyber_[moduł]_scale_mobile`
+   - `cyber_[moduł]_scale_mobile_small`
+
+   Nazwy breakpointów w polach są zgodne z sekcją 18.
+
+Ten wzorzec jest **domyślny dla wszystkich przyszłych modułów** z wieloma wartościami
+liczbowymi (fonty, odstępy między sekcjami itp.). Odstępstwo — czyli kontrola
+per-elementowa na każdym breakpoincie — wymaga **jawnego uzasadnienia przed
+implementacją**, a nie założenia z góry, że dany przypadek jest wyjątkiem.
