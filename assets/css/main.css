@@ -296,6 +296,22 @@ h6 :is(a, span),
 	opacity: 0.7;
 }
 
+/*
+ * Modul Typografii ustawia font-size, font-weight i color BEZPOSREDNIO na
+ * selektorze span (regula "p, span, ul, li"), wiec <span> z tekstem telefonu
+ * i emaila nie dziedziczyl wartosci z .cyber-topheader — dostawal rozmiar
+ * i kolor tekstu tresci zamiast ustawien paska.
+ *
+ * Ta sama sytuacja co z linkami w naglowkach, patrz sekcja "Typografia".
+ * Specyficznosc (0,1,1) przebija globalne (0,0,1).
+ */
+.cyber-topheader :is(span, a) {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	color: inherit;
+}
+
 /* --- Header Desktop -------------------------------------------------------- */
 
 /*
