@@ -112,6 +112,16 @@ Pola kolorystyczne występują w projekcie w dwóch wzorcach:
 Kolejne pola kolorystyczne powinny być **jawnie zaklasyfikowane** do jednego
 z tych wzorców przed implementacją, zamiast zakładać domyślnie jeden z nich.
 
+Ten sam wzorzec (stała nazwa klasy w kodzie, kontekstowo ograniczona przez
+konwencję, nie przez technikę) zastosowano też w module **Footer**:
+`.cyber-footer-title`, `.cyber-footer-text`, `.cyber-footer-link` — przeznaczone
+wyłącznie do użycia wewnątrz `.cyber-footer`, mimo że nic nie blokuje technicznie
+użycia ich gdzie indziej.
+
+Kolejne moduły z podobną potrzebą (style ograniczone kontekstowo do jednej sekcji
+strony) powinny nazywać klasy z prefiksem tej sekcji — `cyber-[sekcja]-[rola]` —
+zamiast reużywać globalne klasy narzędziowe z modułu Kolory.
+
 ## 6. Global Options — moduł nr 1
 
 Pierwszy moduł projektu. Pełna specyfikacja pól znajduje się w `docs/acf-schema.md`

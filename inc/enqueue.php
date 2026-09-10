@@ -311,6 +311,57 @@ function cyber_header_css() {
 }
 
 /**
+ * Mapa pol stylizacji stopki na zmienne CSS.
+ *
+ * Mapa jest jawna, bo nazwy nie przekladaja sie mechanicznie: pole
+ * footer_bg_color daje zmienna --cyber-footer-bg, nie --cyber-footer-bg-color.
+ *
+ * Klucz    = klucz opcji (bez prefiksu cyber_).
+ * [0]      = pelna nazwa zmiennej CSS.
+ * [1]      = jednostka doklejana do wartosci ('px' albo pusty string).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_footer_css_map() {
+	return array(
+		'footer_bg_color'        => array( '--cyber-footer-bg', '' ),
+		'footer_title_font_size' => array( '--cyber-footer-title-font-size', 'px' ),
+		'footer_title_color'     => array( '--cyber-footer-title-color', '' ),
+		'footer_text_font_size'  => array( '--cyber-footer-text-font-size', 'px' ),
+		'footer_text_color'      => array( '--cyber-footer-text-color', '' ),
+		'footer_link_font_size'  => array( '--cyber-footer-link-font-size', 'px' ),
+		'footer_link_color'      => array( '--cyber-footer-link-color', '' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi stylizacji stopki.
+ *
+ * Zmienne zasilaja tlo stopki oraz trzy klasy narzedziowe ograniczone
+ * kontekstowo do stopki: .cyber-footer-title, .cyber-footer-text
+ * i .cyber-footer-link (CLAUDE.md sekcja 5, dwa wzorce kolorow).
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_footer_css() {
+	$css = ':root{';
+
+	foreach ( cyber_footer_css_map() as $option_key => $definition ) {
+		list( $css_var, $unit ) = $definition;
+
+		$value = cyber_get_option( $option_key );
+
+		if ( 'px' === $unit ) {
+			$value = sprintf( '%dpx', (int) $value );
+		}
+
+		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
+	}
+
+	return $css . '}';
+}
+
+/**
  * Buduje CSS ze zmiennymi paska Top Header.
  *
  * Modul ma tylko trzy pola stylu — reszta wygladu (padding paska, odstep
@@ -525,7 +576,8 @@ function cyber_print_inline_css() {
 		. cyber_header_mobile_css()
 		. cyber_button_css()
 		. cyber_colors_css()
-		. cyber_top_header_css();
+		. cyber_top_header_css()
+		. cyber_footer_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

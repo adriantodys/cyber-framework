@@ -40,7 +40,7 @@ $cyber_content   = isset( $args['content'] ) ? $args['content'] : '';
 				<?php endif; ?>
 
 				<?php if ( '' !== $cyber_content ) : ?>
-					<div class="cyber-footer__content">
+					<div class="cyber-footer__content cyber-footer-text">
 						<?php
 						/*
 						 * Tresc redaktorska z pola WYSIWYG — wp_kses_post() przepuszcza

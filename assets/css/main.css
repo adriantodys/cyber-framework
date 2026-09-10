@@ -93,6 +93,14 @@
 	--cyber-topheader-color: #ffffff;
 	--cyber-topheader-font-size: 14px;
 
+	--cyber-footer-bg: #ffffff;
+	--cyber-footer-title-font-size: 20px;
+	--cyber-footer-title-color: #111111;
+	--cyber-footer-text-font-size: 16px;
+	--cyber-footer-text-color: #333333;
+	--cyber-footer-link-font-size: 16px;
+	--cyber-footer-link-color: #0057ff;
+
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
 	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
@@ -670,6 +678,45 @@ h6 :is(a, span),
 
 .cyber-footer {
 	padding-block: 48px;
+	background-color: var(--cyber-footer-bg);
+}
+
+/*
+ * Klasy narzedziowe stopki. Nazwy sa stale i zapisane w kodzie — ACF ustawia
+ * wylacznie wartosci (CLAUDE.md sekcja 5, wzorzec narzedziowy).
+ *
+ * Ograniczenie do wnetrza .cyber-footer jest KONWENCJA, nie technika: nic nie
+ * blokuje nalozenia tych klas gdzie indziej, ale nie po to powstaly.
+ *
+ * .cyber-footer-title i .cyber-footer-link nie maja jeszcze zastosowania
+ * w markupie — stopka nie ma tytulow kolumn ani linkow tekstowych. Sa gotowe
+ * pod zawartosc kolumn 2 i 3 (CLAUDE.md sekcja 22).
+ */
+
+.cyber-footer-title {
+	font-size: var(--cyber-footer-title-font-size);
+	color: var(--cyber-footer-title-color);
+}
+
+.cyber-footer-text {
+	font-size: var(--cyber-footer-text-font-size);
+	color: var(--cyber-footer-text-color);
+}
+
+/*
+ * Tresc z WYSIWYG to znaczniki generowane przez wpautop, a modul Typografii
+ * ustawia font-size i color BEZPOSREDNIO na selektorach p / span / ul / li,
+ * wiec nie dziedzicza one wartosci z kontenera. Ta sama sytuacja co w pasku
+ * Top Header — patrz sekcja "Top Header".
+ */
+.cyber-footer-text :is(p, span, ul, ol, li) {
+	font-size: inherit;
+	color: inherit;
+}
+
+.cyber-footer-link {
+	font-size: var(--cyber-footer-link-font-size);
+	color: var(--cyber-footer-link-color);
 }
 
 .cyber-footer__grid {

@@ -702,10 +702,54 @@ Stopka ma **cztery kolumny**, ale pola ACF dostaje wyłącznie pierwsza.
 > Praktyczna konsekwencja: profil wyłączony na pasku **nadal pojawia się w stopce**.
 > To celowe — pasek jest ciasny i wybiórczy, stopka pokazuje komplet.
 
-**Stopka nie ma pola tła ani koloru.** Nie było ich w specyfikacji modułu, więc
-dziedziczy je z `body`. Odrębna kolorystyka stopki to osobny moduł do zlecenia
-(„Stylizacja Footer"), nie pole dodane przy okazji. Odstępy siatki (`gap: 32px`),
-padding stopki (`48px`) i podział na breakpointach też są stałymi wartościami.
+**Sekcja: Stylizacja Footer**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Tło Footer | `cyber_footer_bg_color` | Color Picker | `#ffffff` | `--cyber-footer-bg` |
+| Rozmiar tytułów (stopka) | `cyber_footer_title_font_size` | Number (8–100 px) | `20` | `--cyber-footer-title-font-size` |
+| Kolor tytułów (stopka) | `cyber_footer_title_color` | Color Picker | `#111111` | `--cyber-footer-title-color` |
+| Rozmiar tekstu (stopka) | `cyber_footer_text_font_size` | Number (8–100 px) | `16` | `--cyber-footer-text-font-size` |
+| Kolor tekstu (stopka) | `cyber_footer_text_color` | Color Picker | `#333333` | `--cyber-footer-text-color` |
+| Rozmiar linków (stopka) | `cyber_footer_link_font_size` | Number (8–100 px) | `16` | `--cyber-footer-link-font-size` |
+| Kolor linków (stopka) | `cyber_footer_link_color` | Color Picker | `#0057ff` | `--cyber-footer-link-color` |
+
+> ### Wzorzec narzędziowy, ograniczony kontekstowo konwencją
+>
+> Trzy z tych pól działają przez **stałe klasy CSS**, dokładnie jak kolory
+> narzędziowe z modułu „Kolory": nazwa klasy jest zapisana w kodzie, ACF ustawia
+> wyłącznie wartość. Nie ma pola do wpisania nazwy klasy.
+>
+> | Klasa | Sterowana polami |
+> |---|---|
+> | `.cyber-footer-title` | `cyber_footer_title_font_size`, `cyber_footer_title_color` |
+> | `.cyber-footer-text` | `cyber_footer_text_font_size`, `cyber_footer_text_color` |
+> | `.cyber-footer-link` | `cyber_footer_link_font_size`, `cyber_footer_link_color` |
+>
+> **Ograniczenie do wnętrza `.cyber-footer` jest konwencją, nie techniką.** Nic nie
+> blokuje nałożenia tych klas gdziekolwiek indziej — po prostu nie po to powstały.
+> Prefiks `cyber-footer-` w nazwie ma to komunikować (CLAUDE.md sekcja 5).
+
+**Stan użycia w markupie:**
+
+| Klasa | Gdzie |
+|---|---|
+| `.cyber-footer-text` | na kontenerze treści WYSIWYG w kolumnie 1 — **działa teraz** |
+| `.cyber-footer-title` | **nigdzie** — stopka nie ma tytułów kolumn |
+| `.cyber-footer-link` | **nigdzie** — stopka nie ma linków tekstowych |
+
+Dwie ostatnie są zdefiniowane w CSS i gotowe pod zawartość kolumn 2 i 3
+(CLAUDE.md sekcja 22). Nie dodano dla nich znaczników na siłę — nagłówek bez
+tytułu i link bez treści byłyby pustym markupem.
+
+> **Treść WYSIWYG wymaga reguły dziedziczenia.** `wpautop()` generuje `<p>`,
+> a moduł „Ustawienia czcionki" ustawia `font-size` i `color` **bezpośrednio
+> na selektorze `p`**, więc akapity nie dziedziczą wartości z kontenera. Dlatego
+> obok `.cyber-footer-text` istnieje `.cyber-footer-text :is(p, span, ul, ol, li)`
+> z `inherit` — ten sam wzorzec co w pasku Top Header.
+
+Padding stopki (`48px`), odstępy siatki (`gap: 32px`) i podział na breakpointach
+pozostają stałymi wartościami, bez pól.
 
 **Siatka responsywnie** (progi z CLAUDE.md sekcja 18): 4 kolumny na desktopie,
 **2 kolumny** poniżej 980px, **1 kolumna** poniżej 767px.
@@ -870,7 +914,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -1022,6 +1066,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Footer: nowa sekcja **„Stylizacja Footer”** — 7 pól (tło + rozmiar/kolor dla tytułów, tekstu i linków). Wzorzec narzędziowy: stałe klasy `.cyber-footer-title` / `-text` / `-link`, ograniczone do stopki konwencją, nie techniką.
 - 2026-09-10 — Nowa zakładka **„Footer”**: 2 pola dla kolumny 1 (logo + WYSIWYG). Kolumny 2 i 3 zarezerwowane bez pól, kolumna 4 reużywa `cyber_social_*` bez wyłączników. Wydzielony wspólny komponent `cyber_social_icons()` — Top Header przestał mieć własną pętlę. Nowy typ schematu `html`.
 - 2026-09-10 — Nowa zakładka **„Top Header”**: 3 pola stylu + 8 przełączników widoczności. **Pierwszy moduł konsumujący pola z „Kontakt" i „Social Media"** przez `cyber_get_option()`. Nowy `template-parts/header/top-header.php`, `cyber_top_header_data()` w `inc/header.php`, własne inline SVG w `cyber_get_social_icon()`.
 - 2026-09-10 — Nowa zakładka **„Social Media”**: 6 pól URL (Facebook, Instagram, YouTube, X, LinkedIn, TikTok) — **bez logiki frontendowej**, zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Bez nowego pliku w `inc/` — walidację pokrywa istniejący typ schematu `url`.

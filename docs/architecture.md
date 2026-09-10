@@ -74,7 +74,8 @@ cyber_header_css()            ← moduł „Header Desktop”
 cyber_header_mobile_css()     ← moduł „Header Mobile”
 cyber_button_css()            ← moduł „Przyciski”
 cyber_colors_css()            ← moduł „Kolory”
-cyber_top_header_css()        ← moduł „Top Header”              (inc/enqueue.php)
+cyber_top_header_css()        ← moduł „Top Header”
+cyber_footer_css()            ← moduł „Footer”                  (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
@@ -174,8 +175,14 @@ Obie ścieżki prowadzą przez ten sam komponent `cyber_social_icons()`
 `cyber_top_header_data()` też z niej korzysta — klucz `social` służy tam wyłącznie
 do decyzji, czy pasek ma się w ogóle renderować.
 
-Stopka nie ma pola tła ani koloru; dziedziczy je z `body`. To brak modułu,
-nie przeoczenie — odrębna kolorystyka stopki wymaga osobnego zlecenia.
+Stopka ma własne tło (`cyber_footer_bg_color`) oraz trzy klasy narzędziowe
+ograniczone do niej konwencją: `.cyber-footer-title`, `.cyber-footer-text`
+i `.cyber-footer-link` (CLAUDE.md sekcja 5). Nazwy klas są stałe w kodzie —
+ACF ustawia wyłącznie rozmiar i kolor.
+
+Dwie z tych klas nie mają jeszcze zastosowania w markupie: stopka nie ma tytułów
+kolumn ani linków tekstowych. Są zdefiniowane i gotowe pod zawartość kolumn 2 i 3,
+a nie dopięte na siłę do pustych znaczników.
 
 ## Top Header
 

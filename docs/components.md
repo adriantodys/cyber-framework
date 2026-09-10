@@ -57,6 +57,11 @@ Renderowany z `footer.php` w rootcie. Kolumny 2 i 3 są celowo puste — patrz
 CLAUDE.md sekcja 22. Treść kolumny 1 pochodzi z pola WYSIWYG i jest wypisywana
 przez `wp_kses_post()` (escapowanie przy outpucie, CLAUDE.md sekcja 8).
 
+Kontener treści niesie klasę `.cyber-footer-text`, więc rozmiar i kolor pochodzą
+z sekcji „Stylizacja Footer". Klasy `.cyber-footer-title` i `.cyber-footer-link`
+są zdefiniowane w CSS, ale nie mają jeszcze zastosowania w markupie — czekają
+na zawartość kolumn 2 i 3.
+
 #### Top Header
 
 Renderowany z `header.php` w rootcie, **przed** nagłówkiem. Dane buduje

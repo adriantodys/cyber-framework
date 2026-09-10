@@ -2913,6 +2913,162 @@
             "toolbar": "basic",
             "media_upload": 0,
             "delay": 0
+        },
+        {
+            "key": "field_cyber_msg_footer_style",
+            "label": "Stylizacja Footer",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Ustawienia dotyczą wyłącznie obszaru stopki. Rozmiary i kolory tytułów, tekstu i linków działają przez stałe klasy CSS (cyber-footer-title, cyber-footer-text, cyber-footer-link) — nazwy są zapisane w kodzie i nie da się ich zmienić z panelu. Tytuły i linki tekstowe pojawią się w stopce dopiero razem z zawartością kolumn 2 i 3.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_footer_bg_color",
+            "label": "Tło Footer",
+            "name": "cyber_footer_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Tło całego obszaru stopki.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_footer_title_font_size",
+            "label": "Rozmiar tytułów (stopka)",
+            "name": "cyber_footer_title_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Klasa cyber-footer-title. Dotyczy wyłącznie obszaru stopki.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 20,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_footer_title_color",
+            "label": "Kolor tytułów (stopka)",
+            "name": "cyber_footer_title_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa cyber-footer-title. Dotyczy wyłącznie obszaru stopki.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_footer_text_font_size",
+            "label": "Rozmiar tekstu (stopka)",
+            "name": "cyber_footer_text_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Klasa cyber-footer-text — obejmuje treść kolumny 1. Dotyczy wyłącznie obszaru stopki.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_footer_text_color",
+            "label": "Kolor tekstu (stopka)",
+            "name": "cyber_footer_text_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa cyber-footer-text — obejmuje treść kolumny 1. Dotyczy wyłącznie obszaru stopki.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#333333",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_footer_link_font_size",
+            "label": "Rozmiar linków (stopka)",
+            "name": "cyber_footer_link_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Klasa cyber-footer-link. Dotyczy wyłącznie obszaru stopki.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_footer_link_color",
+            "label": "Kolor linków (stopka)",
+            "name": "cyber_footer_link_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Klasa cyber-footer-link. Dotyczy wyłącznie obszaru stopki.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
         }
     ],
     "location": [
@@ -2933,5 +3089,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998410
+    "modified": 1788998411
 }
