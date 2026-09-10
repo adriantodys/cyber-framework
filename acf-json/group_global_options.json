@@ -667,6 +667,148 @@
             "ui": 0,
             "ajax": 0,
             "placeholder": ""
+        },
+        {
+            "key": "field_cyber_msg_font_weight",
+            "label": "Grubość czcionki",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Jedna wartość dla wszystkich urządzeń — grubość NIE jest przeliczana per breakpoint, w odróżnieniu od wielkości. Uwaga: Georgia oraz Arial mają realnie tylko 400 i 700; pośrednie wartości przeglądarka zaokrągli do najbliższej dostępnej.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_font_weight_headings",
+            "label": "Grubość nagłówków",
+            "name": "cyber_font_weight_headings",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy h1–h6.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "700",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_font_weight_overtitle",
+            "label": "Grubość overtitle",
+            "name": "cyber_font_weight_overtitle",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy obu wariantów: .cyber-overtitle i .cyber-overtitle--secondary.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "600",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_font_weight_text",
+            "label": "Grubość tekstu",
+            "name": "cyber_font_weight_text",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy p, span, ul, li.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "400",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_font_weight_links",
+            "label": "Grubość linków",
+            "name": "cyber_font_weight_links",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy a poza nagłówkami.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "400",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
         }
     ],
     "location": [
@@ -687,5 +829,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998400
+    "modified": 1788998401
 }

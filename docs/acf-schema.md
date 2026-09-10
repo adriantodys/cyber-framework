@@ -166,6 +166,44 @@ Georgia, "Times New Roman", Times, serif                        : Georgia — sz
 > (walidacja przy odczycie). Stack dodany tylko w JSON zostanie odrzucony przez
 > `cyber_get_option()` i podmieniony na wartość domyślną.
 
+**Sekcja: Grubość czcionki**
+
+Wszystkie pola: typ **Select**, required, `allow_null: 0`. Wartością pola jest
+liczba wstawiana wprost jako `font-weight`.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Grubość nagłówków | `cyber_font_weight_headings` | Select | `700` | `font-weight` dla `h1`–`h6`. |
+| Grubość overtitle | `cyber_font_weight_overtitle` | Select | `600` | `font-weight` dla `.cyber-overtitle` i `.cyber-overtitle--secondary`. |
+| Grubość tekstu | `cyber_font_weight_text` | Select | `400` | `font-weight` dla `body`, `p`, `span`, `ul`, `li`. |
+| Grubość linków | `cyber_font_weight_links` | Select | `400` | `font-weight` dla `a` poza nagłówkami. |
+
+**Choices (identyczne dla wszystkich czterech pól):**
+
+```
+300 : Light (300)
+400 : Regular (400)
+500 : Medium (500)
+600 : SemiBold (600)
+700 : Bold (700)
+800 : ExtraBold (800)
+```
+
+> ### Grubość NIE podlega skalowaniu responsywnemu
+>
+> W odróżnieniu od `font-size`, grubość ma **jedną wartość dla wszystkich urządzeń**.
+> Nie ma pól `cyber_font_weight_*_scale_tablet` ani odpowiedników dla pozostałych
+> breakpointów, a `cyber_font_css()` wypisuje zmienne grubości **wyłącznie w bloku
+> bazowym `:root`** — nie powtarzają się w żadnym `@media`. Uzasadnienie i status
+> tego wyjątku: CLAUDE.md sekcja 19.
+
+> **Uwaga o dostępnych grubościach.** `Georgia` i `Arial` realnie zawierają tylko
+> Regular (400) i Bold (700). Wybranie 300, 500, 600 lub 800 dla tych krojów nie
+> daje osobnego rysunku pisma — przeglądarka zaokrągli do najbliższej dostępnej
+> grubości albo wygeneruje wariant syntetyczny. Pełny zakres ma praktycznie tylko
+> stack systemowy. Pole nie blokuje takiego wyboru, bo to kwestia decyzji
+> projektowej, a nie poprawności danych.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -220,6 +258,11 @@ Zakładka „Ustawienia czcionki” (klucz pola = `field_` + nazwa pola, bez wyj
 | — (nagłówek sekcji) | `field_cyber_msg_font_family` | Message |
 | `cyber_font_family_headings` | `field_cyber_font_family_headings` | Select |
 | `cyber_font_family_text` | `field_cyber_font_family_text` | Select |
+| — (nagłówek sekcji) | `field_cyber_msg_font_weight` | Message |
+| `cyber_font_weight_headings` | `field_cyber_font_weight_headings` | Select |
+| `cyber_font_weight_overtitle` | `field_cyber_font_weight_overtitle` | Select |
+| `cyber_font_weight_text` | `field_cyber_font_weight_text` | Select |
+| `cyber_font_weight_links` | `field_cyber_font_weight_links` | Select |
 
 ### Założenia przyjęte przy wdrożeniu (do akceptacji lub zmiany)
 
@@ -308,6 +351,10 @@ ACF PRO albo z wyłączonym hookiem nadal ma sensowny kontener).
 |---|---|---|
 | `--cyber-font-family-headings` | `cyber_font_family_headings` | nie |
 | `--cyber-font-family-text` | `cyber_font_family_text` | nie |
+| `--cyber-font-weight-headings` | `cyber_font_weight_headings` | nie |
+| `--cyber-font-weight-overtitle` | `cyber_font_weight_overtitle` | nie |
+| `--cyber-font-weight-text` | `cyber_font_weight_text` | nie |
+| `--cyber-font-weight-links` | `cyber_font_weight_links` | nie |
 | `--cyber-font-size-h1` … `-h6` | `cyber_font_size_h1` … `_h6` | tak |
 | `--cyber-font-size-overtitle-1` | `cyber_font_size_overtitle_1` | tak |
 | `--cyber-font-size-overtitle-2` | `cyber_font_size_overtitle_2` | tak |
@@ -350,15 +397,19 @@ i osobnej decyzji, nie jest domyślna.
 
 | Selektor | Zmienne |
 |---|---|
-| `h1` … `h6` | `--cyber-font-size-h1` … `-h6` + `--cyber-font-family-headings` |
-| `.cyber-overtitle` | `--cyber-font-size-overtitle-1` + `--cyber-font-family-headings` |
-| `.cyber-overtitle--secondary` | `--cyber-font-size-overtitle-2` + `--cyber-font-family-headings` |
-| `body`, `p`, `span`, `ul`, `li` | `--cyber-font-size-text` + `--cyber-font-family-text` |
-| `a` | `--cyber-font-size-links` + `--cyber-font-family-text` |
+| `h1` … `h6` | `--cyber-font-size-h1` … `-h6`, `--cyber-font-family-headings`, `--cyber-font-weight-headings` |
+| `.cyber-overtitle` | `--cyber-font-size-overtitle-1`, `--cyber-font-family-headings`, `--cyber-font-weight-overtitle` |
+| `.cyber-overtitle--secondary` | `--cyber-font-size-overtitle-2`, `--cyber-font-family-headings`, `--cyber-font-weight-overtitle` |
+| `body`, `p`, `span`, `ul`, `li` | `--cyber-font-size-text`, `--cyber-font-family-text`, `--cyber-font-weight-text` |
+| `a` | `--cyber-font-size-links`, `--cyber-font-family-text`, `--cyber-font-weight-links` |
 
-Wyjątek: `a` i `span` **wewnątrz** nagłówków i overtitle mają `font-size: inherit`
-i `font-family: inherit`. Bez tej reguły `<h1><a>…</a></h1>` skurczyłby się do
-wielkości linku.
+Nagłówki i overtitle mają wspólny **krój**, ale osobną **grubość**, dlatego reguła
+kroju rozpada się na dwa selektory: `h1`–`h6` oraz `.cyber-overtitle` wraz
+z wariantem `--secondary`.
+
+Wyjątek: `a` i `span` **wewnątrz** nagłówków i overtitle mają `font-size`,
+`font-family` i `font-weight` ustawione na `inherit`. Bez tej reguły
+`<h1><a>…</a></h1>` skurczyłby się do wielkości i grubości linku.
 
 Klasy `.cyber-overtitle` i `.cyber-overtitle--secondary` są **nowe** — wprowadzone
 razem z tym modułem, bo ACF definiuje dwie wielkości overtitle, a motyw nie miał
@@ -387,4 +438,5 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Rozszerzenie zakładki „Ustawienia czcionki” o sekcję **„Grubość czcionki”**: 4 pola Select (`cyber_font_weight_headings` / `_overtitle` / `_text` / `_links`). Grubość celowo bez skalowania responsywnego — jedna wartość dla wszystkich breakpointów.
 - 2026-09-10 — Nowa zakładka **„Ustawienia czcionki”** w `group_global_options`: 10 pól wielkości (desktop), 3 pola skalowania procentowego, 2 pola wyboru kroju. Wdrożona logika `cyber_font_css()`, wspólne `cyber_breakpoints()`, klasy `.cyber-overtitle` / `.cyber-overtitle--secondary`. Funkcja wypisująca przemianowana na `cyber_print_inline_css()`, znacznik `<style>` na `id="cyber-global-vars"`.

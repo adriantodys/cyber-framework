@@ -299,3 +299,12 @@ Ten wzorzec jest **domyślny dla wszystkich przyszłych modułów** z wieloma wa
 liczbowymi (fonty, odstępy między sekcjami itp.). Odstępstwo — czyli kontrola
 per-elementowa na każdym breakpoincie — wymaga **jawnego uzasadnienia przed
 implementacją**, a nie założenia z góry, że dany przypadek jest wyjątkiem.
+
+### Wyjątek: wartości niepodlegające skalowaniu
+
+Grubość czcionki (`font-weight`) jest wyjątkiem od zasady skalowania responsywnego
+opisanej w tej sekcji — nie podlega przeliczaniu per breakpoint, ponieważ zmiana
+grubości nie jest praktyką responsywnego web designu w tym projekcie. Kolejne pola
+tego typu (np. `letter-spacing`, jeśli powstanie) powinny być każdorazowo jawnie
+zaklasyfikowane jako **skalowane** albo **stałe**, zamiast domyślnie zakładać
+jeden wzorzec.

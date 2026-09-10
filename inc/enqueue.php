@@ -135,6 +135,24 @@ function cyber_font_size_map() {
 }
 
 /**
+ * Mapa pol z grubosciami czcionek na koncowki zmiennych CSS.
+ *
+ * Analogiczna do cyber_font_size_map(), ale te wartosci NIE sa skalowane
+ * przez breakpointy — grubosc jest jedna dla wszystkich urzadzen
+ * (CLAUDE.md sekcja 19, wyjatek od wariantu B).
+ *
+ * @return array<string, string> Klucz opcji => koncowka zmiennej CSS.
+ */
+function cyber_font_weight_map() {
+	return array(
+		'font_weight_headings'  => 'headings',
+		'font_weight_overtitle' => 'overtitle',
+		'font_weight_text'      => 'text',
+		'font_weight_links'     => 'links',
+	);
+}
+
+/**
  * Przelicza wielkosc desktopowa na wartosc dla breakpointu.
  *
  * Skalowanie liczone jest w PHP i wypisywane jako gotowa liczba px — swiadomie
@@ -153,12 +171,15 @@ function cyber_scale_font_size( $base_px, $scale ) {
  *
  * Wariant B z CLAUDE.md sekcja 19: konkretne wartosci istnieja tylko dla
  * desktopu, a kazdy breakpoint dostaje jedna skale procentowa, ktora przelicza
- * wszystkie wielkosci naraz. Rodziny czcionek sie nie skaluja, wiec wystepuja
- * wylacznie w bloku bazowym.
+ * wszystkie wielkosci naraz.
  *
- * Wartosci font-family pochodza z pola typu 'choice' — cyber_get_option()
- * przepuszcza wylacznie stringi z listy dozwolonej w cyber_option_schema(),
- * wiec do CSS nie trafi nic spoza tej listy.
+ * Skalowaniu podlegaja WYLACZNIE wielkosci (font-size). Rodziny (font-family)
+ * i grubosci (font-weight) sa stale dla wszystkich urzadzen, wiec wystepuja
+ * tylko w bloku bazowym :root i nie powtarzaja sie w zadnym @media.
+ *
+ * Wartosci font-family i font-weight pochodza z pol typu 'choice' —
+ * cyber_get_option() przepuszcza wylacznie stringi z listy dozwolonej
+ * w cyber_option_schema(), wiec do CSS nie trafi nic spoza tej listy.
  *
  * @return string CSS bez znacznika <style>.
  */
@@ -174,6 +195,14 @@ function cyber_font_css() {
 		cyber_get_option( 'font_family_headings' ),
 		cyber_get_option( 'font_family_text' )
 	);
+
+	foreach ( cyber_font_weight_map() as $option_key => $css_name ) {
+		$css .= sprintf(
+			'--cyber-font-weight-%1$s:%2$s;',
+			$css_name,
+			cyber_get_option( $option_key )
+		);
+	}
 
 	foreach ( $sizes as $css_name => $base_px ) {
 		$css .= sprintf( '--cyber-font-size-%1$s:%2$dpx;', $css_name, $base_px );

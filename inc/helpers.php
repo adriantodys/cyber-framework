@@ -175,6 +175,26 @@ function cyber_option_schema() {
 				'"Helvetica Neue", Helvetica, Arial, sans-serif',
 			),
 		),
+		'font_weight_headings'    => array(
+			'type'    => 'choice',
+			'default' => '700',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'font_weight_overtitle'   => array(
+			'type'    => 'choice',
+			'default' => '600',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'font_weight_text'        => array(
+			'type'    => 'choice',
+			'default' => '400',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'font_weight_links'       => array(
+			'type'    => 'choice',
+			'default' => '400',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
 	);
 }
 

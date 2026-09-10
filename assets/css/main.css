@@ -16,6 +16,11 @@
 	--cyber-font-family-headings: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 	--cyber-font-family-text: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
+	--cyber-font-weight-headings: 700;
+	--cyber-font-weight-overtitle: 600;
+	--cyber-font-weight-text: 400;
+	--cyber-font-weight-links: 400;
+
 	--cyber-font-size-h1: 48px;
 	--cyber-font-size-h2: 40px;
 	--cyber-font-size-h3: 32px;
@@ -58,6 +63,7 @@ body {
 	margin: 0;
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-text);
+	font-weight: var(--cyber-font-weight-text);
 	line-height: 1.6;
 }
 
@@ -70,7 +76,7 @@ video {
 /* --- Typografia ----------------------------------------------------------- */
 
 /*
- * Rozmiary i kroje pochodza wylacznie ze zmiennych — konkretne wartosci sa
+ * Rozmiary, kroje i grubosci pochodza wylacznie ze zmiennych — konkretne wartosci sa
  * wypisywane inline w wp_head na podstawie zakladki "Ustawienia czcionki"
  * (cyber_font_css() w inc/enqueue.php). Tutaj nie ma zadnych liczb.
  */
@@ -80,10 +86,15 @@ h2,
 h3,
 h4,
 h5,
-h6,
+h6 {
+	font-family: var(--cyber-font-family-headings);
+	font-weight: var(--cyber-font-weight-headings);
+}
+
 .cyber-overtitle,
 .cyber-overtitle--secondary {
 	font-family: var(--cyber-font-family-headings);
+	font-weight: var(--cyber-font-weight-overtitle);
 }
 
 h1 { font-size: var(--cyber-font-size-h1); }
@@ -107,17 +118,19 @@ ul,
 li {
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-text);
+	font-weight: var(--cyber-font-weight-text);
 }
 
 a {
 	font-family: var(--cyber-font-family-text);
 	font-size: var(--cyber-font-size-links);
+	font-weight: var(--cyber-font-weight-links);
 }
 
 /*
- * Tekst i linki wewnatrz naglowkow dziedzicza rozmiar naglowka. Bez tej reguly
- * <h1><a>...</a></h1> zmniejszylby sie do wielkosci linku, a <span> w naglowku
- * do wielkosci tekstu.
+ * Tekst i linki wewnatrz naglowkow dziedzicza rozmiar, kroj i grubosc naglowka.
+ * Bez tej reguly <h1><a>...</a></h1> zmniejszylby sie do wielkosci i grubosci
+ * linku, a <span> w naglowku do wartosci tekstu.
  */
 h1 :is(a, span),
 h2 :is(a, span),
@@ -129,6 +142,7 @@ h6 :is(a, span),
 .cyber-overtitle--secondary :is(a, span) {
 	font-family: inherit;
 	font-size: inherit;
+	font-weight: inherit;
 }
 
 /* --- Kontener ------------------------------------------------------------- */
