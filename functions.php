@@ -60,11 +60,3 @@ function cyber_load_modules() {
 	}
 }
 cyber_load_modules();
-
-/**
- * Jawne zaladowanie modulu Options Page.
- *
- * Plik jest juz ladowany przez cyber_load_modules(); require_once jest
- * idempotentne, wiec ta linia sluzy wylacznie jako jawna deklaracja zaleznosci.
- */
-require_once get_template_directory() . '/inc/options.php';
