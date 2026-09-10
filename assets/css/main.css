@@ -188,6 +188,10 @@ h6 :is(a, span),
  * i trzyma jedna linie z trescia na kazdym breakpoincie.
  */
 
+.cyber-header {
+	position: relative;
+}
+
 .cyber-header__inner {
 	display: flex;
 	align-items: center;
@@ -345,6 +349,45 @@ h6 :is(a, span),
 
 .cyber-submenu .current-menu-item > a {
 	color: var(--cyber-header-submenu-color-active);
+}
+
+/* --- Header Mobile -------------------------------------------------------- */
+
+/*
+ * Prog przelaczania desktop/mobile pochodzi z pola ACF, wiec caly blok @media
+ * generuje PHP (cyber_header_mobile_css() w inc/enqueue.php). Tutaj leza tylko
+ * reguly niezalezne od progu: wyglad hamburgera i bazowe style panelu.
+ *
+ * Selektor .cyber-mobile-menu celowo NIE zawiera pozycjonowania — to zadanie
+ * klasy modyfikujacej (.cyber-mobile-menu--dropdown). Dzieki temu dolozenie
+ * wariantu wysuwanego z lewej lub prawej to nowa klasa obok istniejacej,
+ * a nie przepisywanie komponentu (CLAUDE.md sekcja 20).
+ */
+
+.cyber-hamburger {
+	/* Ukryty domyslnie; pokazuje go dopiero blok @media z progiem z panelu. */
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	gap: 5px;
+	margin-left: auto;
+	padding: var(--cyber-header-menu-link-padding);
+	border: 0;
+	background: none;
+	color: var(--cyber-header-menu-color);
+	cursor: pointer;
+}
+
+.cyber-hamburger:hover,
+.cyber-hamburger:focus-visible {
+	color: var(--cyber-header-menu-color-hover);
+}
+
+.cyber-hamburger__bar {
+	display: block;
+	width: 24px;
+	height: 2px;
+	background: currentColor;
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

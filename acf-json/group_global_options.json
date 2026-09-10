@@ -1346,6 +1346,63 @@
             "default_value": "#0057ff",
             "enable_opacity": 0,
             "return_format": "string"
+        },
+        {
+            "key": "field_cyber_tab_header_mobile",
+            "label": "Header Mobile",
+            "name": "cyber_tab_header_mobile",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_header_mobile",
+            "label": "Próg przełączania",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Menu mobilne dziedziczy kolory i typografię z zakładki „Header Desktop” — te same ustawienia nie są duplikowane w dwóch miejscach.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_mobile_breakpoint",
+            "label": "Próg menu mobilnego",
+            "name": "cyber_header_mobile_breakpoint",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Poniżej tej szerokości ekranu menu desktopowe jest zastępowane menu mobilnym (hamburger).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 980,
+            "min": 320,
+            "max": 2000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
         }
     ],
     "location": [
@@ -1366,5 +1423,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998403
+    "modified": 1788998404
 }

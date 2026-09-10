@@ -275,6 +275,10 @@ bo moduły przestają się przełączać w tym samym momencie.
 W CSS progi zapisujemy jako granice domknięte od góry: `max-width: 980px`,
 `max-width: 767px`, `max-width: 479px`.
 
+> **Wyjątek.** Próg przełączania header desktop/mobile (`cyber_header_mobile_breakpoint`)
+> jest świadomym wyjątkiem od tego systemu i pozostaje niezależnie konfigurowalny
+> przez admina.
+
 ## 19. Konwencja: skalowanie wartości responsywnych (wariant B)
 
 Dotyczy pól, które definiują **wiele powiązanych wartości liczbowych** na desktopie
@@ -328,6 +332,14 @@ W CSS wyrównanie jest **modyfikatorem klasy**, nie zmienną CSS: `.cyber-menu--
 `.cyber-submenu--center` itd. Powód: wyrównanie zmienia układ (`justify-content`,
 `align-items`, `text-align` naraz), a nie pojedynczą wartość — zmienna CSS
 wymuszałaby wypisywanie trzech różnych właściwości sterowanych jednym stringiem.
+
+### Warianty pozycji komponentów
+
+Komponenty, które w przyszłości mogą zyskać alternatywne warianty wizualne
+(np. mobile menu wysuwane z lewej/prawej zamiast rozwijane w dół), powinny być
+od razu budowane z **wymienną klasą modyfikującą na głównym wrapperze**, zamiast
+wartości wpisanych na sztywno w bazowym selektorze — tak, żeby dodanie wariantu
+wymagało tylko nowej klasy i pola ACF, a nie przepisania komponentu.
 
 ## 21. Lokalizacja głównego menu
 

@@ -33,7 +33,7 @@ w ustalonej kolejności:
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
 | 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties (kontener + typografia) w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
-| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułu Header Desktop. Stała `CYBER_HEADER_MENU_LOCATION`. |
+| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile. Stała `CYBER_HEADER_MENU_LOCATION`. |
 
 ## Stałe
 
@@ -68,7 +68,8 @@ cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
       ▼
 cyber_container_css()         ← moduł „Główne ustawienia strony”
 cyber_font_css()              ← moduł „Ustawienia czcionki”
-cyber_header_css()            ← moduł „Header Desktop”          (inc/enqueue.php)
+cyber_header_css()            ← moduł „Header Desktop”
+cyber_header_mobile_css()     ← moduł „Header Mobile”            (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
@@ -137,7 +138,33 @@ Dwie decyzje warte zapamiętania:
   stron witryny, co jest domyślnym zachowaniem WordPressa.
 
 Rozwijanie podmenu działa na `:hover` **oraz** `:focus-within`, żeby było osiągalne
-z klawiatury (CLAUDE.md sekcja 11). Nie ma tu JavaScriptu.
+z klawiatury (CLAUDE.md sekcja 11). Na desktopie nie ma tu JavaScriptu.
+
+## Header Mobile
+
+**Jeden markup obsługuje oba widoki.** Element `<nav>` z menu jest jednocześnie
+panelem mobilnym — niesie `id` (cel `aria-controls` hamburgera), klasę wariantu
+pozycji i próg dla JS w `data-breakpoint`. Drugie wywołanie `wp_nav_menu()`
+dałoby ten sam zestaw linków po raz drugi, a razem z nim **zduplikowane
+`id="menu-item-…"`** na każdej pozycji — czyli niepoprawny HTML i mylące cele
+dla technologii asystujących.
+
+| Element | Realizacja |
+|---|---|
+| Przełączenie widoków | `cyber_header_mobile_css()` — cały blok `@media` generowany w PHP, bo próg pochodzi z ACF |
+| Otwieranie panelu | klasa `.is-open` dodawana przez `assets/js/header.js` — klik/tap, nie `:hover` |
+| Wariant pozycji | `.cyber-mobile-menu--dropdown`; selektor bazowy celowo bez pozycjonowania (CLAUDE.md sekcja 20) |
+| Skrypt | czysty JS, enqueue warunkowy (tylko gdy `primary` ma menu), wersja z `filemtime()` |
+
+Skrypt nie zna żadnej wartości z panelu: próg i etykiety `aria-label` przychodzą
+z markupu przez atrybuty `data-*`. Dzięki temu liczba żyje w jednym miejscu (ACF),
+a teksty pozostają tłumaczalne w PHP.
+
+Dostępność: hamburger to `<button>` z `aria-expanded` i `aria-controls`, panel
+zamyka się na Escape (z powrotem fokusu na przycisk) i kliknięciem poza obszarem,
+a zamknięty panel ma `display: none`, więc jego linki nie łapią fokusu.
+Podmenu na mobile jest rozwinięte na stałe — otwieranie go dotknięciem wymagałoby
+drugiego mechanizmu, a wskaźnik strzałki byłby wtedy mylący, więc w tym widoku znika.
 
 ## Edytor treści
 

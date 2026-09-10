@@ -31,7 +31,7 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
-| Header Desktop | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `has_menu` | sekcja „Header Desktop” w `assets/css/main.css` + zmienne z `cyber_header_css()` |
+| Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
 Header dostaje wszystkie dane przez `$args` z `header.php` w rootcie — nie woła
 `cyber_get_option()` samodzielnie. Wartości liczbowe i kolory w ogóle nie przechodzą

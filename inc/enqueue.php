@@ -42,6 +42,24 @@ function cyber_enqueue_assets() {
 		cyber_asset_version( 'assets/css/main.css' )
 	);
 
+	/*
+	 * Skrypt headera ma sens tylko wtedy, gdy jest co rozwijac — bez menu
+	 * przypisanego do lokalizacji 'primary' hamburger sie nie renderuje
+	 * (CLAUDE.md sekcja 10, enqueue warunkowy).
+	 */
+	if ( has_nav_menu( CYBER_HEADER_MENU_LOCATION ) ) {
+		wp_enqueue_script(
+			'cyber-header',
+			CYBER_URI . '/assets/js/header.js',
+			array(),
+			cyber_asset_version( 'assets/js/header.js' ),
+			array(
+				'in_footer' => true,
+				'strategy'  => 'defer',
+			)
+		);
+	}
+
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
@@ -293,6 +311,56 @@ function cyber_header_css() {
 }
 
 /**
+ * Buduje CSS modulu "Header Mobile".
+ *
+ * Caly blok @media powstaje w PHP, bo prog przelaczania pochodzi z pola ACF,
+ * a media query nie przyjmuje var() jako wartosci granicznej. To jedyny
+ * fragment CSS w projekcie, ktory MUSI byc generowany w calosci — reszta
+ * modulow wypisuje wylacznie wartosci zmiennych.
+ *
+ * Prog jest swiadomym wyjatkiem od kanonicznych breakpointow z cyber_breakpoints()
+ * (CLAUDE.md sekcja 18) — admin ustawia go swobodnie.
+ *
+ * W bloku znajduja sie WYLACZNIE reguly zalezne od progu. Wyglad hamburgera
+ * i bazowe style panelu leza w assets/css/main.css.
+ *
+ * Pozycjonowanie panelu siedzi w klasie modyfikujacej .cyber-mobile-menu--dropdown,
+ * nie w selektorze bazowym — dolozenie wariantu wysuwanego z boku to nowa klasa
+ * obok istniejacej, bez ruszania reszty (CLAUDE.md sekcja 20).
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_header_mobile_css() {
+	$breakpoint = (int) cyber_get_option( 'header_mobile_breakpoint' );
+
+	$rules = array(
+		// Przelaczenie: menu desktopowe znika, hamburger sie pojawia.
+		'.cyber-hamburger{display:flex;}',
+		'.cyber-mobile-menu{display:none;}',
+		'.cyber-mobile-menu.is-open{display:block;}',
+
+		// Wariant pozycji: rozwijanie w dol pod headerem.
+		'.cyber-mobile-menu--dropdown{position:absolute;top:100%;left:0;right:0;z-index:20;'
+			. 'padding:var(--cyber-header-menu-link-padding);'
+			. 'background:var(--cyber-header-submenu-background);}',
+
+		// Lista pionowa; odstepy daje padding linku, nie gap poziomy.
+		'.cyber-mobile-menu .cyber-menu{flex-direction:column;align-items:stretch;gap:0;}',
+
+		/*
+		 * Podmenu na mobile jest rozwiniete na stale. Otwieranie go dotknieciem
+		 * wymagaloby drugiego mechanizmu (:hover na tapie dziala nieprzewidywalnie),
+		 * a strzalka sugerujaca zwijanie bylaby wtedy myllaca — dlatego znika.
+		 */
+		'.cyber-mobile-menu .cyber-submenu{display:flex;position:static;min-width:0;'
+			. 'background:none;padding-inline-start:var(--cyber-header-submenu-link-padding);}',
+		'.cyber-mobile-menu .cyber-menu--with-indicator .menu-item-has-children > a::after{display:none;}',
+	);
+
+	return sprintf( '@media (max-width:%1$dpx){%2$s}', $breakpoint, implode( '', $rules ) );
+}
+
+/**
  * Wypisuje zmienne Global Options jako inline <style> w <head>.
  *
  * Jeden blok <style> dla calego motywu — kolejne moduly dopisuja tu swoja
@@ -307,7 +375,7 @@ function cyber_header_css() {
  * @return void
  */
 function cyber_print_inline_css() {
-	$css = cyber_container_css() . cyber_font_css() . cyber_header_css();
+	$css = cyber_container_css() . cyber_font_css() . cyber_header_css() . cyber_header_mobile_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki” i „Header Desktop”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop” i „Header Mobile”
 
 ---
 
@@ -287,6 +287,35 @@ right  : Do prawej
 > Tło podmenu jest z tej trójki najpilniejsze: bez niego lista rozwijana byłaby
 > nieczytelna na tle treści.
 
+### Zakładka: „Header Mobile”
+
+Cel: próg, poniżej którego menu desktopowe zastępuje hamburger. **Jedno pole** —
+menu mobilne dziedziczy kolory i typografię z zakładki „Header Desktop”
+(`cyber_header_menu_color`, `cyber_header_menu_font_size`, …), żeby te same
+ustawienia nie żyły w dwóch miejscach i nie rozjeżdżały się przy edycji.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Próg menu mobilnego | `cyber_header_mobile_breakpoint` | Number (320–2000 px) | `980` | Granica `max-width` bloku `@media`, w którym menu desktopowe znika, a pojawia się hamburger. |
+
+> ### To pole jest świadomym wyjątkiem od kanonicznych breakpointów
+>
+> **Nie „poprawiać" go do jednej z wartości z CLAUDE.md sekcja 18.** Próg
+> przełączania header desktop/mobile ma być swobodnie konfigurowalny przez
+> administratora — moment, w którym nawigacja przestaje się mieścić w jednej linii,
+> zależy od liczby i długości pozycji menu, a nie od systemowej siatki layoutu.
+> Zmiana z 980px na np. 767px jest przewidzianym scenariuszem użycia, nie błędem.
+>
+> Konsekwencja techniczna: `cyber_breakpoints()` **nie zna** tego progu, a moduł
+> Header Mobile nie korzysta z tej funkcji. To jedyne takie miejsce w projekcie.
+
+**Dlaczego cały blok `@media` powstaje w PHP.** Media query nie przyjmuje `var()`
+jako wartości granicznej w przeglądarkach objętych wsparciem, więc próg nie może
+być zmienną CSS jak reszta wartości w projekcie. `cyber_header_mobile_css()`
+w `inc/enqueue.php` generuje więc komplet reguł jako gotowy string, wstrzykując
+liczbę wprost. To jedyny fragment CSS generowany w całości — pozostałe moduły
+wypisują wyłącznie wartości zmiennych.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -369,6 +398,14 @@ Zakładka „Header Desktop” (klucz pola = `field_` + nazwa pola):
 | `cyber_header_submenu_font_weight` | `field_cyber_header_submenu_font_weight` | Select |
 | `cyber_header_submenu_color` / `_hover` / `_active` | `field_cyber_header_submenu_color` / `_hover` / `_active` | Color Picker |
 
+Zakładka „Header Mobile”:
+
+| Field Name | Field Key | Typ |
+|---|---|---|
+| — (zakładka) | `field_cyber_tab_header_mobile` | Tab |
+| — (nagłówek sekcji) | `field_cyber_msg_header_mobile` | Message |
+| `cyber_header_mobile_breakpoint` | `field_cyber_header_mobile_breakpoint` | Number |
+
 ### Założenia przyjęte przy wdrożeniu (do akceptacji lub zmiany)
 
 Poniższe rzeczy nie były opisane w specyfikacji modułu. Zostały wdrożone jako
@@ -420,7 +457,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -572,6 +609,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Header Mobile”**: jedno pole `cyber_header_mobile_breakpoint` (Number, default 980), świadomy wyjątek od kanonicznych breakpointów. Hamburger + panel mobilny w `template-parts/header/header.php`, blok `@media` generowany przez `cyber_header_mobile_css()`, obsługa w `assets/js/header.js` (czysty JS, enqueue warunkowy).
 - 2026-09-10 — Header Desktop: nowe pole `cyber_header_submenu_indicator` (True/False, default `true`) — strzałka przy pozycjach z podmenu. Nowy typ walidacji `bool` w `cyber_option_schema()`.
 - 2026-09-10 — Nowa zakładka **„Header Desktop”**: pole Image (logo, return format `url` — precedens dla pól obrazu), wyrównanie, paddingi kontenera, 7 pól menu głównego i 8 pól podmenu (Number / Select / Color Picker). Nowy `inc/header.php`, markup w `template-parts/header/header.php`, sekcja CSS w `main.css`. Menu korzysta z istniejącej lokalizacji `primary`.
 - 2026-09-10 — Rozszerzenie zakładki „Ustawienia czcionki” o sekcję **„Grubość czcionki”**: 4 pola Select (`cyber_font_weight_headings` / `_overtitle` / `_text` / `_links`). Grubość celowo bez skalowania responsywnego — jedna wartość dla wszystkich breakpointów.

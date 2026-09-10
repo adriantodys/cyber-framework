@@ -298,6 +298,12 @@ function cyber_option_schema() {
 			'type'    => 'color',
 			'default' => '#0057ff',
 		),
+		'header_mobile_breakpoint'    => array(
+			'type'    => 'px',
+			'default' => 980,
+			'min'     => 320,
+			'max'     => 2000,
+		),
 	);
 }
 
