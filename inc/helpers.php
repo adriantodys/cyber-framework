@@ -13,6 +13,66 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Platformy spolecznosciowe obslugiwane przez motyw.
+ *
+ * Klucz = czlon nazwy pola (cyber_social_[klucz], cyber_topheader_show_[klucz])
+ * oraz argument cyber_get_social_icon(). Wartosc = nazwa dla czytnikow ekranu.
+ *
+ * Kolejnosc tablicy jest kolejnoscia wyswietlania ikon.
+ *
+ * @return array<string, string> Slug platformy => nazwa.
+ */
+function cyber_social_platforms() {
+	return array(
+		'facebook'  => 'Facebook',
+		'instagram' => 'Instagram',
+		'youtube'   => 'YouTube',
+		'x'         => 'X (Twitter)',
+		'linkedin'  => 'LinkedIn',
+		'tiktok'    => 'TikTok',
+	);
+}
+
+/**
+ * Zwraca inline SVG ikony platformy spolecznosciowej.
+ *
+ * Wlasne ikony, bez biblioteki zewnetrznej (CLAUDE.md sekcja 2 i 22a). Kazda ma
+ * ten sam viewBox 0 0 20 20 i dziedziczy kolor przez currentColor — nie ma tu
+ * barw marek, to lekka ikonografia, nie zestaw logotypow.
+ *
+ * Ikona jest dekoracyjna (aria-hidden), wiec dostepna nazwa musi znalezc sie
+ * na elemencie nadrzednym, np. jako aria-label linku.
+ *
+ * Zwracany markup jest STALY i pochodzi wylacznie z tej funkcji — nie zawiera
+ * zadnych danych uzytkownika, wiec jest bezpieczny do wypisania bez escapowania
+ * (escapowanie zniszczyloby znaczniki SVG).
+ *
+ * @param string $platform Slug platformy, patrz cyber_social_platforms().
+ * @return string Znacznik <svg> albo pusty string dla nieznanej platformy.
+ */
+function cyber_get_social_icon( $platform ) {
+	$paths = array(
+		'facebook'  => '<path d="M12.4 19v-7.3h2.5l.4-2.9h-2.9V6.9c0-.8.2-1.4 1.4-1.4h1.6V2.9c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.1H6.8v2.9h2.5V19h3.1z"/>',
+		'instagram' => '<rect x="2.6" y="2.6" width="14.8" height="14.8" rx="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+			. '<circle cx="10" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>'
+			. '<circle cx="14.6" cy="5.5" r="1.1"/>',
+		'youtube'   => '<path fill-rule="evenodd" d="M18.6 6.5c-.2-.9-.9-1.5-1.7-1.8C15.4 4.3 10 4.3 10 4.3s-5.4 0-6.9.4c-.8.3-1.5.9-1.7 1.8-.4 1.5-.4 3.5-.4 3.5s0 2 .4 3.5c.2.9.9 1.5 1.7 1.8 1.5.4 6.9.4 6.9.4s5.4 0 6.9-.4c.8-.3 1.5-.9 1.7-1.8.4-1.5.4-3.5.4-3.5s0-2-.4-3.5zM8.4 12.6V7.4L12.8 10l-4.4 2.6z"/>',
+		'x'         => '<path d="M3.4 3h3.2l3.7 5 4.2-5h2.1l-5.3 6.3L17 17h-3.2l-3.9-5.3L5.3 17H3.2l5.6-6.6L3.4 3z"/>',
+		'linkedin'  => '<circle cx="4.3" cy="4.4" r="1.7"/>'
+			. '<rect x="3" y="7.7" width="2.7" height="9.3"/>'
+			. '<path d="M7.7 17V7.7h2.6v1.3c.5-.9 1.6-1.5 2.9-1.5 2.2 0 3.8 1.4 3.8 4V17h-2.7v-4.9c0-1.3-.6-2.1-1.8-2.1-1.1 0-2.1.8-2.1 2.2V17H7.7z"/>',
+		'tiktok'    => '<path d="M12.9 2h2.5c.2 1.9 1.4 3.3 3.2 3.5v2.6c-1.2 0-2.3-.4-3.2-1v5.3c0 3-2.4 5.4-5.4 5.4S4.6 15.4 4.6 12.4 7 7 10 7c.3 0 .6 0 .9.1v2.7c-.3-.1-.6-.2-.9-.2-1.5 0-2.7 1.2-2.7 2.8s1.2 2.8 2.7 2.8 2.9-1.2 2.9-2.8V2z"/>',
+	);
+
+	if ( ! isset( $paths[ $platform ] ) ) {
+		return '';
+	}
+
+	return '<svg class="cyber-icon" viewBox="0 0 20 20" fill="currentColor" '
+		. 'aria-hidden="true" focusable="false">' . $paths[ $platform ] . '</svg>';
+}
+
+/**
  * Wzorce walidacyjne pol kontaktowych.
  *
  * Jedno zrodlo dla dwoch warstw: walidacji przy zapisie w panelu
@@ -581,6 +641,52 @@ function cyber_option_schema() {
 			'type'     => 'url',
 			'default'  => '',
 			'nullable' => true,
+		),
+		'topheader_bg_color'          => array(
+			'type'    => 'color',
+			'default' => '#111111',
+		),
+		'topheader_font_color'        => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'topheader_font_size'         => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 40,
+		),
+		'topheader_show_phone'        => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_email'        => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_facebook'     => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_instagram'    => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_youtube'      => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_x'            => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_linkedin'     => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'topheader_show_tiktok'       => array(
+			'type'    => 'bool',
+			'default' => true,
 		),
 	);
 }

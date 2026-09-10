@@ -77,3 +77,77 @@ function cyber_header_submenu_css_class( $classes, $args, $depth ) {
 	return $classes;
 }
 add_filter( 'nav_menu_submenu_css_class', 'cyber_header_submenu_css_class', 10, 3 );
+
+/**
+ * Buduje dane paska Top Header.
+ *
+ * Modul jest pierwszym konsumentem pol z zakladek "Kontakt" i "Social Media"
+ * (CLAUDE.md sekcja 22) — nie ma wlasnych pol na telefon, email ani adresy
+ * profili, tylko czyta istniejace przez cyber_get_option().
+ *
+ * Regula widocznosci to koniunkcja i jest CELOWO w PHP, nie w conditional logic
+ * ACF: element pojawia sie tylko wtedy, gdy wlacznik jest wlaczony ORAZ pole
+ * zrodlowe nie jest puste. ACF potrafilby ukryc pole w panelu, ale to jest
+ * decyzja widoku, a nie ksztaltu danych.
+ *
+ * @return array {
+ *     @type array|null $phone  Tablica 'text' i 'href' albo null.
+ *     @type array|null $email  Tablica 'text' i 'href' albo null.
+ *     @type array      $social Lista tablic 'platform', 'label', 'url'.
+ * }
+ */
+function cyber_top_header_data() {
+	$data = array(
+		'phone'  => null,
+		'email'  => null,
+		'social' => array(),
+	);
+
+	$phone = cyber_get_option( 'contact_phone' );
+
+	if ( '' !== $phone && cyber_get_option( 'topheader_show_phone' ) ) {
+		$data['phone'] = array(
+			// W tresci zostaje zapis redaktora, w href tylko cyfry i wiodacy plus.
+			'text' => $phone,
+			'href' => 'tel:' . preg_replace( '/[^0-9+]/', '', $phone ),
+		);
+	}
+
+	$email = cyber_get_option( 'contact_email' );
+
+	if ( '' !== $email && cyber_get_option( 'topheader_show_email' ) ) {
+		$data['email'] = array(
+			'text' => $email,
+			'href' => 'mailto:' . $email,
+		);
+	}
+
+	foreach ( cyber_social_platforms() as $platform => $label ) {
+		$url = cyber_get_option( 'social_' . $platform );
+
+		if ( '' === $url || ! cyber_get_option( 'topheader_show_' . $platform ) ) {
+			continue;
+		}
+
+		$data['social'][] = array(
+			'platform' => $platform,
+			'label'    => $label,
+			'url'      => $url,
+		);
+	}
+
+	return $data;
+}
+
+/**
+ * Czy pasek Top Header ma cokolwiek do pokazania.
+ *
+ * Pusty pasek bylby kolorowym paskiem bez tresci — lepiej go nie renderowac
+ * w ogole niz zostawic ozdobna belke nad naglowkiem.
+ *
+ * @param array $data Wynik cyber_top_header_data().
+ * @return bool Czy renderowac pasek.
+ */
+function cyber_top_header_has_content( array $data ) {
+	return null !== $data['phone'] || null !== $data['email'] || array() !== $data['social'];
+}

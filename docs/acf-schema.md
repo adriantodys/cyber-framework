@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt” i „Social Media”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media” i „Top Header”
 
 ---
 
@@ -567,6 +567,84 @@ własnego pliku w `inc/` — nie było czego dokładać.
 > żeby redaktor wiedział, o co chodzi, niezależnie od tego, jak serwis nazywa się
 > w danym roku.
 
+### Zakładka: „Top Header”
+
+Cienki pasek nad nagłówkiem. **Pierwszy moduł, który konsumuje pola z zakładek
+„Kontakt" i „Social Media"** — nie ma własnych pól na telefon, email ani adresy
+profili, tylko czyta istniejące przez `cyber_get_option()` (CLAUDE.md sekcja 22).
+
+**Sekcja: Styl paska**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Tło Top Header | `cyber_topheader_bg_color` | Color Picker | `#111111` | `--cyber-topheader-bg` |
+| Kolor tekstu i ikon | `cyber_topheader_font_color` | Color Picker | `#ffffff` | `--cyber-topheader-color` |
+| Rozmiar czcionki | `cyber_topheader_font_size` | Number (8–40 px) | `14` | `--cyber-topheader-font-size` |
+
+> **Ikony nie mają własnego pola koloru.** SVG używa `fill="currentColor"`, więc
+> dziedziczy `--cyber-topheader-color` razem z tekstem. Osobne pole pozwoliłoby
+> rozjechać ikony z tekstem na tym samym pasku, co zawsze wygląda na błąd.
+
+**Sekcja: Co pokazać na pasku**
+
+Wszystkie pola: **True/False (toggle)**, domyślnie **włączone**.
+
+| Field Name | Steruje | Pole źródłowe |
+|---|---|---|
+| `cyber_topheader_show_phone` | telefonem | `cyber_contact_phone` (zakładka „Kontakt") |
+| `cyber_topheader_show_email` | emailem | `cyber_contact_email` (zakładka „Kontakt") |
+| `cyber_topheader_show_facebook` | ikoną Facebooka | `cyber_social_facebook` |
+| `cyber_topheader_show_instagram` | ikoną Instagrama | `cyber_social_instagram` |
+| `cyber_topheader_show_youtube` | ikoną YouTube | `cyber_social_youtube` |
+| `cyber_topheader_show_x` | ikoną X | `cyber_social_x` |
+| `cyber_topheader_show_linkedin` | ikoną LinkedIn | `cyber_social_linkedin` |
+| `cyber_topheader_show_tiktok` | ikoną TikToka | `cyber_social_tiktok` |
+
+> ### Logika widoczności to koniunkcja
+>
+> Element pojawia się na pasku **tylko wtedy, gdy oba warunki są spełnione**:
+>
+> ```
+> przełącznik = true   ORAZ   pole źródłowe niepuste
+> ```
+>
+> Przełącznik działa **niezależnie** od tego, czy pole danych jest wypełnione —
+> to dwa osobne stany. Wyłączony przełącznik ukrywa element mimo wypełnionego pola;
+> puste pole ukrywa go mimo włączonego przełącznika.
+>
+> **Zaimplementowane w PHP** (`cyber_top_header_data()` w `inc/header.php`),
+> nie przez conditional logic ACF. ACF potrafiłby ukryć pole w panelu, ale to jest
+> decyzja widoku, a nie kształtu danych — te same pola konsumuje w przyszłości
+> stopka, z własnym zestawem przełączników.
+>
+> Gdy nie ma czego pokazać, **pasek nie renderuje się wcale** —
+> `cyber_top_header_has_content()` sprawdza to przed `get_template_part()`.
+> Pusty pasek byłby kolorową belką bez treści.
+
+**Wartości stałe, bez pól ACF:** padding pionowy paska (`8px`), odstęp między
+ikonami (`12px`), rozmiar ikony (`16px`) i przezroczystość na hover (`0.7`).
+To proporcje paska, nie konfiguracja.
+
+**Telefon w dwóch postaciach:** widoczny tekst zachowuje zapis redaktora
+(`+48 500-600-700`), a `href` jest czyszczony do `tel:+48500600700`
+(`preg_replace( '/[^0-9+]/', '', … )`) — inaczej część telefonów nie zadzwoni.
+
+### Ikony social media
+
+`cyber_get_social_icon( $platform )` w `inc/helpers.php` zwraca **inline SVG**
+dla platform z `cyber_social_platforms()`. Bez biblioteki zewnętrznej, bez fontu
+ikon, bez `<img>` (CLAUDE.md sekcja 2).
+
+| | |
+|---|---|
+| viewBox | `0 0 20 20` — jednakowy dla wszystkich sześciu |
+| Kolor | `fill="currentColor"` / `stroke="currentColor"`, zero barw w atrybutach |
+| Dostępność | `aria-hidden="true"` i `focusable="false"` na `<svg>` — nazwa dostępna jest na linku (`aria-label`), nie na ikonie |
+| Nieznana platforma | pusty string, bez błędu |
+
+Kształty są **proste i jednokolorowe**, celowo nie są odwzorowaniem oficjalnych
+logotypów w barwach marek — mają tworzyć spójną, lekką ikonografię paska.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -708,7 +786,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -860,6 +938,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Top Header”**: 3 pola stylu + 8 przełączników widoczności. **Pierwszy moduł konsumujący pola z „Kontakt" i „Social Media"** przez `cyber_get_option()`. Nowy `template-parts/header/top-header.php`, `cyber_top_header_data()` w `inc/header.php`, własne inline SVG w `cyber_get_social_icon()`.
 - 2026-09-10 — Nowa zakładka **„Social Media”**: 6 pól URL (Facebook, Instagram, YouTube, X, LinkedIn, TikTok) — **bez logiki frontendowej**, zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Bez nowego pliku w `inc/` — walidację pokrywa istniejący typ schematu `url`.
 - 2026-09-10 — Nowa zakładka **„Kontakt”**: 7 pól danych kontaktowych (adres, godziny, telefon, email, NIP, KRS, REGON) — **bez logiki frontendowej**, świadomie zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Nowy `inc/contact.php` z walidacją przy zapisie, nowe typy schematu `text` / `textarea` / `email`.
 - 2026-09-10 — Nowa zakładka **„Kolory”**: 5 pól semantycznych (auto) i 5 narzędziowych (stałe klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover`). Nowy typ walidacji `color_alpha` dla pól cieni z `enable_opacity`.

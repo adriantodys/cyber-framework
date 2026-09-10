@@ -311,6 +311,25 @@ function cyber_header_css() {
 }
 
 /**
+ * Buduje CSS ze zmiennymi paska Top Header.
+ *
+ * Modul ma tylko trzy pola stylu — reszta wygladu (padding paska, odstep
+ * i rozmiar ikon, przezroczystosc na hover) to stale wartosci w main.css.
+ * Kolor ikon nie ma osobnego pola: SVG dziedzicza go przez currentColor
+ * z --cyber-topheader-color.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_top_header_css() {
+	return sprintf(
+		':root{--cyber-topheader-bg:%1$s;--cyber-topheader-color:%2$s;--cyber-topheader-font-size:%3$dpx;}',
+		cyber_get_option( 'topheader_bg_color' ),
+		cyber_get_option( 'topheader_font_color' ),
+		(int) cyber_get_option( 'topheader_font_size' )
+	);
+}
+
+/**
  * Klucze pol modulu "Kolory".
  *
  * Nazwa zmiennej CSS powstaje mechanicznie: prefiks --cyber- i podkreslenia
@@ -505,7 +524,8 @@ function cyber_print_inline_css() {
 		. cyber_header_css()
 		. cyber_header_mobile_css()
 		. cyber_button_css()
-		. cyber_colors_css();
+		. cyber_colors_css()
+		. cyber_top_header_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

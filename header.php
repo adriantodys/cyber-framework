@@ -24,6 +24,12 @@ defined( 'ABSPATH' ) || exit;
 <a class="cyber-skip-link" href="#cyber-main"><?php esc_html_e( 'Przejdz do tresci', 'cyber-framework' ); ?></a>
 
 <?php
+$cyber_top_header = cyber_top_header_data();
+
+if ( cyber_top_header_has_content( $cyber_top_header ) ) {
+	get_template_part( 'template-parts/header/top-header', null, $cyber_top_header );
+}
+
 get_template_part(
 	'template-parts/header/header',
 	null,

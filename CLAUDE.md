@@ -382,9 +382,12 @@ danych.
 
 ### Kontakt
 
-`cyber_contact_*`, zakładka Global Options → Kontakt. Adres, godziny otwarcia, telefon,
-email, NIP, KRS, REGON.
+`cyber_contact_*`, zakładka Global Options → Kontakt.
 
+**Wykorzystywane od modułu Top Header:** `cyber_contact_phone`, `cyber_contact_email`.
+
+**Nadal zarezerwowane:** `cyber_contact_address`, `cyber_contact_hours`,
+`cyber_contact_nip`, `cyber_contact_krs`, `cyber_contact_regon`.
 Przewidywane zastosowania: **stopka**, strona kontaktowa, dane strukturalne
 Schema.org/LocalBusiness, możliwe formularze.
 
@@ -393,5 +396,14 @@ Schema.org/LocalBusiness, możliwe formularze.
 `cyber_social_*`, zakładka Global Options → Social Media. Adresy URL profili
 społecznościowych (Facebook, Instagram, YouTube, X, LinkedIn, TikTok).
 
-Przewidywane zastosowania: **stopka**, top header, dane strukturalne Schema.org
-(`sameAs`).
+**Wykorzystywane od modułu Top Header** — wszystkie sześć pól. Nadal przewidywane:
+**stopka** i dane strukturalne Schema.org (`sameAs`); oba mają czytać te same pola,
+nie tworzyć własnych.
+
+### Ikony social media
+
+Ikony są **własnymi, inline SVG** — funkcja `cyber_get_social_icon()`
+w `inc/helpers.php` — a nie biblioteką zewnętrzną (np. Font Awesome).
+
+Kolejne miejsca w projekcie potrzebujące tych samych ikon (np. stopka) mają
+**reużywać tę samą funkcję**, nie duplikować SVG.

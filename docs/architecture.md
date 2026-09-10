@@ -33,7 +33,7 @@ w ustalonej kolejności:
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
 | 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
-| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile. Stała `CYBER_HEADER_MENU_LOCATION`. |
+| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile, dane paska Top Header. Stała `CYBER_HEADER_MENU_LOCATION`. |
 | 8 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
 | 9 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 
@@ -73,7 +73,8 @@ cyber_font_css()              ← moduł „Ustawienia czcionki”
 cyber_header_css()            ← moduł „Header Desktop”
 cyber_header_mobile_css()     ← moduł „Header Mobile”
 cyber_button_css()            ← moduł „Przyciski”
-cyber_colors_css()            ← moduł „Kolory”                  (inc/enqueue.php)
+cyber_colors_css()            ← moduł „Kolory”
+cyber_top_header_css()        ← moduł „Top Header”              (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
@@ -154,6 +155,34 @@ Pola cieni mają włączoną przezroczystość, więc zwracają `rgba()`. Obsłu
 osobny typ walidacji `color_alpha`, który przepuszcza HEX albo `rgb()`/`rgba()`
 o ścisłym wzorcu — `sanitize_hex_color()` odrzuciłby `rgba()`, a cień bez kanału
 alfa jest wizualnie bezużyteczny.
+
+## Top Header
+
+Pierwszy moduł, który **konsumuje dane innego modułu** zamiast definiować własne.
+Telefon, email i sześć adresów profili czyta z zakładek „Kontakt" i „Social Media"
+przez `cyber_get_option()`; własne ma tylko trzy pola stylu i osiem przełączników.
+
+```
+cyber_top_header_data()          ← koniunkcja: przełącznik ORAZ pole niepuste
+      │
+      ▼
+cyber_top_header_has_content()   ← pusty pasek w ogóle się nie renderuje
+      │
+      ▼
+template-parts/header/top-header.php   ← widok bez warunków biznesowych
+      │
+      ▼
+cyber_get_social_icon()          ← własne inline SVG, currentColor
+```
+
+Dwie decyzje warte zapamiętania:
+
+- **Koniunkcja w PHP, nie w conditional logic ACF.** Przełącznik i pole źródłowe
+  to dwa niezależne stany. ACF potrafiłby ukryć pole w panelu, ale widoczność
+  elementu na pasku jest decyzją widoku — te same pola będzie konsumować stopka,
+  z własnym zestawem przełączników.
+- **Ikony dziedziczą kolor tekstu** przez `fill="currentColor"`. Osobne pole
+  koloru ikon pozwoliłoby rozjechać je z tekstem na tym samym pasku.
 
 ## Header Desktop
 

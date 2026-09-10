@@ -2554,6 +2554,285 @@
             "default_value": "",
             "placeholder": "https://www.tiktok.com/@twojafirma",
             "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_tab_topheader",
+            "label": "Top Header",
+            "name": "cyber_tab_topheader",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_topheader_style",
+            "label": "Styl paska",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Cienki pasek nad nagłówkiem. Ikony social media dziedziczą kolor tekstu — nie mają osobnego pola. Wysokość paska, odstęp i rozmiar ikon są stałe.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_topheader_bg_color",
+            "label": "Tło Top Header",
+            "name": "cyber_topheader_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_topheader_font_color",
+            "label": "Kolor tekstu i ikon",
+            "name": "cyber_topheader_font_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Ikony SVG dziedziczą tę wartość przez currentColor.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_topheader_font_size",
+            "label": "Rozmiar czcionki",
+            "name": "cyber_topheader_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Dotyczy tekstu telefonu i emaila. Rozmiar ikon jest stały (16px).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_topheader_visibility",
+            "label": "Co pokazać na pasku",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Przełączniki działają niezależnie od danych. Element pojawi się na pasku tylko wtedy, gdy przełącznik jest włączony ORAZ odpowiadające mu pole jest wypełnione — telefon i email w zakładce „Kontakt”, adresy profili w zakładce „Social Media”. Jeśli nie ma czego pokazać, pasek nie renderuje się wcale.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_topheader_show_phone",
+            "label": "Telefon",
+            "name": "cyber_topheader_show_phone",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „Telefon” w zakładce „Kontakt” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_email",
+            "label": "Email",
+            "name": "cyber_topheader_show_email",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „Email” w zakładce „Kontakt” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_facebook",
+            "label": "Facebook",
+            "name": "cyber_topheader_show_facebook",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „Facebook” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_instagram",
+            "label": "Instagram",
+            "name": "cyber_topheader_show_instagram",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „Instagram” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_youtube",
+            "label": "YouTube",
+            "name": "cyber_topheader_show_youtube",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „YouTube” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_x",
+            "label": "X (Twitter)",
+            "name": "cyber_topheader_show_x",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „X (Twitter)” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_linkedin",
+            "label": "LinkedIn",
+            "name": "cyber_topheader_show_linkedin",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „LinkedIn” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_show_tiktok",
+            "label": "TikTok",
+            "name": "cyber_topheader_show_tiktok",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pokazuje się tylko wtedy, gdy pole „TikTok” w zakładce „Social Media” jest wypełnione.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -2574,5 +2853,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998408
+    "modified": 1788998409
 }
