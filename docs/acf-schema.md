@@ -784,8 +784,8 @@ pasek co Top Header** — ten sam układ kontener / inner / dwie strony
 | Field Label | Field Name | Typ ACF | Return format | Przeznaczenie |
 |---|---|---|---|---|
 | Tekst copyright (lewa kolumna) | `cyber_copyright_text` | Text | — | Tekst po lewej stronie paska. |
-| Link do polityki prywatności | `cyber_copyright_privacy_link` | **Link** | `array` | Renderowany tylko, gdy ma adres. |
-| Link do polityki cookies | `cyber_copyright_cookies_link` | **Link** | `array` | Renderowany tylko, gdy ma adres. |
+| Strona: Polityka prywatności | `cyber_copyright_privacy_link` | **Page Link** | URL (string) | Wybór istniejącej strony. Renderowany tylko, gdy strona jest wskazana. |
+| Strona: Polityka cookies | `cyber_copyright_cookies_link` | **Page Link** | URL (string) | Wybór istniejącej strony. Renderowany tylko, gdy strona jest wskazana. |
 
 **Sekcja: Styl**
 
@@ -810,18 +810,32 @@ pasek co Top Header** — ten sam układ kontener / inner / dwie strony
 > **To dodatek wykraczający poza specyfikację modułu** — zaproponowany świadomie,
 > nie założony po cichu.
 
-> **Pole Link, nie URL.** Typ Link daje adres, tytuł i `target` w jednej tablicy,
-> więc redaktor nie musi osobno wpisywać tekstu linku. Walidacja (typ schematu
-> `link`) sanityzuje każdy element osobno: adres przez `esc_url_raw()`, tytuł przez
-> `sanitize_text_field()`, a `target` przyjmuje **wyłącznie** `_blank` albo pustą
-> wartość. Brak adresu = brak linku, nawet jeśli tytuł jest wypełniony —
-> sam tytuł nie ma czego wskazać.
+> ### Page Link + stała etykieta w kodzie
 >
-> Pusty tytuł przy wypełnionym adresie → w tekście linku pokazuje się adres,
-> żeby link nie był niewidoczny.
+> Oba odnośniki prawne używają pola **Page Link**: redaktor wybiera istniejącą
+> stronę z listy, zamiast wklejać adres ręcznie. Adres podąża za stroną — zmiana
+> slugu nie zostawia martwego linku.
 >
-> `target="_blank"` automatycznie dokłada `rel="noopener noreferrer"`
-> (CLAUDE.md sekcja 9).
+> Page Link **nie przechowuje własnego tytułu**, więc etykiety są **stałe w kodzie**,
+> w `template-parts/footer/copyright.php`:
+>
+> | Klucz | Etykieta na froncie |
+> |---|---|
+> | `privacy` | „Polityka prywatności" |
+> | `cookies` | „Polityka cookies" |
+>
+> To celowe także merytorycznie: nazwy dokumentów prawnych są ustalone i nie powinny
+> zależeć od tego, jak redaktor nazwał stronę w drzewie witryny. Etykiety przechodzą
+> przez `__()`, więc pozostają tłumaczalne — dlatego tablica, a nie `define()`.
+>
+> Walidacja korzysta z istniejącego typu schematu **`url`** (`esc_url_raw()`).
+> Nic nie wybrano → pole zwraca `false` albo pusty string, a `cyber_get_option()`
+> oddaje `''` i link się nie renderuje. Wzorzec „Page Link + stała etykieta"
+> obowiązuje dla wszystkich odnośników do stron istniejących w witrynie
+> (CLAUDE.md sekcja 5a).
+>
+> Linki **zewnętrzne** nadal używają pola Link — typ schematu `link` pozostaje
+> w `cyber_validate_option_value()`, choć chwilowo nie obsługuje żadnego pola.
 
 **Gdy wszystkie trzy pola treści są puste, pasek nie renderuje się wcale** —
 `cyber_copyright_has_content()` sprawdza to przed `get_template_part()`, dokładnie
@@ -1125,6 +1139,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Copyright: pola prawne przestawione z **Link** na **Page Link** (wybór istniejącej strony); etykiety linków stałe w `template-parts/footer/copyright.php`. Typ schematu tych pól zmieniony z `link` na `url`.
 - 2026-09-10 — Nowa zakładka **„Copyright”**: 3 pola treści (tekst + 2 pola typu Link) i 5 pól stylu. Nowy `inc/footer.php` i `template-parts/footer/copyright.php`, nowy typ schematu `link`, znacznik `{year}` w tekście. Zamyka listę modułów podstawowych Global Options.
 - 2026-09-10 — Footer: nowa sekcja **„Stylizacja Footer”** — 7 pól (tło + rozmiar/kolor dla tytułów, tekstu i linków). Wzorzec narzędziowy: stałe klasy `.cyber-footer-title` / `-text` / `-link`, ograniczone do stopki konwencją, nie techniką.
 - 2026-09-10 — Nowa zakładka **„Footer”**: 2 pola dla kolumny 1 (logo + WYSIWYG). Kolumny 2 i 3 zarezerwowane bez pól, kolumna 4 reużywa `cyber_social_*` bez wyłączników. Wydzielony wspólny komponent `cyber_social_icons()` — Top Header przestał mieć własną pętlę. Nowy typ schematu `html`.

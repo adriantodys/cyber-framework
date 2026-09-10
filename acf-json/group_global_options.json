@@ -3128,11 +3128,11 @@
         },
         {
             "key": "field_cyber_copyright_privacy_link",
-            "label": "Link do polityki prywatności",
+            "label": "Strona: Polityka prywatności",
             "name": "cyber_copyright_privacy_link",
             "aria-label": "",
-            "type": "link",
-            "instructions": "Pokazuje się tylko, gdy wskażesz adres.",
+            "type": "page_link",
+            "instructions": "Wybierz istniejącą stronę. Tekst linku na froncie jest stały („Polityka prywatności”) i nie pochodzi z tego pola.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -3140,16 +3140,23 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "allow_in_bindings": 0
+            "post_type": [
+                "page"
+            ],
+            "post_status": "",
+            "taxonomy": [],
+            "allow_null": 1,
+            "allow_in_bindings": 0,
+            "multiple": 0,
+            "allow_archives": 0
         },
         {
             "key": "field_cyber_copyright_cookies_link",
-            "label": "Link do polityki cookies",
+            "label": "Strona: Polityka cookies",
             "name": "cyber_copyright_cookies_link",
             "aria-label": "",
-            "type": "link",
-            "instructions": "Pokazuje się tylko, gdy wskażesz adres.",
+            "type": "page_link",
+            "instructions": "Wybierz istniejącą stronę. Tekst linku na froncie jest stały („Polityka cookies”) i nie pochodzi z tego pola.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -3157,8 +3164,15 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array",
-            "allow_in_bindings": 0
+            "post_type": [
+                "page"
+            ],
+            "post_status": "",
+            "taxonomy": [],
+            "allow_null": 1,
+            "allow_in_bindings": 0,
+            "multiple": 0,
+            "allow_archives": 0
         },
         {
             "key": "field_cyber_msg_copyright_style",
@@ -3295,5 +3309,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998412
+    "modified": 1788998413
 }

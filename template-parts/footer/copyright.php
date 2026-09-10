@@ -10,7 +10,7 @@
  *
  * @param array $args {
  *     @type string $text  Tekst copyright albo pusty string.
- *     @type array  $links Lista tablic 'url', 'title', 'target', 'rel'.
+ *     @type array  $links Lista tablic 'key' i 'url'.
  * }
  */
 
@@ -18,6 +18,20 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_text  = isset( $args['text'] ) ? $args['text'] : '';
 $cyber_links = isset( $args['links'] ) ? $args['links'] : array();
+
+/*
+ * Etykiety linkow prawnych sa STALE i zyja tutaj, nie w ACF. Pole Page Link
+ * przechowuje wylacznie wybrana strone, bez wlasnego tytulu, a nazwy dokumentow
+ * prawnych sa ustalone i nie powinny zalezec od tego, jak redaktor nazwal strone
+ * w drzewie witryny (CLAUDE.md sekcja 5a).
+ *
+ * Sa tlumaczalne przez __(), dlatego tablica, a nie define() — stala nie
+ * przeszlaby przez mechanizm tlumaczen.
+ */
+$cyber_link_labels = array(
+	'privacy' => __( 'Polityka prywatnosci', 'cyber-framework' ),
+	'cookies' => __( 'Polityka cookies', 'cyber-framework' ),
+);
 ?>
 
 <div class="cyber-copyright">
@@ -31,15 +45,14 @@ $cyber_links = isset( $args['links'] ) ? $args['links'] : array();
 			<?php if ( array() !== $cyber_links ) : ?>
 				<div class="cyber-copyright__links">
 					<?php foreach ( $cyber_links as $cyber_link ) : ?>
-						<a
-							href="<?php echo esc_url( $cyber_link['url'] ); ?>"
-							<?php if ( '' !== $cyber_link['target'] ) : ?>
-								target="<?php echo esc_attr( $cyber_link['target'] ); ?>"
-							<?php endif; ?>
-							<?php if ( '' !== $cyber_link['rel'] ) : ?>
-								rel="<?php echo esc_attr( $cyber_link['rel'] ); ?>"
-							<?php endif; ?>
-						><?php echo esc_html( $cyber_link['title'] ); ?></a>
+						<?php
+						if ( ! isset( $cyber_link_labels[ $cyber_link['key'] ] ) ) {
+							continue;
+						}
+						?>
+						<a href="<?php echo esc_url( $cyber_link['url'] ); ?>">
+							<?php echo esc_html( $cyber_link_labels[ $cyber_link['key'] ] ); ?>
+						</a>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>

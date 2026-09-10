@@ -100,6 +100,16 @@ cyber-framework/
 9. Pola responsywne projektujemy zgodnie z sekcją 18 (breakpointy) i sekcją 19
    (skalowanie procentowe zamiast pól per breakpoint).
 
+### Odnośniki do stron witryny
+
+Linki do stron prawnych (polityka prywatności, cookies) używają pola **Page Link**,
+nie Link/URL — wybór istniejącej strony WP zamiast ręcznego wklejania adresu.
+Etykiety tekstowe tych linków są **stałe w kodzie**, nie edytowalne przez ACF.
+
+Ten wzorzec (Page Link + stała etykieta) jest **preferowany dla wszystkich przyszłych
+odnośników do stron istniejących w strukturze witryny**, w odróżnieniu od linków
+zewnętrznych, które nadal używają pola Link.
+
 ### Dwa wzorce kolorów
 
 Pola kolorystyczne występują w projekcie w dwóch wzorcach:

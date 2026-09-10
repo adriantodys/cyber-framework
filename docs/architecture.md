@@ -168,9 +168,10 @@ inner / dwie strony i ta sama zasada „pusty pasek się nie renderuje"
 
 Dwie rzeczy specyficzne dla tego modułu:
 
-- **Pola typu Link, nie URL.** Typ schematu `link` sanityzuje każdy element tablicy
-  osobno; `target` przyjmuje wyłącznie `_blank` albo pustą wartość, a brak adresu
-  oznacza brak linku niezależnie od tytułu.
+- **Pola typu Page Link.** Redaktor wybiera istniejącą stronę, więc adres podąża
+  za nią przy zmianie slugu. Page Link nie przechowuje tytułu, dlatego etykiety
+  („Polityka prywatności", „Polityka cookies") są stałe w widoku, a nie w ACF
+  (CLAUDE.md sekcja 5a). Walidację pokrywa istniejący typ schematu `url`.
 - **Znacznik `{year}`** w tekście copyright podmieniany na bieżący rok
   (`wp_date( 'Y' )`). Pole pozostaje statycznym tekstem — kto nie użyje znacznika,
   dostaje dokładnie to, co wpisał.

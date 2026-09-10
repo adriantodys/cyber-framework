@@ -28,9 +28,14 @@ const CYBER_COPYRIGHT_YEAR_TOKEN = '{year}';
  * Linki renderujemy tylko wtedy, gdy faktycznie maja adres — brak wymogu
  * wypelnienia obu na raz.
  *
+ * Pola prawne sa typu Page Link, wiec zwracaja sam URL wybranej strony (albo
+ * pusta wartosc), a nie tablice jak pole Link. Etykieta nie pochodzi z ACF —
+ * Page Link jej nie przechowuje — dlatego przekazujemy tylko klucz, a tekst
+ * dopisuje widok (CLAUDE.md sekcja 5a).
+ *
  * @return array {
  *     @type string $text  Tekst copyright z podstawionym rokiem albo pusty string.
- *     @type array  $links Lista tablic 'url', 'title', 'target', 'rel'.
+ *     @type array  $links Lista tablic 'key' i 'url'.
  * }
  */
 function cyber_copyright_data() {
@@ -45,19 +50,22 @@ function cyber_copyright_data() {
 		'links' => array(),
 	);
 
-	foreach ( array( 'copyright_privacy_link', 'copyright_cookies_link' ) as $option_key ) {
-		$link = cyber_get_option( $option_key );
+	// Klucz => pole. Kolejnosc tablicy jest kolejnoscia linkow na pasku.
+	$legal_links = array(
+		'privacy' => 'copyright_privacy_link',
+		'cookies' => 'copyright_cookies_link',
+	);
 
-		if ( ! is_array( $link ) ) {
+	foreach ( $legal_links as $key => $option_key ) {
+		$url = cyber_get_option( $option_key );
+
+		if ( '' === $url ) {
 			continue;
 		}
 
 		$data['links'][] = array(
-			'url'    => $link['url'],
-			// Pole ACF Link pozwala zostawic tytul pusty — wtedy pokazujemy adres.
-			'title'  => ( '' !== $link['title'] ) ? $link['title'] : $link['url'],
-			'target' => $link['target'],
-			'rel'    => ( '_blank' === $link['target'] ) ? 'noopener noreferrer' : '',
+			'key' => $key,
+			'url' => $url,
 		);
 	}
 

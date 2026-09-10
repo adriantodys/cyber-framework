@@ -772,12 +772,12 @@ function cyber_option_schema() {
 			'nullable' => true,
 		),
 		'copyright_privacy_link'      => array(
-			'type'     => 'link',
+			'type'     => 'url',
 			'default'  => '',
 			'nullable' => true,
 		),
 		'copyright_cookies_link'      => array(
-			'type'     => 'link',
+			'type'     => 'url',
 			'default'  => '',
 			'nullable' => true,
 		),
@@ -925,6 +925,10 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 
 	if ( 'link' === $config['type'] ) {
 		/*
+		 * Typ chwilowo bez pola: odnosniki do stron witryny uzywaja Page Link
+		 * (typ 'url'). Zostaje pod linki ZEWNETRZNE, ktore nadal wymagaja
+		 * wlasnego tytulu i target (CLAUDE.md sekcja 5a).
+		 *
 		 * Pole ACF Link zwraca tablice url / title / target albo pusty string.
 		 * Kazdy element sanitujemy osobno, a brak adresu traktujemy jak brak
 		 * linku — sam tytul bez URL nie ma czego wskazac.
