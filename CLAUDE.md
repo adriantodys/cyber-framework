@@ -308,3 +308,37 @@ grubości nie jest praktyką responsywnego web designu w tym projekcie. Kolejne 
 tego typu (np. `letter-spacing`, jeśli powstanie) powinny być każdorazowo jawnie
 zaklasyfikowane jako **skalowane** albo **stałe**, zamiast domyślnie zakładać
 jeden wzorzec.
+
+## 20. Konwencja pól wyrównania (alignment)
+
+Każde pole typu Select służące do wyboru wyrównania elementu używa **identycznego
+zestawu wartości i identycznych etykiet**:
+
+| Wartość | Etykieta |
+|---|---|
+| `left` | Do lewej |
+| `center` | Do środka |
+| `right` | Do prawej |
+
+Kolejne moduły (stopka, sidebar, sekcje Flexible Content) **reużywają ten zestaw**
+i nie definiują własnego — żadnych `start`/`end`, `l`/`c`/`r` ani wariantów
+z dodatkową opcją „justify" bez wyraźnej decyzji.
+
+W CSS wyrównanie jest **modyfikatorem klasy**, nie zmienną CSS: `.cyber-menu--left`,
+`.cyber-submenu--center` itd. Powód: wyrównanie zmienia układ (`justify-content`,
+`align-items`, `text-align` naraz), a nie pojedynczą wartość — zmienna CSS
+wymuszałaby wypisywanie trzech różnych właściwości sterowanych jednym stringiem.
+
+## 21. Lokalizacja głównego menu
+
+Menu główne ma w tym projekcie **jedną, docelową lokalizację: `primary`**
+(etykieta „Menu glowne"), zarejestrowaną w `inc/setup.php` przez `register_nav_menus()`.
+Stała `CYBER_HEADER_MENU_LOCATION` w `inc/header.php` trzyma ten slug w jednym miejscu.
+
+Kolejne moduły **nie rejestrują nowej lokalizacji** dla menu głównego i nie tworzą
+lokalizacji konkurencyjnej „bo tak wygodniej w tym widoku" — sięgają po `primary`.
+Druga zarejestrowana lokalizacja to `footer` i dotyczy wyłącznie stopki.
+
+Nowa lokalizacja menu (np. menu boczne w panelu klienta) wymaga takiego samego
+jawnego uzasadnienia jak nowy breakpoint (sekcja 18) — inaczej redaktor dostaje
+listę lokalizacji, z których połowa nic nie robi.

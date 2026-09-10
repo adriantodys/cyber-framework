@@ -809,6 +809,522 @@
             "ui": 0,
             "ajax": 0,
             "placeholder": ""
+        },
+        {
+            "key": "field_cyber_tab_header",
+            "label": "Header Desktop",
+            "name": "cyber_tab_header",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_header_logo",
+            "label": "Logo",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Logo wyświetlane po lewej stronie headera, linkowane do strony głównej. Puste pole = w headerze pojawi się tekstowa nazwa witryny. Wysokość ograniczona w CSS do 60px (bez pola ACF).",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_logo",
+            "label": "Logo",
+            "name": "cyber_header_logo",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Zwracany jest sam URL pliku.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium"
+        },
+        {
+            "key": "field_cyber_msg_header_layout",
+            "label": "Układ i odstępy",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Padding poziomy nie ma tu pola — header korzysta z tej samej klasy .cyber-container co reszta strony i dziedziczy marginesy z zakładki „Główne ustawienia strony”.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_menu_alignment",
+            "label": "Wyrównanie menu",
+            "name": "cyber_header_menu_alignment",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Pozycja bloku menu w przestrzeni obok logo.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do środka",
+                "right": "Do prawej"
+            },
+            "default_value": "right",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_header_padding_top",
+            "label": "Padding górny",
+            "name": "cyber_header_padding_top",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Kontener wewnętrzny headera.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 24,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_padding_bottom",
+            "label": "Padding dolny",
+            "name": "cyber_header_padding_bottom",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Kontener wewnętrzny headera.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 24,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_header_menu",
+            "label": "Menu główne",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Dotyczy pozycji pierwszego poziomu w menu przypisanym do lokalizacji „Menu glowne”.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_menu_item_gap",
+            "label": "Odstęp między pozycjami",
+            "name": "cyber_header_menu_item_gap",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 32,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_menu_link_padding",
+            "label": "Padding linku",
+            "name": "cyber_header_menu_link_padding",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Powiększa obszar klikalny.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 8,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_menu_font_size",
+            "label": "Wielkość czcionki",
+            "name": "cyber_header_menu_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_menu_font_weight",
+            "label": "Grubość czcionki",
+            "name": "cyber_header_menu_font_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "500",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_header_menu_color",
+            "label": "Kolor linku",
+            "name": "cyber_header_menu_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#1a1a1a",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_header_menu_color_hover",
+            "label": "Kolor po najechaniu",
+            "name": "cyber_header_menu_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_header_menu_color_active",
+            "label": "Kolor aktywnej strony",
+            "name": "cyber_header_menu_color_active",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Pozycja z klasą current-menu-item.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_msg_header_submenu",
+            "label": "Podmenu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Lista rozwijana po najechaniu na pozycję menu głównego (oraz po wejściu w nią klawiaturą). Tło podmenu jest białe i nie ma pola ACF.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_submenu_alignment",
+            "label": "Wyrównanie podmenu",
+            "name": "cyber_header_submenu_alignment",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do środka",
+                "right": "Do prawej"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_header_submenu_item_gap",
+            "label": "Odstęp między pozycjami",
+            "name": "cyber_header_submenu_item_gap",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_submenu_link_padding",
+            "label": "Padding linku",
+            "name": "cyber_header_submenu_link_padding",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_submenu_font_size",
+            "label": "Wielkość czcionki",
+            "name": "cyber_header_submenu_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 15,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_header_submenu_font_weight",
+            "label": "Grubość czcionki",
+            "name": "cyber_header_submenu_font_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "400",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_header_submenu_color",
+            "label": "Kolor linku",
+            "name": "cyber_header_submenu_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#1a1a1a",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_header_submenu_color_hover",
+            "label": "Kolor po najechaniu",
+            "name": "cyber_header_submenu_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_header_submenu_color_active",
+            "label": "Kolor aktywnej strony",
+            "name": "cyber_header_submenu_color_active",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
         }
     ],
     "location": [
@@ -829,5 +1345,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998401
+    "modified": 1788998402
 }

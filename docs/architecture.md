@@ -33,6 +33,7 @@ w ustalonej kolejności:
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
 | 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties (kontener + typografia) w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
+| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułu Header Desktop. Stała `CYBER_HEADER_MENU_LOCATION`. |
 
 ## Stałe
 
@@ -66,15 +67,20 @@ cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
       │
       ▼
 cyber_container_css()         ← moduł „Główne ustawienia strony”
-cyber_font_css()              ← moduł „Ustawienia czcionki”     (inc/enqueue.php)
+cyber_font_css()              ← moduł „Ustawienia czcionki”
+cyber_header_css()            ← moduł „Header Desktop”          (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
       │                         na wp_head, priorytet 20
       ▼
 assets/css/main.css           ← jedyny konsument zmiennych
-                                (.cyber-container, h1–h6, .cyber-overtitle, p/span/a/ul/li)
+                                (.cyber-container, typografia, .cyber-header__inner,
+                                 .cyber-menu, .cyber-submenu)
 ```
+
+Wyjątek od tego przepływu: **wyrównanie**. Nie jest zmienną CSS, tylko modyfikatorem
+klasy w markupie (CLAUDE.md sekcja 20), bo steruje układem, a nie pojedynczą wartością.
 
 Priorytet 20 jest celowy: `wp_head` wypisuje arkusze stylów wcześniej
 (`wp_enqueue_scripts` na 1, `wp_print_styles` na 8), więc wartości z panelu
@@ -103,6 +109,35 @@ Moduł czcionek realizuje wariant B (CLAUDE.md sekcja 19): pola trzymają warto�
 wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę procentową
 danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
 dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
+
+## Header Desktop
+
+Pierwszy moduł z warstwą markupu, więc ustala wzorzec dla kolejnych:
+
+```
+header.php (root)                  ← zbiera dane przez cyber_get_option()
+      │                              i przekazuje je jawnie jako $args
+      ▼
+template-parts/header/header.php   ← czysty widok, zero dostępu do stanu globalnego
+      │
+      ▼
+wp_nav_menu( cyber_header_menu_args( $alignment ) )
+      │
+      ▼
+filtr nav_menu_submenu_css_class   ← dokłada .cyber-submenu i modyfikator wyrównania
+```
+
+Dwie decyzje warte zapamiętania:
+
+- **Bez własnego Walkera.** Podmenu potrzebowało tylko dwóch dodatkowych klas na `<ul>`,
+  a to załatwia filtr rdzenia. Własna klasa `Walker_Nav_Menu` byłaby kilkudziesięcioma
+  liniami kodu do utrzymania przy każdej zmianie w rdzeniu WordPressa.
+- **Bez `fallback_cb`.** Gdy do lokalizacji `primary` nie przypisano żadnego menu,
+  header nie renderuje nawigacji w ogóle — zamiast wyrzucać na front listę wszystkich
+  stron witryny, co jest domyślnym zachowaniem WordPressa.
+
+Rozwijanie podmenu działa na `:hover` **oraz** `:focus-within`, żeby było osiągalne
+z klawiatury (CLAUDE.md sekcja 11). Nie ma tu JavaScriptu.
 
 ## Edytor treści
 

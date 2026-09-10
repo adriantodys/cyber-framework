@@ -21,7 +21,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * Znaczenie kluczy konfiguracji:
  * - type      : 'choice' (wartosc musi nalezec do 'choices'), 'px' albo 'percent'
- *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka).
+ *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
+ *              'color' (kolor HEX) albo 'url' (adres pliku, np. logo z pola Image).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
@@ -31,133 +32,133 @@ defined( 'ABSPATH' ) || exit;
  */
 function cyber_option_schema() {
 	return array(
-		'page_width_type'         => array(
+		'page_width_type'             => array(
 			'type'    => 'choice',
 			'default' => '80',
 			'choices' => array( '100', '80', '60' ),
 		),
-		'page_width_60'           => array(
+		'page_width_60'               => array(
 			'type'    => 'px',
 			'default' => 1150,
 			'min'     => 320,
 			'max'     => 4000,
 		),
-		'page_width_80'           => array(
+		'page_width_80'               => array(
 			'type'    => 'px',
 			'default' => 1500,
 			'min'     => 320,
 			'max'     => 4000,
 		),
-		'page_width_100'          => array(
+		'page_width_100'              => array(
 			'type'     => 'px',
 			'default'  => '',
 			'min'      => 320,
 			'max'      => 4000,
 			'nullable' => true,
 		),
-		'page_margin_desktop'     => array(
+		'page_margin_desktop'         => array(
 			'type'    => 'px',
 			'default' => 40,
 			'min'     => 0,
 			'max'     => 200,
 		),
-		'page_margin_tablet'      => array(
+		'page_margin_tablet'          => array(
 			'type'    => 'px',
 			'default' => 30,
 			'min'     => 0,
 			'max'     => 200,
 		),
-		'page_margin_mobile_l'    => array(
+		'page_margin_mobile_l'        => array(
 			'type'    => 'px',
 			'default' => 30,
 			'min'     => 0,
 			'max'     => 200,
 		),
-		'page_margin_mobile_s'    => array(
+		'page_margin_mobile_s'        => array(
 			'type'    => 'px',
 			'default' => 20,
 			'min'     => 0,
 			'max'     => 200,
 		),
-		'font_size_h1'            => array(
+		'font_size_h1'                => array(
 			'type'    => 'px',
 			'default' => 48,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_h2'            => array(
+		'font_size_h2'                => array(
 			'type'    => 'px',
 			'default' => 40,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_h3'            => array(
+		'font_size_h3'                => array(
 			'type'    => 'px',
 			'default' => 32,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_h4'            => array(
+		'font_size_h4'                => array(
 			'type'    => 'px',
 			'default' => 26,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_h5'            => array(
+		'font_size_h5'                => array(
 			'type'    => 'px',
 			'default' => 22,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_h6'            => array(
+		'font_size_h6'                => array(
 			'type'    => 'px',
 			'default' => 18,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_overtitle_1'   => array(
+		'font_size_overtitle_1'       => array(
 			'type'    => 'px',
 			'default' => 16,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_overtitle_2'   => array(
+		'font_size_overtitle_2'       => array(
 			'type'    => 'px',
 			'default' => 14,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_text'          => array(
+		'font_size_text'              => array(
 			'type'    => 'px',
 			'default' => 16,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_size_links'         => array(
+		'font_size_links'             => array(
 			'type'    => 'px',
 			'default' => 16,
 			'min'     => 8,
 			'max'     => 200,
 		),
-		'font_scale_tablet'       => array(
+		'font_scale_tablet'           => array(
 			'type'    => 'percent',
 			'default' => 90,
 			'min'     => 10,
 			'max'     => 200,
 		),
-		'font_scale_mobile'       => array(
+		'font_scale_mobile'           => array(
 			'type'    => 'percent',
 			'default' => 80,
 			'min'     => 10,
 			'max'     => 200,
 		),
-		'font_scale_mobile_small' => array(
+		'font_scale_mobile_small'     => array(
 			'type'    => 'percent',
 			'default' => 70,
 			'min'     => 10,
 			'max'     => 200,
 		),
-		'font_family_headings'    => array(
+		'font_family_headings'        => array(
 			'type'    => 'choice',
 			'default' => 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
 			'choices' => array(
@@ -166,7 +167,7 @@ function cyber_option_schema() {
 				'"Helvetica Neue", Helvetica, Arial, sans-serif',
 			),
 		),
-		'font_family_text'        => array(
+		'font_family_text'            => array(
 			'type'    => 'choice',
 			'default' => 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
 			'choices' => array(
@@ -175,25 +176,122 @@ function cyber_option_schema() {
 				'"Helvetica Neue", Helvetica, Arial, sans-serif',
 			),
 		),
-		'font_weight_headings'    => array(
+		'font_weight_headings'        => array(
 			'type'    => 'choice',
 			'default' => '700',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'font_weight_overtitle'   => array(
+		'font_weight_overtitle'       => array(
 			'type'    => 'choice',
 			'default' => '600',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'font_weight_text'        => array(
+		'font_weight_text'            => array(
 			'type'    => 'choice',
 			'default' => '400',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'font_weight_links'       => array(
+		'font_weight_links'           => array(
 			'type'    => 'choice',
 			'default' => '400',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'header_logo'                 => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'header_menu_alignment'       => array(
+			'type'    => 'choice',
+			'default' => 'right',
+			'choices' => array( 'left', 'center', 'right' ),
+		),
+		'header_padding_top'          => array(
+			'type'    => 'px',
+			'default' => 24,
+			'min'     => 0,
+			'max'     => 200,
+		),
+		'header_padding_bottom'       => array(
+			'type'    => 'px',
+			'default' => 24,
+			'min'     => 0,
+			'max'     => 200,
+		),
+		'header_menu_item_gap'        => array(
+			'type'    => 'px',
+			'default' => 32,
+			'min'     => 0,
+			'max'     => 200,
+		),
+		'header_menu_link_padding'    => array(
+			'type'    => 'px',
+			'default' => 8,
+			'min'     => 0,
+			'max'     => 100,
+		),
+		'header_menu_font_size'       => array(
+			'type'    => 'px',
+			'default' => 16,
+			'min'     => 8,
+			'max'     => 100,
+		),
+		'header_menu_font_weight'     => array(
+			'type'    => 'choice',
+			'default' => '500',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'header_menu_color'           => array(
+			'type'    => 'color',
+			'default' => '#1a1a1a',
+		),
+		'header_menu_color_hover'     => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'header_menu_color_active'    => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'header_submenu_alignment'    => array(
+			'type'    => 'choice',
+			'default' => 'left',
+			'choices' => array( 'left', 'center', 'right' ),
+		),
+		'header_submenu_item_gap'     => array(
+			'type'    => 'px',
+			'default' => 0,
+			'min'     => 0,
+			'max'     => 200,
+		),
+		'header_submenu_link_padding' => array(
+			'type'    => 'px',
+			'default' => 10,
+			'min'     => 0,
+			'max'     => 100,
+		),
+		'header_submenu_font_size'    => array(
+			'type'    => 'px',
+			'default' => 15,
+			'min'     => 8,
+			'max'     => 100,
+		),
+		'header_submenu_font_weight'  => array(
+			'type'    => 'choice',
+			'default' => '400',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'header_submenu_color'        => array(
+			'type'    => 'color',
+			'default' => '#1a1a1a',
+		),
+		'header_submenu_color_hover'  => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'header_submenu_color_active' => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
 		),
 	);
 }
@@ -302,6 +400,30 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		$value = sanitize_text_field( (string) $value );
 
 		return in_array( $value, $config['choices'], true ) ? $value : $fallback;
+	}
+
+	if ( 'color' === $config['type'] ) {
+		$value = sanitize_hex_color( (string) $value );
+
+		return ( null === $value || '' === $value ) ? $fallback : $value;
+	}
+
+	if ( 'url' === $config['type'] ) {
+		/*
+		 * Pole Image z return_format 'array' albo 'id' zwrocilo by inny typ niz string.
+		 * Wyciagamy z tablicy URL, zeby przestawienie pola w UI nie wywrocilo widoku.
+		 */
+		if ( is_array( $value ) ) {
+			$value = isset( $value['url'] ) ? $value['url'] : '';
+		}
+
+		$value = esc_url_raw( (string) $value );
+
+		if ( '' === $value ) {
+			return ! empty( $config['nullable'] ) ? '' : $fallback;
+		}
+
+		return $value;
 	}
 
 	if ( 'px' === $config['type'] || 'percent' === $config['type'] ) {

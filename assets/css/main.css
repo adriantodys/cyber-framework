@@ -31,6 +31,32 @@
 	--cyber-font-size-overtitle-2: 14px;
 	--cyber-font-size-text: 16px;
 	--cyber-font-size-links: 16px;
+
+	--cyber-header-padding-top: 24px;
+	--cyber-header-padding-bottom: 24px;
+	--cyber-header-menu-gap: 32px;
+	--cyber-header-menu-link-padding: 8px;
+	--cyber-header-menu-font-size: 16px;
+	--cyber-header-menu-font-weight: 500;
+	--cyber-header-menu-color: #1a1a1a;
+	--cyber-header-menu-color-hover: #0057ff;
+	--cyber-header-menu-color-active: #0057ff;
+
+	--cyber-header-submenu-gap: 0px;
+	--cyber-header-submenu-link-padding: 10px;
+	--cyber-header-submenu-font-size: 15px;
+	--cyber-header-submenu-font-weight: 400;
+	--cyber-header-submenu-color: #1a1a1a;
+	--cyber-header-submenu-color-hover: #0057ff;
+	--cyber-header-submenu-color-active: #0057ff;
+
+	/*
+	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
+	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
+	 */
+	--cyber-header-logo-max-height: 60px;
+	--cyber-header-submenu-background: #fff;
+	--cyber-header-submenu-min-width: 200px;
 }
 
 @media (max-width: 980px) {
@@ -152,6 +178,150 @@ h6 :is(a, span),
 	max-width: var(--cyber-container-width);
 	margin-inline: auto;
 	padding-inline: var(--cyber-container-margin);
+}
+
+/* --- Header Desktop -------------------------------------------------------- */
+
+/*
+ * Padding poziomy NIE jest tu ustawiany: header korzysta z tej samej klasy
+ * .cyber-container co reszta strony, wiec dziedziczy --cyber-container-margin
+ * i trzyma jedna linie z trescia na kazdym breakpoincie.
+ */
+
+.cyber-header__inner {
+	display: flex;
+	align-items: center;
+	gap: var(--cyber-header-menu-gap);
+	padding-top: var(--cyber-header-padding-top);
+	padding-bottom: var(--cyber-header-padding-bottom);
+}
+
+.cyber-header__brand {
+	margin: 0;
+	flex-shrink: 0;
+}
+
+.cyber-header__logo {
+	display: block;
+	max-height: var(--cyber-header-logo-max-height);
+	width: auto;
+}
+
+.cyber-header__nav {
+	flex: 1;
+	min-width: 0;
+}
+
+/* --- Menu glowne ---------------------------------------------------------- */
+
+.cyber-menu {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--cyber-header-menu-gap);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-menu--left {
+	justify-content: flex-start;
+}
+
+.cyber-menu--center {
+	justify-content: center;
+}
+
+.cyber-menu--right {
+	justify-content: flex-end;
+}
+
+.cyber-menu li {
+	position: relative;
+}
+
+.cyber-menu a {
+	display: block;
+	padding: var(--cyber-header-menu-link-padding);
+	font-size: var(--cyber-header-menu-font-size);
+	font-weight: var(--cyber-header-menu-font-weight);
+	color: var(--cyber-header-menu-color);
+	text-decoration: none;
+}
+
+.cyber-menu a:hover,
+.cyber-menu a:focus-visible {
+	color: var(--cyber-header-menu-color-hover);
+}
+
+.cyber-menu .current-menu-item > a,
+.cyber-menu .current-menu-ancestor > a {
+	color: var(--cyber-header-menu-color-active);
+}
+
+/* --- Podmenu -------------------------------------------------------------- */
+
+/*
+ * Rozwijanie dziala na :hover ORAZ :focus-within — bez tego drugiego podmenu
+ * byloby nieosiagalne z klawiatury (CLAUDE.md sekcja 11).
+ */
+
+.cyber-submenu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 10;
+	flex-direction: column;
+	gap: var(--cyber-header-submenu-gap);
+	min-width: var(--cyber-header-submenu-min-width);
+	margin: 0;
+	padding-block: var(--cyber-header-submenu-link-padding);
+	padding-inline: 0;
+	list-style: none;
+	background: var(--cyber-header-submenu-background);
+}
+
+.cyber-menu li:hover > .cyber-submenu,
+.cyber-menu li:focus-within > .cyber-submenu {
+	display: flex;
+}
+
+.cyber-submenu--left {
+	align-items: flex-start;
+	text-align: left;
+}
+
+.cyber-submenu--center {
+	align-items: center;
+	text-align: center;
+}
+
+.cyber-submenu--right {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.cyber-submenu li {
+	width: 100%;
+}
+
+.cyber-submenu a {
+	display: block;
+	padding: var(--cyber-header-submenu-link-padding);
+	font-size: var(--cyber-header-submenu-font-size);
+	font-weight: var(--cyber-header-submenu-font-weight);
+	color: var(--cyber-header-submenu-color);
+	text-decoration: none;
+}
+
+.cyber-submenu a:hover,
+.cyber-submenu a:focus-visible {
+	color: var(--cyber-header-submenu-color-hover);
+}
+
+.cyber-submenu .current-menu-item > a {
+	color: var(--cyber-header-submenu-color-active);
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

@@ -1,13 +1,14 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-09.
+Ostatnia aktualizacja: 2026-09-10.
 
 ## Status
 
-**Brak zdefiniowanych komponentów i layoutów Flexible Content.** System komponentów
-to etap 4 w kolejności budowy (CLAUDE.md sekcja 17); obecnie zrealizowane są etapy 1 i 2.
+**Brak layoutów Flexible Content.** System komponentów to etap 4 w kolejności budowy
+(CLAUDE.md sekcja 17); obecnie zrealizowane są etapy 1, 2 oraz część etapu 3 (header).
 
 Katalogi `template-parts/components/` i `template-parts/sections/` istnieją, ale są puste.
+Zajęty jest `template-parts/header/` — patrz tabela „Komponenty reużywalne”.
 
 ## Reguła, którą będzie realizować ten dokument
 
@@ -30,7 +31,12 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
-| *(brak)* | — | — | — |
+| Header Desktop | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `has_menu` | sekcja „Header Desktop” w `assets/css/main.css` + zmienne z `cyber_header_css()` |
+
+Header dostaje wszystkie dane przez `$args` z `header.php` w rootcie — nie woła
+`cyber_get_option()` samodzielnie. Wartości liczbowe i kolory w ogóle nie przechodzą
+przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
+(patrz `docs/acf-schema.md`, sekcja „Stan: generowanie CSS”).
 
 ## Zasady
 

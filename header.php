@@ -1,10 +1,10 @@
 <?php
 /**
- * Szkielet naglowka dokumentu.
+ * Naglowek dokumentu.
  *
- * SZKIELET TYMCZASOWY (etap 1). Wlasciwy header sterowany polami ACF powstaje
- * w etapie 3 (CLAUDE.md sekcja 17) i zamieszka w template-parts/header/.
- * Ten plik istnieje tylko po to, zeby motyw dalo sie aktywowac i przetestowac.
+ * Plik odpowiada za <head>, otwarcie <body> i skip-link. Sam header wizualny
+ * mieszka w template-parts/header/header.php i dostaje dane jawnie przez $args
+ * (CLAUDE.md sekcja 4) — tutaj tylko zbieramy je przez cyber_get_option().
  *
  * @package Cyber_Framework
  */
@@ -23,15 +23,17 @@ defined( 'ABSPATH' ) || exit;
 
 <a class="cyber-skip-link" href="#cyber-main"><?php esc_html_e( 'Przejdz do tresci', 'cyber-framework' ); ?></a>
 
-<header class="cyber-header">
-	<div class="cyber-container">
-		<p class="cyber-header__brand">
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-				<?php echo esc_html( get_bloginfo( 'name' ) ); ?>
-			</a>
-		</p>
-		<?php // TODO (etap 3): nawigacja i pola ACF headera. ?>
-	</div>
-</header>
+<?php
+get_template_part(
+	'template-parts/header/header',
+	null,
+	array(
+		'logo_url'       => cyber_get_option( 'header_logo' ),
+		'site_name'      => get_bloginfo( 'name' ),
+		'menu_alignment' => cyber_get_option( 'header_menu_alignment' ),
+		'has_menu'       => has_nav_menu( CYBER_HEADER_MENU_LOCATION ),
+	)
+);
+?>
 
 <main id="cyber-main" class="cyber-main">

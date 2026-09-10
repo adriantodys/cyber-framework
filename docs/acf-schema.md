@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony” i „Ustawienia czcionki”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki” i „Header Desktop”
 
 ---
 
@@ -204,6 +204,88 @@ liczba wstawiana wprost jako `font-weight`.
 > stack systemowy. Pole nie blokuje takiego wyboru, bo to kwestia decyzji
 > projektowej, a nie poprawności danych.
 
+### Zakładka: „Header Desktop”
+
+Cel: pełna kontrola nad wyglądem nagłówka na desktopie — logo, odstępy kontenera,
+menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego modułu.
+
+**Sekcja: Logo**
+
+| Field Label | Field Name | Typ | Return format | Default | Przeznaczenie |
+|---|---|---|---|---|---|
+| Logo | `cyber_header_logo` | Image | **`url`** | *(puste)* | Obraz linkowany do strony głównej. Puste = w headerze pojawia się tekstowa nazwa witryny. |
+
+> **Precedens dla pól Image.** To pierwsze pole obrazu w projekcie. Przyjęty
+> return format to **`url`** — pole zwraca sam adres pliku, a `cyber_get_option()`
+> waliduje go typem `url` (`esc_url_raw`, pusta wartość jest dozwolona i znacząca).
+> Kolejne pola Image trzymają się tego formatu, chyba że konkretny przypadek
+> wymaga rozmiarów lub `srcset` — wtedy zmiana wymaga jawnej decyzji, bo dotyczy
+> całej warstwy dostępu do obrazów.
+>
+> **Koszt tej decyzji:** mając sam URL, motyw nie zna wymiarów pliku, więc znacznik
+> `<img>` nie ma `width`/`height` ani `srcset`. Przy dużym logo oznacza to możliwy
+> CLS. Format `id` + `wp_get_attachment_image()` rozwiązałby to jednym wywołaniem —
+> jeśli logo okaże się problemem wydajnościowym, to jest miejsce do zmiany.
+
+**Sekcja: Układ i odstępy**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Wyrównanie menu | `cyber_header_menu_alignment` | Select | `right` | Pozycja bloku menu w przestrzeni obok logo. Wartości zgodne z CLAUDE.md sekcja 20. |
+| Padding górny | `cyber_header_padding_top` | Number (0–200 px) | `24` | `padding-top` na `.cyber-header__inner`. |
+| Padding dolny | `cyber_header_padding_bottom` | Number (0–200 px) | `24` | `padding-bottom` na `.cyber-header__inner`. |
+
+> **Padding poziomy nie ma pola — świadomie.** Header renderuje się wewnątrz
+> `.cyber-container`, więc dziedziczy `--cyber-container-margin` z zakładki
+> „Główne ustawienia strony”. Dzięki temu logo trzyma jedną pionową linię z treścią
+> strony na każdym breakpoincie. Osobne pole pozwoliłoby te dwie wartości rozjechać,
+> co w praktyce zawsze wygląda na błąd. Zmiana tego założenia wymaga decyzji,
+> bo dotyczy wyrównania całej witryny, nie samego nagłówka.
+
+**Sekcja: Menu główne**
+
+Dotyczy pozycji pierwszego poziomu w menu przypisanym do lokalizacji `primary`
+(CLAUDE.md sekcja 21).
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Odstęp między pozycjami | `cyber_header_menu_item_gap` | Number (0–200 px) | `32` | `gap` na `.cyber-menu` i na `.cyber-header__inner`. |
+| Padding linku | `cyber_header_menu_link_padding` | Number (0–100 px) | `8` | `padding` na `.cyber-menu a` — powiększa obszar klikalny. |
+| Wielkość czcionki | `cyber_header_menu_font_size` | Number (8–100 px) | `16` | `font-size` na `.cyber-menu a`. |
+| Grubość czcionki | `cyber_header_menu_font_weight` | Select | `500` | `font-weight`. Choices reużyte z modułu „Ustawienia czcionki” (300–800). |
+| Kolor linku | `cyber_header_menu_color` | Color Picker | `#1a1a1a` | Stan domyślny. |
+| Kolor po najechaniu | `cyber_header_menu_color_hover` | Color Picker | `#0057ff` | `:hover` oraz `:focus-visible`. |
+| Kolor aktywnej strony | `cyber_header_menu_color_active` | Color Picker | `#0057ff` | `.current-menu-item > a` i `.current-menu-ancestor > a`. |
+
+**Sekcja: Podmenu**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Wyrównanie podmenu | `cyber_header_submenu_alignment` | Select | `left` | Modyfikator `.cyber-submenu--*`, nakładany filtrem `nav_menu_submenu_css_class`. |
+| Odstęp między pozycjami | `cyber_header_submenu_item_gap` | Number (0–200 px) | `0` | `gap` na `.cyber-submenu`. |
+| Padding linku | `cyber_header_submenu_link_padding` | Number (0–100 px) | `10` | `padding` linku oraz `padding-block` całej listy. |
+| Wielkość czcionki | `cyber_header_submenu_font_size` | Number (8–100 px) | `15` | `font-size`. |
+| Grubość czcionki | `cyber_header_submenu_font_weight` | Select | `400` | `font-weight`, te same choices co wyżej. |
+| Kolor linku | `cyber_header_submenu_color` | Color Picker | `#1a1a1a` | Stan domyślny. |
+| Kolor po najechaniu | `cyber_header_submenu_color_hover` | Color Picker | `#0057ff` | `:hover` oraz `:focus-visible`. |
+| Kolor aktywnej strony | `cyber_header_submenu_color_active` | Color Picker | `#0057ff` | `.current-menu-item > a`. |
+
+**Choices wyrównania (oba pola Select, CLAUDE.md sekcja 20):**
+
+```
+left   : Do lewej
+center : Do środka
+right  : Do prawej
+```
+
+> **Wartości bez pola ACF.** Trzy rzeczy w headerze są zaszyte w `assets/css/main.css`
+> jako świadome decyzje motywu, nie konfiguracja: maksymalna wysokość logo (`60px`),
+> tło podmenu (`#fff`) i minimalna szerokość podmenu (`200px`). Nie mają pól,
+> bo nie było ich w specyfikacji modułu — jeśli mają być edytowalne, to trzy kolejne
+> pola (Number, Color Picker, Number) i trzy wpisy w `cyber_header_css_map()`.
+> Tło podmenu jest z tej trójki najpilniejsze: bez niego lista rozwijana byłaby
+> nieczytelna na tle treści.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -264,6 +346,27 @@ Zakładka „Ustawienia czcionki” (klucz pola = `field_` + nazwa pola, bez wyj
 | `cyber_font_weight_text` | `field_cyber_font_weight_text` | Select |
 | `cyber_font_weight_links` | `field_cyber_font_weight_links` | Select |
 
+Zakładka „Header Desktop” (klucz pola = `field_` + nazwa pola):
+
+| Field Name | Field Key | Typ |
+|---|---|---|
+| — (zakładka) | `field_cyber_tab_header` | Tab |
+| — (nagłówki sekcji) | `field_cyber_msg_header_logo`, `_layout`, `_menu`, `_submenu` | Message |
+| `cyber_header_logo` | `field_cyber_header_logo` | Image |
+| `cyber_header_menu_alignment` | `field_cyber_header_menu_alignment` | Select |
+| `cyber_header_padding_top` / `_bottom` | `field_cyber_header_padding_top` / `_bottom` | Number |
+| `cyber_header_menu_item_gap` | `field_cyber_header_menu_item_gap` | Number |
+| `cyber_header_menu_link_padding` | `field_cyber_header_menu_link_padding` | Number |
+| `cyber_header_menu_font_size` | `field_cyber_header_menu_font_size` | Number |
+| `cyber_header_menu_font_weight` | `field_cyber_header_menu_font_weight` | Select |
+| `cyber_header_menu_color` / `_hover` / `_active` | `field_cyber_header_menu_color` / `_hover` / `_active` | Color Picker |
+| `cyber_header_submenu_alignment` | `field_cyber_header_submenu_alignment` | Select |
+| `cyber_header_submenu_item_gap` | `field_cyber_header_submenu_item_gap` | Number |
+| `cyber_header_submenu_link_padding` | `field_cyber_header_submenu_link_padding` | Number |
+| `cyber_header_submenu_font_size` | `field_cyber_header_submenu_font_size` | Number |
+| `cyber_header_submenu_font_weight` | `field_cyber_header_submenu_font_weight` | Select |
+| `cyber_header_submenu_color` / `_hover` / `_active` | `field_cyber_header_submenu_color` / `_hover` / `_active` | Color Picker |
+
 ### Założenia przyjęte przy wdrożeniu (do akceptacji lub zmiany)
 
 Poniższe rzeczy nie były opisane w specyfikacji modułu. Zostały wdrożone jako
@@ -315,7 +418,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()` i `cyber_font_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -364,6 +467,31 @@ ACF PRO albo z wyłączonym hookiem nadal ma sensowny kontener).
 Podkreślenia w nazwie pola stają się myślnikami w nazwie zmiennej
 (`cyber_font_size_overtitle_1` → `--cyber-font-size-overtitle-1`). Mapa siedzi
 w `cyber_font_size_map()`.
+
+#### Zmienne generowane przez moduł Header Desktop
+
+Mapa pól na zmienne siedzi w `cyber_header_css_map()`. Żadna z tych wartości
+**nie jest skalowana** przez breakpointy — moduł opisuje wyłącznie widok desktopowy.
+
+| Zmienna CSS | Źródło |
+|---|---|
+| `--cyber-header-padding-top` / `-bottom` | `cyber_header_padding_top` / `_bottom` |
+| `--cyber-header-menu-gap` | `cyber_header_menu_item_gap` |
+| `--cyber-header-menu-link-padding` | `cyber_header_menu_link_padding` |
+| `--cyber-header-menu-font-size` | `cyber_header_menu_font_size` |
+| `--cyber-header-menu-font-weight` | `cyber_header_menu_font_weight` |
+| `--cyber-header-menu-color` / `-hover` / `-active` | `cyber_header_menu_color` / `_hover` / `_active` |
+| `--cyber-header-submenu-gap` | `cyber_header_submenu_item_gap` |
+| `--cyber-header-submenu-link-padding` | `cyber_header_submenu_link_padding` |
+| `--cyber-header-submenu-font-size` | `cyber_header_submenu_font_size` |
+| `--cyber-header-submenu-font-weight` | `cyber_header_submenu_font_weight` |
+| `--cyber-header-submenu-color` / `-hover` / `-active` | `cyber_header_submenu_color` / `_hover` / `_active` |
+
+**Wyrównanie nie jest zmienną CSS.** `cyber_header_menu_alignment`
+i `cyber_header_submenu_alignment` trafiają do markupu jako modyfikator klasy
+(`.cyber-menu--center`, `.cyber-submenu--right`) — uzasadnienie w CLAUDE.md sekcja 20.
+Modyfikator menu głównego nakłada `cyber_header_menu_args()`, modyfikator podmenu —
+filtr `nav_menu_submenu_css_class` w `inc/header.php` (zamiast własnego Walkera).
 
 #### Mechanizm skalowania (wariant B)
 
@@ -438,5 +566,6 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Header Desktop”**: pole Image (logo, return format `url` — precedens dla pól obrazu), wyrównanie, paddingi kontenera, 7 pól menu głównego i 8 pól podmenu (Number / Select / Color Picker). Nowy `inc/header.php`, markup w `template-parts/header/header.php`, sekcja CSS w `main.css`. Menu korzysta z istniejącej lokalizacji `primary`.
 - 2026-09-10 — Rozszerzenie zakładki „Ustawienia czcionki” o sekcję **„Grubość czcionki”**: 4 pola Select (`cyber_font_weight_headings` / `_overtitle` / `_text` / `_links`). Grubość celowo bez skalowania responsywnego — jedna wartość dla wszystkich breakpointów.
 - 2026-09-10 — Nowa zakładka **„Ustawienia czcionki”** w `group_global_options`: 10 pól wielkości (desktop), 3 pola skalowania procentowego, 2 pola wyboru kroju. Wdrożona logika `cyber_font_css()`, wspólne `cyber_breakpoints()`, klasy `.cyber-overtitle` / `.cyber-overtitle--secondary`. Funkcja wypisująca przemianowana na `cyber_print_inline_css()`, znacznik `<style>` na `id="cyber-global-vars"`.

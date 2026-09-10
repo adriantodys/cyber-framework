@@ -230,6 +230,69 @@ function cyber_font_css() {
 }
 
 /**
+ * Mapa pol modulu "Header Desktop" na zmienne CSS.
+ *
+ * Klucz    = klucz opcji (bez prefiksu cyber_).
+ * [0]      = pelna nazwa zmiennej CSS.
+ * [1]      = jednostka doklejana do wartosci ('px' albo pusty string).
+ *
+ * Zadna z tych wartosci nie jest skalowana przez breakpointy — modul opisuje
+ * wylacznie widok desktopowy (CLAUDE.md sekcja 19, klasyfikacja jawna).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_header_css_map() {
+	return array(
+		'header_padding_top'          => array( '--cyber-header-padding-top', 'px' ),
+		'header_padding_bottom'       => array( '--cyber-header-padding-bottom', 'px' ),
+		'header_menu_item_gap'        => array( '--cyber-header-menu-gap', 'px' ),
+		'header_menu_link_padding'    => array( '--cyber-header-menu-link-padding', 'px' ),
+		'header_menu_font_size'       => array( '--cyber-header-menu-font-size', 'px' ),
+		'header_menu_font_weight'     => array( '--cyber-header-menu-font-weight', '' ),
+		'header_menu_color'           => array( '--cyber-header-menu-color', '' ),
+		'header_menu_color_hover'     => array( '--cyber-header-menu-color-hover', '' ),
+		'header_menu_color_active'    => array( '--cyber-header-menu-color-active', '' ),
+		'header_submenu_item_gap'     => array( '--cyber-header-submenu-gap', 'px' ),
+		'header_submenu_link_padding' => array( '--cyber-header-submenu-link-padding', 'px' ),
+		'header_submenu_font_size'    => array( '--cyber-header-submenu-font-size', 'px' ),
+		'header_submenu_font_weight'  => array( '--cyber-header-submenu-font-weight', '' ),
+		'header_submenu_color'        => array( '--cyber-header-submenu-color', '' ),
+		'header_submenu_color_hover'  => array( '--cyber-header-submenu-color-hover', '' ),
+		'header_submenu_color_active' => array( '--cyber-header-submenu-color-active', '' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi headera na podstawie Global Options.
+ *
+ * Wyrownanie (menu i submenu) NIE trafia tutaj — jest modyfikatorem klasy
+ * w markupie (.cyber-menu--center itd.), bo zmienia uklad, a nie wartosc.
+ *
+ * Kolory pochodza z pol typu 'color', wiec cyber_get_option() przepuszcza
+ * wylacznie poprawny HEX; liczby sa rzutowane na int. Do CSS nie trafia
+ * zaden ciag spoza tych dwoch ksztaltow.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_header_css() {
+	$css = ':root{';
+
+	foreach ( cyber_header_css_map() as $option_key => $definition ) {
+		list( $css_var, $unit ) = $definition;
+
+		$value = cyber_get_option( $option_key );
+
+		if ( 'px' === $unit ) {
+			$value = sprintf( '%dpx', (int) $value );
+		}
+
+		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
+	}
+
+	return $css . '}';
+}
+
+/**
  * Wypisuje zmienne Global Options jako inline <style> w <head>.
  *
  * Jeden blok <style> dla calego motywu — kolejne moduly dopisuja tu swoja
@@ -244,7 +307,7 @@ function cyber_font_css() {
  * @return void
  */
 function cyber_print_inline_css() {
-	$css = cyber_container_css() . cyber_font_css();
+	$css = cyber_container_css() . cyber_font_css() . cyber_header_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",
