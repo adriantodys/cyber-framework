@@ -163,8 +163,22 @@ a teksty pozostają tłumaczalne w PHP.
 Dostępność: hamburger to `<button>` z `aria-expanded` i `aria-controls`, panel
 zamyka się na Escape (z powrotem fokusu na przycisk) i kliknięciem poza obszarem,
 a zamknięty panel ma `display: none`, więc jego linki nie łapią fokusu.
-Podmenu na mobile jest rozwinięte na stałe — otwieranie go dotknięciem wymagałoby
-drugiego mechanizmu, a wskaźnik strzałki byłby wtedy mylący, więc w tym widoku znika.
+Podmenu na mobile działa jako **akordeon**: pozycja z `menu-item-has-children` jest
+domyślnie zwinięta, a kliknięcie rozwija wyłącznie jej własne podmenu. Skrypt blokuje
+wtedy domyślną nawigację (`preventDefault`) i przełącza `.is-open` oraz `aria-expanded`
+na tym konkretnym `<li>`. Powyżej progu atrybut `aria-expanded` jest **usuwany**, bo
+na desktopie podmenu otwiera `:hover` / `:focus-within` i link przestaje być elementem
+rozwijającym. Wskaźnik strzałki z modułu Header Desktop obraca się o 180° w stanie
+rozwiniętym, zamiast dublować się osobną ikoną.
+
+Blok `@media` neutralizuje przy tym desktopowe reguły `:hover` / `:focus-within` —
+poniżej progu podmenu otwiera wyłącznie kliknięcie, bo na ekranie dotykowym hover
+potrafi się „przykleić" po tapnięciu.
+
+**Konsekwencja do zapamiętania:** na mobile link pozycji z podmenu **nie nawiguje** —
+pierwszy klik rozwija, drugi zwija. Jeśli strona-rodzic ma być osiągalna z telefonu,
+trzeba ją zdublować jako pierwszą pozycję wewnątrz jej własnego podmenu (standardowy
+zabieg redakcyjny, robiony w `Wygląd → Menu`, bez zmian w kodzie).
 
 ## Edytor treści
 

@@ -348,13 +348,29 @@ function cyber_header_mobile_css() {
 		'.cyber-mobile-menu .cyber-menu{flex-direction:column;align-items:stretch;gap:0;}',
 
 		/*
-		 * Podmenu na mobile jest rozwiniete na stale. Otwieranie go dotknieciem
-		 * wymagaloby drugiego mechanizmu (:hover na tapie dziala nieprzewidywalnie),
-		 * a strzalka sugerujaca zwijanie bylaby wtedy myllaca — dlatego znika.
+		 * Akordeon: podmenu jest zwiniete, dopoki assets/js/header.js nie doda
+		 * klasy .is-open na konkretnej pozycji.
 		 */
-		'.cyber-mobile-menu .cyber-submenu{display:flex;position:static;min-width:0;'
+		'.cyber-mobile-menu .cyber-submenu{display:none;position:static;min-width:0;'
 			. 'background:none;padding-inline-start:var(--cyber-header-submenu-link-padding);}',
-		'.cyber-mobile-menu .cyber-menu--with-indicator .menu-item-has-children > a::after{display:none;}',
+
+		/*
+		 * Neutralizacja zachowania desktopowego. Reguly :hover / :focus-within
+		 * z modulu Header Desktop obowiazuja tez ponizej progu, a na ekranie
+		 * dotykowym hover potrafi sie "przykleic" — tutaj rozwija wylacznie klik.
+		 */
+		'.cyber-mobile-menu .cyber-menu li:hover > .cyber-submenu,'
+			. '.cyber-mobile-menu .cyber-menu li:focus-within > .cyber-submenu{display:none;}',
+
+		/*
+		 * Selektor jest celowo dluzszy niz reguly powyzej — musi je przebic
+		 * specyficznoscia, inaczej :hover wygralby ze stanem klikniecia.
+		 */
+		'.cyber-mobile-menu .cyber-menu li.menu-item-has-children.is-open > .cyber-submenu{display:flex;}',
+
+		// Strzalka wskaznika obraca sie o 180 stopni zamiast dublowac sie nowa ikona.
+		'.cyber-mobile-menu .cyber-menu--with-indicator .menu-item-has-children.is-open > a::after'
+			. '{transform:translateY(-0.15em) rotate(225deg);}',
 	);
 
 	return sprintf( '@media (max-width:%1$dpx){%2$s}', $breakpoint, implode( '', $rules ) );

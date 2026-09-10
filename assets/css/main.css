@@ -284,6 +284,7 @@ h6 :is(a, span),
 	border-right: 2px solid currentColor;
 	border-bottom: 2px solid currentColor;
 	transform: translateY(-0.15em) rotate(45deg);
+	transition: transform 0.2s ease;
 }
 
 /* --- Podmenu -------------------------------------------------------------- */
@@ -388,6 +389,26 @@ h6 :is(a, span),
 	width: 24px;
 	height: 2px;
 	background: currentColor;
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/*
+ * Stan otwarty: skrajne kreski jada do srodka i krzyzuja sie, srodkowa znika.
+ * Przesuniecie o 7px wynika z geometrii przycisku — 3 kreski po 2px z gap 5px
+ * daja 16px wysokosci, wiec srodek lezy 7px od kazdej skrajnej kreski.
+ * Zmiana gap albo grubosci kresek wymaga przeliczenia tej wartosci.
+ */
+
+.cyber-hamburger--active .cyber-hamburger__bar:nth-child(1) {
+	transform: translateY(7px) rotate(45deg);
+}
+
+.cyber-hamburger--active .cyber-hamburger__bar:nth-child(2) {
+	opacity: 0;
+}
+
+.cyber-hamburger--active .cyber-hamburger__bar:nth-child(3) {
+	transform: translateY(-7px) rotate(-45deg);
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */
