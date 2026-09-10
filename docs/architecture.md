@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-09 (stan: etap 1 i 2 z CLAUDE.md sekcja 17).
+Ostatnia aktualizacja: 2026-09-10 (stan: etap 1 i 2 z CLAUDE.md sekcja 17).
 
 ## Przepływ danych
 
@@ -32,6 +32,7 @@ w ustalonej kolejności:
 | 3 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
 | 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`. |
+| 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 
 ## Stałe
 
@@ -51,6 +52,24 @@ ACF PRO jest twardą zależnością, ale motyw nie umiera bez niego:
 - `cyber_get_option()` zwraca wartości domyślne ze schematu.
 
 Efekt: strona się renderuje z wartościami domyślnymi, tracąc jedynie konfigurowalność.
+
+## Edytor treści
+
+Motyw używa **wyłącznie klasycznego edytora** (TinyMCE). Edytor blokowy jest wyłączony
+dla wpisów, stron i każdego CPT — także tych rejestrowanych przez wtyczki.
+
+| Element | Realizacja |
+|---|---|
+| Wyłączenie bloków | `use_block_editor_for_post_type` → zawsze `false` (`inc/editor.php`). Filtr `gutenberg_can_edit_post_type` obsłużony tak samo, na wypadek instalacji wtyczki Gutenberg. |
+| Wtyczka Classic Editor | **Niepotrzebna.** Klasyczny edytor jest częścią rdzenia WordPressa — wystarczy odmówić użycia edytora blokowego. |
+| Style bloków na froncie | `wp-block-library`, `wp-block-library-theme`, `wp-components`, `global-styles` i `classic-theme-styles` są usuwane z kolejki na `wp_enqueue_scripts` (priorytet 100). |
+| Zakres | Globalny i bezwarunkowy. Wyjątek dla pojedynczego typu treści = zmiana wyłącznie w `cyber_disable_block_editor()`. |
+
+**Konsekwencja do zapamiętania:** usunięcie `wp-block-library` zakłada, że na froncie
+nie renderuje się żaden blok. Gdyby kiedyś włączono blokowy edytor widgetów albo wtyczka
+zaczęła zwracać znaczniki blokowe, te style trzeba przywrócić — inaczej ich HTML straci
+formatowanie. Blokowy edytor widgetów (`use_widgets_block_editor`) **nie** jest obecnie
+wyłączany — to osobna decyzja, nieobjęta tą zmianą.
 
 ## Co jeszcze nie istnieje
 

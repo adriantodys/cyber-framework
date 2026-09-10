@@ -13,8 +13,11 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 - Nazwa: `cyber-framework`.
 - Czysty PHP + **ACF PRO** jako jedyny system zarządzania danymi.
 - **Brak page buildera** (Elementor, Divi, Beaver Builder itp.).
-- Gutenberg dopuszczalny wyłącznie dla treści edytorskich (np. wpisy blogowe) —
-  nigdy jako narzędzie do budowania layoutu stron.
+- **Gutenberg wyłączony w całym motywie** — wpisy, strony i każdy CPT edytuje się
+  klasycznym edytorem (TinyMCE). Wyłączenie realizuje `inc/editor.php` filtrem
+  `use_block_editor_for_post_type`; wtyczka Classic Editor nie jest potrzebna.
+  Ponowne włączenie bloków dla jakiegokolwiek typu treści wymaga wyraźnej zgody
+  (patrz sekcja 15) — layout buduje ACF, a nie drugi system edycji.
 - Cel: architektura czysta, bezpieczna, wydajna, zgodna z WordPress Coding Standards (WPCS).
 
 ## 2. Stack technologiczny i ograniczenia

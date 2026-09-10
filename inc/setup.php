@@ -10,8 +10,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Deklaruje wsparcie motywu dla funkcji WordPressa.
  *
- * Gutenberg wlaczony jest wylacznie dla tresci edytorskich (wpisy, tresc strony),
- * nigdy jako narzedzie do budowania layoutu — layout buduje ACF (CLAUDE.md sekcja 1).
+ * Gutenberg jest wylaczony w calym motywie (patrz inc/editor.php). Tresc edytuje sie
+ * klasycznym edytorem, layout buduje ACF (CLAUDE.md sekcja 1).
  *
  * @return void
  */

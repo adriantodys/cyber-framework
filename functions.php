@@ -47,6 +47,7 @@ function cyber_load_modules() {
 		'inc/options.php',
 		'inc/setup.php',
 		'inc/enqueue.php',
+		'inc/editor.php',
 	);
 
 	foreach ( $modules as $module ) {
