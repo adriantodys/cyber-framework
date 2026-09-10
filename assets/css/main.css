@@ -2,10 +2,11 @@
  * Cyber Framework — arkusz bazowy.
  *
  * UWAGA: wartosci zmiennych ponizej to STATYCZNE wartosci domyslne, zgodne
- * z docs/acf-schema.md. Generowanie tych zmiennych z Global Options (inline
- * w wp_head) jest celowo NIE zaimplementowane — docs/acf-schema.md wymaga
- * potwierdzenia podejscia przed wdrozeniem. Do tego czasu motyw wyglada tak,
- * jakby w panelu zapisano wartosci domyslne.
+ * z docs/acf-schema.md. Sluza jako warstwa awaryjna — na froncie nadpisuje je
+ * inline <style id="cyber-container-vars"> wypisywany w wp_head na podstawie
+ * Global Options (cyber_print_container_css() w inc/enqueue.php). Ten arkusz
+ * laduje sie wczesniej, wiec przy tej samej specyficznosci :root wygrywaja
+ * wartosci z panelu.
  */
 
 :root {

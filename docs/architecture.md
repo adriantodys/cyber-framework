@@ -31,7 +31,7 @@ w ustalonej kolejności:
 | 2 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
 | 3 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
-| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`. |
+| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties kontenera w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 
 ## Stałe
@@ -52,6 +52,35 @@ ACF PRO jest twardą zależnością, ale motyw nie umiera bez niego:
 - `cyber_get_option()` zwraca wartości domyślne ze schematu.
 
 Efekt: strona się renderuje z wartościami domyślnymi, tracąc jedynie konfigurowalność.
+
+## Global Options → CSS
+
+Wartości wpływające na wygląd frontu nie trafiają do widoków jako inline style,
+tylko jako **CSS Custom Properties** (CLAUDE.md sekcja 6, „Konwencja: ACF Options → CSS”):
+
+```
+ACF Options Page
+      │
+      ▼
+cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
+      │
+      ▼
+cyber_container_css()         ← mapowanie pól na reguły CSS (inc/enqueue.php)
+      │
+      ▼
+wp_head, priorytet 20         ← <style id="cyber-container-vars">
+      │
+      ▼
+.cyber-container              ← jedyny konsument zmiennych (assets/css/main.css)
+```
+
+Priorytet 20 jest celowy: `wp_head` wypisuje arkusze stylów wcześniej
+(`wp_enqueue_scripts` na 1, `wp_print_styles` na 8), więc wartości z panelu
+nadpisują statyczne wartości domyślne z `main.css` przy tej samej specyficzności `:root`.
+
+Konsekwencja praktyczna: żeby dodać kolejną opcję sterującą wyglądem, dopisuje się
+ją do `cyber_option_schema()` i do `cyber_container_css()` (albo analogicznej funkcji
+dla nowego obszaru) — widoki i CSS nie wymagają zmian, bo czytają zmienną.
 
 ## Edytor treści
 
@@ -82,4 +111,3 @@ Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaim
   i `template-parts/components/` są puste.
 - **Etap 5** — szablony widoków w `templates/`. Obecnie istnieje wyłącznie `index.php`
   jako wymagany przez WordPress fallback.
-- **Generowanie CSS z Global Options** — wstrzymane do decyzji, patrz `docs/acf-schema.md`.

@@ -6,7 +6,7 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-09-09
+Ostatnia aktualizacja: 2026-09-10
 Moduł: **Global Options — zakładka "Szerokość strony"** (pierwszy moduł projektu)
 
 ---
@@ -189,10 +189,35 @@ Gwarancje `cyber_get_option()`:
 
 ### Stan: generowanie CSS
 
-**Niezaimplementowane, zgodnie z zastrzeżeniem powyżej.** `assets/css/main.css`
-definiuje statyczne zmienne `--cyber-container-width` / `--cyber-container-margin`
-o wartościach równych domyślnym z tego dokumentu. Podpięcie ich pod Global Options
-(inline `<style>` w `wp_head` vs. plik generowany) czeka na decyzję.
+**Zaimplementowane.** Podejście zatwierdzone: inline `<style>` w `wp_head`
+(nie plik generowany) — patrz CLAUDE.md sekcja 6, „Konwencja: ACF Options → CSS".
+
+| | |
+|---|---|
+| Funkcja budująca CSS | `cyber_container_css()` — `inc/enqueue.php` |
+| Funkcja wypisująca | `cyber_print_container_css()`, hook `wp_head` priorytet 20 |
+| Zmienne | `--cyber-container-width`, `--cyber-container-margin` |
+| Konsument | klasa `.cyber-container` w `assets/css/main.css` (header, footer, `index.php`) |
+
+Mapowanie pól na CSS:
+
+- `cyber_page_width_type` = `60` / `80` → `--cyber-container-width` = wartość
+  odpowiednio z `cyber_page_width_60` / `cyber_page_width_80` w px.
+- `cyber_page_width_type` = `100` → jeśli `cyber_page_width_100` jest puste,
+  `--cyber-container-width: 100%`; jeśli wypełnione, wartość w px działa jako cap
+  (`.cyber-container` ma `width: 100%`, więc `max-width` daje efekt `min(100%, cap)`).
+- Marginesy trafiają do `--cyber-container-margin`: wartość bazowa
+  z `cyber_page_margin_desktop`, a następnie trzy `@media (max-width: …)`
+  dla 980 / 767 / 479 px. Obowiązują niezależnie od wybranej szerokości.
+
+**Przyjęte założenie (granice breakpointów).** Schemat opisuje zakresy słownie
+(„980px–767px"), co nie rozstrzyga, do którego zakresu należy sama wartość graniczna.
+Przyjęto granice domknięte od góry: `max-width: 980px` / `767px` / `479px`, czyli
+dokładnie 980px korzysta już z marginesu tabletowego. Zmiana tej interpretacji to
+edycja jednej tablicy `$breakpoints` w `cyber_container_css()`.
+
+Statyczne wartości w `assets/css/main.css` zostają jako warstwa awaryjna (motyw bez
+ACF PRO albo z wyłączonym hookiem nadal ma sensowny kontener).
 
 ---
 
@@ -215,3 +240,4 @@ o wartościach równych domyślnym z tego dokumentu. Podpięcie ich pod Global O
 
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
+- 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.

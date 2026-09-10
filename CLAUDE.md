@@ -113,6 +113,16 @@ Widoki nie wołają `get_field( $key, 'option' )` bezpośrednio — zawsze przez
 z `inc/helpers.php`, żeby w jednym miejscu móc dodać cache/transient bez zmiany
 dziesiątek plików szablonów.
 
+### Konwencja: ACF Options → CSS
+
+Wartości z Global Options, które wpływają na wygląd frontu, są wypisywane jako
+**CSS Custom Properties** w `<style>` w `wp_head` (funkcja w `inc/enqueue.php`).
+
+- Nazwy zmiennych: prefiks `--cyber-`, np. `--cyber-container-width`,
+  `--cyber-container-margin`.
+- Elementy strukturalne (header, footer, kontener treści) konsumują te zmienne
+  przez wspólną klasę `.cyber-container` — **nie** przez inline style w PHP.
+
 ## 7. Komponenty i template parts
 
 - `template-parts/sections/` — jeden plik = jeden layout Flexible Content.
