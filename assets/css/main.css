@@ -279,6 +279,18 @@ h6 :is(a, span),
 	gap: 12px;
 }
 
+/*
+ * Rozmiar ikon nalezy do komponentu, nie do kontekstu. Wczesniej wymiary dawala
+ * wylacznie regula ".cyber-topheader svg", wiec ikony w stopce zostawaly bez
+ * szerokosci i wysokosci — <svg> ma tylko viewBox, bez atrybutow width/height.
+ */
+.cyber-social-icons svg {
+	display: block;
+	flex-shrink: 0;
+	width: 16px;
+	height: 16px;
+}
+
 .cyber-topheader svg {
 	display: block;
 	flex-shrink: 0;
