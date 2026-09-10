@@ -369,17 +369,29 @@ listę lokalizacji, z których połowa nic nie robi.
 
 ## 22. Pola zarezerwowane na przyszłość
 
-Moduł **Kontakt** (`cyber_contact_*`, zakładka Global Options → Kontakt) zawiera dane
-(adres, godziny otwarcia, telefon, email, NIP, KRS, REGON) świadomie przygotowane
-**bez obecnej logiki frontendowej**.
-
-Te pola będą kluczowe w dalszym rozwoju motywu. Przewidywane zastosowania: stopka,
-strona kontaktowa, dane strukturalne Schema.org/LocalBusiness, możliwe formularze.
-
-Przy planowaniu kolejnych modułów — zwłaszcza **stopki** i **danych strukturalnych** —
-sprawdź, czy dany moduł powinien konsumować te pola przez `cyber_get_option()`,
-zamiast tworzyć nowe, równoległe pola dla tych samych danych kontaktowych.
+Poniższe moduły to **wyłącznie warstwa danych** — świadomie bez logiki frontendowej.
+Ich brak wykorzystania na danym etapie jest zamierzony, nie jest błędem ani
+zaniedbaniem.
 
 **Nie usuwać tych pól przy porządkowaniu ani refaktoryzacji jako rzekomo
-„nieużywanych".** Ich brak wykorzystania na danym etapie jest zamierzony —
-nie jest błędem ani zaniedbaniem.
+„nieużywanych".**
+
+Przy planowaniu kolejnych modułów sprawdź, czy dany moduł powinien konsumować te pola
+przez `cyber_get_option()`, zamiast tworzyć nowe, równoległe pola dla tych samych
+danych.
+
+### Kontakt
+
+`cyber_contact_*`, zakładka Global Options → Kontakt. Adres, godziny otwarcia, telefon,
+email, NIP, KRS, REGON.
+
+Przewidywane zastosowania: **stopka**, strona kontaktowa, dane strukturalne
+Schema.org/LocalBusiness, możliwe formularze.
+
+### Social Media
+
+`cyber_social_*`, zakładka Global Options → Social Media. Adresy URL profili
+społecznościowych (Facebook, Instagram, YouTube, X, LinkedIn, TikTok).
+
+Przewidywane zastosowania: **stopka**, top header, dane strukturalne Schema.org
+(`sameAs`).

@@ -2411,6 +2411,149 @@
             "placeholder": "",
             "prepend": "",
             "append": ""
+        },
+        {
+            "key": "field_cyber_tab_social",
+            "label": "Social Media",
+            "name": "cyber_tab_social",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_social",
+            "label": "Profile społecznościowe",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Pełne adresy URL profili. Wszystkie pola są opcjonalne — puste pole oznacza po prostu, że firma nie prowadzi tego kanału. Pola przygotowane pod przyszłe wykorzystanie; obecnie nie są podłączone do żadnego widoku na froncie.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_social_facebook",
+            "label": "Facebook",
+            "name": "cyber_social_facebook",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://www.facebook.com/twojafirma",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_social_instagram",
+            "label": "Instagram",
+            "name": "cyber_social_instagram",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://www.instagram.com/twojafirma",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_social_youtube",
+            "label": "YouTube",
+            "name": "cyber_social_youtube",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://www.youtube.com/@twojafirma",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_social_x",
+            "label": "X (Twitter)",
+            "name": "cyber_social_x",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://x.com/twojafirma",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_social_linkedin",
+            "label": "LinkedIn",
+            "name": "cyber_social_linkedin",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://www.linkedin.com/company/twojafirma",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_social_tiktok",
+            "label": "TikTok",
+            "name": "cyber_social_tiktok",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://www.tiktok.com/@twojafirma",
+            "allow_in_bindings": 0
         }
     ],
     "location": [
@@ -2431,5 +2574,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998407
+    "modified": 1788998408
 }

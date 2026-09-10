@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory” i „Kontakt”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt” i „Social Media”
 
 ---
 
@@ -533,6 +533,40 @@ Nowe typy w schemacie wprowadzone przez ten moduł: **`text`** (z opcjonalnym kl
 `pattern`), **`textarea`** (`sanitize_textarea_field()`, zachowuje znaki nowej linii)
 i **`email`** (`sanitize_email()` + `is_email()`).
 
+### Zakładka: „Social Media”
+
+> ### Pola przygotowane pod przyszłe wykorzystanie
+>
+> **Obecnie niepodłączone do żadnego widoku frontendowego.** Tak jak zakładka
+> „Kontakt”: brak zmiennych CSS, markupu i wpisu w `cyber_print_inline_css()`.
+> Przewidywane zastosowania: stopka, top header, dane strukturalne Schema.org
+> (`sameAs`). Zakaz usuwania przy refaktoryzacji: CLAUDE.md sekcja 22.
+
+Wszystkie pola: typ ACF **URL**, opcjonalne, `nullable`. Puste pole znaczy
+„firma nie prowadzi tego kanału”, a nie „brak konfiguracji” — dlatego
+`cyber_get_option()` zwraca dla nich `''`, nie wartość domyślną.
+
+| Field Label | Field Name | Typ ACF | Placeholder w panelu |
+|---|---|---|---|
+| Facebook | `cyber_social_facebook` | URL | `https://www.facebook.com/twojafirma` |
+| Instagram | `cyber_social_instagram` | URL | `https://www.instagram.com/twojafirma` |
+| YouTube | `cyber_social_youtube` | URL | `https://www.youtube.com/@twojafirma` |
+| X (Twitter) | `cyber_social_x` | URL | `https://x.com/twojafirma` |
+| LinkedIn | `cyber_social_linkedin` | URL | `https://www.linkedin.com/company/twojafirma` |
+| TikTok | `cyber_social_tiktok` | URL | `https://www.tiktok.com/@twojafirma` |
+
+**Walidacja bez nowego kodu.** Typ ACF URL sprawdza format w panelu, a po stronie
+odczytu pola używają istniejącego typu schematu **`url`** — tego samego, który
+obsługuje logo nagłówka (`esc_url_raw()`). Adres bez protokołu albo z protokołem
+spoza białej listy WordPressa (np. `javascript:`) wraca jako pusty. Moduł nie ma
+własnego pliku w `inc/` — nie było czego dokładać.
+
+> **Nazwa pola vs nazwa serwisu.** `cyber_social_x` celowo nie nazywa się
+> `cyber_social_twitter`: nazwa pola staje się kluczem w `wp_options` i zmiana jej
+> później oznacza utratę zapisanej wartości. Etykieta w panelu brzmi „X (Twitter)”,
+> żeby redaktor wiedział, o co chodzi, niezależnie od tego, jak serwis nazywa się
+> w danym roku.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -826,6 +860,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Social Media”**: 6 pól URL (Facebook, Instagram, YouTube, X, LinkedIn, TikTok) — **bez logiki frontendowej**, zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Bez nowego pliku w `inc/` — walidację pokrywa istniejący typ schematu `url`.
 - 2026-09-10 — Nowa zakładka **„Kontakt”**: 7 pól danych kontaktowych (adres, godziny, telefon, email, NIP, KRS, REGON) — **bez logiki frontendowej**, świadomie zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Nowy `inc/contact.php` z walidacją przy zapisie, nowe typy schematu `text` / `textarea` / `email`.
 - 2026-09-10 — Nowa zakładka **„Kolory”**: 5 pól semantycznych (auto) i 5 narzędziowych (stałe klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover`). Nowy typ walidacji `color_alpha` dla pól cieni z `enable_opacity`.
 - 2026-09-10 — Nowa zakładka **„Przyciski”**: 3 rozmiary × 8 pól (geometria, grubość, 4 kolory) = 24 pola. Komponent `cyber_button()` w `inc/components.php` + `template-parts/components/button.php`, sekcja CSS w `main.css`. Lista grubości wydzielona do `cyber_font_weight_choices()` i reużyta przez wszystkie moduły.

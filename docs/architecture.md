@@ -115,11 +115,16 @@ wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę proc
 danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
 dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
 
-## Kontakt — moduł bez frontu
+## Moduły bez frontu: Kontakt i Social Media
 
-Jedyny moduł, który **celowo nie ma warstwy widoku**: żadnych zmiennych CSS, markupu
-ani wpisu w `cyber_print_inline_css()`. `inc/contact.php` zawiera wyłącznie walidację
-przy zapisie w panelu.
+Dwa moduły **celowo nie mają warstwy widoku**: żadnych zmiennych CSS, markupu ani
+wpisu w `cyber_print_inline_css()` (CLAUDE.md sekcja 22).
+
+**Social Media** nie ma nawet pliku w `inc/` — 6 pól typu URL w całości obsługuje
+istniejący typ schematu `url` (`esc_url_raw()`), ten sam, którego używa logo nagłówka.
+Nie było czego dokładać.
+
+**Kontakt** ma `inc/contact.php` z wyłączną walidacją przy zapisie w panelu.
 
 Walidacja działa w dwóch warstwach, ale wzorce żyją raz — w `cyber_contact_patterns()`
 (`inc/helpers.php`). Warstwa panelu (`acf/validate_value/name=…`) blokuje zapis

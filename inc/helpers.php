@@ -552,6 +552,36 @@ function cyber_option_schema() {
 			'pattern'  => cyber_contact_pattern( 'contact_regon' ),
 			'nullable' => true,
 		),
+		'social_facebook'             => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'social_instagram'            => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'social_youtube'              => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'social_x'                    => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'social_linkedin'             => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'social_tiktok'               => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
 	);
 }
 
