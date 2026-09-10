@@ -267,8 +267,14 @@ h6 :is(a, span),
 	gap: 16px;
 }
 
-.cyber-topheader__social {
+/*
+ * Wspolny komponent ikon (template-parts/components/social-icons.php) niesie
+ * klase .cyber-social-icons oraz klase kontekstu przekazana w argumencie.
+ * Uklad jest wspolny, wiec definiujemy go raz na klasie bazowej.
+ */
+.cyber-social-icons {
 	display: flex;
+	flex-wrap: nowrap;
 	align-items: center;
 	gap: 12px;
 }
@@ -637,6 +643,57 @@ h6 :is(a, span),
 .cyber-shadow-hover:hover,
 .cyber-shadow-hover:focus-visible {
 	box-shadow: 0 4px 12px var(--cyber-color-shadow-hover);
+}
+
+/* --- Footer ---------------------------------------------------------------- */
+
+/*
+ * Stopka NIE ma wlasnego pola tla ani koloru — nie bylo ich w specyfikacji
+ * modulu, wiec dziedziczy je z body. Gdyby stopka miala byc odrebna
+ * kolorystycznie, jest to osobny modul do zlecenia, nie pole dodane po cichu.
+ *
+ * Odstepy siatki i podzial na breakpointach to na razie stale wartosci
+ * (progi zgodne z CLAUDE.md sekcja 18).
+ */
+
+.cyber-footer {
+	padding-block: 48px;
+}
+
+.cyber-footer__grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 32px;
+}
+
+.cyber-footer__brand {
+	margin: 0 0 16px;
+}
+
+.cyber-footer__logo {
+	display: block;
+	max-height: var(--cyber-header-logo-max-height);
+	width: auto;
+}
+
+.cyber-footer__content > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-footer__content > *:last-child {
+	margin-bottom: 0;
+}
+
+@media (max-width: 980px) {
+	.cyber-footer__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-footer__grid {
+		grid-template-columns: 1fr;
+	}
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

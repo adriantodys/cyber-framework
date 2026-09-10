@@ -31,9 +31,31 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
+| Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content` | sekcja „Footer” w `assets/css/main.css` |
+| Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
 | Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
+
+#### Social icons
+
+Wywoływany funkcją `cyber_social_icons( $args )` z `inc/components.php`, nie
+bezpośrednio przez `get_template_part()` — funkcja buduje listę
+(`cyber_social_links()`) i pomija render, gdy nie ma żadnego wypełnionego adresu.
+
+| Kontekst | Wywołanie | Warunek pokazania ikony |
+|---|---|---|
+| Top Header | `array( 'respect_toggles' => true, 'class' => 'cyber-topheader__social' )` | przełącznik **oraz** wypełniony adres |
+| Footer | `array( 'class' => 'cyber-footer__social' )` | tylko wypełniony adres |
+
+Klasa bazowa `.cyber-social-icons` niesie układ (flex, `nowrap`, `gap`), klasa
+kontekstu służy do ewentualnych nadpisań w danym miejscu.
+
+#### Footer
+
+Renderowany z `footer.php` w rootcie. Kolumny 2 i 3 są celowo puste — patrz
+CLAUDE.md sekcja 22. Treść kolumny 1 pochodzi z pola WYSIWYG i jest wypisywana
+przez `wp_kses_post()` (escapowanie przy outpucie, CLAUDE.md sekcja 8).
 
 #### Top Header
 

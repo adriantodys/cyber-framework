@@ -74,3 +74,80 @@ function cyber_button( $args = array() ) {
 
 	get_template_part( 'template-parts/components/button', null, $args );
 }
+
+/**
+ * Zwraca liste profili spolecznosciowych do wyswietlenia.
+ *
+ * Zrodlem sa pola cyber_social_* z zakladki "Social Media" — zaden modul nie
+ * ma wlasnych pol na te adresy (CLAUDE.md sekcja 22).
+ *
+ * Dwa konteksty roznia sie jednym warunkiem:
+ * - Top Header respektuje wylaczniki cyber_topheader_show_* (koniunkcja:
+ *   wlacznik ORAZ wypelniony adres),
+ * - Stopka ich nie ma — liczy sie wylacznie to, czy adres jest wypelniony.
+ *
+ * @param bool $respect_toggles Czy uwzgledniac wylaczniki Top Header.
+ * @return array Lista tablic 'platform', 'label', 'url'.
+ */
+function cyber_social_links( $respect_toggles = false ) {
+	$links = array();
+
+	foreach ( cyber_social_platforms() as $platform => $label ) {
+		$url = cyber_get_option( 'social_' . $platform );
+
+		if ( '' === $url ) {
+			continue;
+		}
+
+		if ( $respect_toggles && ! cyber_get_option( 'topheader_show_' . $platform ) ) {
+			continue;
+		}
+
+		$links[] = array(
+			'platform' => $platform,
+			'label'    => $label,
+			'url'      => $url,
+		);
+	}
+
+	return $links;
+}
+
+/**
+ * Wypisuje liste ikon social media.
+ *
+ * Wspolny komponent dla Top Header i stopki — pojedyncza petla po platformach
+ * zyje w jednym miejscu, zamiast byc kopiowana do kazdego widoku
+ * (CLAUDE.md sekcja 22b).
+ *
+ * Gdy nie ma zadnego wypelnionego adresu, komponent nie generuje niczego —
+ * pusty kontener flex zostawialby w layoucie dziure po odstepach.
+ *
+ * @param array $args {
+ *     @type bool   $respect_toggles Czy uwzgledniac wylaczniki Top Header. Domyslnie false.
+ *     @type string $class           Dodatkowa klasa kontenera, np. 'cyber-footer__social'.
+ * }
+ * @return void
+ */
+function cyber_social_icons( $args = array() ) {
+	$defaults = array(
+		'respect_toggles' => false,
+		'class'           => '',
+	);
+
+	$args  = wp_parse_args( $args, $defaults );
+	$items = cyber_social_links( (bool) $args['respect_toggles'] );
+
+	if ( array() === $items ) {
+		return;
+	}
+
+	get_template_part(
+		'template-parts/components/social-icons',
+		null,
+		array(
+			'items' => $items,
+			'class' => (string) $args['class'],
+		)
+	);
+}

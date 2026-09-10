@@ -90,6 +90,10 @@ add_filter( 'nav_menu_submenu_css_class', 'cyber_header_submenu_css_class', 10, 
  * zrodlowe nie jest puste. ACF potrafilby ukryc pole w panelu, ale to jest
  * decyzja widoku, a nie ksztaltu danych.
  *
+ * Klucz 'social' sluzy wylacznie do decyzji, czy pasek ma sie renderowac —
+ * same ikony wypisuje wspolny komponent cyber_social_icons() (bez wylacznikow
+ * uzywa go stopka).
+ *
  * @return array {
  *     @type array|null $phone  Tablica 'text' i 'href' albo null.
  *     @type array|null $email  Tablica 'text' i 'href' albo null.
@@ -122,19 +126,8 @@ function cyber_top_header_data() {
 		);
 	}
 
-	foreach ( cyber_social_platforms() as $platform => $label ) {
-		$url = cyber_get_option( 'social_' . $platform );
-
-		if ( '' === $url || ! cyber_get_option( 'topheader_show_' . $platform ) ) {
-			continue;
-		}
-
-		$data['social'][] = array(
-			'platform' => $platform,
-			'label'    => $label,
-			'url'      => $url,
-		);
-	}
+	// Ta sama lista, ktora wypisze potem wspolny komponent cyber_social_icons().
+	$data['social'] = cyber_social_links( true );
 
 	return $data;
 }

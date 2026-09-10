@@ -156,6 +156,27 @@ osobny typ walidacji `color_alpha`, który przepuszcza HEX albo `rgb()`/`rgba()`
 o ścisłym wzorcu — `sanitize_hex_color()` odrzuciłby `rgba()`, a cień bez kanału
 alfa jest wizualnie bezużyteczny.
 
+## Footer
+
+Cztery kolumny w CSS grid, ale tylko pierwsza ma pola ACF. Kolumny 2 i 3 renderują
+się jako puste `<div>` — bez tekstu zastępczego na froncie — a kolumna 4 czerpie
+w całości z `cyber_social_*`.
+
+Różnica wobec Top Header sprowadza się do jednego argumentu:
+
+```
+cyber_social_links( true )   → pasek: przełącznik ORAZ wypełniony adres
+cyber_social_links( false )  → stopka: tylko wypełniony adres
+```
+
+Obie ścieżki prowadzą przez ten sam komponent `cyber_social_icons()`
+(CLAUDE.md sekcja 22b), więc pętla po platformach istnieje w kodzie raz.
+`cyber_top_header_data()` też z niej korzysta — klucz `social` służy tam wyłącznie
+do decyzji, czy pasek ma się w ogóle renderować.
+
+Stopka nie ma pola tła ani koloru; dziedziczy je z `body`. To brak modułu,
+nie przeoczenie — odrębna kolorystyka stopki wymaga osobnego zlecenia.
+
 ## Top Header
 
 Pierwszy moduł, który **konsumuje dane innego modułu** zamiast definiować własne.

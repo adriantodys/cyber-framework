@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media” i „Top Header”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header” i „Footer”
 
 ---
 
@@ -659,6 +659,76 @@ i są **inline SVG**. Bez biblioteki zewnętrznej, bez fontu ikon, bez `<img>`
 Kształty są **proste i jednokolorowe**, celowo nie są odwzorowaniem oficjalnych
 logotypów w barwach marek — mają tworzyć spójną, lekką ikonografię.
 
+### Zakładka: „Footer”
+
+Stopka ma **cztery kolumny**, ale pola ACF dostaje wyłącznie pierwsza.
+
+| Field Label | Field Name | Typ ACF | Return format | Przeznaczenie |
+|---|---|---|---|---|
+| Logo stopki | `cyber_footer_logo` | Image | **`url`** | Logo w kolumnie 1, linkowane do strony głównej. |
+| Treść kolumny 1 | `cyber_footer_content` | WYSIWYG (toolbar `basic`, bez uploadu mediów) | HTML | Tekst opisowy pod logo. |
+
+> **Logo stopki jest osobnym polem od `cyber_header_logo`** — celowo, nie przez
+> przeoczenie. Stopka może mieć inne tło i wymagać innej wersji znaku (np. jasnej
+> na ciemnym). Return format `url` jest ten sam co w nagłówku, zgodnie z precedensem
+> z modułu Header Desktop.
+
+**Skąd bierze się zawartość każdej kolumny:**
+
+| Kolumna | Klasa | Źródło |
+|---|---|---|
+| 1 | `.cyber-footer__col--1` | `cyber_footer_logo` + `cyber_footer_content` |
+| 2 | `.cyber-footer__col--2` | **brak — zarezerwowana** |
+| 3 | `.cyber-footer__col--3` | **brak — zarezerwowana** |
+| 4 | `.cyber-footer__col--4` | `cyber_social_*` (zakładka „Social Media") |
+
+> ### Kolumny 2 i 3 są świadomie puste
+>
+> Nie mają żadnych pól ACF i renderują się jako puste `<div>` — **bez żadnego tekstu
+> zastępczego widocznego na froncie**. Zarezerwowane pod przyszłą zawartość, np. menu
+> stopki albo zapis do newslettera (CLAUDE.md sekcja 22). Puste kolumny w siatce
+> utrzymują układ, do którego dopisze się treść, zamiast wymuszać przebudowę.
+
+> ### Kolumna 4 nie ma wyłączników — i to jest różnica wobec Top Header
+>
+> W stopce liczy się **wyłącznie to, czy adres profilu jest wypełniony**.
+> Nie ma odpowiedników `cyber_topheader_show_*`.
+>
+> | | Top Header | Footer |
+> |---|---|---|
+> | Warunek | przełącznik **ORAZ** wypełniony adres | tylko wypełniony adres |
+> | Wywołanie | `cyber_social_icons( array( 'respect_toggles' => true, … ) )` | `cyber_social_icons( array( … ) )` |
+>
+> Praktyczna konsekwencja: profil wyłączony na pasku **nadal pojawia się w stopce**.
+> To celowe — pasek jest ciasny i wybiórczy, stopka pokazuje komplet.
+
+**Stopka nie ma pola tła ani koloru.** Nie było ich w specyfikacji modułu, więc
+dziedziczy je z `body`. Odrębna kolorystyka stopki to osobny moduł do zlecenia
+(„Stylizacja Footer"), nie pole dodane przy okazji. Odstępy siatki (`gap: 32px`),
+padding stopki (`48px`) i podział na breakpointach też są stałymi wartościami.
+
+**Siatka responsywnie** (progi z CLAUDE.md sekcja 18): 4 kolumny na desktopie,
+**2 kolumny** poniżej 980px, **1 kolumna** poniżej 767px.
+
+### Komponent `cyber_social_icons()`
+
+Wspólna lista ikon dla Top Header i stopki — jedna pętla po platformach zamiast
+kopii w każdym widoku (CLAUDE.md sekcja 22b).
+
+| | |
+|---|---|
+| Funkcja | `cyber_social_icons( array $args )` — `inc/components.php` |
+| Budowanie listy | `cyber_social_links( bool $respect_toggles )` — ta sama funkcja zasila `cyber_top_header_data()` |
+| Widok | `template-parts/components/social-icons.php` |
+
+| Argument | Typ | Domyślnie | Znaczenie |
+|---|---|---|---|
+| `respect_toggles` | bool | `false` | Czy uwzględniać wyłączniki `cyber_topheader_show_*`. |
+| `class` | string | `''` | Dodatkowa klasa kontenera obok bazowej `.cyber-social-icons`. |
+
+Gdy żaden adres nie jest wypełniony, komponent **nie generuje niczego** — pusty
+kontener flex zostawiałby w layoucie dziurę po odstępach.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -952,6 +1022,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Footer”**: 2 pola dla kolumny 1 (logo + WYSIWYG). Kolumny 2 i 3 zarezerwowane bez pól, kolumna 4 reużywa `cyber_social_*` bez wyłączników. Wydzielony wspólny komponent `cyber_social_icons()` — Top Header przestał mieć własną pętlę. Nowy typ schematu `html`.
 - 2026-09-10 — Nowa zakładka **„Top Header”**: 3 pola stylu + 8 przełączników widoczności. **Pierwszy moduł konsumujący pola z „Kontakt" i „Social Media"** przez `cyber_get_option()`. Nowy `template-parts/header/top-header.php`, `cyber_top_header_data()` w `inc/header.php`, własne inline SVG w `cyber_get_social_icon()`.
 - 2026-09-10 — Nowa zakładka **„Social Media”**: 6 pól URL (Facebook, Instagram, YouTube, X, LinkedIn, TikTok) — **bez logiki frontendowej**, zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Bez nowego pliku w `inc/` — walidację pokrywa istniejący typ schematu `url`.
 - 2026-09-10 — Nowa zakładka **„Kontakt”**: 7 pól danych kontaktowych (adres, godziny, telefon, email, NIP, KRS, REGON) — **bez logiki frontendowej**, świadomie zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Nowy `inc/contact.php` z walidacją przy zapisie, nowe typy schematu `text` / `textarea` / `email`.

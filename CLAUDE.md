@@ -400,6 +400,24 @@ społecznościowych (Facebook, Instagram, YouTube, X, LinkedIn, TikTok).
 **stopka** i dane strukturalne Schema.org (`sameAs`); oba mają czytać te same pola,
 nie tworzyć własnych.
 
+### Kolumny 2 i 3 stopki
+
+Kolumny 2 i 3 modułu Footer (`template-parts/footer/footer.php`) są świadomie puste,
+bez pól ACF — zarezerwowane pod przyszłą zawartość (np. menu stopki, newsletter).
+
+Przy planowaniu kolejnych modułów sprawdź najpierw, czy pasują właśnie tam, zamiast
+tworzyć nową sekcję w innym miejscu strony.
+
+### Komponent ikon social media
+
+Ikony social media renderowane są przez wspólny komponent
+`template-parts/components/social-icons.php`, używany zarówno przez **Top Header**
+(z respektowaniem wyłączników `cyber_topheader_show_*`), jak i **Footer**
+(bez wyłączników — liczy się tylko czy pole URL jest wypełnione).
+
+Kolejne miejsca potrzebujące tej samej listy ikon mają **reużywać ten komponent**,
+nie duplikować pętli.
+
 ### Ikony
 
 Ikony są **własnymi, inline SVG** — jeden rejestr `cyber_icons()` w `inc/helpers.php`,

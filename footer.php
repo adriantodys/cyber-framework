@@ -1,8 +1,10 @@
 <?php
 /**
- * Szkielet stopki dokumentu.
+ * Zamkniecie dokumentu.
  *
- * SZKIELET TYMCZASOWY (etap 1) — patrz komentarz w header.php.
+ * Sama stopka mieszka w template-parts/footer/footer.php i dostaje dane jawnie
+ * przez $args (CLAUDE.md sekcja 4) — tutaj tylko zbieramy je przez
+ * cyber_get_option() i zamykamy dokument.
  *
  * @package Cyber_Framework
  */
@@ -11,23 +13,17 @@ defined( 'ABSPATH' ) || exit;
 ?>
 </main>
 
-<footer class="cyber-footer">
-	<div class="cyber-container">
-		<p>
-			<?php
-			echo esc_html(
-				sprintf(
-					/* translators: 1: rok, 2: nazwa witryny */
-					__( '© %1$s %2$s', 'cyber-framework' ),
-					gmdate( 'Y' ),
-					get_bloginfo( 'name' )
-				)
-			);
-			?>
-		</p>
-		<?php // TODO (etap 3): pola ACF stopki. ?>
-	</div>
-</footer>
+<?php
+get_template_part(
+	'template-parts/footer/footer',
+	null,
+	array(
+		'logo_url'  => cyber_get_option( 'footer_logo' ),
+		'site_name' => get_bloginfo( 'name' ),
+		'content'   => cyber_get_option( 'footer_content' ),
+	)
+);
+?>
 
 <?php wp_footer(); ?>
 </body>

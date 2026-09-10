@@ -12,7 +12,9 @@
  * @param array $args {
  *     @type array|null $phone  Tablica 'text' i 'href' albo null.
  *     @type array|null $email  Tablica 'text' i 'href' albo null.
- *     @type array      $social Lista tablic 'platform', 'label', 'url'.
+ *     @type array      $social Lista profili — sluzy wylacznie do decyzji, czy
+ *                              pasek ma sie renderowac. Same ikony wypisuje
+ *                              wspolny komponent cyber_social_icons().
  * }
  */
 
@@ -20,7 +22,6 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_phone  = isset( $args['phone'] ) ? $args['phone'] : null;
 $cyber_email  = isset( $args['email'] ) ? $args['email'] : null;
-$cyber_social = isset( $args['social'] ) ? $args['social'] : array();
 ?>
 
 <div class="cyber-topheader">
@@ -48,28 +49,15 @@ $cyber_social = isset( $args['social'] ) ? $args['social'] : array();
 				<?php endif; ?>
 			</div>
 
-			<?php if ( array() !== $cyber_social ) : ?>
-				<div class="cyber-topheader__social">
-					<?php foreach ( $cyber_social as $cyber_item ) : ?>
-						<a
-							class="cyber-topheader__link"
-							href="<?php echo esc_url( $cyber_item['url'] ); ?>"
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label="<?php echo esc_attr( $cyber_item['label'] ); ?>"
-						>
-							<?php
-							/*
-							 * Ikona to staly markup z cyber_get_social_icon(), bez zadnych
-							 * danych uzytkownika. Escapowanie zamienilo by znaczniki SVG
-							 * w tekst, dlatego wypisujemy je bezposrednio.
-							 */
-							echo cyber_get_social_icon( $cyber_item['platform'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-							?>
-						</a>
-					<?php endforeach; ?>
-				</div>
-			<?php endif; ?>
+			<?php
+			// Wspolny komponent — na pasku respektuje wylaczniki cyber_topheader_show_*.
+			cyber_social_icons(
+				array(
+					'respect_toggles' => true,
+					'class'           => 'cyber-topheader__social',
+				)
+			);
+			?>
 
 		</div>
 	</div>

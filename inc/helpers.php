@@ -165,7 +165,8 @@ function cyber_font_weight_choices() {
  *              'color' (kolor HEX), 'color_alpha' (HEX albo rgb/rgba — pole Color
  *              Picker z wlaczona przezroczystoscia), 'url' (adres pliku, np. logo
  *              z pola Image), 'bool' (pole True/False), 'text' / 'textarea'
- *              (tekst, opcjonalnie sprawdzany kluczem 'pattern') albo 'email'.
+ *              (tekst, opcjonalnie sprawdzany kluczem 'pattern'), 'email'
+ *              albo 'html' (tresc z pola WYSIWYG).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
@@ -720,6 +721,16 @@ function cyber_option_schema() {
 			'type'    => 'bool',
 			'default' => true,
 		),
+		'footer_logo'                 => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'footer_content'              => array(
+			'type'     => 'html',
+			'default'  => '',
+			'nullable' => true,
+		),
 	);
 }
 
@@ -836,6 +847,17 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		 * nie zostanie podmienione na wartosc domyslna.
 		 */
 		return (bool) $value;
+	}
+
+	if ( 'html' === $config['type'] ) {
+		/*
+		 * Tresc z WYSIWYG jest juz sformatowana przez ACF (wpautop, shortcode).
+		 * Filtrowanie znacznikow nalezy do momentu wypisania — widok uzywa
+		 * wp_kses_post() (CLAUDE.md sekcja 8: escapowanie przy outpucie).
+		 */
+		$value = (string) $value;
+
+		return ( '' === trim( $value ) ) ? $fallback : $value;
 	}
 
 	if ( 'textarea' === $config['type'] ) {
