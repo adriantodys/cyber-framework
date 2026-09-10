@@ -254,6 +254,419 @@
             "placeholder": "",
             "prepend": "",
             "append": "px"
+        },
+        {
+            "key": "field_cyber_tab_font",
+            "label": "Ustawienia czcionki",
+            "name": "cyber_tab_font",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_font_sizes",
+            "label": "Wielkości czcionek (Desktop)",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Wartości w px obowiązujące na desktopie (powyżej 980px). Mniejsze ekrany nie mają własnych pól — przelicza je sekcja „Skalowanie responsywne” poniżej.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_font_size_h1",
+            "label": "Nagłówek H1",
+            "name": "cyber_font_size_h1",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 48,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_h2",
+            "label": "Nagłówek H2",
+            "name": "cyber_font_size_h2",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_h3",
+            "label": "Nagłówek H3",
+            "name": "cyber_font_size_h3",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 32,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_h4",
+            "label": "Nagłówek H4",
+            "name": "cyber_font_size_h4",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 26,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_h5",
+            "label": "Nagłówek H5",
+            "name": "cyber_font_size_h5",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 22,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_h6",
+            "label": "Nagłówek H6",
+            "name": "cyber_font_size_h6",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 18,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_overtitle_1",
+            "label": "Overtitle 1",
+            "name": "cyber_font_size_overtitle_1",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_overtitle_2",
+            "label": "Overtitle 2",
+            "name": "cyber_font_size_overtitle_2",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_text",
+            "label": "Tekst (p, span, ul, li)",
+            "name": "cyber_font_size_text",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_font_size_links",
+            "label": "Linki (a)",
+            "name": "cyber_font_size_links",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_font_scale",
+            "label": "Skalowanie responsywne",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Procent wartości desktopowych. 100% = bez zmian. Każda skala przelicza WSZYSTKIE wielkości z sekcji powyżej naraz — nie ma osobnych pól per element i per breakpoint.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_font_scale_tablet",
+            "label": "Tablet (980–767px)",
+            "name": "cyber_font_scale_tablet",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 90,
+            "min": 10,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_cyber_font_scale_mobile",
+            "label": "Mobile (767–479px)",
+            "name": "cyber_font_scale_mobile",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 80,
+            "min": 10,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_cyber_font_scale_mobile_small",
+            "label": "Mobile small (poniżej 479px)",
+            "name": "cyber_font_scale_mobile_small",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 70,
+            "min": 10,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_cyber_msg_font_family",
+            "label": "Czcionki",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Zestawy dostępne lokalnie w systemie użytkownika — motyw nie doładowuje plików czcionek z zewnątrz.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_font_family_headings",
+            "label": "Czcionka nagłówków",
+            "name": "cyber_font_family_headings",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy h1–h6 oraz Overtitle 1 i 2.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif": "Systemowa — bezszeryfowa (domyślna)",
+                "Georgia, \"Times New Roman\", Times, serif": "Georgia — szeryfowa",
+                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica / Arial — bezszeryfowa"
+            },
+            "default_value": "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_font_family_text",
+            "label": "Czcionka tekstu",
+            "name": "cyber_font_family_text",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy p, span, a, ul, li.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif": "Systemowa — bezszeryfowa (domyślna)",
+                "Georgia, \"Times New Roman\", Times, serif": "Georgia — szeryfowa",
+                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica / Arial — bezszeryfowa"
+            },
+            "default_value": "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
         }
     ],
     "location": [
@@ -274,5 +687,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788912000
+    "modified": 1788998400
 }

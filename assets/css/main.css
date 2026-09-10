@@ -3,8 +3,8 @@
  *
  * UWAGA: wartosci zmiennych ponizej to STATYCZNE wartosci domyslne, zgodne
  * z docs/acf-schema.md. Sluza jako warstwa awaryjna — na froncie nadpisuje je
- * inline <style id="cyber-container-vars"> wypisywany w wp_head na podstawie
- * Global Options (cyber_print_container_css() w inc/enqueue.php). Ten arkusz
+ * inline <style id="cyber-global-vars"> wypisywany w wp_head na podstawie
+ * Global Options (cyber_print_inline_css() w inc/enqueue.php). Ten arkusz
  * laduje sie wczesniej, wiec przy tej samej specyficznosci :root wygrywaja
  * wartosci z panelu.
  */
@@ -12,6 +12,20 @@
 :root {
 	--cyber-container-width: 1500px;
 	--cyber-container-margin: 40px;
+
+	--cyber-font-family-headings: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+	--cyber-font-family-text: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+	--cyber-font-size-h1: 48px;
+	--cyber-font-size-h2: 40px;
+	--cyber-font-size-h3: 32px;
+	--cyber-font-size-h4: 26px;
+	--cyber-font-size-h5: 22px;
+	--cyber-font-size-h6: 18px;
+	--cyber-font-size-overtitle-1: 16px;
+	--cyber-font-size-overtitle-2: 14px;
+	--cyber-font-size-text: 16px;
+	--cyber-font-size-links: 16px;
 }
 
 @media (max-width: 980px) {
@@ -42,7 +56,8 @@
 
 body {
 	margin: 0;
-	font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-font-size-text);
 	line-height: 1.6;
 }
 
@@ -50,6 +65,70 @@ img,
 video {
 	max-width: 100%;
 	height: auto;
+}
+
+/* --- Typografia ----------------------------------------------------------- */
+
+/*
+ * Rozmiary i kroje pochodza wylacznie ze zmiennych — konkretne wartosci sa
+ * wypisywane inline w wp_head na podstawie zakladki "Ustawienia czcionki"
+ * (cyber_font_css() w inc/enqueue.php). Tutaj nie ma zadnych liczb.
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.cyber-overtitle,
+.cyber-overtitle--secondary {
+	font-family: var(--cyber-font-family-headings);
+}
+
+h1 { font-size: var(--cyber-font-size-h1); }
+h2 { font-size: var(--cyber-font-size-h2); }
+h3 { font-size: var(--cyber-font-size-h3); }
+h4 { font-size: var(--cyber-font-size-h4); }
+h5 { font-size: var(--cyber-font-size-h5); }
+h6 { font-size: var(--cyber-font-size-h6); }
+
+.cyber-overtitle {
+	font-size: var(--cyber-font-size-overtitle-1);
+}
+
+.cyber-overtitle--secondary {
+	font-size: var(--cyber-font-size-overtitle-2);
+}
+
+p,
+span,
+ul,
+li {
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+a {
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-font-size-links);
+}
+
+/*
+ * Tekst i linki wewnatrz naglowkow dziedzicza rozmiar naglowka. Bez tej reguly
+ * <h1><a>...</a></h1> zmniejszylby sie do wielkosci linku, a <span> w naglowku
+ * do wielkosci tekstu.
+ */
+h1 :is(a, span),
+h2 :is(a, span),
+h3 :is(a, span),
+h4 :is(a, span),
+h5 :is(a, span),
+h6 :is(a, span),
+.cyber-overtitle :is(a, span),
+.cyber-overtitle--secondary :is(a, span) {
+	font-family: inherit;
+	font-size: inherit;
 }
 
 /* --- Kontener ------------------------------------------------------------- */

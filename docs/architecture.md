@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-10 (stan: etap 1 i 2 z CLAUDE.md sekcja 17).
+Ostatnia aktualizacja: 2026-09-10 (stan: etap 1 i 2 z CLAUDE.md sekcja 17; Global Options ma zakładki „Główne ustawienia strony” i „Ustawienia czcionki”).
 
 ## Przepływ danych
 
@@ -27,11 +27,11 @@ w ustalonej kolejności:
 
 | # | Plik | Odpowiedzialność |
 |---|---|---|
-| 1 | `inc/helpers.php` | Schemat opcji, walidacja, `cyber_get_option()`. Musi być pierwszy — reszta może z niego korzystać. |
+| 1 | `inc/helpers.php` | Schemat opcji, walidacja, `cyber_get_option()`, kanoniczne breakpointy `cyber_breakpoints()`. Musi być pierwszy — reszta może z niego korzystać. |
 | 2 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
 | 3 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
-| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties kontenera w `wp_head`. |
+| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties (kontener + typografia) w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 
 ## Stałe
@@ -65,13 +65,15 @@ ACF Options Page
 cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
       │
       ▼
-cyber_container_css()         ← mapowanie pól na reguły CSS (inc/enqueue.php)
+cyber_container_css()         ← moduł „Główne ustawienia strony”
+cyber_font_css()              ← moduł „Ustawienia czcionki”     (inc/enqueue.php)
       │
       ▼
-wp_head, priorytet 20         ← <style id="cyber-container-vars">
-      │
+cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
+      │                         na wp_head, priorytet 20
       ▼
-.cyber-container              ← jedyny konsument zmiennych (assets/css/main.css)
+assets/css/main.css           ← jedyny konsument zmiennych
+                                (.cyber-container, h1–h6, .cyber-overtitle, p/span/a/ul/li)
 ```
 
 Priorytet 20 jest celowy: `wp_head` wypisuje arkusze stylów wcześniej
@@ -79,8 +81,28 @@ Priorytet 20 jest celowy: `wp_head` wypisuje arkusze stylów wcześniej
 nadpisują statyczne wartości domyślne z `main.css` przy tej samej specyficzności `:root`.
 
 Konsekwencja praktyczna: żeby dodać kolejną opcję sterującą wyglądem, dopisuje się
-ją do `cyber_option_schema()` i do `cyber_container_css()` (albo analogicznej funkcji
-dla nowego obszaru) — widoki i CSS nie wymagają zmian, bo czytają zmienną.
+ją do `cyber_option_schema()` oraz do funkcji budującej CSS dla danego obszaru,
+a tę funkcję dokleja się w `cyber_print_inline_css()`. Nowy moduł **nie rejestruje
+własnego hooka** — cały motyw wypisuje jeden blok `<style>`.
+
+### Breakpointy
+
+`cyber_breakpoints()` w `inc/helpers.php` jest jedynym źródłem progów
+(CLAUDE.md sekcja 18) i używają go oba moduły. Dodanie progu w jednym miejscu
+zmienia zachowanie całego motywu naraz — o to chodzi.
+
+**Znana rozbieżność nazewnicza:** pola marginesów powstały przed konwencją z sekcji 18
+i mają końcówki `_mobile_l` / `_mobile_s` zamiast kanonicznych `_mobile` / `_mobile_small`
+(pola czcionek są już zgodne). Mapowanie nazw siedzi w `cyber_container_css()`.
+Zmiana nazw pól ACF oznacza utratę zapisanych wartości w `wp_options`, więc wymaga
+świadomej migracji — nie jest robiona przy okazji.
+
+### Skalowanie wartości responsywnych
+
+Moduł czcionek realizuje wariant B (CLAUDE.md sekcja 19): pola trzymają wartości
+wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę procentową
+danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
+dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
 
 ## Edytor treści
 

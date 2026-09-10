@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduł: **Global Options — zakładka "Szerokość strony"** (pierwszy moduł projektu)
+Moduły: **Global Options** — zakładki „Główne ustawienia strony” i „Ustawienia czcionki”
 
 ---
 
@@ -101,11 +101,70 @@ SEO itd.) to kolejne, nieplanowane jeszcze moduły.
 > to osobny, nieplanowany na razie moduł i nie należy go zakładać ani wdrażać
 > bez wyraźnego zlecenia.
 
-### Planowane wykorzystanie w kodzie (kolejny etap, nieobjęty tym modułem)
+### Wykorzystanie w kodzie
 
-Wartości z tej zakładki będą źródłem dla zmiennych CSS (np. `--container-width`,
-`--container-margin-desktop` itd.) generowanych inline w `wp_head` lub w
-skompilowanym pliku CSS. Nie implementować przed potwierdzeniem podejścia.
+Zaimplementowane — patrz „Stan: generowanie CSS” na końcu tego dokumentu.
+
+### Zakładka: „Ustawienia czcionki”
+
+Cel: jedno miejsce sterujące całą typografią motywu — wielkościami, skalowaniem
+responsywnym i krojami. Zakładka realizuje **wariant B** z CLAUDE.md sekcja 19:
+konkretne wartości istnieją wyłącznie dla desktopu, a mniejsze ekrany dostają je
+przeliczone przez jedną skalę procentową na breakpoint.
+
+**Sekcja: Wielkości czcionek (Desktop)**
+
+Wszystkie pola: typ **Number**, append `px`, required, zakres **8–200 px**.
+Obowiązują powyżej 980px; niżej przelicza je sekcja „Skalowanie responsywne”.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Nagłówek H1 | `cyber_font_size_h1` | Number | `48` | `font-size` dla `h1`. |
+| Nagłówek H2 | `cyber_font_size_h2` | Number | `40` | `font-size` dla `h2`. |
+| Nagłówek H3 | `cyber_font_size_h3` | Number | `32` | `font-size` dla `h3`. |
+| Nagłówek H4 | `cyber_font_size_h4` | Number | `26` | `font-size` dla `h4`. |
+| Nagłówek H5 | `cyber_font_size_h5` | Number | `22` | `font-size` dla `h5`. |
+| Nagłówek H6 | `cyber_font_size_h6` | Number | `18` | `font-size` dla `h6`. |
+| Overtitle 1 | `cyber_font_size_overtitle_1` | Number | `16` | `font-size` dla klasy `.cyber-overtitle`. |
+| Overtitle 2 | `cyber_font_size_overtitle_2` | Number | `14` | `font-size` dla klasy `.cyber-overtitle--secondary`. |
+| Tekst (p, span, ul, li) | `cyber_font_size_text` | Number | `16` | `font-size` dla `body`, `p`, `span`, `ul`, `li`. |
+| Linki (a) | `cyber_font_size_links` | Number | `16` | `font-size` dla `a` poza nagłówkami. |
+
+**Sekcja: Skalowanie responsywne**
+
+Wszystkie pola: typ **Number**, append `%`, required, zakres **10–200 %**.
+Breakpointy zgodne z CLAUDE.md sekcja 18.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Tablet (980–767px) | `cyber_font_scale_tablet` | Number | `90` | Skala WSZYSTKICH wielkości desktopowych w `@media (max-width: 980px)`. |
+| Mobile (767–479px) | `cyber_font_scale_mobile` | Number | `80` | To samo w `@media (max-width: 767px)`. |
+| Mobile small (poniżej 479px) | `cyber_font_scale_mobile_small` | Number | `70` | To samo w `@media (max-width: 479px)`. |
+
+**Sekcja: Czcionki**
+
+Oba pola: typ **Select**, required, `allow_null: 0`. Wartością pola jest **gotowy
+stack CSS**, wstawiany wprost jako `font-family` — nie ma pośredniej mapy slug → stack.
+Zestawy są dostępne lokalnie w systemie użytkownika; motyw **nie doładowuje plików
+czcionek z zewnątrz** (CLAUDE.md sekcja 2 i 10).
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Czcionka nagłówków | `cyber_font_family_headings` | Select | stack systemowy | `font-family` dla `h1`–`h6`, `.cyber-overtitle`, `.cyber-overtitle--secondary`. |
+| Czcionka tekstu | `cyber_font_family_text` | Select | stack systemowy | `font-family` dla `body`, `p`, `span`, `a`, `ul`, `li`. |
+
+**Choices (identyczne dla obu pól):**
+
+```
+system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif : Systemowa — bezszeryfowa (domyślna)
+Georgia, "Times New Roman", Times, serif                        : Georgia — szeryfowa
+"Helvetica Neue", Helvetica, Arial, sans-serif                  : Helvetica / Arial — bezszeryfowa
+```
+
+> **Uwaga przy dodawaniu kroju.** Lista jest zamknięta w dwóch miejscach naraz:
+> w `acf-json/group_global_options.json` (panel) i w `cyber_option_schema()`
+> (walidacja przy odczycie). Stack dodany tylko w JSON zostanie odrzucony przez
+> `cyber_get_option()` i podmieniony na wartość domyślną.
 
 ### Zasada dostępu w kodzie
 
@@ -142,6 +201,25 @@ Nie trzeba jej klikać w UI — wystarczy Sync (patrz README, sekcja „Instalac
 | `cyber_page_margin_tablet` | `field_cyber_page_margin_tablet` | Number |
 | `cyber_page_margin_mobile_l` | `field_cyber_page_margin_mobile_l` | Number |
 | `cyber_page_margin_mobile_s` | `field_cyber_page_margin_mobile_s` | Number |
+
+Zakładka „Ustawienia czcionki” (klucz pola = `field_` + nazwa pola, bez wyjątków):
+
+| Field Name | Field Key | Typ |
+|---|---|---|
+| — (zakładka) | `field_cyber_tab_font` | Tab |
+| — (nagłówek sekcji) | `field_cyber_msg_font_sizes` | Message |
+| `cyber_font_size_h1` … `cyber_font_size_h6` | `field_cyber_font_size_h1` … `_h6` | Number |
+| `cyber_font_size_overtitle_1` | `field_cyber_font_size_overtitle_1` | Number |
+| `cyber_font_size_overtitle_2` | `field_cyber_font_size_overtitle_2` | Number |
+| `cyber_font_size_text` | `field_cyber_font_size_text` | Number |
+| `cyber_font_size_links` | `field_cyber_font_size_links` | Number |
+| — (nagłówek sekcji) | `field_cyber_msg_font_scale` | Message |
+| `cyber_font_scale_tablet` | `field_cyber_font_scale_tablet` | Number |
+| `cyber_font_scale_mobile` | `field_cyber_font_scale_mobile` | Number |
+| `cyber_font_scale_mobile_small` | `field_cyber_font_scale_mobile_small` | Number |
+| — (nagłówek sekcji) | `field_cyber_msg_font_family` | Message |
+| `cyber_font_family_headings` | `field_cyber_font_family_headings` | Select |
+| `cyber_font_family_text` | `field_cyber_font_family_text` | Select |
 
 ### Założenia przyjęte przy wdrożeniu (do akceptacji lub zmiany)
 
@@ -194,10 +272,15 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcja budująca CSS | `cyber_container_css()` — `inc/enqueue.php` |
-| Funkcja wypisująca | `cyber_print_container_css()`, hook `wp_head` priorytet 20 |
-| Zmienne | `--cyber-container-width`, `--cyber-container-margin` |
-| Konsument | klasa `.cyber-container` w `assets/css/main.css` (header, footer, `index.php`) |
+| Funkcje budujące CSS | `cyber_container_css()` i `cyber_font_css()` — `inc/enqueue.php` |
+| Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
+| Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
+| Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
+| Konsument | `assets/css/main.css` — żaden szablon PHP nie zawiera inline `style=""` |
+
+Kolejne moduły dopisują własną funkcję budującą CSS i doklejają ją
+w `cyber_print_inline_css()`. **Nie rejestrują własnego hooka** — motyw wypisuje
+dokładnie jeden blok `<style>`.
 
 Mapowanie pól na CSS:
 
@@ -219,11 +302,74 @@ edycja jednej tablicy `$breakpoints` w `cyber_container_css()`.
 Statyczne wartości w `assets/css/main.css` zostają jako warstwa awaryjna (motyw bez
 ACF PRO albo z wyłączonym hookiem nadal ma sensowny kontener).
 
+#### Zmienne generowane przez moduł czcionek
+
+| Zmienna CSS | Źródło | Skalowana? |
+|---|---|---|
+| `--cyber-font-family-headings` | `cyber_font_family_headings` | nie |
+| `--cyber-font-family-text` | `cyber_font_family_text` | nie |
+| `--cyber-font-size-h1` … `-h6` | `cyber_font_size_h1` … `_h6` | tak |
+| `--cyber-font-size-overtitle-1` | `cyber_font_size_overtitle_1` | tak |
+| `--cyber-font-size-overtitle-2` | `cyber_font_size_overtitle_2` | tak |
+| `--cyber-font-size-text` | `cyber_font_size_text` | tak |
+| `--cyber-font-size-links` | `cyber_font_size_links` | tak |
+
+Podkreślenia w nazwie pola stają się myślnikami w nazwie zmiennej
+(`cyber_font_size_overtitle_1` → `--cyber-font-size-overtitle-1`). Mapa siedzi
+w `cyber_font_size_map()`.
+
+#### Mechanizm skalowania (wariant B)
+
+Wartość dla breakpointu liczona jest **w PHP**, nie przez `calc()` w CSS:
+
+```
+wartość_breakpointu = max( 1, round( wartość_desktop * skala / 100 ) )
+```
+
+Do przeglądarki trafiają gotowe liczby w px. Przykład dla domyślnych ustawień
+(`h1 = 48px`, skale 90 / 80 / 70):
+
+| Breakpoint | Media query | Obliczenie | Wynik |
+|---|---|---|---|
+| Desktop | — (wartość bazowa) | — | 48px |
+| Tablet | `max-width: 980px` | `round(48 × 0,90)` | 43px |
+| Mobile | `max-width: 767px` | `round(48 × 0,80)` | 38px |
+| Mobile small | `max-width: 479px` | `round(48 × 0,70)` | 34px |
+
+Zabezpieczenie `max( 1, … )` istnieje po to, żeby ekstremalna kombinacja małej
+wartości i niskiej skali nie dała `font-size: 0px`, czyli niewidocznego tekstu.
+
+**Konsekwencja do zapamiętania:** skala działa na wszystko naraz. Nie da się
+zmniejszyć samego `h1` na mobile, zostawiając tekst bez zmian — to świadomy koszt
+wariantu B (CLAUDE.md sekcja 19). Per-elementowa kontrola wymaga uzasadnienia
+i osobnej decyzji, nie jest domyślna.
+
+#### Konsumpcja zmiennych w CSS
+
+`assets/css/main.css`, sekcja „Typografia”:
+
+| Selektor | Zmienne |
+|---|---|
+| `h1` … `h6` | `--cyber-font-size-h1` … `-h6` + `--cyber-font-family-headings` |
+| `.cyber-overtitle` | `--cyber-font-size-overtitle-1` + `--cyber-font-family-headings` |
+| `.cyber-overtitle--secondary` | `--cyber-font-size-overtitle-2` + `--cyber-font-family-headings` |
+| `body`, `p`, `span`, `ul`, `li` | `--cyber-font-size-text` + `--cyber-font-family-text` |
+| `a` | `--cyber-font-size-links` + `--cyber-font-family-text` |
+
+Wyjątek: `a` i `span` **wewnątrz** nagłówków i overtitle mają `font-size: inherit`
+i `font-family: inherit`. Bez tej reguły `<h1><a>…</a></h1>` skurczyłby się do
+wielkości linku.
+
+Klasy `.cyber-overtitle` i `.cyber-overtitle--secondary` są **nowe** — wprowadzone
+razem z tym modułem, bo ACF definiuje dwie wielkości overtitle, a motyw nie miał
+dla nich żadnego znacznika. Nie ma jeszcze template-partu, który je wypisuje;
+pojawią się w komponentach etapu 4.
+
 ---
 
 ## Inne grupy pól
 
-*(brak — pierwszy moduł w trakcie realizacji)*
+*(brak — cała konfiguracja globalna mieści się w `group_global_options`)*
 
 ---
 
@@ -241,3 +387,4 @@ ACF PRO albo z wyłączonym hookiem nadal ma sensowny kontener).
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Ustawienia czcionki”** w `group_global_options`: 10 pól wielkości (desktop), 3 pola skalowania procentowego, 2 pola wyboru kroju. Wdrożona logika `cyber_font_css()`, wspólne `cyber_breakpoints()`, klasy `.cyber-overtitle` / `.cyber-overtitle--secondary`. Funkcja wypisująca przemianowana na `cyber_print_inline_css()`, znacznik `<style>` na `id="cyber-global-vars"`.
