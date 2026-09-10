@@ -172,7 +172,7 @@ cyber_top_header_has_content()   ← pusty pasek w ogóle się nie renderuje
 template-parts/header/top-header.php   ← widok bez warunków biznesowych
       │
       ▼
-cyber_get_social_icon()          ← własne inline SVG, currentColor
+cyber_get_icon() / _social_icon() ← własne inline SVG z cyber_icons(), currentColor
 ```
 
 Dwie decyzje warte zapamiętania:

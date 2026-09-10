@@ -31,7 +31,7 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
-| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_get_social_icon()` |
+| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
 | Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
@@ -44,7 +44,8 @@ biznesowych, tylko sprawdza, czy dana pozycja istnieje w `$args`.
 Pasek nie renderuje się wcale, gdy nie ma czego pokazać — decyduje o tym
 `cyber_top_header_has_content()` wywoływane przed `get_template_part()`.
 
-Ikony pochodzą z `cyber_get_social_icon()` i są wypisywane bez escapowania —
+Ikony pochodzą z rejestru `cyber_icons()` — `cyber_get_icon()` dla telefonu
+i koperty, `cyber_get_social_icon()` dla profili — i są wypisywane bez escapowania —
 to stały markup z kodu, bez danych użytkownika; `esc_html()` zamieniłoby znaczniki
 SVG w tekst. Dostępna nazwa siedzi w `aria-label` linku, bo sama ikona ma
 `aria-hidden="true"`.

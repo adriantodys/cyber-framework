@@ -273,14 +273,18 @@ h6 :is(a, span),
 	gap: 12px;
 }
 
-.cyber-topheader__social svg {
+.cyber-topheader svg {
 	display: block;
+	flex-shrink: 0;
 	width: 16px;
 	height: 16px;
 }
 
 .cyber-topheader a,
 .cyber-topheader__link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
 	color: inherit;
 	font-size: inherit;
 	text-decoration: none;

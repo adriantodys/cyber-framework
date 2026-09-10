@@ -30,13 +30,20 @@ $cyber_social = isset( $args['social'] ) ? $args['social'] : array();
 			<div class="cyber-topheader__contact">
 				<?php if ( null !== $cyber_phone ) : ?>
 					<a class="cyber-topheader__link" href="<?php echo esc_url( $cyber_phone['href'] ); ?>">
-						<?php echo esc_html( $cyber_phone['text'] ); ?>
+						<?php
+						// Ikona dekoracyjna — nazwe niesie widoczny tekst obok niej.
+						echo cyber_get_icon( 'phone' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						?>
+						<span><?php echo esc_html( $cyber_phone['text'] ); ?></span>
 					</a>
 				<?php endif; ?>
 
 				<?php if ( null !== $cyber_email ) : ?>
 					<a class="cyber-topheader__link" href="<?php echo esc_url( $cyber_email['href'] ); ?>">
-						<?php echo esc_html( $cyber_email['text'] ); ?>
+						<?php
+						echo cyber_get_icon( 'envelope' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						?>
+						<span><?php echo esc_html( $cyber_email['text'] ); ?></span>
 					</a>
 				<?php endif; ?>
 			</div>

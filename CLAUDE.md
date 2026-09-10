@@ -400,10 +400,13 @@ społecznościowych (Facebook, Instagram, YouTube, X, LinkedIn, TikTok).
 **stopka** i dane strukturalne Schema.org (`sameAs`); oba mają czytać te same pola,
 nie tworzyć własnych.
 
-### Ikony social media
+### Ikony
 
-Ikony są **własnymi, inline SVG** — funkcja `cyber_get_social_icon()`
-w `inc/helpers.php` — a nie biblioteką zewnętrzną (np. Font Awesome).
+Ikony są **własnymi, inline SVG** — jeden rejestr `cyber_icons()` w `inc/helpers.php`,
+odczytywany przez `cyber_get_icon()` (dowolna ikona) i `cyber_get_social_icon()`
+(wyłącznie platformy społecznościowe). Nie używamy biblioteki zewnętrznej
+(np. Font Awesome) ani fontu ikon.
 
-Kolejne miejsca w projekcie potrzebujące tych samych ikon (np. stopka) mają
-**reużywać tę samą funkcję**, nie duplikować SVG.
+Kolejne miejsca w projekcie potrzebujące ikon (np. stopka) mają **reużywać te same
+funkcje**, nie duplikować SVG. Nowa ikona = nowy wpis w `cyber_icons()`, nie nowy
+plik ani nowa zależność.

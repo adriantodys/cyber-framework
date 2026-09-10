@@ -625,25 +625,39 @@ Wszystkie pola: **True/False (toggle)**, domyślnie **włączone**.
 ikonami (`12px`), rozmiar ikony (`16px`) i przezroczystość na hover (`0.7`).
 To proporcje paska, nie konfiguracja.
 
+Telefon i email mają obok tekstu ikonę (`phone`, `envelope`) — dekoracyjną,
+bo nazwę niesie widoczny tekst linku. Ikony social media nie mają tekstu, dlatego
+tam nazwa siedzi w `aria-label`.
+
 **Telefon w dwóch postaciach:** widoczny tekst zachowuje zapis redaktora
 (`+48 500-600-700`), a `href` jest czyszczony do `tel:+48500600700`
 (`preg_replace( '/[^0-9+]/', '', … )`) — inaczej część telefonów nie zadzwoni.
 
-### Ikony social media
+### Ikony
 
-`cyber_get_social_icon( $platform )` w `inc/helpers.php` zwraca **inline SVG**
-dla platform z `cyber_social_platforms()`. Bez biblioteki zewnętrznej, bez fontu
-ikon, bez `<img>` (CLAUDE.md sekcja 2).
+Wszystkie ikony motywu żyją w jednym rejestrze `cyber_icons()` (`inc/helpers.php`)
+i są **inline SVG**. Bez biblioteki zewnętrznej, bez fontu ikon, bez `<img>`
+(CLAUDE.md sekcja 2).
+
+| Funkcja | Zastosowanie |
+|---|---|
+| `cyber_get_icon( $name )` | dowolna ikona z rejestru |
+| `cyber_get_social_icon( $platform )` | wąskie wejście — przepuszcza wyłącznie platformy z `cyber_social_platforms()`, żeby literówka albo nazwa ikony interfejsu nie trafiła tam, gdzie kod oczekuje ikony profilu |
+
+| Grupa | Nazwy |
+|---|---|
+| Platformy | `facebook`, `instagram`, `youtube`, `x`, `linkedin`, `tiktok` |
+| Interfejs | `phone`, `envelope` — używane przy telefonie i emailu na pasku Top Header |
 
 | | |
 |---|---|
-| viewBox | `0 0 20 20` — jednakowy dla wszystkich sześciu |
+| viewBox | `0 0 20 20` — jednakowy dla wszystkich |
 | Kolor | `fill="currentColor"` / `stroke="currentColor"`, zero barw w atrybutach |
-| Dostępność | `aria-hidden="true"` i `focusable="false"` na `<svg>` — nazwa dostępna jest na linku (`aria-label`), nie na ikonie |
-| Nieznana platforma | pusty string, bez błędu |
+| Dostępność | `aria-hidden="true"` i `focusable="false"` na `<svg>` — nazwa dostępna jest na linku (`aria-label`) albo w jego widocznym tekście, nigdy na ikonie |
+| Nieznana nazwa | pusty string, bez błędu |
 
 Kształty są **proste i jednokolorowe**, celowo nie są odwzorowaniem oficjalnych
-logotypów w barwach marek — mają tworzyć spójną, lekką ikonografię paska.
+logotypów w barwach marek — mają tworzyć spójną, lekką ikonografię.
 
 ### Zasada dostępu w kodzie
 

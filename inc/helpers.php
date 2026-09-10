@@ -34,24 +34,17 @@ function cyber_social_platforms() {
 }
 
 /**
- * Zwraca inline SVG ikony platformy spolecznosciowej.
+ * Rejestr ikon motywu — ksztalty SVG bez otoczki <svg>.
  *
- * Wlasne ikony, bez biblioteki zewnetrznej (CLAUDE.md sekcja 2 i 22a). Kazda ma
- * ten sam viewBox 0 0 20 20 i dziedziczy kolor przez currentColor — nie ma tu
- * barw marek, to lekka ikonografia, nie zestaw logotypow.
+ * Jedno miejsce na wszystkie ikony (CLAUDE.md sekcja 22a): ikony platform
+ * spolecznosciowych oraz ikony interfejsu, np. telefon i koperta. Wszystkie
+ * maja ten sam viewBox 0 0 20 20 i uzywaja currentColor — zero barw marek,
+ * zero kolorow wpisanych w atrybuty.
  *
- * Ikona jest dekoracyjna (aria-hidden), wiec dostepna nazwa musi znalezc sie
- * na elemencie nadrzednym, np. jako aria-label linku.
- *
- * Zwracany markup jest STALY i pochodzi wylacznie z tej funkcji — nie zawiera
- * zadnych danych uzytkownika, wiec jest bezpieczny do wypisania bez escapowania
- * (escapowanie zniszczyloby znaczniki SVG).
- *
- * @param string $platform Slug platformy, patrz cyber_social_platforms().
- * @return string Znacznik <svg> albo pusty string dla nieznanej platformy.
+ * @return array<string, string> Nazwa ikony => zawartosc znacznika <svg>.
  */
-function cyber_get_social_icon( $platform ) {
-	$paths = array(
+function cyber_icons() {
+	return array(
 		'facebook'  => '<path d="M12.4 19v-7.3h2.5l.4-2.9h-2.9V6.9c0-.8.2-1.4 1.4-1.4h1.6V2.9c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.1H6.8v2.9h2.5V19h3.1z"/>',
 		'instagram' => '<rect x="2.6" y="2.6" width="14.8" height="14.8" rx="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/>'
 			. '<circle cx="10" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>'
@@ -62,14 +55,53 @@ function cyber_get_social_icon( $platform ) {
 			. '<rect x="3" y="7.7" width="2.7" height="9.3"/>'
 			. '<path d="M7.7 17V7.7h2.6v1.3c.5-.9 1.6-1.5 2.9-1.5 2.2 0 3.8 1.4 3.8 4V17h-2.7v-4.9c0-1.3-.6-2.1-1.8-2.1-1.1 0-2.1.8-2.1 2.2V17H7.7z"/>',
 		'tiktok'    => '<path d="M12.9 2h2.5c.2 1.9 1.4 3.3 3.2 3.5v2.6c-1.2 0-2.3-.4-3.2-1v5.3c0 3-2.4 5.4-5.4 5.4S4.6 15.4 4.6 12.4 7 7 10 7c.3 0 .6 0 .9.1v2.7c-.3-.1-.6-.2-.9-.2-1.5 0-2.7 1.2-2.7 2.8s1.2 2.8 2.7 2.8 2.9-1.2 2.9-2.8V2z"/>',
-	);
 
-	if ( ! isset( $paths[ $platform ] ) ) {
+		// Ikony interfejsu.
+		'phone'     => '<path d="M6.7 2.7c.5-.2 1.1 0 1.4.5l1.3 2.3c.3.5.2 1.1-.2 1.4L8 8c.7 1.5 2.3 3.1 3.8 3.8l1.1-1.2c.4-.4.9-.5 1.4-.2l2.3 1.3c.5.3.7.9.5 1.4l-.7 1.7c-.2.6-.8.9-1.4.8C9.4 14.9 5 10.5 4.2 4.9c-.1-.6.2-1.2.8-1.4l1.7-.8z"/>',
+		'envelope'  => '<rect x="2.2" y="4.6" width="15.6" height="10.8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/>'
+			. '<path d="M3.2 6.2 10 10.9l6.8-4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+	);
+}
+
+/**
+ * Zwraca inline SVG ikony motywu.
+ *
+ * Wlasne ikony, bez biblioteki zewnetrznej (CLAUDE.md sekcja 2 i 22a). Ikona
+ * jest dekoracyjna (aria-hidden), wiec dostepna nazwa musi znalezc sie
+ * na elemencie nadrzednym — jako aria-label linku albo jego widoczny tekst.
+ *
+ * Zwracany markup jest STALY i pochodzi wylacznie z tej funkcji — nie zawiera
+ * zadnych danych uzytkownika, wiec jest bezpieczny do wypisania bez escapowania
+ * (escapowanie zniszczyloby znaczniki SVG).
+ *
+ * @param string $name Nazwa ikony, patrz cyber_icons().
+ * @return string Znacznik <svg> albo pusty string dla nieznanej ikony.
+ */
+function cyber_get_icon( $name ) {
+	$icons = cyber_icons();
+
+	if ( ! isset( $icons[ $name ] ) ) {
 		return '';
 	}
 
 	return '<svg class="cyber-icon" viewBox="0 0 20 20" fill="currentColor" '
-		. 'aria-hidden="true" focusable="false">' . $paths[ $platform ] . '</svg>';
+		. 'aria-hidden="true" focusable="false">' . $icons[ $name ] . '</svg>';
+}
+
+/**
+ * Zwraca inline SVG ikony platformy spolecznosciowej.
+ *
+ * Waskie wejscie do cyber_get_icon(): przepuszcza wylacznie platformy
+ * z cyber_social_platforms(), zeby literowka albo nazwa ikony interfejsu
+ * nie trafila tam, gdzie kod oczekuje ikony profilu.
+ *
+ * @param string $platform Slug platformy, patrz cyber_social_platforms().
+ * @return string Znacznik <svg> albo pusty string dla nieznanej platformy.
+ */
+function cyber_get_social_icon( $platform ) {
+	$platforms = cyber_social_platforms();
+
+	return isset( $platforms[ $platform ] ) ? cyber_get_icon( $platform ) : '';
 }
 
 /**
