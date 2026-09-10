@@ -1,6 +1,6 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-10.
+Ostatnia aktualizacja: 2026-09-10 (moduły: Header desktop/mobile, Button).
 
 ## Status
 
@@ -31,7 +31,31 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
+| Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
 | Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
+
+#### Button
+
+Wywoływany funkcją `cyber_button( $args )` z `inc/components.php`, nie bezpośrednio
+przez `get_template_part()` — funkcja waliduje rozmiar i uzupełnia `rel="noopener"`
+dla `target="_blank"`, a plik widoku zakłada, że dostaje dane już sprawdzone.
+Funkcja **wypisuje** znacznik, nie zwraca go.
+
+| `size` | Klasa CSS | Pola ACF |
+|---|---|---|
+| `large` | `.btn .btn-large` | `cyber_btn_large_padding_y` / `_padding_x` / `_font_size` / `_font_weight` / `_color` / `_color_hover` / `_bg_color` / `_bg_color_hover` |
+| `medium` *(domyślny)* | `.btn .btn-medium` | `cyber_btn_medium_*`, ten sam zestaw ośmiu pól |
+| `small` | `.btn .btn-small` | `cyber_btn_small_*`, ten sam zestaw ośmiu pól |
+
+Argumenty: `text` (wymagany), `url` (wymagany), `size` (domyślnie `medium`),
+`target`, `rel`. Pusty `text` albo `url` = komponent nie generuje nic, dzięki czemu
+opcjonalny przycisk w sekcji ACF nie wymaga warunku po stronie widoku.
+Nieznany `size` → `_doing_it_wrong()` i fallback na `medium`.
+
+Komponent nie przyjmuje kolorów ani pikseli — wyłącznie nazwę rozmiaru. Wygląd
+należy do Global Options, nie do miejsca wywołania.
+
+#### Header
 
 Header dostaje wszystkie dane przez `$args` z `header.php` w rootcie — nie woła
 `cyber_get_option()` samodzielnie. Wartości liczbowe i kolory w ogóle nie przechodzą

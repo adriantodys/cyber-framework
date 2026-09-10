@@ -13,6 +13,19 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Dozwolone wartosci font-weight — jedno zrodlo dla calego projektu.
+ *
+ * Uzywaja jej pola typografii, naglowka i przyciskow. Lista istnieje w kodzie
+ * raz, zeby dodanie grubosci nie wymagalo szukania jej po kilku modulach
+ * (odpowiednikiem po stronie panelu sa choices w acf-json/).
+ *
+ * @return string[] Wartosci font-weight.
+ */
+function cyber_font_weight_choices() {
+	return array( '300', '400', '500', '600', '700', '800' );
+}
+
+/**
  * Schemat opcji globalnych: wartosci domyslne i reguly walidacji.
  *
  * Klucze podawane sa BEZ prefiksu `cyber_` — prefiks dokladany jest automatycznie
@@ -180,22 +193,22 @@ function cyber_option_schema() {
 		'font_weight_headings'        => array(
 			'type'    => 'choice',
 			'default' => '700',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'font_weight_overtitle'       => array(
 			'type'    => 'choice',
 			'default' => '600',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'font_weight_text'            => array(
 			'type'    => 'choice',
 			'default' => '400',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'font_weight_links'           => array(
 			'type'    => 'choice',
 			'default' => '400',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'header_logo'                 => array(
 			'type'     => 'url',
@@ -240,7 +253,7 @@ function cyber_option_schema() {
 		'header_menu_font_weight'     => array(
 			'type'    => 'choice',
 			'default' => '500',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'header_menu_color'           => array(
 			'type'    => 'color',
@@ -284,7 +297,7 @@ function cyber_option_schema() {
 		'header_submenu_font_weight'  => array(
 			'type'    => 'choice',
 			'default' => '400',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'header_submenu_color'        => array(
 			'type'    => 'color',
@@ -303,6 +316,123 @@ function cyber_option_schema() {
 			'default' => 980,
 			'min'     => 320,
 			'max'     => 2000,
+		),
+		'btn_large_padding_y'         => array(
+			'type'    => 'px',
+			'default' => 18,
+			'min'     => 4,
+			'max'     => 120,
+		),
+		'btn_large_padding_x'         => array(
+			'type'    => 'px',
+			'default' => 40,
+			'min'     => 4,
+			'max'     => 200,
+		),
+		'btn_large_font_size'         => array(
+			'type'    => 'px',
+			'default' => 18,
+			'min'     => 8,
+			'max'     => 100,
+		),
+		'btn_large_font_weight'       => array(
+			'type'    => 'choice',
+			'default' => '600',
+			'choices' => cyber_font_weight_choices(),
+		),
+		'btn_large_color'             => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_large_color_hover'       => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_large_bg_color'          => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'btn_large_bg_color_hover'    => array(
+			'type'    => 'color',
+			'default' => '#0041c2',
+		),
+		'btn_medium_padding_y'        => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 4,
+			'max'     => 120,
+		),
+		'btn_medium_padding_x'        => array(
+			'type'    => 'px',
+			'default' => 32,
+			'min'     => 4,
+			'max'     => 200,
+		),
+		'btn_medium_font_size'        => array(
+			'type'    => 'px',
+			'default' => 16,
+			'min'     => 8,
+			'max'     => 100,
+		),
+		'btn_medium_font_weight'      => array(
+			'type'    => 'choice',
+			'default' => '600',
+			'choices' => cyber_font_weight_choices(),
+		),
+		'btn_medium_color'            => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_medium_color_hover'      => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_medium_bg_color'         => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'btn_medium_bg_color_hover'   => array(
+			'type'    => 'color',
+			'default' => '#0041c2',
+		),
+		'btn_small_padding_y'         => array(
+			'type'    => 'px',
+			'default' => 10,
+			'min'     => 4,
+			'max'     => 120,
+		),
+		'btn_small_padding_x'         => array(
+			'type'    => 'px',
+			'default' => 24,
+			'min'     => 4,
+			'max'     => 200,
+		),
+		'btn_small_font_size'         => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 100,
+		),
+		'btn_small_font_weight'       => array(
+			'type'    => 'choice',
+			'default' => '600',
+			'choices' => cyber_font_weight_choices(),
+		),
+		'btn_small_color'             => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_small_color_hover'       => array(
+			'type'    => 'color',
+			'default' => '#ffffff',
+		),
+		'btn_small_bg_color'          => array(
+			'type'    => 'color',
+			'default' => '#0057ff',
+		),
+		'btn_small_bg_color_hover'    => array(
+			'type'    => 'color',
+			'default' => '#0041c2',
 		),
 	);
 }

@@ -50,6 +50,33 @@
 	--cyber-header-submenu-color-hover: #0057ff;
 	--cyber-header-submenu-color-active: #0057ff;
 
+	--cyber-btn-large-padding-y: 18px;
+	--cyber-btn-large-padding-x: 40px;
+	--cyber-btn-large-font-size: 18px;
+	--cyber-btn-large-font-weight: 600;
+	--cyber-btn-large-color: #ffffff;
+	--cyber-btn-large-color-hover: #ffffff;
+	--cyber-btn-large-bg-color: #0057ff;
+	--cyber-btn-large-bg-color-hover: #0041c2;
+
+	--cyber-btn-medium-padding-y: 14px;
+	--cyber-btn-medium-padding-x: 32px;
+	--cyber-btn-medium-font-size: 16px;
+	--cyber-btn-medium-font-weight: 600;
+	--cyber-btn-medium-color: #ffffff;
+	--cyber-btn-medium-color-hover: #ffffff;
+	--cyber-btn-medium-bg-color: #0057ff;
+	--cyber-btn-medium-bg-color-hover: #0041c2;
+
+	--cyber-btn-small-padding-y: 10px;
+	--cyber-btn-small-padding-x: 24px;
+	--cyber-btn-small-font-size: 14px;
+	--cyber-btn-small-font-weight: 600;
+	--cyber-btn-small-color: #ffffff;
+	--cyber-btn-small-color-hover: #ffffff;
+	--cyber-btn-small-bg-color: #0057ff;
+	--cyber-btn-small-bg-color-hover: #0041c2;
+
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
 	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
@@ -409,6 +436,69 @@ h6 :is(a, span),
 
 .cyber-hamburger--active .cyber-hamburger__bar:nth-child(3) {
 	transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --- Przyciski ------------------------------------------------------------ */
+
+/*
+ * .btn niesie wylacznie wlasciwosci strukturalne — te, ktorych ACF nie ustawia.
+ * Wszystko, co konfigurowalne, przychodzi ze zmiennych rozmiaru.
+ *
+ * border-radius: 0 jest wartoscia domyslna, nie decyzja projektowa — projekt
+ * nie ma jeszcze ustalonego promienia zaokraglenia i nie wymyslamy dla niego
+ * pola na zapas (patrz docs/acf-schema.md).
+ */
+
+.btn {
+	display: inline-block;
+	border: none;
+	border-radius: 0;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-large {
+	padding: var(--cyber-btn-large-padding-y) var(--cyber-btn-large-padding-x);
+	font-size: var(--cyber-btn-large-font-size);
+	font-weight: var(--cyber-btn-large-font-weight);
+	color: var(--cyber-btn-large-color);
+	background-color: var(--cyber-btn-large-bg-color);
+}
+
+.btn-large:hover,
+.btn-large:focus-visible {
+	color: var(--cyber-btn-large-color-hover);
+	background-color: var(--cyber-btn-large-bg-color-hover);
+}
+
+.btn-medium {
+	padding: var(--cyber-btn-medium-padding-y) var(--cyber-btn-medium-padding-x);
+	font-size: var(--cyber-btn-medium-font-size);
+	font-weight: var(--cyber-btn-medium-font-weight);
+	color: var(--cyber-btn-medium-color);
+	background-color: var(--cyber-btn-medium-bg-color);
+}
+
+.btn-medium:hover,
+.btn-medium:focus-visible {
+	color: var(--cyber-btn-medium-color-hover);
+	background-color: var(--cyber-btn-medium-bg-color-hover);
+}
+
+.btn-small {
+	padding: var(--cyber-btn-small-padding-y) var(--cyber-btn-small-padding-x);
+	font-size: var(--cyber-btn-small-font-size);
+	font-weight: var(--cyber-btn-small-font-weight);
+	color: var(--cyber-btn-small-color);
+	background-color: var(--cyber-btn-small-bg-color);
+}
+
+.btn-small:hover,
+.btn-small:focus-visible {
+	color: var(--cyber-btn-small-color-hover);
+	background-color: var(--cyber-btn-small-bg-color-hover);
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

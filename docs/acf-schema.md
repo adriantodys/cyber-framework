@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop” i „Header Mobile”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile” i „Przyciski”
 
 ---
 
@@ -316,6 +316,112 @@ w `inc/enqueue.php` generuje więc komplet reguł jako gotowy string, wstrzykuj�
 liczbę wprost. To jedyny fragment CSS generowany w całości — pozostałe moduły
 wypisują wyłącznie wartości zmiennych.
 
+### Zakładka: „Przyciski”
+
+Trzy rozmiary — `large`, `medium`, `small` — po **8 pól każdy, razem 24**.
+Nazwa rozmiaru jest jednocześnie modyfikatorem klasy (`.btn-large`), członem nazwy
+pola (`cyber_btn_large_*`) i członem nazwy zmiennej (`--cyber-btn-large-*`).
+
+**Choices `font_weight` są tymi samymi wartościami co w module „Ustawienia czcionki”.**
+Po stronie PHP lista istnieje raz, w `cyber_font_weight_choices()` (`inc/helpers.php`),
+i korzystają z niej pola typografii, nagłówka i przycisków. Po stronie panelu
+te same wartości powtarza `acf-json/` — dodanie grubości wymaga zmiany w obu miejscach.
+
+**Rozmiar `large` → klasa `.btn-large`**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Large — padding góra/dół | `cyber_btn_large_padding_y` | Number (4–120 px) | `18` | `--cyber-btn-large-padding-y` |
+| Large — padding lewo/prawo | `cyber_btn_large_padding_x` | Number (4–200 px) | `40` | `--cyber-btn-large-padding-x` |
+| Large — wielkość czcionki | `cyber_btn_large_font_size` | Number (8–100 px) | `18` | `--cyber-btn-large-font-size` |
+| Large — grubość czcionki | `cyber_btn_large_font_weight` | Select | `600` | `--cyber-btn-large-font-weight` |
+| Large — kolor tekstu | `cyber_btn_large_color` | Color Picker | `#ffffff` | `--cyber-btn-large-color` |
+| Large — kolor tekstu po najechaniu | `cyber_btn_large_color_hover` | Color Picker | `#ffffff` | `--cyber-btn-large-color-hover` |
+| Large — kolor tła | `cyber_btn_large_bg_color` | Color Picker | `#0057ff` | `--cyber-btn-large-bg-color` |
+| Large — kolor tła po najechaniu | `cyber_btn_large_bg_color_hover` | Color Picker | `#0041c2` | `--cyber-btn-large-bg-color-hover` |
+
+**Rozmiar `medium` → klasa `.btn-medium`**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Medium — padding góra/dół | `cyber_btn_medium_padding_y` | Number (4–120 px) | `14` | `--cyber-btn-medium-padding-y` |
+| Medium — padding lewo/prawo | `cyber_btn_medium_padding_x` | Number (4–200 px) | `32` | `--cyber-btn-medium-padding-x` |
+| Medium — wielkość czcionki | `cyber_btn_medium_font_size` | Number (8–100 px) | `16` | `--cyber-btn-medium-font-size` |
+| Medium — grubość czcionki | `cyber_btn_medium_font_weight` | Select | `600` | `--cyber-btn-medium-font-weight` |
+| Medium — kolor tekstu | `cyber_btn_medium_color` | Color Picker | `#ffffff` | `--cyber-btn-medium-color` |
+| Medium — kolor tekstu po najechaniu | `cyber_btn_medium_color_hover` | Color Picker | `#ffffff` | `--cyber-btn-medium-color-hover` |
+| Medium — kolor tła | `cyber_btn_medium_bg_color` | Color Picker | `#0057ff` | `--cyber-btn-medium-bg-color` |
+| Medium — kolor tła po najechaniu | `cyber_btn_medium_bg_color_hover` | Color Picker | `#0041c2` | `--cyber-btn-medium-bg-color-hover` |
+
+**Rozmiar `small` → klasa `.btn-small`**
+
+| Field Label | Field Name | Typ | Default | Zmienna CSS |
+|---|---|---|---|---|
+| Small — padding góra/dół | `cyber_btn_small_padding_y` | Number (4–120 px) | `10` | `--cyber-btn-small-padding-y` |
+| Small — padding lewo/prawo | `cyber_btn_small_padding_x` | Number (4–200 px) | `24` | `--cyber-btn-small-padding-x` |
+| Small — wielkość czcionki | `cyber_btn_small_font_size` | Number (8–100 px) | `14` | `--cyber-btn-small-font-size` |
+| Small — grubość czcionki | `cyber_btn_small_font_weight` | Select | `600` | `--cyber-btn-small-font-weight` |
+| Small — kolor tekstu | `cyber_btn_small_color` | Color Picker | `#ffffff` | `--cyber-btn-small-color` |
+| Small — kolor tekstu po najechaniu | `cyber_btn_small_color_hover` | Color Picker | `#ffffff` | `--cyber-btn-small-color-hover` |
+| Small — kolor tła | `cyber_btn_small_bg_color` | Color Picker | `#0057ff` | `--cyber-btn-small-bg-color` |
+| Small — kolor tła po najechaniu | `cyber_btn_small_bg_color_hover` | Color Picker | `#0041c2` | `--cyber-btn-small-bg-color-hover` |
+
+> **Decyzja: kolor należy do rozmiaru, nie do wariantu.** Każdy rozmiar niesie własny
+> komplet czterech kolorów, bo w tym projekcie rozmiar przycisku odpowiada konkretnemu
+> stylowi, a nie samej geometrii. **Konsekwencja:** nie da się zrobić dużego przycisku
+> w kolorystyce małego — wariant kolorystyczny niezależny od rozmiaru (`primary`
+> / `secondary` jako druga oś klas) byłby przebudową modułu, nie dołożeniem pola.
+> Decyzja podjęta świadomie przy wdrożeniu; zmiana wymaga osobnego zlecenia.
+
+> **Dlaczego `color_hover` istnieje.** Bez niego redaktor mógł ustawić jasne tło hover
+> pod jasnym tekstem i przycisk stawał się nieczytelny, bez możliwości naprawy z panelu
+> (CLAUDE.md sekcja 11). Domyślnie kolor hover równa się bazowemu, więc pole nic nie
+> zmienia, dopóki ktoś świadomie go nie ruszy.
+
+> **`border-radius` nie ma pola — celowo.** Projekt nie ma jeszcze ustalonego promienia
+> zaokrąglenia w żadnym komponencie, więc `.btn` używa `border-radius: 0` jako wartości
+> domyślnej. To brak decyzji, nie decyzja — gdy promień zostanie ustalony projektowo,
+> jest to jedno pole Number i jedna zmienna.
+
+### Komponent `cyber_button()`
+
+| | |
+|---|---|
+| Funkcja | `cyber_button( array $args )` — `inc/components.php` |
+| Widok | `template-parts/components/button.php` |
+| Zwraca | nic — **wypisuje** znacznik (spójnie z `get_template_part()`, którego używa header) |
+
+| Argument | Typ | Domyślnie | Znaczenie |
+|---|---|---|---|
+| `text` | string | `''` | Tekst przycisku. **Wymagany.** |
+| `url` | string | `''` | Adres docelowy. **Wymagany.** |
+| `size` | string | `'medium'` | `large`, `medium` albo `small`. |
+| `target` | string | `''` | Np. `_blank`. Pomijany, gdy pusty. |
+| `rel` | string | `''` | Pomijany, gdy pusty. |
+
+Zachowanie warte zapamiętania:
+
+- **Pusty `text` albo pusty `url` = brak znacznika.** W sekcjach ACF przycisk bywa
+  polem opcjonalnym i widok nie powinien musieć tego sprawdzać u siebie.
+- **Nieznany `size`** → `_doing_it_wrong()` i fallback na `medium`, żeby literówka
+  nie zamieniła się w cicho niestylowany przycisk.
+- **`target="_blank"` bez `rel`** → automatycznie `rel="noopener"`. Współczesne
+  przeglądarki domyślają się tego same, ale nie polegamy na tym (CLAUDE.md sekcja 9).
+- Komponent **nie przyjmuje** kolorów ani wartości w pikselach — wyłącznie nazwę
+  rozmiaru. Wygląd należy do Global Options, nie do miejsca wywołania.
+
+Przykład:
+
+```php
+cyber_button(
+	array(
+		'text' => 'Zobacz ofertę',
+		'url'  => get_permalink( $page_id ),
+		'size' => 'large',
+	)
+);
+```
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -457,7 +563,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
@@ -609,6 +715,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-10 — Nowa zakładka **„Przyciski”**: 3 rozmiary × 8 pól (geometria, grubość, 4 kolory) = 24 pola. Komponent `cyber_button()` w `inc/components.php` + `template-parts/components/button.php`, sekcja CSS w `main.css`. Lista grubości wydzielona do `cyber_font_weight_choices()` i reużyta przez wszystkie moduły.
 - 2026-09-10 — Nowa zakładka **„Header Mobile”**: jedno pole `cyber_header_mobile_breakpoint` (Number, default 980), świadomy wyjątek od kanonicznych breakpointów. Hamburger + panel mobilny w `template-parts/header/header.php`, blok `@media` generowany przez `cyber_header_mobile_css()`, obsługa w `assets/js/header.js` (czysty JS, enqueue warunkowy).
 - 2026-09-10 — Header Desktop: nowe pole `cyber_header_submenu_indicator` (True/False, default `true`) — strzałka przy pozycjach z podmenu. Nowy typ walidacji `bool` w `cyber_option_schema()`.
 - 2026-09-10 — Nowa zakładka **„Header Desktop”**: pole Image (logo, return format `url` — precedens dla pól obrazu), wyrównanie, paddingi kontenera, 7 pól menu głównego i 8 pól podmenu (Number / Select / Color Picker). Nowy `inc/header.php`, markup w `template-parts/header/header.php`, sekcja CSS w `main.css`. Menu korzysta z istniejącej lokalizacji `primary`.

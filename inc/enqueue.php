@@ -311,6 +311,60 @@ function cyber_header_css() {
 }
 
 /**
+ * Rozmiary przyciskow — jedno zrodlo dla CSS i dla komponentu.
+ *
+ * Kolejnosc odpowiada malejacej wadze wizualnej. Nazwa rozmiaru jest
+ * jednoczesnie modyfikatorem klasy (.btn-large) i czlonem nazwy pola
+ * (cyber_btn_large_*) oraz zmiennej (--cyber-btn-large-*).
+ *
+ * @return string[] Nazwy rozmiarow.
+ */
+function cyber_button_sizes() {
+	return array( 'large', 'medium', 'small' );
+}
+
+/**
+ * Buduje CSS ze zmiennymi przyciskow na podstawie Global Options.
+ *
+ * Kazdy rozmiar niesie wlasny komplet kolorow — decyzja projektowa: rozmiar
+ * przycisku odpowiada u nas konkretnemu stylowi, nie samej geometrii. Wariant
+ * kolorystyczny niezalezny od rozmiaru bylby druga osia i wymaga osobnej decyzji
+ * (patrz docs/acf-schema.md).
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_button_css() {
+	$properties = array(
+		'padding_y'      => array( 'padding-y', 'px' ),
+		'padding_x'      => array( 'padding-x', 'px' ),
+		'font_size'      => array( 'font-size', 'px' ),
+		'font_weight'    => array( 'font-weight', '' ),
+		'color'          => array( 'color', '' ),
+		'color_hover'    => array( 'color-hover', '' ),
+		'bg_color'       => array( 'bg-color', '' ),
+		'bg_color_hover' => array( 'bg-color-hover', '' ),
+	);
+
+	$css = ':root{';
+
+	foreach ( cyber_button_sizes() as $size ) {
+		foreach ( $properties as $option_suffix => $definition ) {
+			list( $css_suffix, $unit ) = $definition;
+
+			$value = cyber_get_option( 'btn_' . $size . '_' . $option_suffix );
+
+			if ( 'px' === $unit ) {
+				$value = sprintf( '%dpx', (int) $value );
+			}
+
+			$css .= sprintf( '--cyber-btn-%1$s-%2$s:%3$s;', $size, $css_suffix, $value );
+		}
+	}
+
+	return $css . '}';
+}
+
+/**
  * Buduje CSS modulu "Header Mobile".
  *
  * Caly blok @media powstaje w PHP, bo prog przelaczania pochodzi z pola ACF,
@@ -391,7 +445,11 @@ function cyber_header_mobile_css() {
  * @return void
  */
 function cyber_print_inline_css() {
-	$css = cyber_container_css() . cyber_font_css() . cyber_header_css() . cyber_header_mobile_css();
+	$css = cyber_container_css()
+		. cyber_font_css()
+		. cyber_header_css()
+		. cyber_header_mobile_css()
+		. cyber_button_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

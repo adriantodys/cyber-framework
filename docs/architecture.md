@@ -31,9 +31,10 @@ w ustalonej kolejności:
 | 2 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
 | 3 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
 | 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
-| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties (kontener + typografia) w `wp_head`. |
+| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
 | 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 | 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile. Stała `CYBER_HEADER_MENU_LOCATION`. |
+| 8 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
 
 ## Stałe
 
@@ -69,7 +70,8 @@ cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
 cyber_container_css()         ← moduł „Główne ustawienia strony”
 cyber_font_css()              ← moduł „Ustawienia czcionki”
 cyber_header_css()            ← moduł „Header Desktop”
-cyber_header_mobile_css()     ← moduł „Header Mobile”            (inc/enqueue.php)
+cyber_header_mobile_css()     ← moduł „Header Mobile”
+cyber_button_css()            ← moduł „Przyciski”               (inc/enqueue.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">

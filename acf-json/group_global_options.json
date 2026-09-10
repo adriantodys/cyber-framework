@@ -1403,6 +1403,602 @@
             "placeholder": "",
             "prepend": "",
             "append": "px"
+        },
+        {
+            "key": "field_cyber_tab_buttons",
+            "label": "Przyciski",
+            "name": "cyber_tab_buttons",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_buttons",
+            "label": "Trzy rozmiary przycisków",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Każdy rozmiar niesie własny komplet kolorów — rozmiar odpowiada u nas konkretnemu stylowi przycisku, nie samej geometrii. Komponent wywołuje się w kodzie przez cyber_button() z argumentem size: large, medium albo small.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_msg_btn_large",
+            "label": "Przycisk Large (.btn-large)",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_btn_large_padding_y",
+            "label": "Large — padding góra/dół",
+            "name": "cyber_btn_large_padding_y",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 18,
+            "min": 4,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_large_padding_x",
+            "label": "Large — padding lewo/prawo",
+            "name": "cyber_btn_large_padding_x",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "min": 4,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_large_font_size",
+            "label": "Large — wielkość czcionki",
+            "name": "cyber_btn_large_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 18,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_large_font_weight",
+            "label": "Large — grubość czcionki",
+            "name": "cyber_btn_large_font_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "600",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_btn_large_color",
+            "label": "Large — kolor tekstu",
+            "name": "cyber_btn_large_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_large_color_hover",
+            "label": "Large — kolor tekstu po najechaniu",
+            "name": "cyber_btn_large_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Domyślnie taki sam jak kolor bazowy. Zmień, jeśli tło hover wymaga innego kontrastu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_large_bg_color",
+            "label": "Large — kolor tła",
+            "name": "cyber_btn_large_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_large_bg_color_hover",
+            "label": "Large — kolor tła po najechaniu",
+            "name": "cyber_btn_large_bg_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0041c2",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_msg_btn_medium",
+            "label": "Przycisk Medium (.btn-medium)",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_btn_medium_padding_y",
+            "label": "Medium — padding góra/dół",
+            "name": "cyber_btn_medium_padding_y",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 4,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_medium_padding_x",
+            "label": "Medium — padding lewo/prawo",
+            "name": "cyber_btn_medium_padding_x",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 32,
+            "min": 4,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_medium_font_size",
+            "label": "Medium — wielkość czcionki",
+            "name": "cyber_btn_medium_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 16,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_medium_font_weight",
+            "label": "Medium — grubość czcionki",
+            "name": "cyber_btn_medium_font_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "600",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_btn_medium_color",
+            "label": "Medium — kolor tekstu",
+            "name": "cyber_btn_medium_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_medium_color_hover",
+            "label": "Medium — kolor tekstu po najechaniu",
+            "name": "cyber_btn_medium_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Domyślnie taki sam jak kolor bazowy. Zmień, jeśli tło hover wymaga innego kontrastu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_medium_bg_color",
+            "label": "Medium — kolor tła",
+            "name": "cyber_btn_medium_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_medium_bg_color_hover",
+            "label": "Medium — kolor tła po najechaniu",
+            "name": "cyber_btn_medium_bg_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0041c2",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_msg_btn_small",
+            "label": "Przycisk Small (.btn-small)",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_btn_small_padding_y",
+            "label": "Small — padding góra/dół",
+            "name": "cyber_btn_small_padding_y",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 4,
+            "max": 120,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_small_padding_x",
+            "label": "Small — padding lewo/prawo",
+            "name": "cyber_btn_small_padding_x",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 24,
+            "min": 4,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_small_font_size",
+            "label": "Small — wielkość czcionki",
+            "name": "cyber_btn_small_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_btn_small_font_weight",
+            "label": "Small — grubość czcionki",
+            "name": "cyber_btn_small_font_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "Light (300)",
+                "400": "Regular (400)",
+                "500": "Medium (500)",
+                "600": "SemiBold (600)",
+                "700": "Bold (700)",
+                "800": "ExtraBold (800)"
+            },
+            "default_value": "600",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": ""
+        },
+        {
+            "key": "field_cyber_btn_small_color",
+            "label": "Small — kolor tekstu",
+            "name": "cyber_btn_small_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_small_color_hover",
+            "label": "Small — kolor tekstu po najechaniu",
+            "name": "cyber_btn_small_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Domyślnie taki sam jak kolor bazowy. Zmień, jeśli tło hover wymaga innego kontrastu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_small_bg_color",
+            "label": "Small — kolor tła",
+            "name": "cyber_btn_small_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 0,
+            "return_format": "string"
+        },
+        {
+            "key": "field_cyber_btn_small_bg_color_hover",
+            "label": "Small — kolor tła po najechaniu",
+            "name": "cyber_btn_small_bg_color_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0041c2",
+            "enable_opacity": 0,
+            "return_format": "string"
         }
     ],
     "location": [
@@ -1423,5 +2019,5 @@
     "active": true,
     "description": "Ustawienia globalne motywu Cyber Framework. Zrodlo prawdy: docs/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1788998404
+    "modified": 1788998405
 }
