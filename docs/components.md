@@ -1,14 +1,16 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-10 (moduły: Header desktop/mobile, Button).
+Ostatnia aktualizacja: 2026-09-12 (moduły: Top Header, Header desktop/mobile, Footer,
+Copyright, Button, Social icons).
 
 ## Status
 
 **Brak layoutów Flexible Content.** System komponentów to etap 4 w kolejności budowy
-(CLAUDE.md sekcja 17); obecnie zrealizowane są etapy 1, 2 oraz część etapu 3 (header).
+(CLAUDE.md sekcja 17); obecnie zrealizowane są etapy 1, 2 i 3.
 
-Katalogi `template-parts/components/` i `template-parts/sections/` istnieją, ale są puste.
-Zajęty jest `template-parts/header/` — patrz tabela „Komponenty reużywalne”.
+Zajęte są `template-parts/header/`, `template-parts/footer/` oraz
+`template-parts/components/` — patrz tabela „Komponenty reużywalne”. Pusty pozostaje
+wyłącznie `template-parts/sections/`, który zapełni etap 4.
 
 ## Reguła, którą będzie realizować ten dokument
 
@@ -31,6 +33,7 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
+| Copyright | `template-parts/footer/copyright.php` | `text`, `links` | sekcja „Copyright” w `assets/css/main.css` + zmienne z `cyber_copyright_css()` |
 | Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content` | sekcja „Footer” w `assets/css/main.css` |
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
@@ -61,6 +64,27 @@ Kontener treści niesie klasę `.cyber-footer-text`, więc rozmiar i kolor pocho
 z sekcji „Stylizacja Footer". Klasy `.cyber-footer-title` i `.cyber-footer-link`
 są zdefiniowane w CSS, ale nie mają jeszcze zastosowania w markupie — czekają
 na zawartość kolumn 2 i 3.
+
+#### Copyright
+
+Renderowany z `footer.php` w rootcie, **pod** stopką. Dane buduje
+`cyber_copyright_data()` (`inc/footer.php`), a o tym, czy pasek w ogóle się pojawi,
+decyduje `cyber_copyright_has_content()` wywoływane przed `get_template_part()` —
+ta sama zasada „pusty pasek się nie renderuje” co w Top Header.
+
+Markup jest strukturalnie tożsamy z Top Header: kontener / inner / dwie strony flex
+(CLAUDE.md sekcja 16a). Kolejny moduł o tym kształcie ma reużyć ten sam wzorzec,
+a nie tworzyć nowy.
+
+| Element | Skąd pochodzi |
+|---|---|
+| Tekst | `cyber_copyright_text`; znacznik `{year}` podmieniany na bieżący rok (`wp_date( 'Y' )`) |
+| Linki prawne | `cyber_copyright_privacy_link`, `cyber_copyright_cookies_link` — pola **Page Link**, więc zwracają sam URL |
+| Etykiety linków | **stałe w widoku**, nie w ACF — Page Link nie przechowuje tytułu (CLAUDE.md sekcja 5a) |
+| Styl | zmienne z `cyber_copyright_css()`; padding paska i separator między linkami są stałe w `main.css` |
+
+Widok nie zawiera warunków biznesowych — sprawdza wyłącznie, czy tekst jest niepusty
+i czy lista linków coś zawiera. Link bez znanego klucza etykiety jest pomijany.
 
 #### Top Header
 

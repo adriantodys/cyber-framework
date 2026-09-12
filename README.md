@@ -36,7 +36,7 @@ cyber-framework/
 ├── assets/            ← css / js / images
 ├── docs/              ← dokumentacja (patrz niżej)
 ├── inc/               ← logika motywu
-├── template-parts/    ← komponenty i sekcje (puste — etap 3/4)
+├── template-parts/    ← header/, footer/, components/; sections/ czeka na etap 4
 ├── templates/         ← szablony widoków (puste — etap 5)
 ├── functions.php      ← bootstrap, bez logiki
 └── style.css          ← wyłącznie nagłówek motywu; style są w assets/css/
@@ -69,13 +69,19 @@ gdy pole jest puste lub ACF niedostępne. Pełna lista kluczy: `docs/acf-schema.
 Kolejność budowy: CLAUDE.md sekcja 17.
 
 - [x] **Etap 1** — szkielet motywu (`style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`)
-- [x] **Etap 2** — Global Options: Options Page + zakładka „Szerokość strony”
-- [ ] **Etap 3** — Header / Footer (ACF + template-parts)
+- [x] **Etap 2** — Global Options: Options Page + jedenaście zakładek (od „Główne ustawienia strony” po „Copyright”)
+- [x] **Etap 3** — Header / Footer (ACF + template-parts): Top Header, Header Desktop, Header Mobile, Footer, Copyright
 - [ ] **Etap 4** — system komponentów / Flexible Content
 - [ ] **Etap 5** — szablony widoków (front-page, page, single, archive, 404, search)
 - [ ] **Etap 6** — formularze / AJAX
 - [ ] **Etap 7** — podstawy SEO
 - [ ] **Etap 8** — audyt wydajności, dostępności, bezpieczeństwa + WPCS
 
-`header.php`, `footer.php` i `index.php` w rootcie to **tymczasowy szkielet** — istnieją
-po to, żeby motyw dało się aktywować i przetestować przed etapem 3/5.
+`header.php` i `footer.php` w rootcie są już docelowe — zbierają dane przez
+`cyber_get_option()` i przekazują je jawnie do `template-parts/` (CLAUDE.md sekcja 4).
+**Tymczasowy szkielet** to wyłącznie `index.php`: wymagany przez WordPress fallback,
+który zastąpią szablony z `templates/` w etapie 5.
+
+Kolumny 2 i 3 stopki oraz część pól zakładki „Kontakt” są celowo puste —
+to pola zarezerwowane pod przyszłe moduły, nie niedokończona praca
+(CLAUDE.md sekcja 22).

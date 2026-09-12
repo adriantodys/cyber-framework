@@ -674,9 +674,10 @@ h6 :is(a, span),
 /* --- Footer ---------------------------------------------------------------- */
 
 /*
- * Stopka NIE ma wlasnego pola tla ani koloru — nie bylo ich w specyfikacji
- * modulu, wiec dziedziczy je z body. Gdyby stopka miala byc odrebna
- * kolorystycznie, jest to osobny modul do zlecenia, nie pole dodane po cichu.
+ * Tlo stopki pochodzi z pola cyber_footer_bg_color (zakladka Footer, sekcja
+ * "Stylizacja Footer") i trafia tutaj jako --cyber-footer-bg. Rozmiary i kolory
+ * tekstu daja klasy narzedziowe ponizej, wiec stopka nie dziedziczy juz
+ * kolorystyki z body.
  *
  * Odstepy siatki i podzial na breakpointach to na razie stale wartosci
  * (progi zgodne z CLAUDE.md sekcja 18).

@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-10 (stan: etap 1 i 2 z CLAUDE.md sekcja 17; Global Options ma zakładki „Główne ustawienia strony” i „Ustawienia czcionki”).
+Ostatnia aktualizacja: 2026-09-12 (stan: etapy 1–3 z CLAUDE.md sekcja 17; Global Options ma jedenaście zakładek — od „Główne ustawienia strony” po „Copyright”).
 
 ## Przepływ danych
 
@@ -320,12 +320,20 @@ wyłączany — to osobna decyzja, nieobjęta tą zmianą.
 
 ## Co jeszcze nie istnieje
 
+Etapy 1–3 są zrealizowane i opisane w sekcjach powyżej: Global Options wraz
+z generowaniem CSS, Top Header, Header Desktop, Header Mobile, Footer i Copyright.
+
 Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaimplementowane:
 
-- **Etap 3** — Header / Footer sterowane ACF. `header.php` i `footer.php` w rootcie to
-  tymczasowy szkielet (branding + skip-link), potrzebny tylko po to, by motyw dało się
-  aktywować. Docelowo `template-parts/header/` i `template-parts/footer/`.
-- **Etap 4** — Flexible Content i system komponentów. `template-parts/sections/`
-  i `template-parts/components/` są puste.
-- **Etap 5** — szablony widoków w `templates/`. Obecnie istnieje wyłącznie `index.php`
-  jako wymagany przez WordPress fallback.
+- **Etap 4** — Flexible Content i system sekcji. `template-parts/sections/` jest pusty.
+  `template-parts/components/` ma już dwa komponenty ogólnego użytku (`button.php`,
+  `social-icons.php`), ale żaden z nich nie jest layoutem ACF.
+- **Etap 5** — szablony widoków w `templates/`. Katalog jest pusty; jedynym widokiem
+  jest `index.php` w rootcie, wymagany przez WordPress fallback. `header.php`
+  i `footer.php` w rootcie **nie** są już szkieletem — zbierają dane przez
+  `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
+- **Etapy 6–8** — formularze / AJAX, podstawy SEO oraz audyt wydajności, dostępności
+  i bezpieczeństwa wraz z weryfikacją PHPCS (ruleset `WordPress`).
+
+Osobno, poza kolejnością etapów: kolumny 2 i 3 stopki oraz część pól zakładki
+„Kontakt” są **zarezerwowane**, nie zapomniane (CLAUDE.md sekcja 22).
