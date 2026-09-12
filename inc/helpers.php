@@ -60,6 +60,11 @@ function cyber_icons() {
 		'phone'     => '<path d="M6.7 2.7c.5-.2 1.1 0 1.4.5l1.3 2.3c.3.5.2 1.1-.2 1.4L8 8c.7 1.5 2.3 3.1 3.8 3.8l1.1-1.2c.4-.4.9-.5 1.4-.2l2.3 1.3c.5.3.7.9.5 1.4l-.7 1.7c-.2.6-.8.9-1.4.8C9.4 14.9 5 10.5 4.2 4.9c-.1-.6.2-1.2.8-1.4l1.7-.8z"/>',
 		'envelope'  => '<rect x="2.2" y="4.6" width="15.6" height="10.8" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/>'
 			. '<path d="M3.2 6.2 10 10.9l6.8-4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
+		'user'      => '<circle cx="10" cy="6.6" r="3.3" fill="none" stroke="currentColor" stroke-width="1.6"/>'
+			. '<path d="M3.8 17.4c0-3.2 2.8-5.4 6.2-5.4s6.2 2.2 6.2 5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+		'cart'      => '<path d="M2.5 3.5h2l1.8 8.5h8.2l1.6-6H5.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
+			. '<circle cx="8" cy="15.6" r="1.4"/>'
+			. '<circle cx="13.8" cy="15.6" r="1.4"/>',
 	);
 }
 
@@ -150,6 +155,23 @@ function cyber_contact_pattern( $key ) {
  */
 function cyber_font_weight_choices() {
 	return array( '300', '400', '500', '600', '700', '800' );
+}
+
+/**
+ * Warianty ukladu headera — jedno zrodlo dla schematu, widoku i CSS.
+ *
+ * Nazwa wariantu jest jednoczesnie wartoscia pola ACF i czlonem klasy
+ * modyfikujacej (.cyber-header--centered). Lista zyje tutaj, a nie
+ * w inc/header.php, zeby cyber_option_schema() nie zalezalo od pliku
+ * ladowanego pozniej — tak samo jak cyber_font_weight_choices().
+ *
+ * Dolozenie wariantu to wpis tutaj, choices w acf-json/ i reguly CSS pod
+ * .cyber-header--[nazwa]. Komponentu nie trzeba ruszac (CLAUDE.md sekcja 20).
+ *
+ * @return string[] Nazwy wariantow.
+ */
+function cyber_header_variants() {
+	return array( 'default', 'centered', 'cta', 'woocommerce' );
 }
 
 /**
@@ -373,6 +395,21 @@ function cyber_option_schema() {
 		'header_sticky'               => array(
 			'type'    => 'bool',
 			'default' => false,
+		),
+		'header_variant'              => array(
+			'type'    => 'choice',
+			'default' => 'default',
+			'choices' => cyber_header_variants(),
+		),
+		'header_cta_text'             => array(
+			'type'     => 'text',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'header_cta_url'              => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
 		),
 		'header_menu_item_gap'        => array(
 			'type'    => 'px',

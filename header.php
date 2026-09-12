@@ -30,6 +30,13 @@ if ( cyber_top_header_has_content( $cyber_top_header ) ) {
 	get_template_part( 'template-parts/header/top-header', null, $cyber_top_header );
 }
 
+/*
+ * Wariant decyduje, ktory slot akcji ma sens — dlatego dane CTA i WooCommerce
+ * budujemy TYLKO dla swojego wariantu. Inaczej kazde wejscie na strone pytaloby
+ * WooCommerce o adresy koszyka, nawet gdy header ich nie pokazuje.
+ */
+$cyber_header_variant = cyber_get_option( 'header_variant' );
+
 get_template_part(
 	'template-parts/header/header',
 	null,
@@ -41,6 +48,9 @@ get_template_part(
 		'mobile_breakpoint' => cyber_get_option( 'header_mobile_breakpoint' ),
 		'has_menu'          => has_nav_menu( CYBER_HEADER_MENU_LOCATION ),
 		'sticky'            => cyber_get_option( 'header_sticky' ),
+		'variant'           => $cyber_header_variant,
+		'cta'               => ( 'cta' === $cyber_header_variant ) ? cyber_header_cta_data() : null,
+		'woocommerce'       => ( 'woocommerce' === $cyber_header_variant ) ? cyber_header_woocommerce_data() : null,
 	)
 );
 ?>

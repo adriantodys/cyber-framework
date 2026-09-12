@@ -37,6 +37,7 @@ w ustalonej kolejności:
 | 8 | `inc/footer.php` | Dane paska Copyright (`cyber_copyright_data()`). Odpowiednik `inc/header.php` po stronie stopki. |
 | 9 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
 | 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
+| 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
 
 ## Stałe
 
@@ -385,6 +386,95 @@ potrafi się „przykleić" po tapnięciu.
 pierwszy klik rozwija, drugi zwija. Jeśli strona-rodzic ma być osiągalna z telefonu,
 trzeba ją zdublować jako pierwszą pozycję wewnątrz jej własnego podmenu (standardowy
 zabieg redakcyjny, robiony w `Wygląd → Menu`, bez zmian w kodzie).
+
+## Warianty układu headera
+
+Cztery warianty (`cyber_header_variant`) różnią się **wyłącznie** klasą na wrapperze
+i obecnością slotu akcji. Żaden nie przepisuje komponentu:
+
+```
+default      logo | menu                       — bez slotu
+centered     logo nad menu (kolumna)           — bez slotu
+cta          logo | menu | przycisk CTA        — actions-cta.php
+woocommerce  logo | menu | konto + koszyk      — actions-woocommerce.php
+```
+
+**Slot akcji** (`.cyber-header__actions`) to jedyny punkt rozbieżności markupu.
+Każdy wariant wnosi własny template-part, więc dołożenie piątego wariantu oznacza
+nowy plik obok istniejących plus reguły CSS — bez dotykania `header.php`.
+
+Trzy decyzje warte zapamiętania:
+
+- **Slot leży poza warunkiem `has_menu`.** Przycisk CTA i ikony sklepu mają sens
+  także na witrynie, która nie ma jeszcze przypisanego menu.
+- **`margin-right: auto` przeniosło się na `.cyber-header__brand`.** Wcześniej
+  odpychaniem sterował `margin-left: auto` na hamburgerze, ale odkąd istnieje slot,
+  hamburger nie jest ostatnim elementem i musiałby o to miejsce konkurować.
+- **Na mobile kolejność zmienia `order`, nie DOM.** Slot przechodzi wizualnie przed
+  hamburgera (`order: 2` / `order: 3` w bloku `cyber_header_mobile_css()`), ale
+  w DOM hamburger nadal stoi przed `<nav>` — dzięki temu po otwarciu panelu Tab
+  prowadzi z przycisku prosto do pozycji menu, a nie do ikon sklepu.
+
+Wariant `centered` **nie** nadpisuje `cyber_header_menu_alignment` — zmienia tylko oś
+układu. Pole, które w jednym wariancie przestaje działać, byłoby cichą magią; przy
+tym wariancie wyrównanie ustawia się osobno na „Do środka”.
+
+## WooCommerce — zależność miękka
+
+WooCommerce jest zależnością **miękką**, inaczej niż ACF PRO. Motyw działa bez niego
+w całości, a funkcje, które go wymagają, wyłączają się same. `inc/woocommerce.php`
+jest **jedynym** miejscem, które o tym decyduje — kolejne moduły sklepowe pytają
+stąd, zamiast wołać `class_exists( 'WooCommerce' )` u siebie. Rozsypanie tego warunku
+po plikach kończy się tym, że po wyłączeniu wtyczki część miejsc milknie cicho,
+a część głośno.
+
+| Funkcja | Rola |
+|---|---|
+| `cyber_is_woocommerce_active()` | jedyne źródło prawdy o obecności wtyczki |
+| `cyber_woocommerce_required_by()` | lista funkcji motywu, które **w bieżącej konfiguracji** wymagają WooCommerce |
+| `cyber_woocommerce_missing_message()` | treść komunikatu (czysty tekst, escapuje miejsce wypisania) |
+| `cyber_woocommerce_missing_notice()` | `notice-warning` w panelu |
+| `cyber_woocommerce_missing_hint()` | podpowiedź na froncie, wyłącznie dla administratora |
+| `cyber_header_woocommerce_data()` | adresy konta i koszyka plus licznik, albo `null` |
+| `cyber_wc_cart_count_fragment()` | licznik koszyka aktualizowany AJAX-em WooCommerce |
+
+**Komunikat ma trzy poziomy, świadomie:**
+
+1. **Gość witryny nie widzi nic.** Header renderuje się normalnie, po prostu bez ikon.
+   Brak wtyczki nie jest jego problemem i nie ma prawa wyciec na front.
+2. **Zalogowany administrator** widzi w miejscu ikon krótką podpowiedź, żeby wiedzieć,
+   *dlaczego* jest tam pusto, zamiast szukać błędu.
+3. **W panelu** czeka pełne ostrzeżenie — ale tylko dla kogoś z `activate_plugins`
+   i tylko wtedy, gdy jakaś funkcja faktycznie jest włączona. Sam brak WooCommerce
+   na witrynie bez sklepu nie jest błędem i nie ma o czym informować.
+
+**Punkt rozszerzenia na przyszłość:** filtr `cyber_woocommerce_required_by`. Kolejny
+moduł sklepowy dopisuje się do niego jedną linią i dostaje komplet ostrzeżeń
+(panel + front) bez własnego kodu:
+
+```php
+add_filter( 'cyber_woocommerce_required_by', function ( $features ) {
+	if ( cyber_get_option( 'footer_show_cart' ) ) {
+		$features[] = __( 'koszyk w stopce', 'cyber-framework' );
+	}
+	return $features;
+} );
+```
+
+To pierwszy własny hook w tym motywie — do tej pory nie było ani jednego
+`apply_filters()`. Powstał, bo rozbudowa o WooCommerce jest zaplanowana, a nie
+„na wszelki wypadek” (CLAUDE.md sekcja 2).
+
+**Licznik koszyka** korzysta z natywnego mechanizmu WooCommerce
+(`woocommerce_add_to_cart_fragments`), więc aktualizuje się po dodaniu produktu bez
+przeładowania strony i bez linijki własnego JavaScriptu. Markup mieszka w osobnym
+template-part, bo trafia w dwa miejsca: do headera przy renderowaniu i do
+WooCommerce jako fragment. Pusty koszyk dostaje klasę `--empty` zamiast znikać
+z DOM — bez elementu WooCommerce nie miałby czego podmienić.
+
+`cyber_wc_cart_count()` sprawdza koszyk **podwójnie**: `WC()` istnieje także wtedy,
+gdy koszyk nie został jeszcze zainicjowany (REST, cron, część zadań w panelu),
+a odwołanie do niezainicjowanego koszyka jest błędem krytycznym.
 
 ## Edytor treści
 

@@ -393,8 +393,13 @@ h6 :is(a, span),
 	padding-bottom: var(--cyber-header-padding-bottom);
 }
 
+/*
+ * margin-right: auto odpycha wszystko pozostale w prawo. Wczesniej robil to
+ * margin-left: auto na hamburgerze, ale odkad istnieje slot akcji, hamburger
+ * nie jest juz ostatnim elementem i musialby o to miejsce konkurowac.
+ */
 .cyber-header__brand {
-	margin: 0;
+	margin: 0 auto 0 0;
 	flex-shrink: 0;
 }
 
@@ -407,6 +412,46 @@ h6 :is(a, span),
 .cyber-header__nav {
 	flex: 1;
 	min-width: 0;
+}
+
+/*
+ * Slot akcji po prawej stronie headera. Wnosza go warianty 'cta'
+ * i 'woocommerce'; warianty 'default' i 'centered' nie renderuja go wcale,
+ * wiec ta regula nie ma wtedy na czym zadzialac.
+ *
+ * Odstep miedzy elementami slotu jest staly — to proporcja komponentu,
+ * nie konfiguracja.
+ */
+.cyber-header__actions {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	gap: 16px;
+}
+
+/* --- Header: warianty ukladu ----------------------------------------------- */
+
+/*
+ * Wariant 'centered': logo na srodku, menu pod nim. Zmienia wylacznie os
+ * ukladu — wyrownanie samego menu nadal nalezy do pola Wyrownanie menu
+ * (.cyber-menu--left/center/right), zeby zaden wariant nie unewaznial po cichu
+ * istniejacego pola.
+ *
+ * Ponizej progu mobilnego blok generowany przez cyber_header_mobile_css()
+ * przywraca uklad w rzedzie — kolumna z hamburgerem pod logo nie ma sensu.
+ */
+.cyber-header--centered .cyber-header__inner {
+	flex-direction: column;
+	align-items: center;
+}
+
+.cyber-header--centered .cyber-header__brand {
+	margin: 0;
+}
+
+.cyber-header--centered .cyber-header__nav {
+	flex: 0 1 auto;
+	width: 100%;
 }
 
 /* --- Menu glowne ---------------------------------------------------------- */
@@ -564,7 +609,6 @@ h6 :is(a, span),
 	flex-direction: column;
 	justify-content: center;
 	gap: 5px;
-	margin-left: auto;
 	padding: var(--cyber-header-menu-link-padding);
 	border: 0;
 	background: none;
@@ -602,6 +646,79 @@ h6 :is(a, span),
 
 .cyber-hamburger--active .cyber-hamburger__bar:nth-child(3) {
 	transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --- Header: konto i koszyk WooCommerce ------------------------------------ */
+
+/*
+ * Wariant 'woocommerce'. Ikony dziedzicza kolory menu glownego, wiec nie maja
+ * wlasnych pol — zmiana koloru linkow menu przestawia je razem z nim.
+ *
+ * Licznik korzysta z barw przycisku Medium (--cyber-btn-medium-*), tego samego,
+ * ktory niesie przycisk CTA. Osobne pole na kolor plakietki byloby czwartym
+ * miejscem, w ktorym trzeba pamietac o tej samej barwie akcentu.
+ */
+
+.cyber-wc-link {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	padding: var(--cyber-header-menu-link-padding);
+	color: var(--cyber-header-menu-color);
+	text-decoration: none;
+}
+
+.cyber-wc-link:hover,
+.cyber-wc-link:focus-visible {
+	color: var(--cyber-header-menu-color-hover);
+}
+
+.cyber-wc-link svg {
+	display: block;
+	flex-shrink: 0;
+	width: 22px;
+	height: 22px;
+}
+
+/*
+ * Plakietka z liczba pozycji. Specyficznosc (0,1,0) przebija globalna regule
+ * "p, span, ul, li" (0,0,1) z modulu Typografii, ktora inaczej narzucilaby
+ * plakietce rozmiar i kolor tekstu tresci.
+ */
+.cyber-wc-count {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 18px;
+	padding: 0 5px;
+	border-radius: 9px;
+	background-color: var(--cyber-btn-medium-bg-color);
+	color: var(--cyber-btn-medium-color);
+	font-size: 11px;
+	font-weight: 700;
+	line-height: 18px;
+	text-align: center;
+}
+
+/*
+ * Pusty koszyk: element ZOSTAJE w DOM, tylko sie nie wyswietla. Usuniecie go
+ * odebraloby WooCommerce cel do podmiany fragmentem AJAX i licznik nie
+ * pojawilby sie po dodaniu pierwszego produktu.
+ */
+.cyber-wc-count--empty {
+	display: none;
+}
+
+/*
+ * Podpowiedz widoczna WYLACZNIE dla zalogowanego administratora, gdy wariant
+ * WooCommerce jest wybrany, a wtyczki nie ma. Gosc witryny nie dostaje niczego.
+ */
+.cyber-wc-missing {
+	padding: 4px 8px;
+	border: 1px dashed var(--cyber-color-border-1);
+	color: var(--cyber-color-text);
+	font-size: 12px;
+	line-height: 1.3;
 }
 
 /* --- Przyciski ------------------------------------------------------------ */

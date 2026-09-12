@@ -30,6 +30,32 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 - Brak jQuery, jeśli zadanie da się zrealizować czystym JS (chyba że coś w rdzeniu WP
   tego wymaga).
 
+### Zależności twarde i miękkie
+
+| Zależność | Rodzaj | Zachowanie przy braku |
+|---|---|---|
+| **ACF PRO** | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). |
+| **WooCommerce** | miękka | Funkcje sklepowe wyłączają się same, reszta witryny działa bez zmian (`inc/woocommerce.php`). |
+
+Każda zależność miękka musi mieć **jeden plik**, który o niej decyduje. Moduły pytają
+tam, zamiast wołać `class_exists()` u siebie — rozsypanie tego warunku po plikach
+kończy się tym, że po wyłączeniu wtyczki część miejsc milknie cicho, a część głośno.
+
+**Komunikat o braku zależności miękkiej ma trzy poziomy i żaden nie jest opcjonalny:**
+
+1. **Gość witryny nie widzi nic.** Brak wtyczki nie jest jego problemem i nie ma
+   prawa wyciec na front.
+2. **Zalogowany administrator** widzi na froncie krótką podpowiedź w miejscu, które
+   miało należeć do wtyczki — żeby wiedział, *dlaczego* jest tam pusto.
+3. **W panelu** czeka pełne ostrzeżenie, ale tylko dla kogoś z odpowiednim
+   `capability` i tylko wtedy, gdy funkcja faktycznie jest włączona. Sam brak
+   wtyczki nie jest błędem i nie ma o czym informować.
+
+Brak zależności miękkiej **nigdy** nie kończy się błędem krytycznym ani pustą stroną.
+
+Nowy moduł korzystający z WooCommerce dopisuje się do filtra
+`cyber_woocommerce_required_by` i dostaje komplet tych komunikatów bez własnego kodu.
+
 ## 3. Struktura katalogów
 
 ```

@@ -243,6 +243,61 @@ menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego 
 > CLS. Format `id` + `wp_get_attachment_image()` rozwiązałby to jednym wywołaniem —
 > jeśli logo okaże się problemem wydajnościowym, to jest miejsce do zmiany.
 
+**Sekcja: Wariant układu**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Wariant headera | `cyber_header_variant` | Select | `default` | Nakłada klasę `.cyber-header--[wartość]`. **Nie jest zmienną CSS** — patrz CLAUDE.md sekcja 20. |
+
+| Wartość | Układ | Wymaga |
+|---|---|---|
+| `default` | Logo po lewej, menu po prawej | — |
+| `centered` | Logo na środku, menu pod logo | — |
+| `cta` | Logo, menu i przycisk CTA po prawej | wypełnionych obu pól CTA |
+| `woocommerce` | Logo, menu, ikony konta i koszyka po prawej | aktywnej wtyczki WooCommerce |
+
+> **Wariant „centered” NIE nadpisuje wyrównania menu.** Zmienia wyłącznie oś układu
+> (kolumna zamiast rzędu); poziome wyrównanie menu pod logo nadal należy do pola
+> `cyber_header_menu_alignment`. Przy tym wariancie ustaw je na **Do środka** —
+> domyślne `right` da menu dosunięte do prawej pod wyśrodkowanym logo.
+>
+> Wariant celowo nie wymusza tej wartości: pole, które w jednym wariancie przestaje
+> działać, to dokładnie ten rodzaj cichej magii, przed którym ostrzega CLAUDE.md
+> sekcja 21 przy lokalizacjach menu.
+
+> **Poniżej progu mobilnego każdy wariant wygląda tak samo.** Blok generowany przez
+> `cyber_header_mobile_css()` przywraca układ w rzędzie (logo + hamburger), bo
+> kolumna z hamburgerem pod wyśrodkowanym logo zjadałaby pół ekranu telefonu.
+> Slot akcji zostaje widoczny i przechodzi **przed** hamburgera.
+
+**Sekcja: Przycisk CTA**
+
+Widoczne w panelu zawsze, ale renderowane **tylko** w wariancie `cta`.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść przycisku CTA | `cyber_header_cta_text` | Text | *(puste)* | Etykieta przycisku. |
+| Adres przycisku CTA | `cyber_header_cta_url` | URL | *(puste)* | Adres docelowy — wewnętrzny lub zewnętrzny. |
+
+> **Przycisk nie ma własnych pól wyglądu.** Renderuje go `cyber_button()` z rozmiarem
+> `medium`, więc dziedziczy **komplet** stylów z zakładki „Przyciski”: geometrię,
+> grubość i cztery kolory. Zmiana wyglądu CTA to zmiana rozmiaru Medium, a nie nowe
+> pola w tej zakładce — inaczej ten sam przycisk miałby dwa źródła prawdy.
+
+> **Dlaczego pole URL, a nie Page Link ani Link.** CLAUDE.md sekcja 5a preferuje
+> **Page Link + stałą etykietę** dla odnośników do stron witryny, a pole **Link** dla
+> zewnętrznych. Żaden z tych wzorców tu nie pasuje: etykieta ma być edytowalna
+> (więc nie „stała etykieta”), a adres bywa zarówno wewnętrzny, jak i zewnętrzny —
+> CTA równie dobrze prowadzi do podstrony Kontakt, co do zewnętrznego systemu
+> rezerwacji. Pole **Link** niosłoby własny tytuł, dublując pole tekstowe.
+>
+> Stąd dwa osobne pola i typ schematu `url` (`esc_url_raw()`). Świadomy koszt:
+> przy zmianie sluga strony wewnętrznej adres trzeba poprawić ręcznie.
+>
+> **Brak pola `target`** — przycisk zawsze otwiera się w tej samej karcie. `cyber_button()`
+> obsługuje `target` i dokłada wtedy `rel="noopener"`, więc dodanie pola to jedno
+> pole ACF i jedna linia w `cyber_header_cta_data()`.
+
 **Sekcja: Układ i odstępy**
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
@@ -1183,6 +1238,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-12 — Header Desktop: **trzy warianty układu** (`cyber_header_variant`: `centered`, `cta`, `woocommerce` obok `default`) plus dwa pola przycisku CTA (`cyber_header_cta_text`, `cyber_header_cta_url`). Wariant jest modyfikatorem klasy, nie zmienną CSS. CTA dziedziczy cały wygląd z rozmiaru Medium — bez własnych pól stylu. Wariant WooCommerce wymaga wtyczki; jej brak nie wywraca strony (patrz `inc/woocommerce.php`). Nowe ikony `user` i `cart` w `cyber_icons()`.
 - 2026-09-12 — Header Desktop: dwa nowe pola — `cyber_header_bg_color` (Color Picker, `#ffffff`, zmienna `--cyber-header-bg`) i `cyber_header_sticky` (True/False, `false`). Sticky jest modyfikatorem klasy `.cyber-header--sticky`, nie zmienną CSS; wysokość paska administratora bierze z `--wp-admin--admin-bar--height`, więc nie wymagał nowego breakpointu. Pole tła powstało razem ze sticky, bo przezroczysty przyklejony header pokazywałby przewijaną treść.
 - 2026-09-12 — **Przezroczystość włączona na wszystkich polach Color Picker** (35 pól w zakładkach Header Desktop, Przyciski, Kolory, Top Header, Footer, Copyright; cienie miały ją już wcześniej). Typ schematu tych pól zmieniony z `color` na `color_alpha` — bez zmiany samej walidacji, bo `color_alpha` przepuszcza HEX, `rgb()` i `rgba()`. Typ `color` zostaje w kodzie bez przypisanego pola. Żadna zapisana wartość ani wartość domyślna się nie zmienia.
 - 2026-09-10 — Copyright: pola prawne przestawione z **Link** na **Page Link** (wybór istniejącej strony); etykiety linków stałe w `template-parts/footer/copyright.php`. Typ schematu tych pól zmieniony z `link` na `url`.

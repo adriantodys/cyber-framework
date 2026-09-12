@@ -18,6 +18,8 @@
  *     @type bool   $has_menu       Czy do lokalizacji 'primary' przypisano menu.
  *     @type string $variant        Wariant ukladu headera. Domyslnie 'default'.
  *     @type bool   $sticky         Czy header ma zostawac na gorze przy przewijaniu.
+ *     @type array  $cta            Dane przycisku CTA albo null (tylko wariant 'cta').
+ *     @type array  $woocommerce    Dane konta i koszyka albo null (tylko wariant 'woocommerce').
  * }
  */
 
@@ -31,6 +33,8 @@ $cyber_menu_indicator = ! empty( $args['menu_indicator'] );
 $cyber_mobile_bp      = isset( $args['mobile_breakpoint'] ) ? (int) $args['mobile_breakpoint'] : 980;
 $cyber_variant        = isset( $args['variant'] ) ? $args['variant'] : 'default';
 $cyber_sticky         = ! empty( $args['sticky'] );
+$cyber_cta            = isset( $args['cta'] ) ? $args['cta'] : null;
+$cyber_wc             = isset( $args['woocommerce'] ) ? $args['woocommerce'] : null;
 
 $cyber_header_class = cyber_variant_class( 'cyber-header', $cyber_variant );
 
@@ -95,6 +99,31 @@ $cyber_mobile_menu_id = 'cyber-mobile-menu';
 				</nav>
 
 			<?php endif; ?>
+
+			<?php
+			/*
+			 * Slot akcji po prawej stronie. Celowo POZA warunkiem has_menu:
+			 * przycisk CTA i ikony sklepu maja sens takze wtedy, gdy do
+			 * lokalizacji 'primary' nie przypisano jeszcze zadnego menu.
+			 *
+			 * Kazdy wariant wnosi wlasny template-part, zamiast rozrastac ten
+			 * plik o kolejne galezie — nowy wariant to nowy plik obok, a nie
+			 * kolejny if tutaj.
+			 */
+			if ( 'cta' === $cyber_variant && null !== $cyber_cta ) {
+				get_template_part(
+					'template-parts/header/actions-cta',
+					null,
+					array( 'cta' => $cyber_cta )
+				);
+			} elseif ( 'woocommerce' === $cyber_variant ) {
+				get_template_part(
+					'template-parts/header/actions-woocommerce',
+					null,
+					array( 'wc' => $cyber_wc )
+				);
+			}
+			?>
 
 		</div>
 	</div>

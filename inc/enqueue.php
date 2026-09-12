@@ -585,6 +585,22 @@ function cyber_header_mobile_css() {
 		// Strzalka wskaznika obraca sie o 180 stopni zamiast dublowac sie nowa ikona.
 		'.cyber-mobile-menu .cyber-menu--with-indicator .menu-item-has-children.is-open > a::after'
 			. '{transform:translateY(-0.15em) rotate(225deg);}',
+
+		/*
+		 * Slot akcji (CTA, ikony sklepu) zostaje widoczny na mobile, ale wchodzi
+		 * PRZED hamburgera. Zmieniamy wylacznie kolejnosc wizualna — kolejnosc
+		 * w DOM (hamburger przed menu) zostaje nietknieta, zeby po otwarciu
+		 * panelu Tab prowadzil z przycisku prosto do pozycji menu.
+		 */
+		'.cyber-header__actions{order:2;}',
+		'.cyber-hamburger{order:3;}',
+
+		/*
+		 * Wariant 'centered' wraca ponizej progu do ukladu w rzedzie: logo na
+		 * srodku z hamburgerem pod spodem zjadaloby pol ekranu telefonu.
+		 */
+		'.cyber-header--centered .cyber-header__inner{flex-direction:row;align-items:center;}',
+		'.cyber-header--centered .cyber-header__brand{margin-right:auto;}',
 	);
 
 	return sprintf( '@media (max-width:%1$dpx){%2$s}', $breakpoint, implode( '', $rules ) );

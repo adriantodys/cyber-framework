@@ -79,6 +79,32 @@ function cyber_header_submenu_css_class( $classes, $args, $depth ) {
 add_filter( 'nav_menu_submenu_css_class', 'cyber_header_submenu_css_class', 10, 3 );
 
 /**
+ * Dane przycisku CTA w headerze.
+ *
+ * Przycisk pojawia sie wylacznie wtedy, gdy ma CO pokazac i DOKAD prowadzic.
+ * Sam tekst bez adresu albo sam adres bez tekstu to pole niedokonczone,
+ * a nie polowiczny przycisk — dlatego null, nie czesciowa tablica.
+ *
+ * Modul nie ma wlasnych pol koloru ani geometrii: wygladem steruje wylacznie
+ * rozmiar 'medium' z zakladki Przyciski (CLAUDE.md sekcja 7).
+ *
+ * @return array|null Tablica 'text' i 'url' albo null.
+ */
+function cyber_header_cta_data() {
+	$text = cyber_get_option( 'header_cta_text' );
+	$url  = cyber_get_option( 'header_cta_url' );
+
+	if ( '' === $text || '' === $url ) {
+		return null;
+	}
+
+	return array(
+		'text' => $text,
+		'url'  => $url,
+	);
+}
+
+/**
  * Buduje dane paska Top Header.
  *
  * Modul jest pierwszym konsumentem pol z zakladek "Kontakt" i "Social Media"

@@ -52,6 +52,7 @@ function cyber_load_modules() {
 		'inc/footer.php',
 		'inc/components.php',
 		'inc/contact.php',
+		'inc/woocommerce.php',
 	);
 
 	foreach ( $modules as $module ) {

@@ -1,7 +1,8 @@
 # Komponenty i layouty — Cyber Framework
 
 Ostatnia aktualizacja: 2026-09-12 (moduły: Top Header, Header desktop/mobile, Footer,
-Copyright, Button, Social icons; warianty wrapperów i przyklejony header).
+Copyright, Button, Social icons; warianty wrapperów, przyklejony header, cztery
+warianty układu headera wraz ze slotem akcji i integracją WooCommerce).
 
 ## Status
 
@@ -59,6 +60,9 @@ w którym powstał.
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
+| Header — slot akcji: CTA | `template-parts/header/actions-cta.php` | `cta` | `.cyber-header__actions` w `assets/css/main.css`; przycisk z `cyber_button()` w rozmiarze `medium` |
+| Header — slot akcji: WooCommerce | `template-parts/header/actions-woocommerce.php` | `wc` | sekcja „Header: konto i koszyk WooCommerce” w `assets/css/main.css`; ikony `user` i `cart` z `cyber_icons()` |
+| Header — licznik koszyka | `template-parts/header/cart-count.php` | `count` | `.cyber-wc-count` w `assets/css/main.css` |
 | Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu`, `variant`, `sticky` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
 #### Social icons
@@ -152,6 +156,27 @@ Nieznany `size` → `_doing_it_wrong()` i fallback na `medium`.
 
 Komponent nie przyjmuje kolorów ani pikseli — wyłącznie nazwę rozmiaru. Wygląd
 należy do Global Options, nie do miejsca wywołania.
+
+#### Header — warianty układu i slot akcji
+
+Cztery warianty (`cyber_header_variant`) nakładają klasę na wrapper i nic poza tym:
+
+| Wariant | Klasa | Slot akcji |
+|---|---|---|
+| `default` | `.cyber-header--default` | brak |
+| `centered` | `.cyber-header--centered` | brak |
+| `cta` | `.cyber-header--cta` | `actions-cta.php` |
+| `woocommerce` | `.cyber-header--woocommerce` | `actions-woocommerce.php` |
+
+**Slot akcji** (`.cyber-header__actions`) to jedyne miejsce, w którym warianty
+różnią się markupem. Każdy wnosi **własny template-part**, zamiast rozrastać
+`header.php` o kolejne gałęzie — nowy wariant to nowy plik obok, a nie kolejny `if`.
+
+Slot jest renderowany **poza** warunkiem `has_menu`: przycisk CTA i ikony sklepu
+mają sens także wtedy, gdy do lokalizacji `primary` nie przypisano jeszcze menu.
+
+Dwa warianty nie renderują slotu wcale — nie generują też pustego `<div>`.
+Dotyczy to również wariantu `cta` z niewypełnionymi polami.
 
 #### Header
 

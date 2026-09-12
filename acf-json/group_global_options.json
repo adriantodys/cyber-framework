@@ -888,6 +888,112 @@
             "preview_size": "medium"
         },
         {
+            "key": "field_cyber_msg_header_variant",
+            "label": "Wariant układu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_variant",
+            "label": "Wariant headera",
+            "name": "cyber_header_variant",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Układ elementów w headerze. Wariant z logo na środku NIE wymusza wyrównania menu — ustaw je osobno polem Wyrównanie menu. Wariant WooCommerce wymaga aktywnej wtyczki WooCommerce; bez niej header renderuje się poprawnie, tylko bez ikon konta i koszyka.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "default": "Domyślny — logo po lewej, menu po prawej",
+                "centered": "Logo na środku, menu pod logo",
+                "cta": "Logo, menu i przycisk CTA po prawej",
+                "woocommerce": "WooCommerce — logo, menu, konto i koszyk"
+            },
+            "default_value": "default",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_header_cta",
+            "label": "Przycisk CTA",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_header_cta_text",
+            "label": "Treść przycisku CTA",
+            "name": "cyber_header_cta_text",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Widoczne tylko w wariancie z przyciskiem CTA. Puste pole albo pusty adres = przycisk w ogóle się nie renderuje.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_header_cta_url",
+            "label": "Adres przycisku CTA",
+            "name": "cyber_header_cta_url",
+            "aria-label": "",
+            "type": "url",
+            "instructions": "Adres docelowy — wewnętrzny lub zewnętrzny. Przycisk dziedziczy cały wygląd rozmiaru Medium z zakładki Przyciski i nie ma własnych pól stylu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "allow_in_bindings": 0
+        },
+        {
             "key": "field_cyber_msg_header_layout",
             "label": "Układ i odstępy",
             "name": "",
@@ -3504,5 +3610,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789203400
+    "modified": 1789205000
 }
