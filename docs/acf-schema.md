@@ -250,6 +250,8 @@ menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego 
 | Wyrównanie menu | `cyber_header_menu_alignment` | Select | `right` | Pozycja bloku menu w przestrzeni obok logo. Wartości zgodne z CLAUDE.md sekcja 20. |
 | Padding górny | `cyber_header_padding_top` | Number (0–200 px) | `24` | `padding-top` na `.cyber-header__inner`. |
 | Padding dolny | `cyber_header_padding_bottom` | Number (0–200 px) | `24` | `padding-bottom` na `.cyber-header__inner`. |
+| Tło headera | `cyber_header_bg_color` | Color Picker | `#ffffff` | `--cyber-header-bg` na `.cyber-header`. |
+| Przyklejony header | `cyber_header_sticky` | True/False | `false` | Nakłada klasę `.cyber-header--sticky`. **Nie jest zmienną CSS** — patrz niżej. |
 
 > **Padding poziomy nie ma pola — świadomie.** Header renderuje się wewnątrz
 > `.cyber-container`, więc dziedziczy `--cyber-container-margin` z zakładki
@@ -257,6 +259,28 @@ menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego 
 > strony na każdym breakpoincie. Osobne pole pozwoliłoby te dwie wartości rozjechać,
 > co w praktyce zawsze wygląda na błąd. Zmiana tego założenia wymaga decyzji,
 > bo dotyczy wyrównania całej witryny, nie samego nagłówka.
+
+> **Przyklejony header — dlaczego klasa, a nie zmienna CSS.** Włączenie tej opcji
+> to *obecność reguły* (`position: sticky`), a nie wartość, którą dałoby się
+> podstawić przez `var()`. Zgodnie z CLAUDE.md sekcja 20 takie przełączniki są
+> modyfikatorem klasy: `cyber_header_sticky` dokłada `.cyber-header--sticky`
+> obok klasy wariantu układu, nie zamiast niej. Dzięki temu header może być
+> jednocześnie przyklejony i w dowolnym przyszłym wariancie — to dwie
+> prostopadłe osie.
+>
+> **Pasek administratora obsługuje się sam.** `.cyber-header--sticky` używa
+> `top: var(--wp-admin--admin-bar--height, 0px)`. WordPress ustawia tę zmienną
+> w `admin-bar.css` (32px, na wąskich ekranach 46px), a zalogowanego użytkownika
+> nie trzeba wykrywać w PHP. Dla wylogowanych arkusz się nie ładuje i obowiązuje
+> fallback `0px`. **Nie dodano przez to żadnego breakpointu** — CLAUDE.md
+> sekcja 18 zostaje nietknięta.
+>
+> **Dlaczego razem z tym powstało pole tła.** Header nie miał własnego tła —
+> przy przewijaniu treść byłaby widoczna pod przyklejonym paskiem. `#ffffff`
+> jako wartość domyślna niczego nie zmienia wizualnie (strona i tak stoi na
+> białym tle przeglądarki), ale daje redaktorowi kontrolę wtedy, gdy jej
+> potrzebuje. Pole ma włączoną przezroczystość jak każdy Color Picker w grupie,
+> więc świadomie półprzezroczysty header jest możliwy.
 
 **Sekcja: Menu główne**
 
@@ -1159,6 +1183,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-12 — Header Desktop: dwa nowe pola — `cyber_header_bg_color` (Color Picker, `#ffffff`, zmienna `--cyber-header-bg`) i `cyber_header_sticky` (True/False, `false`). Sticky jest modyfikatorem klasy `.cyber-header--sticky`, nie zmienną CSS; wysokość paska administratora bierze z `--wp-admin--admin-bar--height`, więc nie wymagał nowego breakpointu. Pole tła powstało razem ze sticky, bo przezroczysty przyklejony header pokazywałby przewijaną treść.
 - 2026-09-12 — **Przezroczystość włączona na wszystkich polach Color Picker** (35 pól w zakładkach Header Desktop, Przyciski, Kolory, Top Header, Footer, Copyright; cienie miały ją już wcześniej). Typ schematu tych pól zmieniony z `color` na `color_alpha` — bez zmiany samej walidacji, bo `color_alpha` przepuszcza HEX, `rgb()` i `rgba()`. Typ `color` zostaje w kodzie bez przypisanego pola. Żadna zapisana wartość ani wartość domyślna się nie zmienia.
 - 2026-09-10 — Copyright: pola prawne przestawione z **Link** na **Page Link** (wybór istniejącej strony); etykiety linków stałe w `template-parts/footer/copyright.php`. Typ schematu tych pól zmieniony z `link` na `url`.
 - 2026-09-10 — Nowa zakładka **„Copyright”**: 3 pola treści (tekst + 2 pola typu Link) i 5 pól stylu. Nowy `inc/footer.php` i `template-parts/footer/copyright.php`, nowy typ schematu `link`, znacznik `{year}` w tekście. Zamyka listę modułów podstawowych Global Options.

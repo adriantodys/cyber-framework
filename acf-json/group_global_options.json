@@ -980,6 +980,48 @@
             "append": "px"
         },
         {
+            "key": "field_cyber_header_bg_color",
+            "label": "Tło headera",
+            "name": "cyber_header_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Zmienna --cyber-header-bg. Istotne przy włączonym przyklejaniu: przez przezroczyste tło treść przewija się widocznie pod headerem.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_header_sticky",
+            "label": "Przyklejony header",
+            "name": "cyber_header_sticky",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Header zostaje na górze ekranu przy przewijaniu (position: sticky). Pasek Top Header przewija się normalnie i znika. Wysokość paska administratora jest uwzględniana automatycznie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_cyber_msg_header_menu",
             "label": "Menu główne",
             "name": "",
@@ -3462,5 +3504,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789202380
+    "modified": 1789203400
 }

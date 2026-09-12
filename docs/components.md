@@ -1,7 +1,7 @@
 # Komponenty i layouty — Cyber Framework
 
 Ostatnia aktualizacja: 2026-09-12 (moduły: Top Header, Header desktop/mobile, Footer,
-Copyright, Button, Social icons).
+Copyright, Button, Social icons; warianty wrapperów i przyklejony header).
 
 ## Status
 
@@ -11,6 +11,27 @@ Copyright, Button, Social icons).
 Zajęte są `template-parts/header/`, `template-parts/footer/` oraz
 `template-parts/components/` — patrz tabela „Komponenty reużywalne”. Pusty pozostaje
 wyłącznie `template-parts/sections/`, który zapełni etap 4.
+
+## Warianty wrapperów
+
+Każdy komponent-wrapper (Header, Top Header, Footer, Copyright) niesie klasę
+bazową **oraz** modyfikator wariantu, budowane przez `cyber_variant_class()`
+z `inc/components.php`:
+
+```php
+$cyber_class = cyber_variant_class( 'cyber-footer', $variant ); // 'cyber-footer cyber-footer--default'
+```
+
+Argument `variant` jest opcjonalny — brak w `$args` oznacza `default`. Na razie
+żaden moduł nie ma pola ACF na wariant i `default` jest jedyną wartością; klasa
+istnieje jako punkt zaczepienia wymagany przez CLAUDE.md sekcja 20.
+
+**Stany nie są wariantami.** Przyklejony header dokłada `.cyber-header--sticky`
+**obok** modyfikatora wariantu, nie zamiast niego — to druga, prostopadła oś:
+
+```html
+<header class="cyber-header cyber-header--default cyber-header--sticky">
+```
 
 ## Reguła, którą będzie realizować ten dokument
 
@@ -33,12 +54,12 @@ w którym powstał.
 
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
-| Copyright | `template-parts/footer/copyright.php` | `text`, `links` | sekcja „Copyright” w `assets/css/main.css` + zmienne z `cyber_copyright_css()` |
-| Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content` | sekcja „Footer” w `assets/css/main.css` |
+| Copyright | `template-parts/footer/copyright.php` | `text`, `links`, `variant` | sekcja „Copyright” w `assets/css/main.css` + zmienne z `cyber_copyright_css()` |
+| Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content`, `copyright`, `variant` | sekcja „Footer” w `assets/css/main.css` |
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
-| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
+| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
-| Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
+| Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu`, `variant`, `sticky` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
 #### Social icons
 
@@ -57,7 +78,16 @@ kontekstu służy do ewentualnych nadpisań w danym miejscu.
 #### Footer
 
 Renderowany z `footer.php` w rootcie. Kolumny 2 i 3 są celowo puste — patrz
-CLAUDE.md sekcja 22. Treść kolumny 1 pochodzi z pola WYSIWYG i jest wypisywana
+CLAUDE.md sekcja 22.
+
+**Pasek Copyright jest częścią tego widoku**, a nie osobnym wywołaniem obok
+stopki: przychodzi jako `$args['copyright']` (tablica albo `null`) i renderuje się
+jako ostatnie dziecko `<footer>`, żeby należeć do landmarka `contentinfo`. Widok
+sprawdza wyłącznie, czy dane przyszły — decyzja „czy jest co pokazać” zapadła
+w `footer.php`.
+
+Odstęp pionowy stopki siedzi na wrapperze `.cyber-footer__main`, nie na
+`<footer>` — inaczej padding dolny wypadłby pod paskiem Copyright. Treść kolumny 1 pochodzi z pola WYSIWYG i jest wypisywana
 przez `wp_kses_post()` (escapowanie przy outpucie, CLAUDE.md sekcja 8).
 
 Kontener treści niesie klasę `.cyber-footer-text`, więc rozmiar i kolor pochodzą
@@ -67,10 +97,11 @@ na zawartość kolumn 2 i 3.
 
 #### Copyright
 
-Renderowany z `footer.php` w rootcie, **pod** stopką. Dane buduje
-`cyber_copyright_data()` (`inc/footer.php`), a o tym, czy pasek w ogóle się pojawi,
-decyduje `cyber_copyright_has_content()` wywoływane przed `get_template_part()` —
-ta sama zasada „pusty pasek się nie renderuje” co w Top Header.
+Renderowany **wewnątrz** `<footer>`, jako jego ostatnie dziecko — wywołuje go
+widok stopki, nie `footer.php` w rootcie. Dane buduje `cyber_copyright_data()`
+(`inc/footer.php`), a o tym, czy pasek w ogóle się pojawi, decyduje
+`cyber_copyright_has_content()` w `footer.php` — ta sama zasada „pusty pasek się
+nie renderuje” co w Top Header.
 
 Markup jest strukturalnie tożsamy z Top Header: kontener / inner / dwie strony flex
 (CLAUDE.md sekcja 16a). Kolejny moduł o tym kształcie ma reużyć ten sam wzorzec,
@@ -125,7 +156,9 @@ należy do Global Options, nie do miejsca wywołania.
 #### Header
 
 Header dostaje wszystkie dane przez `$args` z `header.php` w rootcie — nie woła
-`cyber_get_option()` samodzielnie. Wartości liczbowe i kolory w ogóle nie przechodzą
+`cyber_get_option()` samodzielnie. Dotyczy to również `sticky`: widok dostaje
+gotowy `bool` i jedynie dokłada klasę `.cyber-header--sticky`, a całe zachowanie
+przyklejania leży w CSS (`position: sticky`), bez JavaScriptu. Wartości liczbowe i kolory w ogóle nie przechodzą
 przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
 (patrz `docs/acf-schema.md`, sekcja „Stan: generowanie CSS”).
 

@@ -15,6 +15,7 @@
  *     @type array      $social Lista profili — sluzy wylacznie do decyzji, czy
  *                              pasek ma sie renderowac. Same ikony wypisuje
  *                              wspolny komponent cyber_social_icons().
+ *     @type string     $variant Wariant paska. Domyslnie 'default'.
  * }
  */
 
@@ -22,9 +23,11 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_phone  = isset( $args['phone'] ) ? $args['phone'] : null;
 $cyber_email  = isset( $args['email'] ) ? $args['email'] : null;
+
+$cyber_class = cyber_variant_class( 'cyber-topheader', isset( $args['variant'] ) ? $args['variant'] : 'default' );
 ?>
 
-<div class="cyber-topheader">
+<div class="<?php echo esc_attr( $cyber_class ); ?>">
 	<div class="cyber-container">
 		<div class="cyber-topheader__inner">
 

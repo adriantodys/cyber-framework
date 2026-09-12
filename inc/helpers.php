@@ -366,6 +366,14 @@ function cyber_option_schema() {
 			'min'     => 0,
 			'max'     => 200,
 		),
+		'header_bg_color'             => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
+		),
+		'header_sticky'               => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
 		'header_menu_item_gap'        => array(
 			'type'    => 'px',
 			'default' => 32,

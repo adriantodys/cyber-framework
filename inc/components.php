@@ -76,6 +76,36 @@ function cyber_button( $args = array() ) {
 }
 
 /**
+ * Buduje liste klas wrappera modulu: klasa bazowa + modyfikator wariantu.
+ *
+ * CLAUDE.md sekcja 20: komponent, ktory moze zyskac alternatywny wariant
+ * wizualny, ma go dostawac jako wymienna klase na glownym wrapperze, a nie
+ * przez przepisywanie selektora bazowego. Wariant 'default' istnieje po to,
+ * zeby dolozenie drugiego bylo nowa klasa obok istniejacej.
+ *
+ * Wariant jest przepuszczany przez sanitize_html_class(), bo trafia wprost
+ * do atrybutu class — pusta albo niepoprawna wartosc wraca do 'default'
+ * zamiast wygenerowac klase-smiecia.
+ *
+ * Stany niezalezne od wariantu (np. przyklejony header) doklada sie osobna
+ * klasa obok zwroconej — to druga, prostopadla os i nie zajmuje slotu wariantu.
+ *
+ * @param string $base    Klasa bazowa modulu, np. 'cyber-header'.
+ * @param string $variant Nazwa wariantu. Domyslnie 'default'.
+ * @return string Klasa bazowa i modyfikator, np. 'cyber-header cyber-header--default'.
+ */
+function cyber_variant_class( $base, $variant = 'default' ) {
+	$base    = sanitize_html_class( $base );
+	$variant = sanitize_html_class( $variant );
+
+	if ( '' === $variant ) {
+		$variant = 'default';
+	}
+
+	return $base . ' ' . $base . '--' . $variant;
+}
+
+/**
  * Zwraca liste profili spolecznosciowych do wyswietlenia.
  *
  * Zrodlem sa pola cyber_social_* z zakladki "Social Media" — zaden modul nie

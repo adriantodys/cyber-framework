@@ -40,6 +40,7 @@ get_template_part(
 		'menu_indicator'    => cyber_get_option( 'header_submenu_indicator' ),
 		'mobile_breakpoint' => cyber_get_option( 'header_mobile_breakpoint' ),
 		'has_menu'          => has_nav_menu( CYBER_HEADER_MENU_LOCATION ),
+		'sticky'            => cyber_get_option( 'header_sticky' ),
 	)
 );
 ?>

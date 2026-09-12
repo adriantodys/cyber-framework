@@ -248,6 +248,38 @@ function cyber_font_css() {
 }
 
 /**
+ * Zamienia mape pol na blok :root ze zmiennymi CSS.
+ *
+ * Wspolna petla dla wszystkich modulow opisanych mapa (Header, Footer,
+ * Copyright). Wczesniej kazdy z nich mial wlasna, identyczna kopie tego kodu —
+ * kolejny modul kopiowalby ja po raz czwarty.
+ *
+ * Wartosci pochodza z cyber_get_option(), wiec sa juz zwalidowane co do typu
+ * i zakresu (inc/helpers.php). Jednostka 'px' wymusza dodatkowo rzutowanie na
+ * int, zeby do CSS nie trafil ulamek ani pusty string.
+ *
+ * @param array<string, array{0: string, 1: string}> $map Klucz opcji => nazwa zmiennej i jednostka.
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_css_vars_from_map( array $map ) {
+	$css = ':root{';
+
+	foreach ( $map as $option_key => $definition ) {
+		list( $css_var, $unit ) = $definition;
+
+		$value = cyber_get_option( $option_key );
+
+		if ( 'px' === $unit ) {
+			$value = sprintf( '%dpx', (int) $value );
+		}
+
+		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
+	}
+
+	return $css . '}';
+}
+
+/**
  * Mapa pol modulu "Header Desktop" na zmienne CSS.
  *
  * Klucz    = klucz opcji (bez prefiksu cyber_).
@@ -261,6 +293,7 @@ function cyber_font_css() {
  */
 function cyber_header_css_map() {
 	return array(
+		'header_bg_color'             => array( '--cyber-header-bg', '' ),
 		'header_padding_top'          => array( '--cyber-header-padding-top', 'px' ),
 		'header_padding_bottom'       => array( '--cyber-header-padding-bottom', 'px' ),
 		'header_menu_item_gap'        => array( '--cyber-header-menu-gap', 'px' ),
@@ -293,21 +326,7 @@ function cyber_header_css_map() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_header_css() {
-	$css = ':root{';
-
-	foreach ( cyber_header_css_map() as $option_key => $definition ) {
-		list( $css_var, $unit ) = $definition;
-
-		$value = cyber_get_option( $option_key );
-
-		if ( 'px' === $unit ) {
-			$value = sprintf( '%dpx', (int) $value );
-		}
-
-		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
-	}
-
-	return $css . '}';
+	return cyber_css_vars_from_map( cyber_header_css_map() );
 }
 
 /**
@@ -337,21 +356,7 @@ function cyber_copyright_css_map() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_copyright_css() {
-	$css = ':root{';
-
-	foreach ( cyber_copyright_css_map() as $option_key => $definition ) {
-		list( $css_var, $unit ) = $definition;
-
-		$value = cyber_get_option( $option_key );
-
-		if ( 'px' === $unit ) {
-			$value = sprintf( '%dpx', (int) $value );
-		}
-
-		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
-	}
-
-	return $css . '}';
+	return cyber_css_vars_from_map( cyber_copyright_css_map() );
 }
 
 /**
@@ -388,21 +393,7 @@ function cyber_footer_css_map() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_footer_css() {
-	$css = ':root{';
-
-	foreach ( cyber_footer_css_map() as $option_key => $definition ) {
-		list( $css_var, $unit ) = $definition;
-
-		$value = cyber_get_option( $option_key );
-
-		if ( 'px' === $unit ) {
-			$value = sprintf( '%dpx', (int) $value );
-		}
-
-		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
-	}
-
-	return $css . '}';
+	return cyber_css_vars_from_map( cyber_footer_css_map() );
 }
 
 /**

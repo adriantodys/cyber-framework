@@ -132,6 +132,27 @@ Kolejne moduły z podobną potrzebą (style ograniczone kontekstowo do jednej se
 strony) powinny nazywać klasy z prefiksem tej sekcji — `cyber-[sekcja]-[rola]` —
 zamiast reużywać globalne klasy narzędziowe z modułu Kolory.
 
+#### Przezroczystość — obowiązkowa we wszystkich polach koloru
+
+**Każde pole Color Picker w projekcie ma włączoną przezroczystość**
+(`enable_opacity`) i używa typu schematu **`color_alpha`**, nie `color`.
+Bez wyjątków, we wszystkich zakładkach.
+
+Nowe pole koloru dodaje się od razu w tej postaci. Ustawienie samego
+`enable_opacity` w ACF **bez** zmiany typu w `cyber_option_schema()` jest
+pułapką, nie półśrodkiem: `color` waliduje przez `sanitize_hex_color()`, które
+odrzuca `rgba()` — redaktor ustawi alfę, zapisze, a motyw po cichu podmieni
+wartość na domyślną. Panel pokaże jedno, front drugie.
+
+Typ `color` (sam HEX) zostaje w `cyber_validate_option_value()` bez
+przypisanego pola, pod ewentualne przyszłe pole, które musi odrzucić kanał alfa.
+Jego użycie wymaga uzasadnienia.
+
+Biblioteka koloru z alfą **nie zwraca HEX-a**: przy pełnym kryciu daje
+`rgb(r,g,b)`, poniżej — `rgba(r,g,b,a)`. Wartości zapisane wcześniej jako HEX
+zostają w bazie nietknięte do czasu ponownego zapisu pola, więc w `wp_options`
+oba formaty współistnieją. To stan normalny, nie niespójność do naprawienia.
+
 ## 6. Global Options — moduł nr 1
 
 Pierwszy moduł projektu. Pełna specyfikacja pól znajduje się w `docs/acf-schema.md`
@@ -158,6 +179,15 @@ Wartości z Global Options, które wpływają na wygląd frontu, są wypisywane 
   przez wspólną klasę `.cyber-container` — **nie** przez inline style w PHP.
 - Wartości responsywne wypisujemy na progach z sekcji 18; przy wielu powiązanych
   wartościach obowiązuje skalowanie procentowe z sekcji 19.
+- Moduł opisany **mapą pól** (klucz opcji → nazwa zmiennej + jednostka) **nie
+  pisze własnej pętli** — wypisuje zmienne przez `cyber_css_vars_from_map()`.
+
+Własna pętla jest dopuszczalna tylko wtedy, gdy moduł robi coś więcej niż proste
+przepisanie wartości: skaluje na breakpointach (`cyber_font_css()`), wybiera
+wartość zależnie od innego pola (`cyber_container_css()`), generuje cały blok
+`@media` (`cyber_header_mobile_css()`) albo tworzy nazwy zmiennych mechanicznie
+i mapy w ogóle nie potrzebuje (`cyber_colors_css()`). Skopiowanie pętli „bo tak
+robi sąsiedni moduł" jest błędem — wcześniej istniały trzy jej identyczne kopie.
 
 ## 7. Komponenty i template parts
 
@@ -329,6 +359,16 @@ W CSS progi zapisujemy jako granice domknięte od góry: `max-width: 980px`,
 > jest świadomym wyjątkiem od tego systemu i pozostaje niezależnie konfigurowalny
 > przez admina.
 
+> **Precedens: cudzy próg załatw cudzą zmienną.** Przyklejony header
+> (`.cyber-header--sticky`) musi uwzględnić wysokość paska administratora
+> WordPressa, która zmienia się przy 782px — progu spoza tego zestawu. Nie
+> kosztowało to nowego breakpointu: pozycję daje
+> `top: var(--wp-admin--admin-bar--height, 0px)`, czyli zmienna, którą WordPress
+> sam ustawia w `admin-bar.css`, a `0px` obsługuje wylogowanych.
+>
+> Zanim dołożysz próg pod komponent, którego nie kontrolujesz, sprawdź, czy ten
+> komponent nie wystawia własnej zmiennej. Zwykle wystawia.
+
 ## 19. Konwencja: skalowanie wartości responsywnych (wariant B)
 
 Dotyczy pól, które definiują **wiele powiązanych wartości liczbowych** na desktopie
@@ -390,6 +430,41 @@ Komponenty, które w przyszłości mogą zyskać alternatywne warianty wizualne
 od razu budowane z **wymienną klasą modyfikującą na głównym wrapperze**, zamiast
 wartości wpisanych na sztywno w bazowym selektorze — tak, żeby dodanie wariantu
 wymagało tylko nowej klasy i pola ACF, a nie przepisania komponentu.
+
+#### Wrapper każdego modułu niesie klasę wariantu
+
+Zasada nie ogranicza się do komponentów, którym wariant już zaplanowano —
+obowiązuje **każdy wrapper modułu**. Klasę buduje `cyber_variant_class()`
+(`inc/components.php`), które sanityzuje wartość i sprowadza pustą lub
+niepoprawną do `default`:
+
+```
+cyber-header     cyber-header--default
+cyber-topheader  cyber-topheader--default
+cyber-footer     cyber-footer--default
+cyber-copyright  cyber-copyright--default
+```
+
+Wariant `default`, którego nie celuje żadna reguła CSS, **nie jest martwym
+kodem** — to punkt zaczepienia. Dodany teraz kosztuje jedną klasę w markupie;
+dodany po napisaniu sekcji Flexible Content oznacza rewizję każdego selektora,
+który zakłada gołe `.cyber-header`.
+
+#### Stan to nie wariant
+
+Przełącznik niezależny od układu (np. przyklejony header) dostaje **własną klasę
+obok** modyfikatora wariantu, nigdy kolejną jego wartość:
+
+```html
+<header class="cyber-header cyber-header--default cyber-header--sticky">
+```
+
+Dzięki temu obie osie mnożą się swobodnie, zamiast wymuszać nazwy w rodzaju
+`--centered-sticky`, a potem `--centered-sticky-transparent`.
+
+Każdy nowy przełącznik wizualny trzeba **jawnie zaklasyfikować przed
+implementacją**: wariant (wyklucza się z pozostałymi wariantami) albo stan
+(łączy się z każdym wariantem).
 
 ## 21. Lokalizacja głównego menu
 

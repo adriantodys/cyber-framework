@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-12 (stan: etapy 1–3 z CLAUDE.md sekcja 17; Global Options ma jedenaście zakładek — od „Główne ustawienia strony” po „Copyright”).
+Ostatnia aktualizacja: 2026-09-12 (stan: etapy 1–3 z CLAUDE.md sekcja 17; Global Options ma jedenaście zakładek — od „Główne ustawienia strony” po „Copyright”; wprowadzone warianty komponentów i przyklejony header).
 
 ## Przepływ danych
 
@@ -100,6 +100,61 @@ ją do `cyber_option_schema()` oraz do funkcji budującej CSS dla danego obszaru
 a tę funkcję dokleja się w `cyber_print_inline_css()`. Nowy moduł **nie rejestruje
 własnego hooka** — cały motyw wypisuje jeden blok `<style>`.
 
+### Wspólna pętla: `cyber_css_vars_from_map()`
+
+Moduły opisane mapą (Header, Footer, Copyright) nie mają własnej pętli po polach.
+Wszystkie trzy sprowadzają się do jednej linii:
+
+```php
+function cyber_header_css() {
+	return cyber_css_vars_from_map( cyber_header_css_map() );
+}
+```
+
+Wcześniej każdy z nich niósł identyczną kopię tego samego `foreach` — łącznie
+trzy takie same bloki, które przy kolejnym module rozmnożyłyby się na cztery.
+Mapa zostaje osobna dla każdego modułu, bo nazwy zmiennych nie przekładają się
+mechanicznie z nazw pól (`footer_bg_color` → `--cyber-footer-bg`).
+
+Moduły, które **nie** korzystają z tego mechanizmu, robią to z powodu:
+`cyber_font_css()` liczy skalowanie na breakpointach, `cyber_container_css()`
+wybiera szerokość zależnie od typu, `cyber_header_mobile_css()` generuje cały
+blok `@media`, a `cyber_colors_css()` tworzy nazwy zmiennych mechanicznie i mapy
+w ogóle nie potrzebuje.
+
+### Warianty komponentów
+
+Każdy wrapper modułu niesie klasę bazową **oraz** modyfikator wariantu, budowane
+przez `cyber_variant_class()` (`inc/components.php`):
+
+```
+cyber-header     cyber-header--default
+cyber-topheader  cyber-topheader--default
+cyber-footer     cyber-footer--default
+cyber-copyright  cyber-copyright--default
+```
+
+Na razie istnieje wyłącznie wariant `default` i żadna reguła CSS go nie celuje.
+Nie jest to martwy kod, tylko punkt zaczepienia wymagany przez CLAUDE.md
+sekcja 20: dołożenie drugiego wariantu ma być nową klasą obok istniejącej,
+a nie przepisywaniem selektora bazowego. Dodane teraz kosztuje jedną klasę;
+dodane później oznacza rewizję każdego selektora zakładającego gołe
+`.cyber-header`.
+
+Wariant przechodzi przez `sanitize_html_class()`, bo trafia wprost do atrybutu
+`class`; pusta lub niepoprawna wartość wraca do `default` zamiast wygenerować
+klasę-śmiecia.
+
+**Stany są prostopadłe do wariantów.** Przyklejony header to nie kolejna wartość
+modyfikatora, tylko druga, niezależna klasa obok niego:
+
+```html
+<header class="cyber-header cyber-header--default cyber-header--sticky">
+```
+
+Dzięki temu przyszły wariant układu (logo na środku, menu rozbite na dwie strony)
+łączy się z przyklejaniem bez kombinatoryki `--centered-sticky`.
+
 ### Breakpointy
 
 `cyber_breakpoints()` w `inc/helpers.php` jest jedynym źródłem progów
@@ -194,6 +249,16 @@ Obie ścieżki prowadzą przez ten sam komponent `cyber_social_icons()`
 `cyber_top_header_data()` też z niej korzysta — klucz `social` służy tam wyłącznie
 do decyzji, czy pasek ma się w ogóle renderować.
 
+**Pasek Copyright renderuje się wewnątrz `<footer>`**, jako jego ostatnie dziecko.
+Wcześniej był rodzeństwem stopki i przez to leżał **poza landmarkiem
+`contentinfo`** — czytnik ekranu nie zaliczał go do stopki. Dane paska idą teraz
+do widoku stopki jako `$args['copyright']` (albo `null`), a decyzja „czy jest co
+pokazać” zostaje w `footer.php` w rootcie, tak samo jak przy Top Headerze.
+
+Konsekwencja układowa: odstęp pionowy przeniósł się z `.cyber-footer` na wrapper
+`.cyber-footer__main`. Gdyby został na `<footer>`, padding dolny wypadłby
+**poniżej** paska Copyright i zostawił pod nim pas tła stopki.
+
 Stopka ma własne tło (`cyber_footer_bg_color`) oraz trzy klasy narzędziowe
 ograniczone do niej konwencją: `.cyber-footer-title`, `.cyber-footer-text`
 i `.cyber-footer-link` (CLAUDE.md sekcja 5). Nazwy klas są stałe w kodzie —
@@ -259,6 +324,27 @@ Dwie decyzje warte zapamiętania:
 
 Rozwijanie podmenu działa na `:hover` **oraz** `:focus-within`, żeby było osiągalne
 z klawiatury (CLAUDE.md sekcja 11). Na desktopie nie ma tu JavaScriptu.
+
+**Przyklejony header** (`cyber_header_sticky`) to `position: sticky` nałożone klasą
+`.cyber-header--sticky`, bez grama JavaScriptu i bez nasłuchu na scroll. Trzy rzeczy
+warte zapamiętania:
+
+- `top: var(--wp-admin--admin-bar--height, 0px)` — wysokość paska administratora
+  podaje sam WordPress w `admin-bar.css` (32px, na wąskich ekranach 46px). Motyw
+  nie wykrywa zalogowanego użytkownika i **nie dokłada własnego breakpointu**
+  (CLAUDE.md sekcja 18 nietknięta). Dla wylogowanych arkusz się nie ładuje
+  i obowiązuje fallback `0px`.
+- `z-index: 30` podnosi cały header ponad treść. Podmenu (`10`) i panel mobilny
+  (`20`) leżą wewnątrz niego i układają się w jego kontekście, więc nie wymagały
+  podbicia.
+- Panel mobilny jest pozycjonowany `absolute` względem `.cyber-header`, a `sticky`
+  nadal tworzy kontekst pozycjonowania — panel jedzie razem z przyklejonym
+  headerem, co jest zachowaniem pożądanym.
+
+Razem ze sticky powstało pole `cyber_header_bg_color` (`--cyber-header-bg`). Header
+wcześniej nie miał tła i przy przewijaniu treść byłaby widoczna pod przyklejonym
+paskiem. Domyślne `#ffffff` nie zmienia niczego wizualnie — strona i tak stoi na
+białym tle przeglądarki.
 
 ## Header Mobile
 

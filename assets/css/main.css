@@ -32,6 +32,7 @@
 	--cyber-font-size-text: 16px;
 	--cyber-font-size-links: 16px;
 
+	--cyber-header-bg: #ffffff;
 	--cyber-header-padding-top: 24px;
 	--cyber-header-padding-bottom: 24px;
 	--cyber-header-menu-gap: 32px;
@@ -354,6 +355,34 @@ h6 :is(a, span),
 
 .cyber-header {
 	position: relative;
+	background-color: var(--cyber-header-bg);
+}
+
+/*
+ * Wariant: header przyklejony do gory ekranu. Wlacza go pole
+ * cyber_header_sticky — to obecnosc reguly, a nie jej wartosc, wiec klasa
+ * modyfikujaca zamiast zmiennej CSS (CLAUDE.md sekcja 20).
+ *
+ * Klasa jest PROSTOPADLA do wariantu ukladu (.cyber-header--default i kolejne)
+ * i wystepuje obok niego, nie zamiast niego.
+ *
+ * top nie jest zerem: --wp-admin--admin-bar--height ustawia WordPress
+ * w admin-bar.css (32px, a na waskich ekranach 46px). Fallback 0px obowiazuje
+ * u wylogowanych, u ktorych ten arkusz sie nie laduje. Dzieki temu pasek
+ * administratora nie wymaga wlasnego breakpointu — CLAUDE.md sekcja 18
+ * zostaje nietknieta.
+ *
+ * z-index podnosi CALY header ponad tresc strony. Podmenu (10) i panel
+ * mobilny (20) leza wewnatrz niego i stackuja sie w jego kontekscie, wiec
+ * nie trzeba ich podbijac.
+ *
+ * UWAGA: przezroczyste tlo headera sprawia, ze przy przewijaniu tresc bedzie
+ * widoczna pod nim. To dlatego cyber_header_bg_color istnieje jako pole.
+ */
+.cyber-header--sticky {
+	position: sticky;
+	top: var(--wp-admin--admin-bar--height, 0px);
+	z-index: 30;
 }
 
 .cyber-header__inner {
@@ -684,8 +713,16 @@ h6 :is(a, span),
  */
 
 .cyber-footer {
-	padding-block: 48px;
 	background-color: var(--cyber-footer-bg);
+}
+
+/*
+ * Odstep pionowy siedzi tutaj, a nie na .cyber-footer. Pasek Copyright jest
+ * teraz ostatnim dzieckiem <footer>, wiec padding dolny stopki wypadlby
+ * PONIZEJ niego i zostawil pod paskiem pas tla stopki.
+ */
+.cyber-footer__main {
+	padding-block: 48px;
 }
 
 /*

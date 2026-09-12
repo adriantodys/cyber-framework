@@ -16,6 +16,8 @@
  *     @type bool   $menu_indicator   Czy pozycje z podmenu maja dostac strzalke.
  *     @type int    $mobile_breakpoint Prog przelaczenia na menu mobilne, w px.
  *     @type bool   $has_menu       Czy do lokalizacji 'primary' przypisano menu.
+ *     @type string $variant        Wariant ukladu headera. Domyslnie 'default'.
+ *     @type bool   $sticky         Czy header ma zostawac na gorze przy przewijaniu.
  * }
  */
 
@@ -27,6 +29,19 @@ $cyber_menu_alignment = isset( $args['menu_alignment'] ) ? $args['menu_alignment
 $cyber_has_menu       = ! empty( $args['has_menu'] );
 $cyber_menu_indicator = ! empty( $args['menu_indicator'] );
 $cyber_mobile_bp      = isset( $args['mobile_breakpoint'] ) ? (int) $args['mobile_breakpoint'] : 980;
+$cyber_variant        = isset( $args['variant'] ) ? $args['variant'] : 'default';
+$cyber_sticky         = ! empty( $args['sticky'] );
+
+$cyber_header_class = cyber_variant_class( 'cyber-header', $cyber_variant );
+
+if ( $cyber_sticky ) {
+	/*
+	 * Przyklejenie to osobna os niz wariant ukladu: header moze byc jednoczesnie
+	 * przyklejony i w dowolnym wariancie. Dlatego druga klasa obok modyfikatora,
+	 * a nie kolejna jego wartosc (CLAUDE.md sekcja 20).
+	 */
+	$cyber_header_class .= ' cyber-header--sticky';
+}
 
 /*
  * Jeden markup menu obsluguje oba widoki — patrz docs/architecture.md.
@@ -36,7 +51,7 @@ $cyber_mobile_bp      = isset( $args['mobile_breakpoint'] ) ? (int) $args['mobil
 $cyber_mobile_menu_id = 'cyber-mobile-menu';
 ?>
 
-<header class="cyber-header">
+<header class="<?php echo esc_attr( $cyber_header_class ); ?>">
 	<div class="cyber-container">
 		<div class="cyber-header__inner">
 

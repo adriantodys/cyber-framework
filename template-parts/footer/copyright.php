@@ -10,7 +10,8 @@
  *
  * @param array $args {
  *     @type string $text  Tekst copyright albo pusty string.
- *     @type array  $links Lista tablic 'key' i 'url'.
+ *     @type array  $links   Lista tablic 'key' i 'url'.
+ *     @type string $variant Wariant paska. Domyslnie 'default'.
  * }
  */
 
@@ -18,6 +19,8 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_text  = isset( $args['text'] ) ? $args['text'] : '';
 $cyber_links = isset( $args['links'] ) ? $args['links'] : array();
+
+$cyber_class = cyber_variant_class( 'cyber-copyright', isset( $args['variant'] ) ? $args['variant'] : 'default' );
 
 /*
  * Etykiety linkow prawnych sa STALE i zyja tutaj, nie w ACF. Pole Page Link
@@ -34,7 +37,7 @@ $cyber_link_labels = array(
 );
 ?>
 
-<div class="cyber-copyright">
+<div class="<?php echo esc_attr( $cyber_class ); ?>">
 	<div class="cyber-container">
 		<div class="cyber-copyright__inner">
 
