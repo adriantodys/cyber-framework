@@ -53,6 +53,7 @@ function cyber_load_modules() {
 		'inc/components.php',
 		'inc/contact.php',
 		'inc/woocommerce.php',
+		'inc/breadcrumb.php',
 	);
 
 	foreach ( $modules as $module ) {

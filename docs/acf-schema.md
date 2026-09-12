@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer” i „Copyright”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb” i „Breadcrumb WooCommerce”
 
 ---
 
@@ -945,6 +945,57 @@ jak `cyber_top_header_has_content()` w pasku górnym.
 `::before` na drugim i kolejnych linkach, nie `border-left` — dzięki temu nie pojawia
 się przy pierwszej pozycji ani jako wcięcie po zawinięciu do nowej linii.
 
+### Zakładka: „Breadcrumb”
+
+Cel: wąska belka ze ścieżką okruszków pod headerem, nad treścią strony.
+Obowiązuje **poza** stronami sklepu — te ma własną zakładkę.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Pokaż breadcrumb | `cyber_breadcrumb_enable` | True/False | `false` | Decyduje, czy pasek w ogóle powstaje. **Nie jest zmienną CSS.** |
+| Rozmiar czcionki | `cyber_breadcrumb_font_size` | Number (8–40 px) | `14` | `--cyber-breadcrumb-font-size` |
+| Kolor okruszków | `cyber_breadcrumb_color` | Color Picker | `#666666` | `--cyber-breadcrumb-color` |
+| Kolor bieżącej strony | `cyber_breadcrumb_color_active` | Color Picker | `#111111` | `--cyber-breadcrumb-color-active` |
+
+### Zakładka: „Breadcrumb WooCommerce”
+
+Ten sam komplet pól, **niezależny** od powyższego.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Pokaż breadcrumb WooCommerce | `cyber_breadcrumb_wc_enable` | True/False | `false` | Decyduje, czy pasek powstaje na stronach sklepu. |
+| Rozmiar czcionki | `cyber_breadcrumb_wc_font_size` | Number (8–40 px) | `14` | `--cyber-breadcrumb-wc-font-size` |
+| Kolor okruszków | `cyber_breadcrumb_wc_color` | Color Picker | `#666666` | `--cyber-breadcrumb-wc-color` |
+| Kolor bieżącej strony | `cyber_breadcrumb_wc_color_active` | Color Picker | `#111111` | `--cyber-breadcrumb-wc-color-active` |
+
+> **Dlaczego dwie zakładki, a nie jedna z przełącznikiem.** Oba paski mają
+> **osobne włączniki**, więc da się mieć okruszki wyłącznie w sklepie albo
+> wyłącznie poza nim. Jeden moduł z jedną parą pól wymuszałby wszystko albo nic,
+> a to nie odpowiada realnym potrzebom: sklep zwykle chce ścieżki (kategorie
+> produktów bywają głębokie), a strona firmowa o trzech podstronach — nie.
+>
+> Wspólny został wyłącznie **markup i jedna mapa zmiennych CSS**
+> (`cyber_breadcrumb_css_map()`). Z punktu widzenia stylów to ten sam komponent
+> w dwóch wariantach: `.cyber-breadcrumb--default` i `.cyber-breadcrumb--wc`.
+
+> **Skąd bierze się ścieżka.** Poza sklepem składa ją motyw
+> (`cyber_breadcrumb_items()`), bo WordPress nie ma wbudowanych okruszków.
+> Na stronach sklepu buduje ją **samo WooCommerce** (`woocommerce_breadcrumb()`),
+> bo tylko ono zna hierarchię kategorii produktów. Motyw podstawia wyłącznie
+> własne znaczniki przez argumenty `wrap_before` / `before` / `after`, więc oba
+> paski mają identyczny markup.
+
+> **Czym jest „strona sklepu”.** Warunek jest celowo szerszy niż `is_woocommerce()`:
+> ta funkcja nie obejmuje koszyka, zamówienia ani konta klienta, a dla
+> odwiedzającego to również sklep. Stąd
+> `is_woocommerce() || is_cart() || is_checkout() || is_account_page()`.
+
+> **Pasek nie ma pola tła.** Ma za to stałą dolną kreskę
+> (`--cyber-color-border-1` z modułu Kolory), żeby odciąć się od treści. Padding
+> pionowy i separator między okruszkami też są stałe — to proporcje paska, nie
+> konfiguracja, tak samo jak w Top Header i Copyright. Gdyby tło miało być
+> edytowalne, to osobne pole do zlecenia.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1238,6 +1289,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-12 — Dwie nowe zakładki: **„Breadcrumb”** i **„Breadcrumb WooCommerce”**, po 4 pola każda (włącznik, rozmiar czcionki, kolor, kolor bieżącej strony). Rozdzielone celowo — osobne włączniki pozwalają mieć okruszki wyłącznie w sklepie albo wyłącznie poza nim. Oba domyślnie **wyłączone**, więc synchronizacja niczego nie zmienia. Wspólny markup i jedna mapa zmiennych CSS; ścieżkę poza sklepem składa `cyber_breadcrumb_items()`, w sklepie `woocommerce_breadcrumb()` we własnych znacznikach motywu. Nowy `inc/breadcrumb.php` i katalog `template-parts/breadcrumb/`.
 - 2026-09-12 — Header Desktop: **trzy warianty układu** (`cyber_header_variant`: `centered`, `cta`, `woocommerce` obok `default`) plus dwa pola przycisku CTA (`cyber_header_cta_text`, `cyber_header_cta_url`). Wariant jest modyfikatorem klasy, nie zmienną CSS. CTA dziedziczy cały wygląd z rozmiaru Medium — bez własnych pól stylu. Wariant WooCommerce wymaga wtyczki; jej brak nie wywraca strony (patrz `inc/woocommerce.php`). Nowe ikony `user` i `cart` w `cyber_icons()`.
 - 2026-09-12 — Header Desktop: dwa nowe pola — `cyber_header_bg_color` (Color Picker, `#ffffff`, zmienna `--cyber-header-bg`) i `cyber_header_sticky` (True/False, `false`). Sticky jest modyfikatorem klasy `.cyber-header--sticky`, nie zmienną CSS; wysokość paska administratora bierze z `--wp-admin--admin-bar--height`, więc nie wymagał nowego breakpointu. Pole tła powstało razem ze sticky, bo przezroczysty przyklejony header pokazywałby przewijaną treść.
 - 2026-09-12 — **Przezroczystość włączona na wszystkich polach Color Picker** (35 pól w zakładkach Header Desktop, Przyciski, Kolory, Top Header, Footer, Copyright; cienie miały ją już wcześniej). Typ schematu tych pól zmieniony z `color` na `color_alpha` — bez zmiany samej walidacji, bo `color_alpha` przepuszcza HEX, `rgb()` i `rgba()`. Typ `color` zostaje w kodzie bez przypisanego pola. Żadna zapisana wartość ani wartość domyślna się nie zmienia.

@@ -851,6 +851,42 @@ function cyber_option_schema() {
 			'min'     => 8,
 			'max'     => 40,
 		),
+		'breadcrumb_enable'           => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'breadcrumb_font_size'        => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 40,
+		),
+		'breadcrumb_color'            => array(
+			'type'    => 'color_alpha',
+			'default' => '#666666',
+		),
+		'breadcrumb_color_active'     => array(
+			'type'    => 'color_alpha',
+			'default' => '#111111',
+		),
+		'breadcrumb_wc_enable'        => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'breadcrumb_wc_font_size'     => array(
+			'type'    => 'px',
+			'default' => 14,
+			'min'     => 8,
+			'max'     => 40,
+		),
+		'breadcrumb_wc_color'         => array(
+			'type'    => 'color_alpha',
+			'default' => '#666666',
+		),
+		'breadcrumb_wc_color_active'  => array(
+			'type'    => 'color_alpha',
+			'default' => '#111111',
+		),
 	);
 }
 

@@ -84,6 +84,7 @@ cyber-framework/
 ├── template-parts/
 │   ├── header/
 │   ├── footer/
+│   ├── breadcrumb/                ← ścieżka okruszków (wariant zwykły i WooCommerce)
 │   ├── components/                ← drobne, reużywalne elementy UI (przycisk, karta, badge)
 │   └── sections/                  ← sekcje flexible content (1 layout ACF = 1 plik)
 │

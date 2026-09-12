@@ -3587,6 +3587,248 @@
             "placeholder": "",
             "prepend": "",
             "append": "px"
+        },
+        {
+            "key": "field_cyber_tab_breadcrumb",
+            "label": "Breadcrumb",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_breadcrumb",
+            "label": "Okruszki na stronach witryny",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_breadcrumb_enable",
+            "label": "Pokaz breadcrumb",
+            "name": "cyber_breadcrumb_enable",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wlacza waska belke z okruszkami pod headerem, nad trescia strony. Domyslnie wylaczone, wiec synchronizacja pol niczego nie zmienia na dzialajacej witrynie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_breadcrumb_font_size",
+            "label": "Rozmiar czcionki",
+            "name": "cyber_breadcrumb_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Rozmiar czcionki okruszkow.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_breadcrumb_color",
+            "label": "Kolor okruszkow",
+            "name": "cyber_breadcrumb_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor odnosnikow w sciezce.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#666666",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_breadcrumb_color_active",
+            "label": "Kolor biezacej strony",
+            "name": "cyber_breadcrumb_color_active",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor ostatniego elementu, czyli strony, na ktorej jest uzytkownik.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_tab_breadcrumb_wc",
+            "label": "Breadcrumb WooCommerce",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_breadcrumb_wc",
+            "label": "Okruszki na stronach sklepu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_breadcrumb_wc_enable",
+            "label": "Pokaz breadcrumb WooCommerce",
+            "name": "cyber_breadcrumb_wc_enable",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Niezalezny wlacznik dla stron sklepu. Mozna miec okruszki wylacznie w sklepie albo wylacznie poza nim, bo to dwa osobne moduly.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_breadcrumb_wc_font_size",
+            "label": "Rozmiar czcionki",
+            "name": "cyber_breadcrumb_wc_font_size",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Rozmiar czcionki okruszkow.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 14,
+            "min": 8,
+            "max": 40,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_breadcrumb_wc_color",
+            "label": "Kolor okruszkow",
+            "name": "cyber_breadcrumb_wc_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor odnosnikow w sciezce.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#666666",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_breadcrumb_wc_color_active",
+            "label": "Kolor biezacej strony",
+            "name": "cyber_breadcrumb_wc_color_active",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor ostatniego elementu, czyli strony, na ktorej jest uzytkownik.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
         }
     ],
     "location": [
@@ -3610,5 +3852,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789205000
+    "modified": 1789207000
 }

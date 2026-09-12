@@ -60,6 +60,8 @@ w którym powstał.
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
+| Breadcrumb | `template-parts/breadcrumb/breadcrumb.php` | `context`, `items` | sekcja „Breadcrumb” w `assets/css/main.css` + zmienne z `cyber_breadcrumb_css()` |
+| Breadcrumb WooCommerce | `template-parts/breadcrumb/breadcrumb-woocommerce.php` | `context` | ta sama sekcja CSS; ścieżkę wypisuje `woocommerce_breadcrumb()` we własnych znacznikach motywu |
 | Header — slot akcji: CTA | `template-parts/header/actions-cta.php` | `cta` | `.cyber-header__actions` w `assets/css/main.css`; przycisk z `cyber_button()` w rozmiarze `medium` |
 | Header — slot akcji: WooCommerce | `template-parts/header/actions-woocommerce.php` | `wc` | sekcja „Header: konto i koszyk WooCommerce” w `assets/css/main.css`; ikony `user` i `cart` z `cyber_icons()` |
 | Header — licznik koszyka | `template-parts/header/cart-count.php` | `count` | `.cyber-wc-count` w `assets/css/main.css` |
@@ -156,6 +158,36 @@ Nieznany `size` → `_doing_it_wrong()` i fallback na `medium`.
 
 Komponent nie przyjmuje kolorów ani pikseli — wyłącznie nazwę rozmiaru. Wygląd
 należy do Global Options, nie do miejsca wywołania.
+
+#### Breadcrumb
+
+Dwa widoki dzielą **identyczny markup**, więc obsługuje je jeden blok CSS:
+
+```html
+<div class="cyber-breadcrumb cyber-breadcrumb--default">   <!-- albo --wc -->
+  <div class="cyber-container">
+    <nav class="cyber-breadcrumb__nav" aria-label="Okruszki">
+      <span class="cyber-breadcrumb__item"><a href="…">Strona glowna</a></span>
+      <span class="cyber-breadcrumb__item" aria-current="page">Bieżąca</span>
+    </nav>
+  </div>
+</div>
+```
+
+Różnica jest jedna: w wariancie `default` pętlę po okruszkach wykonuje widok,
+w wariancie `wc` wypisuje ją `woocommerce_breadcrumb()` — ale w **tych samych**
+znacznikach, podstawionych przez `wrap_before` / `before` / `after`.
+
+Ostatni okruszek to strona bieżąca. W naszym markupie niesie `aria-current="page"`;
+WooCommerce takiego atrybutu nie dodaje, dlatego kolor bieżącej strony bierze się
+z selektora `:last-child`, prawdziwego w obu przypadkach.
+
+Widok WooCommerce sprawdza `function_exists( 'woocommerce_breadcrumb' )` mimo że
+wariant jest wybrany w panelu — wtyczkę można wyłączyć w każdej chwili, a brak
+funkcji ma oznaczać brak paska, nigdy błąd.
+
+Klasę wrappera buduje `cyber_variant_class( 'cyber-breadcrumb', $context )`,
+ten sam mechanizm co w Header, Footer i Copyright.
 
 #### Header — warianty układu i slot akcji
 

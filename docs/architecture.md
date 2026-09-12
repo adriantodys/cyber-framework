@@ -38,6 +38,7 @@ w ustalonej kolejności:
 | 9 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
 | 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 | 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
+| 12 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
 
 ## Stałe
 
@@ -475,6 +476,65 @@ z DOM — bez elementu WooCommerce nie miałby czego podmienić.
 `cyber_wc_cart_count()` sprawdza koszyk **podwójnie**: `WC()` istnieje także wtedy,
 gdy koszyk nie został jeszcze zainicjowany (REST, cron, część zadań w panelu),
 a odwołanie do niezainicjowanego koszyka jest błędem krytycznym.
+
+## Breadcrumb
+
+Wąska belka pod headerem, nad treścią. **Dwa niezależne moduły dzielące jeden
+markup** — nie jeden moduł z przełącznikiem.
+
+```
+cyber_breadcrumb_context()    ← 'wc' albo 'default'
+      │
+      ▼
+cyber_breadcrumb_enabled()    ← osobny włącznik dla każdego kontekstu
+      │
+      ▼
+cyber_breadcrumb_data()       ← null = nie ma czego pokazać
+      │
+      ├── 'default' ─→ cyber_breadcrumb_items() ─→ breadcrumb.php
+      └── 'wc'      ─────────────────────────────→ breadcrumb-woocommerce.php
+                                                     └─ woocommerce_breadcrumb()
+```
+
+**Dlaczego dwie zakładki.** Osobne włączniki pozwalają mieć okruszki wyłącznie
+w sklepie albo wyłącznie poza nim. Jedna para pól wymuszałaby wszystko albo nic,
+a sklep z głębokimi kategoriami produktów i strona firmowa o trzech podstronach
+mają różne potrzeby. Wspólne zostały wyłącznie markup i jedna mapa zmiennych CSS
+(`cyber_breadcrumb_css_map()`) — z punktu widzenia stylów to ten sam komponent
+w dwóch wariantach, `.cyber-breadcrumb--default` i `.cyber-breadcrumb--wc`.
+
+**Ścieżkę sklepową buduje WooCommerce**, bo tylko ono zna hierarchię kategorii
+produktów. Motyw podstawia wyłącznie własne znaczniki przez argumenty
+`wrap_before` / `before` / `after`, więc oba paski mają identyczny markup i jeden
+blok CSS. `delimiter` jest pusty celowo — separator rysuje pseudoelement, tak samo
+jak w pasku Copyright; znak wpisany w treść byłby czytany przez czytniki ekranu.
+
+**Warunek „strona sklepu” jest szerszy niż `is_woocommerce()`** — ta funkcja nie
+obejmuje koszyka, zamówienia ani konta klienta, a dla odwiedzającego to również
+sklep. Koniunkcja zaczyna się od `cyber_is_woocommerce_active()`, bo wywołanie
+`is_woocommerce()` przy nieaktywnej wtyczce byłoby błędem krytycznym.
+
+**Pułapka przy testowaniu:** WooCommerce gatuje `is_cart()` i `is_checkout()`
+warunkiem `did_action( 'wp' )` (`CartCheckoutUtils::is_page_type()`). W skrypcie
+CLI ten hook nigdy nie pada, więc obie funkcje zwracają `false` niezależnie od
+zapytania. Weryfikacja wymaga prawdziwego żądania HTTP — najprościej po klasach
+`<body>`, bo WooCommerce dokłada tam `woocommerce-cart`, `woocommerce-account`
+i `woocommerce-shop` dokładnie wtedy, gdy odpowiedni warunek jest prawdziwy.
+
+**Pasek renderuje się wewnątrz `<main>`**, zaraz po jego otwarciu. To nawigacja
+kontekstowa tej konkretnej strony, a nie nawigacja globalna witryny — ta mieszka
+w headerze.
+
+**Dwa przypadki, w których pasek nie powstaje mimo włączonego przełącznika:**
+strona główna (ścieżka z jednego okruszka nie niesie informacji) oraz zapytanie,
+którego żadna gałąź `cyber_breadcrumb_items()` nie rozpoznaje — wtedy zostałaby
+sama „Strona glowna” linkująca donikąd poza samą sobą. Ta sama zasada „pusty
+pasek się nie renderuje” co w Top Header i Copyright.
+
+Zakres ścieżki poza sklepem jest świadomie podstawowy: strony z pełną hierarchią
+rodziców, wpisy, archiwa, wyszukiwanie i 404. Ścieżka wpisu przez kategorię
+(Strona główna > Kategoria > Wpis) to jedna dodatkowa gałąź w
+`cyber_breadcrumb_items()`, do zrobienia wtedy, gdy blog faktycznie powstanie.
 
 ## Edytor treści
 

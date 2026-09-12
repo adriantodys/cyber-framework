@@ -397,6 +397,40 @@ function cyber_footer_css() {
 }
 
 /**
+ * Mapa pol obu modulow breadcrumb na zmienne CSS.
+ *
+ * JEDNA mapa dla dwoch zakladek. Zakladki sa rozdzielone, bo redaktor ma moc
+ * wlaczyc okruszki wylacznie w sklepie albo wylacznie poza nim — ale z punktu
+ * widzenia CSS to ten sam komponent w dwoch wariantach, wiec jedna mapa
+ * i jeden blok zmiennych.
+ *
+ * Wlaczniki (cyber_breadcrumb_enable, cyber_breadcrumb_wc_enable) celowo NIE
+ * sa tu obecne: decyduja, czy cokolwiek sie wyrenderuje, a to obecnosc markupu,
+ * nie wartosc do podstawienia przez var() (CLAUDE.md sekcja 20).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_breadcrumb_css_map() {
+	return array(
+		'breadcrumb_font_size'       => array( '--cyber-breadcrumb-font-size', 'px' ),
+		'breadcrumb_color'           => array( '--cyber-breadcrumb-color', '' ),
+		'breadcrumb_color_active'    => array( '--cyber-breadcrumb-color-active', '' ),
+		'breadcrumb_wc_font_size'    => array( '--cyber-breadcrumb-wc-font-size', 'px' ),
+		'breadcrumb_wc_color'        => array( '--cyber-breadcrumb-wc-color', '' ),
+		'breadcrumb_wc_color_active' => array( '--cyber-breadcrumb-wc-color-active', '' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi obu paskow breadcrumb.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_breadcrumb_css() {
+	return cyber_css_vars_from_map( cyber_breadcrumb_css_map() );
+}
+
+/**
  * Buduje CSS ze zmiennymi paska Top Header.
  *
  * Modul ma tylko trzy pola stylu — reszta wygladu (padding paska, odstep
@@ -629,7 +663,8 @@ function cyber_print_inline_css() {
 		. cyber_colors_css()
 		. cyber_top_header_css()
 		. cyber_footer_css()
-		. cyber_copyright_css();
+		. cyber_copyright_css()
+		. cyber_breadcrumb_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

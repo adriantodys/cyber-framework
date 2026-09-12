@@ -56,3 +56,23 @@ get_template_part(
 ?>
 
 <main id="cyber-main" class="cyber-main">
+
+<?php
+/*
+ * Breadcrumb: pod headerem, nad trescia strony. Renderowany WEWNATRZ <main>,
+ * bo to nawigacja kontekstowa tej konkretnej strony, a nie nawigacja globalna
+ * witryny — ta mieszka w headerze.
+ *
+ * Ktory z dwoch paskow (zwykly czy sklepowy) i czy w ogole ma sie pojawic,
+ * rozstrzyga cyber_breadcrumb_data(). Tutaj zostaje samo wyswietlenie.
+ */
+$cyber_breadcrumb = cyber_breadcrumb_data();
+
+if ( null !== $cyber_breadcrumb ) {
+	$cyber_breadcrumb_part = ( 'wc' === $cyber_breadcrumb['context'] )
+		? 'template-parts/breadcrumb/breadcrumb-woocommerce'
+		: 'template-parts/breadcrumb/breadcrumb';
+
+	get_template_part( $cyber_breadcrumb_part, null, $cyber_breadcrumb );
+}
+?>

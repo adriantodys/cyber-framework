@@ -108,6 +108,14 @@
 	--cyber-copyright-text-font-size: 14px;
 	--cyber-copyright-link-font-size: 14px;
 
+	--cyber-breadcrumb-font-size: 14px;
+	--cyber-breadcrumb-color: #666666;
+	--cyber-breadcrumb-color-active: #111111;
+
+	--cyber-breadcrumb-wc-font-size: 14px;
+	--cyber-breadcrumb-wc-color: #666666;
+	--cyber-breadcrumb-wc-color-active: #111111;
+
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
 	 * Zeby staly sie edytowalne, trzeba dodac pola (patrz docs/acf-schema.md).
@@ -974,6 +982,86 @@ h6 :is(a, span),
 	vertical-align: -0.15em;
 	background: currentColor;
 	opacity: 0.4;
+}
+
+/* --- Breadcrumb ------------------------------------------------------------ */
+
+/*
+ * Waska belka pod headerem, nad trescia. Dwa warianty: .cyber-breadcrumb--default
+ * poza sklepem i .cyber-breadcrumb--wc na stronach WooCommerce. Markup obu jest
+ * IDENTYCZNY — sciezke sklepowa buduje WooCommerce, ale w naszych znacznikach
+ * (argumenty wrap_before / before / after), wiec ten sam blok stylow obsluguje
+ * oba przypadki.
+ *
+ * Padding pionowy i separator sa stale — to proporcje paska, nie konfiguracja,
+ * tak samo jak w Top Header i Copyright. Z ACF pochodza wylacznie rozmiar
+ * czcionki i dwa kolory.
+ *
+ * ZALOZENIE DO ZAKWESTIONOWANIA: dolna kreska. Modul nie ma pola tla, wiec bez
+ * niej pasek nie odcina sie od tresci. Uzywa istniejacej zmiennej
+ * --cyber-color-border-1 z modulu Kolory, zamiast wprowadzac wlasne pole.
+ */
+
+.cyber-breadcrumb {
+	padding-block: 10px;
+	border-bottom: 1px solid var(--cyber-color-border-1);
+	font-size: var(--cyber-breadcrumb-font-size);
+	color: var(--cyber-breadcrumb-color);
+}
+
+.cyber-breadcrumb--wc {
+	font-size: var(--cyber-breadcrumb-wc-font-size);
+	color: var(--cyber-breadcrumb-wc-color);
+}
+
+.cyber-breadcrumb__nav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+/*
+ * Specyficznosc (0,1,0) przebija globalna regule "p, span, ul, li" (0,0,1)
+ * z modulu Typografii, ktora inaczej narzucilaby okruszkom rozmiar i kolor
+ * tekstu tresci. Ta sama sytuacja co w pasku Top Header.
+ */
+.cyber-breadcrumb__item,
+.cyber-breadcrumb__item a {
+	font-size: inherit;
+	color: inherit;
+}
+
+.cyber-breadcrumb__item a {
+	text-decoration: none;
+}
+
+.cyber-breadcrumb__item a:hover,
+.cyber-breadcrumb__item a:focus-visible {
+	text-decoration: underline;
+}
+
+/*
+ * Ostatni okruszek to strona biezaca. W naszym markupie niesie aria-current,
+ * ale WooCommerce takiego atrybutu nie dodaje — dlatego selektor opiera sie
+ * na pozycji, ktora jest prawdziwa w obu przypadkach.
+ */
+.cyber-breadcrumb__item:last-child {
+	color: var(--cyber-breadcrumb-color-active);
+}
+
+.cyber-breadcrumb--wc .cyber-breadcrumb__item:last-child {
+	color: var(--cyber-breadcrumb-wc-color-active);
+}
+
+/*
+ * Separator jako pseudoelement, nie znak w markupie — tak samo jak w pasku
+ * Copyright. Znak wpisany w tresc bylby czytany przez czytniki ekranu.
+ */
+.cyber-breadcrumb__item + .cyber-breadcrumb__item::before {
+	content: "/";
+	margin-inline: 8px;
+	color: var(--cyber-breadcrumb-color);
+	opacity: 0.6;
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */
