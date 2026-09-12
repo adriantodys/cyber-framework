@@ -432,7 +432,7 @@ a część głośno.
 |---|---|
 | `cyber_is_woocommerce_active()` | jedyne źródło prawdy o obecności wtyczki |
 | `cyber_woocommerce_required_by()` | lista funkcji motywu, które **w bieżącej konfiguracji** wymagają WooCommerce |
-| `cyber_woocommerce_missing_message()` | treść komunikatu (czysty tekst, escapuje miejsce wypisania) |
+| `cyber_woocommerce_missing_message()` | treść komunikatu (czysty tekst, escapuje miejsce wypisania); pusty string, gdy wtyczka jest aktywna **albo** żadna funkcja jej nie potrzebuje |
 | `cyber_woocommerce_missing_notice()` | `notice-warning` w panelu |
 | `cyber_woocommerce_missing_hint()` | podpowiedź na froncie, wyłącznie dla administratora |
 | `cyber_header_woocommerce_data()` | adresy konta i koszyka plus licznik, albo `null` |

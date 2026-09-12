@@ -65,11 +65,22 @@ function cyber_woocommerce_required_by() {
  * Tresc komunikatu o braku WooCommerce.
  *
  * Zwraca CZYSTY tekst, bez znacznikow i bez escapowania — to zadanie miejsca
- * wypisania (CLAUDE.md sekcja 8). Pusty string oznacza "nie ma o czym mowic".
+ * wypisania (CLAUDE.md sekcja 8). Pusty string oznacza "nie ma o czym mowic"
+ * i wystepuje w DWOCH przypadkach: wtyczka jest aktywna albo zadna funkcja
+ * motywu jej nie potrzebuje.
+ *
+ * Funkcja sprawdza obecnosc wtyczki SAMA, mimo ze robi to juz kazde miejsce
+ * wywolania. Bez tego jej nazwa klamie: przy aktywnym WooCommerce zwracalaby
+ * pelny komunikat o braku, a pierwszy kod, ktory zapomnialby o wlasnym
+ * warunku, pokazalby ostrzezenie na dzialajacym sklepie.
  *
  * @return string Komunikat albo pusty string.
  */
 function cyber_woocommerce_missing_message() {
+	if ( cyber_is_woocommerce_active() ) {
+		return '';
+	}
+
 	$features = cyber_woocommerce_required_by();
 
 	if ( array() === $features ) {
