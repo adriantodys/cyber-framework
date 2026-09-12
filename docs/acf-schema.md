@@ -42,6 +42,22 @@ if ( function_exists( 'acf_add_options_page' ) ) {
 | Lokalizacja | Options Page equals **Ustawienia Cyber Framework** |
 | Plik Local JSON | `acf-json/group_global_options.json` (zapisuje się automatycznie po pierwszym zapisie grupy w adminie ACF, jeśli katalog `acf-json/` istnieje i jest zapisywalny) |
 
+> **Konwencja: każde pole Color Picker ma włączoną przezroczystość**
+> (`enable_opacity`). Dotyczy to **wszystkich** zakładek — Header Desktop,
+> Przyciski, Kolory, Top Header, Footer i Copyright — bez wyjątków. Alfę ustawia
+> się suwakiem w dowolnym polu koloru, nie tylko w cieniach.
+>
+> Konsekwencja po stronie kodu: wszystkie pola kolorystyczne używają typu
+> **`color_alpha`** w `cyber_option_schema()`, który przepuszcza HEX **albo**
+> `rgb()` / `rgba()` o ścisłym wzorcu. Typ `color` (sam HEX) zostaje
+> w `cyber_validate_option_value()` bez przypisanego pola.
+>
+> **Co pole zwraca po zapisie.** Biblioteka koloru z alfą nie zwraca już HEX-a:
+> przy pełnym kryciu daje `rgb(26,26,26)`, a po zmniejszeniu alfy
+> `rgba(26,26,26,0.5)`. Wartości już zapisane w bazie (HEX) **nie zmieniają się**
+> — zostają, dopóki redaktor nie zapisze danego pola ponownie. Wszystkie trzy
+> formaty przechodzą walidację, więc zmiana jest niewidoczna na froncie.
+
 ### Zakładka: „Główne ustawienia strony”
 
 Cel: kontrola maksymalnej szerokości kontenera strony na desktopie oraz responsywnych
@@ -435,7 +451,8 @@ Zakładka zawiera **dwa różne wzorce** kolorów. Różnica jest praktyczna, ni
 
 **Sekcja: Kolory semantyczne**
 
-Wszystkie pola: **Color Picker**, bez przezroczystości.
+Wszystkie pola: **Color Picker z włączoną przezroczystością** — jak w całej
+grupie, patrz konwencja przy nagłówku „Field Group: Global Options”.
 
 | Field Label | Field Name | Default | Stosowany do | Zmienna CSS |
 |---|---|---|---|---|
@@ -476,12 +493,15 @@ odpowiadających im reguł CSS. ACF ustawia wyłącznie barwę.
 > (`0 4px 12px`) są zapisane w CSS i nie mają pól — świadomie, żeby zakładka
 > nie spuchła do zestawu suwaków do wszystkiego.
 
-> **Pola cieni mają włączoną przezroczystość** (`enable_opacity`), więc zwracają
-> `rgba()`, a nie HEX. Cień bez kanału alfa jest w praktyce bezużyteczny — wygląda
-> jak czarna plama pod elementem. Konsekwencja po stronie walidacji: te dwa pola
-> używają typu **`color_alpha`** w `cyber_option_schema()`, który przepuszcza HEX
-> **albo** `rgb()` / `rgba()` o ścisłym wzorcu. Pozostałe pola kolorystyczne
-> zostają przy typie `color` (sam HEX).
+> **Cienie były pierwszym miejscem, gdzie alfa była konieczna** — cień bez kanału
+> alfa wygląda jak czarna plama pod elementem, dlatego oba pola miały
+> `enable_opacity` na długo przed resztą. Od 2026-09-12 nie są już wyjątkiem:
+> przezroczystość mają wszystkie pola kolorystyczne w grupie (patrz konwencja
+> przy nagłówku „Field Group: Global Options”), a typ `color_alpha` — wcześniej
+> używany tylko tutaj — obsługuje je wszystkie.
+>
+> Domyślne wartości cieni pozostają zapisane jako `rgba(…)`, bo bez kanału alfa
+> nie miałyby sensu.
 
 Obie sekcje obsługuje jedna funkcja `cyber_colors_css()` — z punktu widzenia
 generatora nie ma między nimi różnicy, obie to zmienne. Nazwa zmiennej powstaje
@@ -1139,6 +1159,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-12 — **Przezroczystość włączona na wszystkich polach Color Picker** (35 pól w zakładkach Header Desktop, Przyciski, Kolory, Top Header, Footer, Copyright; cienie miały ją już wcześniej). Typ schematu tych pól zmieniony z `color` na `color_alpha` — bez zmiany samej walidacji, bo `color_alpha` przepuszcza HEX, `rgb()` i `rgba()`. Typ `color` zostaje w kodzie bez przypisanego pola. Żadna zapisana wartość ani wartość domyślna się nie zmienia.
 - 2026-09-10 — Copyright: pola prawne przestawione z **Link** na **Page Link** (wybór istniejącej strony); etykiety linków stałe w `template-parts/footer/copyright.php`. Typ schematu tych pól zmieniony z `link` na `url`.
 - 2026-09-10 — Nowa zakładka **„Copyright”**: 3 pola treści (tekst + 2 pola typu Link) i 5 pól stylu. Nowy `inc/footer.php` i `template-parts/footer/copyright.php`, nowy typ schematu `link`, znacznik `{year}` w tekście. Zamyka listę modułów podstawowych Global Options.
 - 2026-09-10 — Footer: nowa sekcja **„Stylizacja Footer”** — 7 pól (tło + rozmiar/kolor dla tytułów, tekstu i linków). Wzorzec narzędziowy: stałe klasy `.cyber-footer-title` / `-text` / `-link`, ograniczone do stopki konwencją, nie techniką.

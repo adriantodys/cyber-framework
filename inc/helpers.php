@@ -162,8 +162,9 @@ function cyber_font_weight_choices() {
  * Znaczenie kluczy konfiguracji:
  * - type      : 'choice' (wartosc musi nalezec do 'choices'), 'px' albo 'percent'
  *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
- *              'color' (kolor HEX), 'color_alpha' (HEX albo rgb/rgba — pole Color
- *              Picker z wlaczona przezroczystoscia), 'url' (adres pliku, np. logo
+ *              'color_alpha' (HEX albo rgb/rgba — Color Picker z wlaczona
+ *              przezroczystoscia; uzywaja go WSZYSTKIE pola kolorystyczne),
+ *              'color' (sam HEX; typ chwilowo bez pola), 'url' (adres pliku, np. logo
  *              z pola Image), 'bool' (pole True/False), 'text' / 'textarea'
  *              (tekst, opcjonalnie sprawdzany kluczem 'pattern'), 'email'
  *              'html' (tresc z pola WYSIWYG) albo 'link' (pole ACF Link,
@@ -389,15 +390,15 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'header_menu_color'           => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#1a1a1a',
 		),
 		'header_menu_color_hover'     => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'header_menu_color_active'    => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'header_submenu_indicator'    => array(
@@ -433,15 +434,15 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'header_submenu_color'        => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#1a1a1a',
 		),
 		'header_submenu_color_hover'  => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'header_submenu_color_active' => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'header_mobile_breakpoint'    => array(
@@ -474,19 +475,19 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'btn_large_color'             => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_large_color_hover'       => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_large_bg_color'          => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'btn_large_bg_color_hover'    => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0041c2',
 		),
 		'btn_medium_padding_y'        => array(
@@ -513,19 +514,19 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'btn_medium_color'            => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_medium_color_hover'      => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_medium_bg_color'         => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'btn_medium_bg_color_hover'   => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0041c2',
 		),
 		'btn_small_padding_y'         => array(
@@ -552,51 +553,51 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'btn_small_color'             => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_small_color_hover'       => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'btn_small_bg_color'          => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'btn_small_bg_color_hover'    => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0041c2',
 		),
 		'color_headings'              => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#111111',
 		),
 		'color_text'                  => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#333333',
 		),
 		'color_overtitle_1'           => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'color_overtitle_2'           => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#666666',
 		),
 		'color_links'                 => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'color_hover'                 => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0041c2',
 		),
 		'color_border_1'              => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#e0e0e0',
 		),
 		'color_border_2'              => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'color_shadow'                => array(
@@ -677,11 +678,11 @@ function cyber_option_schema() {
 			'nullable' => true,
 		),
 		'topheader_bg_color'          => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#111111',
 		),
 		'topheader_font_color'        => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'topheader_font_size'         => array(
@@ -733,7 +734,7 @@ function cyber_option_schema() {
 			'nullable' => true,
 		),
 		'footer_bg_color'             => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'footer_title_font_size'      => array(
@@ -743,7 +744,7 @@ function cyber_option_schema() {
 			'max'     => 100,
 		),
 		'footer_title_color'          => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#111111',
 		),
 		'footer_text_font_size'       => array(
@@ -753,7 +754,7 @@ function cyber_option_schema() {
 			'max'     => 100,
 		),
 		'footer_text_color'           => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#333333',
 		),
 		'footer_link_font_size'       => array(
@@ -763,7 +764,7 @@ function cyber_option_schema() {
 			'max'     => 100,
 		),
 		'footer_link_color'           => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
 		'copyright_text'              => array(
@@ -782,15 +783,15 @@ function cyber_option_schema() {
 			'nullable' => true,
 		),
 		'copyright_bg_color'          => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#111111',
 		),
 		'copyright_text_color'        => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'copyright_link_color'        => array(
-			'type'    => 'color',
+			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
 		'copyright_text_font_size'    => array(
@@ -990,6 +991,12 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 	}
 
 	if ( 'color' === $config['type'] ) {
+		/*
+		 * Typ chwilowo bez pola, tak samo jak 'link' powyzej. Odkad wszystkie
+		 * pola Color Picker maja wlaczona przezroczystosc, kazde z nich uzywa
+		 * 'color_alpha'. Ten typ zostaje pod ewentualne przyszle pole, ktore
+		 * musi przyjac WYLACZNIE HEX i odrzucic kanal alfa.
+		 */
 		$value = sanitize_hex_color( (string) $value );
 
 		return ( null === $value || '' === $value ) ? $fallback : $value;
