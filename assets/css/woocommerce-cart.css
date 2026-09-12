@@ -1,0 +1,256 @@
+/*
+ * Cyber Framework — strona koszyka WooCommerce.
+ *
+ * Kolejkowany WYLACZNIE na is_cart() (inc/woocommerce-cart.php), zgodnie
+ * z CLAUDE.md sekcja 10.
+ *
+ * Koszyk uzywa klasycznego shortcode'u [woocommerce_cart], wiec zaczepiamy sie
+ * o stabilne klasy WooCommerce: .woocommerce-cart-form, .shop_table,
+ * .cart_totals, .quantity. Nie ma tu ANI JEDNEGO nadpisania szablonu.
+ *
+ * Wszystkie barwy i rozmiary pochodza ze zmiennych motywu — modul nie wprowadza
+ * wlasnych pol ACF i nie ma wpisanych na sztywno kolorow.
+ */
+
+/* --- Uklad dwukolumnowy ---------------------------------------------------- */
+
+/*
+ * form.woocommerce-cart-form i div.cart-collaterals sa RODZENSTWEM wewnatrz
+ * div.woocommerce, wiec grid na rodzicu ustawia je obok siebie bez zadnej
+ * zmiany w markupie.
+ */
+.woocommerce-cart .cyber-main .woocommerce {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Komunikaty WooCommerce maja isc przez cala szerokosc, nad obiema kolumnami. */
+.woocommerce-cart .cyber-main .woocommerce-notices-wrapper {
+  grid-column: 1 / -1;
+}
+
+/*
+ * Tytul strony zostaje znacznikiem <h1> — to glowny naglowek dokumentu
+ * (CLAUDE.md sekcja 11). Projekt chce go w rozmiarze h2, wiec zmieniamy
+ * wylacznie warstwe wizualna, nie strukture.
+ */
+.woocommerce-cart .cyber-main h1 {
+  margin-bottom: 32px;
+  font-size: var(--cyber-font-size-h2);
+}
+
+/*
+ * Naglowki obu kolumn. Lewy wstrzykuje cyber_wc_cart_products_heading(),
+ * prawy pochodzi z szablonu WooCommerce — oba sa <h2>, bo <h3> przeskakiwalby
+ * poziom po <h1>. Rozmiar h3 daje wyglad z projektu bez lamania struktury.
+ */
+.woocommerce-cart .cyber-wc-heading,
+.woocommerce-cart .cart_totals > h2 {
+  margin: 0 0 16px;
+  font-size: var(--cyber-font-size-h3);
+}
+
+/* --- Tabela produktow ------------------------------------------------------ */
+
+.woocommerce-cart .woocommerce-cart-form__contents {
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--cyber-color-border-1);
+  border-collapse: collapse;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents th {
+  padding: 18px 14px;
+  border-bottom: 1px solid var(--cyber-color-border-1);
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+  font-weight: 700;
+  text-align: left;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents td {
+  padding: 20px 14px;
+  vertical-align: middle;
+}
+
+/* Kreska tylko MIEDZY pozycjami — pod ostatnia zamyka ramka tabeli. */
+.woocommerce-cart .woocommerce-cart-form__contents tbody tr + tr td {
+  border-top: 1px solid var(--cyber-color-border-1);
+}
+
+/*
+ * Kolumna usuwania i wiersz akcji (kupon + "Zaktualizuj koszyk") nie wystepuja
+ * w projekcie. display:none NIE usuwa pol z formularza, wiec ukryty przycisk
+ * aktualizacji nadal dziala — klika go assets/js/cart.js po zmianie ilosci —
+ * a nonce woocommerce-cart-nonce nadal jest wysylany.
+ */
+.woocommerce-cart .woocommerce-cart-form__contents .product-remove,
+.woocommerce-cart .woocommerce-cart-form__contents td.actions {
+  display: none;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents .product-thumbnail {
+  width: 130px;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents .product-thumbnail img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents td.product-name a {
+  color: var(--cyber-color-links);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents td.product-name a:hover,
+.woocommerce-cart
+  .woocommerce-cart-form__contents
+  td.product-name
+  a:focus-visible {
+  text-decoration: underline;
+}
+
+.woocommerce-cart .woocommerce-cart-form__contents td.product-price,
+.woocommerce-cart .woocommerce-cart-form__contents td.product-subtotal {
+  color: var(--cyber-color-headings);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* --- Licznik ilosci -------------------------------------------------------- */
+
+/*
+ * Przyciski minus i plus doklada assets/js/cart.js. Bez JS zostaje samo pole
+ * liczbowe, ktore nadal dziala — to progresywne ulepszenie, nie zaleznosc.
+ */
+.woocommerce-cart .quantity {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cyber-color-border-1);
+}
+
+.woocommerce-cart .quantity .cyber-qty-btn {
+  width: 34px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cyber-color-text);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.woocommerce-cart .quantity .cyber-qty-btn:hover,
+.woocommerce-cart .quantity .cyber-qty-btn:focus-visible {
+  color: var(--cyber-color-links);
+}
+
+.woocommerce-cart .quantity input.qty {
+  width: 48px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.woocommerce-cart .quantity input.qty::-webkit-outer-spin-button,
+.woocommerce-cart .quantity input.qty::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* --- Podsumowanie koszyka -------------------------------------------------- */
+
+/*
+ * Neutralizacja ukladu WooCommerce. woocommerce-layout.css narzuca
+ * ".cart-collaterals .cart_totals { float: right; width: 48% }" — wartosc
+ * sprzed ery grida, obliczona pod uklad dwukolumnowy na floatach.
+ *
+ * W naszej siatce prawa kolumna ma juz swoja szerokosc (360px), wiec 48%
+ * zwezalo podsumowanie do polowy tej kolumny. Selektor jest CELOWO taki sam
+ * jak w WooCommerce: ta sama specyficznosc, a wygrywamy kolejnoscia wczytania
+ * (arkusz koszyka zalezy od 'cyber-main' i laduje sie po arkuszach wtyczki).
+ *
+ * NIE USUWAC. Bez tej reguly podsumowanie wraca do 48% szerokosci kolumny.
+ */
+.woocommerce .cart-collaterals .cart_totals,
+.woocommerce-page .cart-collaterals .cart_totals {
+	width: 100%;
+}
+
+.woocommerce-cart .cart_totals > table {
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--cyber-color-border-1);
+  border-collapse: collapse;
+}
+
+.woocommerce-cart .cart_totals th,
+.woocommerce-cart .cart_totals td {
+  padding: 20px 16px;
+  border: 0;
+  color: var(--cyber-color-headings);
+  font-weight: 700;
+}
+
+.woocommerce-cart .cart_totals th {
+  text-align: left;
+}
+
+.woocommerce-cart .cart_totals td {
+  text-align: right;
+  white-space: nowrap;
+}
+
+/*
+ * Projekt przewiduje w podsumowaniu JEDEN wiersz: wartosc zamowienia.
+ * Pozostale wiersze, ktore WooCommerce wypisuje warunkowo, sa ukrywane.
+ * Nie usuwamy ich hookiem, bo znikneloby rowniez przeliczanie wysylki.
+ */
+.woocommerce-cart .cart_totals .cart-subtotal,
+.woocommerce-cart .cart_totals .woocommerce-shipping-totals,
+.woocommerce-cart .cart_totals .cart-discount,
+.woocommerce-cart .cart_totals .fee,
+.woocommerce-cart .cart_totals .tax-rate,
+.woocommerce-cart .cart_totals .tax-total {
+  display: none;
+}
+
+/* Przycisk pod ramka podsumowania, dosuniety do jej prawej krawedzi. */
+.woocommerce-cart .wc-proceed-to-checkout {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding: 0;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+  .woocommerce-cart .cyber-main .woocommerce {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .woocommerce-cart .woocommerce-cart-form__contents .product-thumbnail {
+    width: 90px;
+  }
+
+  .woocommerce-cart .woocommerce-cart-form__contents th,
+  .woocommerce-cart .woocommerce-cart-form__contents td {
+    padding: 12px 8px;
+  }
+}

@@ -39,6 +39,7 @@ w ustalonej kolejności:
 | 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 | 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
 | 12 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
+| 13 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
 
 ## Stałe
 
@@ -535,6 +536,75 @@ Zakres ścieżki poza sklepem jest świadomie podstawowy: strony z pełną hiera
 rodziców, wpisy, archiwa, wyszukiwanie i 404. Ścieżka wpisu przez kategorię
 (Strona główna > Kategoria > Wpis) to jedna dodatkowa gałąź w
 `cyber_breadcrumb_items()`, do zrobienia wtedy, gdy blog faktycznie powstanie.
+
+## Strona koszyka WooCommerce
+
+Koszyk używa **klasycznego shortcode'u** `[woocommerce_cart]`, nie bloku
+(uzasadnienie: CLAUDE.md sekcja 2). Cały wygląd powstaje z hooków i CSS —
+**zero nadpisań szablonów**, więc aktualizacja WooCommerce niczego tu nie psuje
+i nie pojawia się ostrzeżenie „template is out of date" w WooCommerce → Status.
+
+### Co skąd się bierze
+
+| Element projektu | Mechanizm |
+|---|---|
+| Układ dwukolumnowy | CSS grid na `div.woocommerce` — `form.woocommerce-cart-form` i `div.cart-collaterals` są jego **rodzeństwem**, więc wystarczył grid na rodzicu |
+| Nagłówek „Produkty w koszyku” | `woocommerce_before_cart_table` → `cyber_wc_cart_products_heading()` |
+| Nagłówek „Podsumowanie koszyka” | filtr `gettext`: `Cart totals` |
+| Nagłówki tabeli (Produkt / Cena / Ilość / **Razem**) | trzy pierwsze są już w tłumaczeniu WooCommerce; `Subtotal` → „Razem” filtrem |
+| Jeden wiersz „Wartość zamówienia” | filtr `gettext`: `Total`; pozostałe wiersze ukryte CSS-em |
+| Przycisk `btn-large` | `remove_action( 'woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20 )` + własny callback |
+| Brak produktów powiązanych | `remove_action( 'woocommerce_cart_collaterals', 'woocommerce_cross_sell_display' )` |
+| Licznik ilości z − i + | `assets/js/cart.js` — progresywne ulepszenie |
+
+### Trzy decyzje warte zapamiętania
+
+**Filtr `gettext` jest zawężony do `is_cart()`.** Ciągi „Total" i „Subtotal"
+występują w WooCommerce w dziesiątkach miejsc; globalna podmiana rozjechałaby
+zamówienia, maile i panel. Porównujemy ciąg **źródłowy**, nie przetłumaczony,
+więc filtr działa niezależnie od wgranego tłumaczenia.
+
+**`remove_action()` musi odpalić po starcie wtyczki.** Domyślne callbacki
+rejestrują się w `includes/wc-template-hooks.php` przy ładowaniu WooCommerce,
+dlatego przestawienie hooków wisi na akcji `wp`, a nie wykonuje się przy
+ładowaniu pliku motywu.
+
+**WooCommerce narzuca własny układ na floatach — trzeba go neutralizować.**
+`woocommerce-layout.css` ustawia `.cart-collaterals .cart_totals { float: right;
+width: 48% }`. To wartość sprzed ery grida, policzona pod dwie kolumny na
+floatach; w naszej siatce zwężała podsumowanie do połowy prawej kolumny.
+Neutralizujemy ją regułą o **identycznym selektorze** — ta sama specyficzność,
+wygrywamy kolejnością wczytania, bo arkusz koszyka zależy od `cyber-main`
+i ładuje się po arkuszach wtyczki.
+
+To nie jest przypadek jednostkowy: `woocommerce-layout.css` zawiera cały zestaw
+procentowych szerokości i floatów (`.related` 30.75%, `.cross-sells` 48%,
+kolumny formularza zamówienia). **Przy każdym kolejnym widoku sklepu trzeba
+sprawdzić, co ten arkusz narzuca**, zanim uzna się układ za gotowy — samo
+napisanie grida nie wystarczy.
+
+**Ukryty przycisk „Zaktualizuj koszyk" nadal działa.** `display: none` nie usuwa
+pól z formularza ani nie blokuje kliknięcia z poziomu JS — `assets/js/cart.js`
+klika go po zmianie ilości, a nonce `woocommerce-cart-nonce` (leżący w tej samej,
+ukrytej komórce `td.actions`) nadal jest wysyłany. Bez tego skryptu zmiana
+ilości nie robiłaby nic.
+
+### Świadome odstępstwa od projektu graficznego
+
+| Rzecz | Decyzja |
+|---|---|
+| Tytuł strony | Zostaje `<h1>`, dostaje tylko **rozmiar** `h2`. Zmiana znacznika złamałaby zasadę jednego `<h1>` na stronę (CLAUDE.md sekcja 11) |
+| Nagłówki kolumn | `<h2>` w rozmiarze `h3` — `<h3>` po `<h1>` przeskakiwałby poziom |
+| Kolumna usuwania pozycji | Ukryta, bo projekt jej nie pokazuje. **Konsekwencja: pozycję usuwa się ustawiając ilość na 0.** Przywrócenie to jedna linia CSS |
+| Pole kuponu | Ukryte — projekt go nie przewiduje |
+
+### Czego tu nie ma
+
+`add_theme_support( 'woocommerce' )` **nie jest zadeklarowane** i koszyk go nie
+potrzebuje: strona koszyka to zwykła strona z shortcode'em, renderowana przez
+`the_content()`, a nie przez szablony WooCommerce. Deklaracja stanie się
+potrzebna dopiero przy stronach sklepu i produktu — i wtedy będzie osobną
+decyzją, bo zmienia sposób renderowania wszystkich widoków sklepowych.
 
 ## Edytor treści
 

@@ -56,6 +56,38 @@ Brak zależności miękkiej **nigdy** nie kończy się błędem krytycznym ani p
 Nowy moduł korzystający z WooCommerce dopisuje się do filtra
 `cyber_woocommerce_required_by` i dostaje komplet tych komunikatów bez własnego kodu.
 
+#### Strony WooCommerce: klasyczny shortcode, zero nadpisań szablonów
+
+Strony sklepowe (koszyk, zamówienie i kolejne) używają **klasycznych
+shortcode'ów** (`[woocommerce_cart]`), nie bloków WooCommerce. Powód jest
+wprost architektoniczny: motyw ma wyłączony edytor blokowy (sekcja 1), więc
+bloku i tak nie dałoby się skonfigurować — redaktor zobaczyłby w TinyMCE kilka
+kilobajtów surowego markupu blokowego i mógłby go zapisem uszkodzić.
+
+Dodatkowo klasyczny markup jest **stabilniejszy do stylowania**: klasy
+`.shop_table`, `.cart_totals`, `.quantity` nie zmieniły się od lat, podczas gdy
+`.wc-block-components-*` to DOM renderowany Reactem, zmieniany między wersjami.
+
+**Wygląd powstaje wyłącznie z hooków, filtrów i CSS. Żadnych nadpisań
+szablonów WooCommerce w katalogu `woocommerce/`.** To świadoma decyzja o koszcie
+utrzymania: nadpisany szablon przypina kopię do wersji wtyczki, po aktualizacji
+WooCommerce zgłasza „template is out of date" w **WooCommerce → Status**, a
+poprawki z rdzenia przestają docierać do tego pliku.
+
+Nadpisanie pojedynczego szablonu jest dopuszczalne **tylko wtedy**, gdy efektu
+nie da się osiągnąć hookiem ani CSS-em, i wymaga:
+
+1. jawnej decyzji przed implementacją (sekcja 15),
+2. odnotowania w `docs/architecture.md`, **którą wersję** pliku skopiowano
+   (nagłówek `@version` z oryginału),
+3. sprawdzenia tego wpisu przy każdej większej aktualizacji WooCommerce.
+
+Etykiety WooCommerce zmieniamy filtrem `gettext` **zawężonym do konkretnego
+widoku**. Ciągi w rodzaju „Total" czy „Subtotal" występują w dziesiątkach miejsc
+wtyczki — w zamówieniach, mailach i panelu — więc globalna podmiana rozjechałaby
+całą wtyczkę. Porównujemy ciąg **źródłowy (angielski)**, nie przetłumaczony,
+żeby filtr działał niezależnie od wgranego tłumaczenia.
+
 ## 3. Struktura katalogów
 
 ```
