@@ -1,8 +1,9 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-12 (moduły: Top Header, Header desktop/mobile, Footer,
-Copyright, Button, Social icons; warianty wrapperów, przyklejony header, cztery
-warianty układu headera wraz ze slotem akcji i integracją WooCommerce).
+Ostatnia aktualizacja: 2026-09-13 (moduły: Top Header, Header desktop/mobile, Footer,
+Copyright, Breadcrumb, Button, Social icons; warianty wrapperów, przyklejony header,
+cztery warianty układu headera ze slotem akcji oraz warstwa sklepowa WooCommerce —
+koszyk i strona zamówienia).
 
 ## Status
 
@@ -218,6 +219,58 @@ gotowy `bool` i jedynie dokłada klasę `.cyber-header--sticky`, a całe zachowa
 przyklejania leży w CSS (`position: sticky`), bez JavaScriptu. Wartości liczbowe i kolory w ogóle nie przechodzą
 przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
 (patrz `docs/acf-schema.md`, sekcja „Stan: generowanie CSS”).
+
+## Warstwa WooCommerce
+
+Koszyk i strona zamówienia **nie mają template-partów** i nie pojawiają się
+w tabeli wyżej — to nie są komponenty motywu, tylko widoki WooCommerce, którym
+motyw nadaje wygląd z zewnątrz. Ta sekcja istnieje po to, żeby mapa komponentów
+o nich wiedziała.
+
+Pełny opis mechanizmów, pułapek i odstępstw: `docs/architecture.md`, sekcje
+„Strona koszyka WooCommerce" i „Strona zamówienia (checkout)".
+
+### Pliki
+
+| Plik | Rola |
+|---|---|
+| `inc/woocommerce.php` | warstwa ochronna miękkiej zależności: wykrywanie, komunikaty, dane konta i koszyka |
+| `inc/woocommerce-cart.php` | wygląd koszyka: hooki, etykiety, warunkowe assety |
+| `inc/woocommerce-checkout.php` | wygląd zamówienia: kolejność pól, kupon, licznik ilości, endpoint AJAX |
+| `assets/css/woocommerce-cart.css` | style koszyka — ładowany **tylko** na `is_cart()` |
+| `assets/css/woocommerce-checkout.css` | style zamówienia — ładowany **tylko** na `is_checkout()` |
+| `assets/js/cart.js` | licznik ilości w koszyku, automatyczne przeliczanie |
+| `assets/js/checkout.js` | licznik ilości i kupon na stronie zamówienia |
+
+Żaden z tych assetów nie ma prawa załadować się poza swoją stroną
+(CLAUDE.md sekcja 10) — sprawdzone: `/koszyk/` ładuje wyłącznie arkusz koszyka,
+`/zamowienie/` wyłącznie arkusz zamówienia, `/sklep/` żadnego.
+
+### Nadpisania szablonów
+
+Dwa, oba zatwierdzone jawnie przed implementacją (CLAUDE.md sekcja 2).
+Rejestr z wersjami prowadzi `CLAUDE.md`; uzasadnienia i zakres zmian —
+`docs/architecture.md`.
+
+| Plik | Wersja | Dlaczego nie hookiem ani CSS-em |
+|---|---|---|
+| `woocommerce/checkout/review-order.php` | `@version 11.0.0` | W `<thead>` nie ma punktu zaczepienia, więc nagłówka trzeciej kolumny nie da się dołożyć |
+| `woocommerce/cart/cart-shipping.php` | `@version 8.8.0` | `colspan` jest atrybutem i **nie ma odpowiednika wśród właściwości CSS** |
+
+### Własne elementy w tych widokach
+
+Nie są to komponenty reużywalne — istnieją wyłącznie wewnątrz widoków sklepu.
+
+| Klasa | Gdzie | Skąd markup |
+|---|---|---|
+| `.cyber-qty` | koszyk i zamówienie | koszyk: `assets/js/cart.js`; zamówienie: filtr `woocommerce_checkout_cart_item_quantity` |
+| `.cyber-coupon` | zamówienie | `cyber_wc_checkout_coupon_box()` — **celowo bez `<form>`**, bo leży wewnątrz formularza zamówienia |
+| `.cyber-wc-heading` | koszyk | hook `woocommerce_before_cart_table` |
+| `.cyber-wc-checkout-button` | koszyk | hook `woocommerce_proceed_to_checkout`, klasy `btn btn-large` |
+| `.cyber-wc-place-order` | zamówienie | filtr `woocommerce_order_button_html`, klasy `btn btn-large` |
+
+Oba przyciski używają rozmiarów z zakładki **Przyciski** i nie mają własnych pól
+wyglądu — tak samo jak przycisk CTA w headerze.
 
 ## Zasady
 

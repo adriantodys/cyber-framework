@@ -690,7 +690,34 @@ Zamiast dokładać drugi filtr tłumaczeń użyliśmy dedykowanego
 sprawdź w źródle, czy nie pochodzi z `_x()` — i poszukaj dedykowanego filtra,
 zanim dołożysz `gettext_with_context`.
 
-### Jedyne nadpisanie szablonu w projekcie
+### Nadpisania szablonów w projekcie
+
+Dwa, oba zatwierdzone jawnie przed implementacją (CLAUDE.md sekcja 2).
+
+#### `woocommerce/cart/cart-shipping.php` — `@version 8.8.0`
+
+**Powód:** tabela podsumowania ma trzy kolumny, a wiersz dostawy miał dwie
+komórki i żadnego `colspan`. Lista metod kończyła się przez to w połowie
+szerokości tabeli.
+
+**Dlaczego nie CSS-em.** `colspan` jest atrybutem i **nie ma odpowiednika wśród
+właściwości CSS**. Pierwsze podejście — `display: block; width: 100%` na
+komórkach — nie działało i warto wiedzieć dlaczego: przeglądarka owija blokowe
+dziecko wiersza tabeli w **anonimową komórkę**, więc element nadal siedzi
+w jednej kolumnie, a `width: 100%` odnosi się do tej komórki, nie do tabeli.
+
+**Zakres zmian:** wiersz rozbity na **dwa**, każdy z jedną komórką
+`colspan="3"` — etykieta nad listą metod, oba na pełną szerokość.
+
+> Dwie komórki po `colspan="3"` w **jednym** wierszu nie zadziałałyby: `th`
+> zająłby kolumny 1–3, a `td` zaczął się od kolumny 4, więc tabela urosłaby do
+> sześciu kolumn. Stąd podział na dwa wiersze, a nie samo dodanie atrybutu.
+
+Wszystkie 6 hooków i filtrów oryginału zachowanych. Liczba `3` jest związana
+z liczbą kolumn ustaloną w `review-order.php` — zmiana tam wymaga poprawienia
+jej tutaj.
+
+#### `woocommerce/checkout/review-order.php` — `@version 11.0.0`
 
 `woocommerce/checkout/review-order.php`, skopiowany z WooCommerce 11.1.0,
 **`@version 11.0.0`**.

@@ -73,11 +73,18 @@ utrzymania: nadpisany szablon przypina kopię do wersji wtyczki, po aktualizacji
 WooCommerce zgłasza „template is out of date" w **WooCommerce → Status**, a
 poprawki z rdzenia przestają docierać do tego pliku.
 
-**Stan nadpisań: jedno, zatwierdzone.**
+**Stan nadpisań: dwa, oba zatwierdzone.**
 
 | Plik | Wersja | Powód |
 |---|---|---|
 | `woocommerce/checkout/review-order.php` | `@version 11.0.0` | Projekt wymaga tabeli o trzech kolumnach; nagłówka trzeciej nie da się dołożyć hookiem, bo w `<thead>` nie ma punktu zaczepienia |
+| `woocommerce/cart/cart-shipping.php` | `@version 8.8.0` | Wiersz dostawy ma dwie komórki bez `colspan`, więc zajmował dwie z trzech kolumn. **`colspan` jest atrybutem i nie ma odpowiednika w CSS** |
+
+> **Czego CSS nie potrafi — warto znać przed sięganiem po nadpisanie.**
+> Ustawienie `display: block` na komórce tabeli **nie** rozciąga jej na kolejne
+> kolumny: przeglądarka owija taki element w *anonimową komórkę tabeli*, więc
+> nadal siedzi w jednej kolumnie, a `width: 100%` odnosi się do niej, nie do
+> tabeli. Scalenie kolumn daje wyłącznie atrybut `colspan`.
 
 Każde kolejne nadpisanie dopisuje wiersz do tej tabeli **i** do
 `docs/architecture.md`.
