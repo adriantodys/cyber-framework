@@ -1,16 +1,45 @@
 # Bezpieczeństwo — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-09.
+Ostatnia aktualizacja: 2026-09-13 (pierwszy endpoint AJAX w motywie).
 Dokument nadrzędny: CLAUDE.md sekcja 9. Tutaj są checklisty do odhaczania przy review.
 
 ## Stan obecny (v0.1.0)
 
-Motyw **nie zawiera** formularzy front-endowych, endpointów AJAX ani REST. Powierzchnia
-ataku ogranicza się do:
+Motyw nie zawiera endpointów REST. Powierzchnia ataku to:
 
-- wyświetlania danych z ACF (rozwiązanie: escaping przy outputcie + walidacja w helperze),
-- strony ustawień ACF w adminie (rozwiązanie: `capability` = `manage_options`; nonce
-  i zapis obsługuje ACF).
+- wyświetlanie danych z ACF (rozwiązanie: escaping przy outputcie + walidacja w helperze),
+- strona ustawień ACF w adminie (rozwiązanie: `capability` = `manage_options`; nonce
+  i zapis obsługuje ACF),
+- **jeden endpoint AJAX** — zmiana ilości pozycji koszyka na stronie zamówienia.
+
+### Endpoint AJAX: `cyber_checkout_qty`
+
+`inc/woocommerce-checkout.php`, funkcja `cyber_wc_checkout_update_quantity()`.
+Zarejestrowany dla zalogowanych **i** niezalogowanych (`wp_ajax_nopriv_`), bo
+koszyk prowadzą także goście.
+
+| Warstwa | Realizacja |
+|---|---|
+| Nonce | `check_ajax_referer( 'cyber_checkout_qty', 'nonce' )` na pierwszej linii |
+| Sanitizacja | klucz przez `sanitize_text_field( wp_unslash() )`, ilość przez `absint()` |
+| Walidacja | pozycja musi istnieć w koszyku **tej sesji**; ilość ≥ 1, przycięta do `get_max_purchase_quantity()`, sprawdzona przez `has_enough_stock()` |
+| Escaping | odpowiedź to JSON z liczbą i przetłumaczonym komunikatem, nie HTML |
+
+> **Dlaczego nie ma `current_user_can()`.** Checklista poniżej wymaga sprawdzenia
+> uprawnień przy każdej akcji AJAX. To odstępstwo jest **świadome i konieczne**:
+> zakupy bez konta są normalnym scenariuszem sklepu, więc żadna sensowna
+> capability tu nie istnieje.
+>
+> Endpoint nie jest przez to otwarty. Operuje wyłącznie na koszyku **z sesji
+> osoby wykonującej żądanie** — nie przyjmuje identyfikatora użytkownika ani
+> zamówienia, więc nie da się nim sięgnąć cudzych danych. Nonce chroni przed
+> wykonaniem żądania z obcej strony.
+>
+> Każdy kolejny publiczny endpoint musi mieć tak samo **jawnie uzasadniony**
+> brak sprawdzenia uprawnień — albo je zawierać.
+
+Sprawdzone realnymi żądaniami: brak nonce → `403`, zły nonce → `403`,
+nieistniejący klucz pozycji → błąd, ilość `0` → odrzucona.
 
 Checklisty poniżej obowiązują od momentu, w którym pojawi się pierwszy formularz.
 

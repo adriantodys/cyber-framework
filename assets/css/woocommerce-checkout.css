@@ -1,0 +1,526 @@
+/*
+ * Cyber Framework — strona zamowienia WooCommerce.
+ *
+ * Kolejkowany WYLACZNIE na is_checkout() (inc/woocommerce-checkout.php),
+ * zgodnie z CLAUDE.md sekcja 10.
+ *
+ * Wszystkie barwy i rozmiary pochodza ze zmiennych motywu — modul nie wprowadza
+ * wlasnych pol ACF i nie ma wpisanych na sztywno kolorow.
+ */
+
+/* --- Uklad dwukolumnowy 50/50 ---------------------------------------------- */
+
+/*
+ * Trzy elementy sa rodzenstwem wewnatrz form.checkout: #customer_details,
+ * naglowek #order_review_heading i #order_review. Grid ustawia dane
+ * rozliczeniowe w lewej kolumnie przez oba wiersze, a naglowek i podsumowanie
+ * jeden pod drugim w prawej.
+ */
+.woocommerce-checkout .cyber-main form.checkout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 40px;
+  align-items: start;
+}
+
+.woocommerce-checkout #customer_details {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.woocommerce-checkout #order_review_heading {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.woocommerce-checkout #order_review {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/*
+ * Neutralizacja ukladu WooCommerce — ten sam problem co w koszyku.
+ * woocommerce-layout.css ustawia .col2-set .col-1 na width 48% i float left,
+ * oraz lustrzana regule dla .col-2. W naszej siatce obie maja zajmowac cala
+ * szerokosc lewej kolumny i lezec jedna pod druga.
+ *
+ * NIE USUWAC. Bez tego dane rozliczeniowe i uwagi rozjada sie na dwie kolumny
+ * wewnatrz lewej kolumny.
+ */
+.woocommerce-checkout .col2-set .col-1,
+.woocommerce-checkout .col2-set .col-2 {
+  width: 100%;
+  float: none;
+}
+
+/*
+ * Tytul strony zostaje h1 — glowny naglowek dokumentu (CLAUDE.md sekcja 11).
+ * Projekt chce go w rozmiarze h2, wiec zmieniamy tylko warstwe wizualna.
+ */
+.woocommerce-checkout .cyber-main h1 {
+  margin-bottom: 32px;
+  font-size: var(--cyber-font-size-h2);
+}
+
+/*
+ * Naglowki obu kolumn. WooCommerce wypisuje je jako h3 na sztywno
+ * w form-billing.php i form-checkout.php — patrz uwaga o poziomach naglowkow
+ * w docs/architecture.md.
+ */
+.woocommerce-checkout .woocommerce-billing-fields > h3,
+.woocommerce-checkout #order_review_heading {
+  margin: 0 0 20px;
+  font-size: var(--cyber-font-size-h3);
+}
+
+/*
+ * Sekcja wysylki na inny adres nie wystepuje w projekcie — zamowienie idzie
+ * na adres rozliczeniowy.
+ *
+ * ZALOZENIE DO ZAKWESTIONOWANIA: to decyzja biznesowa, nie kosmetyczna.
+ * Usuniecie tej reguly przywraca klientowi mozliwosc podania innego adresu
+ * dostawy.
+ */
+.woocommerce-checkout .woocommerce-shipping-fields {
+  display: none;
+}
+
+/* --- Formularz ------------------------------------------------------------- */
+
+/*
+ * Siatka pol. Imie i nazwisko zajmuja po jednej kolumnie, reszta cala szerokosc.
+ * WooCommerce ustawia .form-row-first i .form-row-last jako floaty po 47% —
+ * w siatce sa zbedne i trzeba je wylaczyc.
+ */
+.woocommerce-checkout .woocommerce-billing-fields__field-wrapper,
+.woocommerce-checkout .woocommerce-additional-fields__field-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 20px;
+}
+
+.woocommerce-checkout .form-row {
+  float: none;
+  width: auto;
+  margin: 0 0 20px;
+  padding: 0;
+  grid-column: 1 / -1;
+}
+
+.woocommerce-checkout .form-row-first {
+  grid-column: 1;
+}
+
+.woocommerce-checkout .form-row-last {
+  grid-column: 2;
+}
+
+/*
+ * Kraj nie jest wyborem klienta — sklep wysyla na jeden rynek. Pole jest
+ * UKRYTE, a nie usuniete: display:none zostawia je w formularzu, wiec wartosc
+ * nadal sie wysyla, a WooCommerce ma na czym policzyc podatek i wysylke.
+ * Usuniecie pola filtrem zepsuloby oba te wyliczenia.
+ */
+#billing_country_field {
+  display: none !important;
+}
+
+/*
+ * Imie i nazwisko na pelna szerokosc swojej kolumny siatki.
+ *
+ * Selektor ID jest tu KONIECZNY, nie wygoda. woocommerce-layout.css ustawia
+ * ".woocommerce form .form-row-first { width: 47% }" ze specyficznoscia
+ * (0,2,1), a regula .woocommerce-checkout .form-row wyzej ma (0,2,0) — czyli
+ * przegrywa. Selektor ID (1,0,0) wygrywa bez podbijania specyficznosci calej
+ * reszty arkusza.
+ *
+ * To ten sam wzorzec co przy .cart_totals w koszyku i .col2-set wyzej:
+ * WooCommerce niesie wlasny uklad na procentach i floatach, ktory trzeba
+ * punktowo neutralizowac.
+ */
+#billing_first_name_field,
+#billing_last_name_field {
+  width: 100%;
+}
+
+.woocommerce-checkout .form-row label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+}
+
+/* Gwiazdka pola wymaganego w kolorze akcentu, bez podkreslenia. */
+.woocommerce-checkout .form-row .required {
+  border: 0;
+  color: var(--cyber-color-links);
+  text-decoration: none;
+}
+
+.woocommerce-checkout .form-row input.input-text,
+.woocommerce-checkout .form-row textarea,
+.woocommerce-checkout .form-row select,
+.woocommerce-checkout .select2-container .select2-selection--single {
+  width: 100%;
+  height: auto;
+  padding: 12px 14px;
+  border: 1px solid var(--cyber-color-border-1);
+  border-radius: 0;
+  background: none;
+  color: var(--cyber-color-text);
+  font-family: var(--cyber-font-family-text);
+  font-size: var(--cyber-font-size-text);
+  line-height: 1.4;
+}
+
+.woocommerce-checkout .form-row textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* --- Tabela podsumowania --------------------------------------------------- */
+
+/*
+ * Trzy kolumny: Produkt, Ilosc, Kwota. Trzecia kolumna pochodzi z jedynego
+ * nadpisania szablonu w projekcie — woocommerce/checkout/review-order.php.
+ */
+.woocommerce-checkout .woocommerce-checkout-review-order-table {
+  width: 100%;
+  margin: 0;
+  border: 1px solid var(--cyber-color-border-1);
+  border-collapse: collapse;
+}
+
+.woocommerce-checkout .woocommerce-checkout-review-order-table th,
+.woocommerce-checkout .woocommerce-checkout-review-order-table td {
+  padding: 16px 14px;
+  color: var(--cyber-color-headings);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.woocommerce-checkout .woocommerce-checkout-review-order-table thead th {
+  border-bottom: 1px solid var(--cyber-color-border-1);
+  font-weight: 700;
+}
+
+.woocommerce-checkout
+  .woocommerce-checkout-review-order-table
+  .product-quantity {
+  width: 110px;
+  text-align: center;
+}
+
+/*
+ * Licznik ilosci. Markup doklada filtr woocommerce_checkout_cart_item_quantity
+ * (inc/woocommerce-checkout.php), obsluge assets/js/checkout.js.
+ *
+ * Wartosc jest tekstem, nie polem formularza: autorytetem pozostaje koszyk
+ * po stronie serwera, a cala tabela przeladowuje sie po kazdej zmianie.
+ */
+.woocommerce-checkout .cyber-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--cyber-color-border-1);
+}
+
+.woocommerce-checkout .cyber-qty.is-busy {
+  opacity: 0.5;
+}
+
+.woocommerce-checkout .cyber-qty-btn {
+  width: 30px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cyber-color-text);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.woocommerce-checkout .cyber-qty-btn:hover,
+.woocommerce-checkout .cyber-qty-btn:focus-visible {
+  color: var(--cyber-color-links);
+}
+
+.woocommerce-checkout .cyber-qty-btn:disabled {
+  cursor: default;
+}
+
+.woocommerce-checkout .cyber-qty-value {
+  min-width: 34px;
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+  font-weight: 700;
+  text-align: center;
+}
+
+.woocommerce-checkout .woocommerce-checkout-review-order-table .product-total,
+.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot td {
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.woocommerce-checkout .woocommerce-checkout-review-order-table tbody td {
+  color: var(--cyber-color-text);
+  font-weight: 400;
+}
+
+/* Kreska nad kazdym wierszem podsumowania oddziela go od pozycji powyzej. */
+.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot tr th,
+.woocommerce-checkout .woocommerce-checkout-review-order-table tfoot tr td {
+  border-top: 1px solid var(--cyber-color-border-1);
+  font-weight: 700;
+}
+
+/*
+ * Wiersz dostawy lamie uklad tabeli CELOWO: w projekcie Dostawa jest etykieta
+ * nad lista metod, a nie wartoscia obok niej. Komorki tego wiersza ida jedna
+ * pod druga na calej szerokosci.
+ *
+ * Ten wiersz pochodzi z cart/cart-shipping.php, ktorego NIE nadpisujemy —
+ * dlatego uklad zalatwiamy tutaj, a nie w szablonie.
+ */
+.woocommerce-checkout
+  .woocommerce-checkout-review-order-table
+  tfoot
+  .shipping
+  th,
+.woocommerce-checkout
+  .woocommerce-checkout-review-order-table
+  tfoot
+  .shipping
+  td {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.woocommerce-checkout
+  .woocommerce-checkout-review-order-table
+  tfoot
+  .shipping
+  td {
+  padding-top: 0;
+  border-top: 0;
+  font-weight: 400;
+}
+
+.woocommerce-checkout ul#shipping_method {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.woocommerce-checkout ul#shipping_method li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--cyber-color-text);
+  font-size: var(--cyber-font-size-text);
+}
+
+/* Cena metody dostawy dosunieta do prawej krawedzi. */
+.woocommerce-checkout ul#shipping_method li label {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+}
+
+/* --- Kupon ----------------------------------------------------------------- */
+
+/*
+ * Wlasny blok kuponu. NIE jest formularzem — lezy wewnatrz formularza
+ * zamowienia, a HTML zabrania zagniezdzania <form>. Szczegoly w komentarzu
+ * przy cyber_wc_checkout_coupon_box() w inc/woocommerce-checkout.php.
+ */
+.woocommerce-checkout .cyber-coupon {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--cyber-color-border-1);
+}
+
+.woocommerce-checkout .cyber-coupon__toggle {
+  margin: 0;
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/*
+ * Przelacznik jest <button>, nie <a href="#">: to sterowanie widokiem,
+ * a nie odnosnik. Wyglada jak link, ale nie wypada z karty przy kliknieciu
+ * i poprawnie oglasza stan przez aria-expanded.
+ */
+.woocommerce-checkout .cyber-coupon__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cyber-color-links);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.woocommerce-checkout .cyber-coupon__link:hover,
+.woocommerce-checkout .cyber-coupon__link:focus-visible {
+  text-decoration: underline;
+}
+
+/*
+ * Pola sa ukryte atrybutem hidden, nie klasa — dzieki temu dzialaja tez
+ * bez CSS, a JS przelacza jedna wlasciwosc zamiast zarzadzac klasami.
+ */
+.woocommerce-checkout .cyber-coupon__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.woocommerce-checkout .cyber-coupon__fields[hidden] {
+  display: none;
+}
+
+.woocommerce-checkout .cyber-coupon__fields input.input-text {
+  flex: 1;
+  min-width: 140px;
+  padding: 12px 14px;
+  border: 1px solid var(--cyber-color-border-1);
+  border-radius: 0;
+  background: none;
+  color: var(--cyber-color-text);
+  font-family: var(--cyber-font-family-text);
+  font-size: var(--cyber-font-size-text);
+}
+
+/* Komunikat zwrotny WooCommerce po probie dodania kuponu. */
+.woocommerce-checkout .cyber-coupon__message:empty {
+  display: none;
+}
+
+.woocommerce-checkout .cyber-coupon__message {
+  margin-top: 16px;
+}
+
+.woocommerce-checkout .cyber-coupon__message .woocommerce-error,
+.woocommerce-checkout .cyber-coupon__message .woocommerce-message,
+.woocommerce-checkout .cyber-coupon__message .woocommerce-info {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--cyber-color-border-1);
+  background: none;
+  color: var(--cyber-color-text);
+  font-size: var(--cyber-font-size-text);
+  list-style: none;
+}
+
+.woocommerce-checkout .cyber-coupon__message .woocommerce-error::before,
+.woocommerce-checkout .cyber-coupon__message .woocommerce-message::before,
+.woocommerce-checkout .cyber-coupon__message .woocommerce-info::before {
+  display: none;
+}
+
+/* --- Platnosci ------------------------------------------------------------- */
+
+.woocommerce-checkout #payment {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--cyber-color-border-1);
+  border-radius: 0;
+  background: none;
+}
+
+.woocommerce-checkout #payment ul.payment_methods {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  list-style: none;
+}
+
+.woocommerce-checkout #payment li.wc_payment_method {
+  margin: 0 0 14px;
+  padding: 0;
+}
+
+.woocommerce-checkout #payment li.wc_payment_method label {
+  display: inline;
+  margin-left: 8px;
+  color: var(--cyber-color-headings);
+  font-size: var(--cyber-font-size-text);
+}
+
+/*
+ * Opis metody platnosci. WooCommerce daje mu szare tlo i strzalke w ::before —
+ * projekt pokazuje zwykla ramke.
+ */
+.woocommerce-checkout #payment .payment_box {
+  margin: 12px 0 0;
+  padding: 14px;
+  border: 1px solid var(--cyber-color-border-1);
+  border-radius: 0;
+  background: none;
+  color: var(--cyber-color-text);
+  font-size: var(--cyber-font-size-text);
+}
+
+.woocommerce-checkout #payment .payment_box::before {
+  display: none;
+}
+
+.woocommerce-checkout #payment .place-order {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 20px 0 0;
+  padding: 0;
+}
+
+/* Zgoda na regulamin idzie przez cala szerokosc, przycisk pod nia po prawej. */
+.woocommerce-checkout
+  #payment
+  .place-order
+  .woocommerce-terms-and-conditions-wrapper {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+  .woocommerce-checkout .cyber-main form.checkout {
+    grid-template-columns: 1fr;
+  }
+
+  .woocommerce-checkout #customer_details,
+  .woocommerce-checkout #order_review_heading,
+  .woocommerce-checkout #order_review {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .woocommerce-checkout #order_review_heading {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 479px) {
+  .woocommerce-checkout .woocommerce-billing-fields__field-wrapper,
+  .woocommerce-checkout .woocommerce-additional-fields__field-wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .woocommerce-checkout .form-row-first,
+  .woocommerce-checkout .form-row-last {
+    grid-column: 1;
+  }
+}

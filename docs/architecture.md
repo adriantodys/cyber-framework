@@ -40,6 +40,7 @@ w ustalonej kolejności:
 | 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
 | 12 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
 | 13 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
+| 14 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
 
 ## Stałe
 
@@ -605,6 +606,170 @@ potrzebuje: strona koszyka to zwykła strona z shortcode'em, renderowana przez
 `the_content()`, a nie przez szablony WooCommerce. Deklaracja stanie się
 potrzebna dopiero przy stronach sklepu i produktu — i wtedy będzie osobną
 decyzją, bo zmienia sposób renderowania wszystkich widoków sklepowych.
+
+## Strona zamówienia (checkout)
+
+Jak koszyk: klasyczny shortcode `[woocommerce_checkout]`, układ z hooków i CSS.
+W odróżnieniu od koszyka **jest tu jedno nadpisanie szablonu** — opisane niżej.
+
+### Układ
+
+Trzy elementy są rodzeństwem wewnątrz `form.checkout`, więc siatka na formularzu
+wystarcza, żeby ustawić je 50/50:
+
+```
+form.checkout                  grid: 1fr 1fr
+  ├ #customer_details          kolumna 1, oba wiersze
+  │   ├ .col-1  → dane rozliczeniowe
+  │   └ .col-2  → uwagi do zamówienia
+  ├ #order_review_heading      kolumna 2, wiersz 1
+  └ #order_review              kolumna 2, wiersz 2
+        ├ tabela podsumowania
+        ├ kupon      ← przeniesiony hookiem
+        └ #payment   ← metody płatności + przycisk
+```
+
+### Co skąd się bierze
+
+| Element projektu | Mechanizm |
+|---|---|
+| Kolejność pól (kraj przed ulicą, kod przed miastem) | filtr `woocommerce_checkout_fields`, klucz `priority` |
+| Etykiety „Ulica”, „Miasto”, „Numer telefonu” | ten sam filtr, klucz `label` |
+| Kupon między tabelą a płatnościami | `remove_action` z `woocommerce_before_checkout_form` + **własny blok** na `woocommerce_checkout_order_review` z priorytetem 15 (tabela to 10, płatności 20) — patrz niżej |
+| „Kwota zamówienia”, „Łącznie” | filtr `gettext`, zawężony do `is_checkout()` |
+| **„Dostawa”** | filtr `woocommerce_shipping_package_name` — **nie** `gettext` |
+| Przycisk `btn-large` „Kupuję i płacę” | filtr `woocommerce_order_button_html` |
+| Licznik ilości − / + | filtr `woocommerce_checkout_cart_item_quantity` + endpoint AJAX + `assets/js/checkout.js` |
+
+### Pułapka: w tej pozycji kupon nie może być formularzem
+
+Docelowe miejsce kuponu — między tabelą a płatnościami — leży **wewnątrz**
+`<form class="checkout">`. Szablon WooCommerce opakowuje kupon we własny
+`<form>`, a HTML zabrania zagnieżdżania formularzy: przeglądarka usuwa
+wewnętrzny znacznik i zostawia jego dzieci.
+
+Serwer wysyła wtedy poprawny markup, a w DOM nie ma po nim śladu. Skutki są trzy:
+
+1. `style="display:none"` znika razem z wrapperem → pola widoczne od razu.
+2. Skrypt wtyczki przełącza `.checkout_coupon`, którego już nie ma → odnośnik
+   nic nie robi.
+3. **Przycisk kuponu (`type="submit"`) należy wtedy do formularza zamówienia** —
+   kliknięcie próbuje złożyć zamówienie zamiast dodać kupon.
+
+Punkt 3 jest groźny i nie widać go „na oko": strona wygląda tylko na
+niedokończoną wizualnie.
+
+**Rozwiązanie:** własny blok (`cyber_wc_checkout_coupon_box()`), celowo **bez**
+`<form>`, z oboma przyciskami jako `type="button"`. Samo dodanie kuponu wykonuje
+`assets/js/checkout.js`, wołając natywny endpoint `wc-ajax=apply_coupon` wraz
+z nonce `apply_coupon_nonce` z `wc_checkout_params`. Nie dublujemy logiki
+wtyczki — tylko jej interfejs. Odpowiedzią jest gotowy komunikat WooCommerce,
+który trafia do `.cyber-coupon__message`.
+
+Pole kodu **nie ma atrybutu `name`**: leży wewnątrz formularza zamówienia, więc
+nazwane trafiałoby do danych składanego zamówienia bez potrzeby.
+
+Pola są ukrywane atrybutem `hidden`, nie klasą — działa bez CSS, a JS przełącza
+jedną właściwość zamiast zarządzać klasami. Przełącznik jest `<button>`, nie
+`<a href="#">`: to sterowanie widokiem, nie odnośnik.
+
+> **Reguła na resztę sklepu:** zanim przeniesiesz cokolwiek od WooCommerce
+> w nowe miejsce, sprawdź, czy przenoszony fragment nie jest formularzem i czy
+> cel nie leży wewnątrz innego. Ta sama pułapka czeka przy logowaniu w kasie
+> i przy formularzach adresowych.
+
+### Pułapka: `_x()` nie przechodzi przez `gettext`
+
+Etykieta wiersza dostawy opierała się mapie etykiet i zostawała jako „Przesyłka”.
+Powód: WooCommerce buduje ją przez `_x( 'Shipping', 'shipping packages', … )`,
+a funkcje z kontekstem idą hookiem **`gettext_with_context`**, nie `gettext`.
+Zamiast dokładać drugi filtr tłumaczeń użyliśmy dedykowanego
+`woocommerce_shipping_package_name`.
+
+**Wniosek na przyszłość:** jeśli etykieta nie reaguje na filtr `gettext`,
+sprawdź w źródle, czy nie pochodzi z `_x()` — i poszukaj dedykowanego filtra,
+zanim dołożysz `gettext_with_context`.
+
+### Jedyne nadpisanie szablonu w projekcie
+
+`woocommerce/checkout/review-order.php`, skopiowany z WooCommerce 11.1.0,
+**`@version 11.0.0`**.
+
+**Powód:** projekt wymaga tabeli o trzech kolumnach (Produkt / Ilość / Kwota).
+Szablon rdzenia ma dwie, a ilość wypisuje jako `<strong>` **wewnątrz** komórki
+produktu. Nagłówka trzeciej kolumny nie da się dołożyć żadnym hookiem — w
+`<thead>` nie ma punktu zaczepienia. Decyzja podjęta jawnie przed implementacją
+(CLAUDE.md sekcja 2).
+
+**Zakres zmian wobec oryginału — świadomie minimalny:**
+
+1. `<thead>`: dodana komórka `<th class="product-quantity">`.
+2. `<tbody>`: ilość przeniesiona do własnej komórki. Filtr
+   `woocommerce_checkout_cart_item_quantity` **zachowany**, żeby wtyczki trzecie
+   nadal mogły go używać.
+3. `<tfoot>`: `colspan="2"` na komórkach etykiet, żeby wiersze podsumowania
+   zgadzały się z nową liczbą kolumn także bez naszego CSS.
+
+Wszystkie **12 hooków i filtrów** oryginału jest zachowanych — sprawdzone
+porównaniem z plikiem rdzenia.
+
+> **Przy aktualizacji WooCommerce** sprawdź, czy rdzeń podbił `@version` tego
+> pliku. Jeśli tak — porównaj zmiany i przenieś je do kopii w motywie.
+> WooCommerce → Status pokaże ostrzeżenie „template is out of date”, dopóki tego
+> nie zrobisz. Nagłówek `@version` w kopii **musi zostać nietknięty**, inaczej ta
+> kontrola przestanie działać.
+
+Wiersz dostawy pochodzi z `cart/cart-shipping.php`, którego **nie**
+nadpisujemy — dlatego jego układ (etykieta nad listą metod) załatwia CSS,
+a nie szablon.
+
+### Edytowalna ilość w podsumowaniu
+
+Licznik − / + przy każdej pozycji. To **nie jest samo stylowanie** — zmiana
+ilości musi przeliczyć sumy, więc moduł ma własny endpoint AJAX.
+
+```
+klik − / +
+   │
+   ▼
+POST admin-ajax.php  action=cyber_checkout_qty  (nonce + klucz pozycji + ilość)
+   │
+   ▼
+cyber_wc_checkout_update_quantity()   ← walidacja: pozycja, limit zakupu, stan magazynu
+   │  WC()->cart->set_quantity( $key, $qty, true )
+   ▼
+jQuery( document.body ).trigger( 'update_checkout' )
+   │
+   ▼
+WooCommerce przerenderowuje cały #order_review — z nową ilością i sumami
+```
+
+**Trzy rzeczy warte zapamiętania:**
+
+- **Delegacja zdarzeń jest wymogiem, nie stylem.** Po `update_checkout` tabela
+  wraz z przyciskami jest w DOM nowym elementem, więc nasłuch podpięty
+  bezpośrednio do przycisku przestałby istnieć po pierwszej zmianie.
+- **jQuery jest tu konieczne** mimo zasady z CLAUDE.md sekcja 2. WooCommerce
+  nasłuchuje `update_checkout` przez jQuery, a zdarzenie natywne tam nie dotrze.
+  Nie dokłada to nowej zależności — wtyczka i tak ładuje jQuery na tej stronie.
+  Poza tym jednym wywołaniem skrypt jest czystym JS.
+- **Dolna granica to 1, nie 0.** Zejście do zera usunęłoby pozycję w trakcie
+  składania zamówienia, a przy ostatniej opróżniłoby koszyk i wyrzuciło klienta
+  ze strony. Usuwanie pozycji należy do koszyka. Granica jest pilnowana
+  **w dwóch miejscach** — w skrypcie i w endpoincie — bo pierwsze można ominąć.
+
+Zabezpieczenia endpointu opisuje `docs/security.md`; to pierwszy i na razie
+jedyny endpoint AJAX w motywie.
+
+### Świadome odstępstwa od projektu graficznego
+
+| Rzecz | Decyzja |
+|---|---|
+| Nagłówki kolumn | WooCommerce wypisuje je jako `<h3>` na sztywno w `form-billing.php` i `form-checkout.php`. Po `<h1>` to **przeskoczenie poziomu** (CLAUDE.md sekcja 11). Naprawa wymagałaby dwóch kolejnych nadpisań, więc zostawione — do decyzji |
+| Sekcja „Wysłać na inny adres?” | Ukryta CSS-em; zamówienie idzie na adres rozliczeniowy. To **decyzja biznesowa**, nie kosmetyczna |
+| Pole „Nazwa firmy” | **Nie pokazuje się**, bo `woocommerce_checkout_company_field` = `hidden` w ustawieniach sklepu. To ustawienie WooCommerce, nie motywu |
+| Tło pól formularza | Przezroczyste z ramką z `--cyber-color-border-1`. Projekt ma jasnoszare wypełnienie — wymagałoby nowego pola albo koloru wpisanego na sztywno |
+| „Rodzaj dokumentu sprzedaży” | Pole ze strony referencyjnej, **nie zamówione** — nie dodane |
 
 ## Edytor treści
 

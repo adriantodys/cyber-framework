@@ -68,11 +68,19 @@ Dodatkowo klasyczny markup jest **stabilniejszy do stylowania**: klasy
 `.shop_table`, `.cart_totals`, `.quantity` nie zmieniły się od lat, podczas gdy
 `.wc-block-components-*` to DOM renderowany Reactem, zmieniany między wersjami.
 
-**Wygląd powstaje wyłącznie z hooków, filtrów i CSS. Żadnych nadpisań
-szablonów WooCommerce w katalogu `woocommerce/`.** To świadoma decyzja o koszcie
+**Wygląd powstaje z hooków, filtrów i CSS.** To świadoma decyzja o koszcie
 utrzymania: nadpisany szablon przypina kopię do wersji wtyczki, po aktualizacji
 WooCommerce zgłasza „template is out of date" w **WooCommerce → Status**, a
 poprawki z rdzenia przestają docierać do tego pliku.
+
+**Stan nadpisań: jedno, zatwierdzone.**
+
+| Plik | Wersja | Powód |
+|---|---|---|
+| `woocommerce/checkout/review-order.php` | `@version 11.0.0` | Projekt wymaga tabeli o trzech kolumnach; nagłówka trzeciej nie da się dołożyć hookiem, bo w `<thead>` nie ma punktu zaczepienia |
+
+Każde kolejne nadpisanie dopisuje wiersz do tej tabeli **i** do
+`docs/architecture.md`.
 
 Nadpisanie pojedynczego szablonu jest dopuszczalne **tylko wtedy**, gdy efektu
 nie da się osiągnąć hookiem ani CSS-em, i wymaga:
