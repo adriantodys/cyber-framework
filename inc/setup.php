@@ -42,6 +42,14 @@ function cyber_theme_setup() {
 	 * pliki generowane przy kazdym uploadzie.
 	 */
 
+	/*
+	 * Bez tej deklaracji WooCommerce traktuje motyw jako niewspierany i owija
+	 * widoki sklepu wlasnymi znacznikami. Uklad listy produktow wchodzi przez
+	 * hooki woocommerce_before_main_content / after_main_content
+	 * (inc/woocommerce-shop.php), wiec zaden szablon sklepu nie jest nadpisany.
+	 */
+	add_theme_support( 'woocommerce' );
+
 	register_nav_menus(
 		array(
 			'primary' => __( 'Menu glowne', 'cyber-framework' ),

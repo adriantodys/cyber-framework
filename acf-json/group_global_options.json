@@ -3829,6 +3829,71 @@
             "custom_palette_source": "",
             "palette_colors": "",
             "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_tab_woocommerce",
+            "label": "WooCommerce",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_woocommerce",
+            "label": "Lista produktów",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_wc_pagination_type",
+            "label": "Sposób wczytywania produktów",
+            "name": "cyber_wc_pagination_type",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy strony sklepu i stron kategorii. Zwykla paginacja przeladowuje strone; przycisk doklada kolejne produkty pod spodem bez przeladowania.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "pagination": "Paginacja — numery stron",
+                "loadmore": "Przycisk — Pokaż więcej (AJAX)"
+            },
+            "default_value": "pagination",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
         }
     ],
     "location": [
@@ -3852,5 +3917,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789207000
+    "modified": 1789389233
 }

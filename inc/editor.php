@@ -39,6 +39,26 @@ add_filter( 'use_block_editor_for_post_type', 'cyber_disable_block_editor', 10, 
  */
 add_filter( 'gutenberg_can_edit_post_type', 'cyber_disable_block_editor', 10, 2 );
 
+/*
+ * Ten sam wybor dla widgetow. Blokowy edytor widgetow to osobny przelacznik
+ * niz edytor tresci — filtr use_block_editor_for_post_type go NIE obejmuje,
+ * wiec trzeba go wylaczyc jawnie.
+ *
+ * POWOD TECHNICZNY, nie tylko spojnosc: motyw usuwa z frontu wp-block-library
+ * (patrz nizej). Widget blokowy wypisuje markup w rodzaju
+ * <div class="wp-block-button">, ktory bez tego arkusza jest goly. Akapit to
+ * przezyje, bo to zwykly <p>, ale przycisk, kolumny czy grupa juz nie.
+ *
+ * Klasyczne widgety nie maja tego problemu: generuja prosty markup, ktory
+ * stylujemy u siebie.
+ *
+ * UWAGA przy przelaczeniu: widgety dodane wczesniej jako bloki zostaja w bazie
+ * jako instancje widget_block. Klasyczny ekran pokazuje je jako widget "Blok"
+ * z surowym markupem w polu tekstowym — nic nie ginie, ale warto je podmienic
+ * na klasyczne odpowiedniki.
+ */
+add_filter( 'use_widgets_block_editor', '__return_false' );
+
 /**
  * Usuwa arkusze stylow edytora blokowego z front-endu.
  *

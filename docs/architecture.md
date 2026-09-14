@@ -41,6 +41,7 @@ w ustalonej kolejności:
 | 12 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
 | 13 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
 | 14 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
+| 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
 
 ## Stałe
 
@@ -798,6 +799,142 @@ jedyny endpoint AJAX w motywie.
 | Tło pól formularza | Przezroczyste z ramką z `--cyber-color-border-1`. Projekt ma jasnoszare wypełnienie — wymagałoby nowego pola albo koloru wpisanego na sztywno |
 | „Rodzaj dokumentu sprzedaży” | Pole ze strony referencyjnej, **nie zamówione** — nie dodane |
 
+## Lista produktów: sklep i kategorie
+
+Dotyczy strony sklepu **oraz wszystkich archiwów taksonomii produktów** —
+kategorii, tagów i atrybutów. Jeden moduł, jeden wygląd; nie ma osobnego kodu
+dla kategorii.
+
+`add_theme_support( 'woocommerce' )` jest wreszcie zadeklarowane
+(`inc/setup.php`) — bez tego WooCommerce traktuje motyw jako niewspierany
+i owija widoki sklepu własnymi znacznikami. **Nie wymagało to żadnego
+nadpisania:** układ wchodzi przez hooki, a `archive-product.php` zostaje
+nietknięty.
+
+### Układ
+
+```
+woocommerce_before_main_content  →  cyber_shop_wrapper_open()
+   <div class="cyber-container">
+     <div class="cyber-shop cyber-shop--grid">     ← klasa widoku
+       <aside class="cyber-shop__sidebar">         ← widgety
+       <div class="cyber-shop__main">
+          tytuł  →  opis  →  pasek widgetów  →  pasek narzędzi  →  produkty
+woocommerce_after_main_content   →  cyber_shop_wrapper_close()
+```
+
+Kontener jest w hooku, a nie w szablonie, bo `archive-product.php` renderuje się
+bezpośrednio w `<main>` z `header.php` — nie przechodzi przez `index.php`, więc
+nie dostaje `.cyber-container` po drodze.
+
+Klasę widoku buduje `cyber_variant_class()` — ten sam mechanizm co w headerze,
+stopce i breadcrumbie (CLAUDE.md sekcja 20).
+
+### Trzy obszary widgetów
+
+| Obszar | Gdzie widoczny |
+|---|---|
+| `cyber-shop-sidebar` | kolumna boczna, **wspólna** dla sklepu i kategorii |
+| `cyber-shop-top` | pasek nad listą, **tylko** strona sklepu |
+| `cyber-category-top` | pasek nad listą, **tylko** archiwa taksonomii |
+
+Kolumna boczna jest jedna, bo zwykle trafia tam to samo drzewo kategorii. Paski
+są osobne, bo filtry na stronie sklepu i w konkretnej kategorii rzadko mają być
+identyczne.
+
+### Pułapka: `woocommerce_sidebar` wciąga awaryjny plik WordPressa
+
+Po zadeklarowaniu `add_theme_support( 'woocommerce' )` pod listą produktów —
+i pod stroną produktu — pojawił się obcy blok: formularz wyszukiwania, lista
+stron, archiwa i kategorie. **Nie były to widgety.** Nie pokazywały się w panelu
+i nie dało się ich usunąć przez *Wygląd → Widgety*.
+
+Łańcuch:
+
+```
+archive-product.php  →  do_action( 'woocommerce_sidebar' )
+                     →  woocommerce_get_sidebar()
+                     →  wc_get_template( 'global/sidebar.php' )
+                     →  get_sidebar( 'shop' )
+                     →  motyw nie ma sidebar-shop.php ani sidebar.php
+                     →  wp-includes/theme-compat/sidebar.php   ← wpisane na sztywno
+```
+
+Plik awaryjny WordPressa zawiera `get_search_form()`, `wp_list_pages()`,
+`wp_get_archives()` i `wp_list_categories()` — dokładnie to, co było widać.
+
+**Rozwiązanie:** `remove_action( 'woocommerce_sidebar', 'woocommerce_get_sidebar', 10 )`.
+Układ ma własną kolumnę boczną wewnątrz siatki, więc hook WooCommerce jest
+zbędny. Zdejmujemy go globalnie, nie tylko na archiwach — ten sam hook kończy
+także `single-product.php`.
+
+> **Reguła na przyszłość:** motyw bez `sidebar.php` nie jest „motywem bez
+> kolumny bocznej" — jest motywem, któremu WordPress podstawi swoją. Zanim
+> uznasz obcy blok za widget, sprawdź, czy nie pochodzi z `theme-compat`.
+
+**Pasek widgetów wisi na `woocommerce_archive_description`, nie na
+`woocommerce_before_shop_loop`.** Ten drugi odpala się dopiero wewnątrz warunku
+`if ( woocommerce_product_loop() )` w `archive-product.php`, więc w **pustej
+kategorii nie zadziałałby wcale** — a filtry są wtedy najbardziej potrzebne, bo
+to nimi odwiedzający zdejmuje zawężenie, które nic nie znalazło.
+
+Pasek narzędzi (sortowanie, widok, liczba na stronie) zostaje przy pętli
+produktów celowo: bez produktów nie ma czego sortować.
+
+### Skąd bierze się tekst nad listą
+
+| Widok | Źródło |
+|---|---|
+| Strona sklepu | treść strony ustawionej jako **Strona sklepu** — wypisuje ją `woocommerce_product_archive_description`, mechanizm WooCommerce, którego nie trzeba było ruszać |
+| Kategoria, tag, atrybut | pole ACF `cyber_category_content`; natywny opis terminu jest zdjęty z hooka i ukryty w panelu |
+
+Brak tekstu jest poprawnym stanem — zostaje sama nazwa kategorii.
+
+### Widok siatki i listy
+
+**Oba widoki mają identyczny markup.** Różnią się wyłącznie regułami
+w `assets/css/woocommerce-shop.css`, więc przełączenie to podmiana jednej klasy
+— bez przeładowania i bez zapytania do serwera. Skrócony opis i przycisk zakupu
+są w markupie zawsze; w siatce ukrywa je CSS.
+
+Wybór ląduje w **ciasteczku**, nie w `localStorage`. Powód jest praktyczny:
+serwer czyta ciasteczko i od razu renderuje właściwy układ. Gdyby wybór siedział
+w `localStorage`, na każdym wejściu mignęłaby najpierw siatka, zanim skrypt
+zdążyłby przełączyć na listę.
+
+Wartość z ciasteczka przechodzi przez **białą listę** — to dane od użytkownika
+i nie trafiają do klasy CSS bez sprawdzenia.
+
+### Sortowanie i liczba produktów
+
+WooCommerce nie ma sortowania alfabetycznego w domyślnej liście opcji, mimo że
+obsługuje `orderby=title` w zapytaniu. Moduł dokłada je filtrem
+`woocommerce_catalog_orderby` i ustawia jako domyślne
+(`woocommerce_default_catalog_orderby`), zgodnie z projektem. Świadomie pominięte:
+„Domyślne sortowanie" i „Ocena".
+
+Liczba produktów na stronie **musi** przejść przez serwer, bo zmienia zapytanie.
+Parametr z adresu przechodzi przez białą listę `12 / 24 / 48 / 96` —
+`absint()` sam nie wystarczy, bo `per_page=100000` jest poprawną liczbą, a zabiłby
+zapytanie. Formularz niesie pozostałe parametry w polach ukrytych
+(`wc_query_string_form_fields`), żeby zmiana liczby nie kasowała sortowania.
+
+### Pułapka: `get_main_tax_query()` nie działa w AJAX
+
+Endpoint doładowywania początkowo zwracał **zero produktów**. Powód:
+`WC()->query->get_main_tax_query()` opiera się na głównym zapytaniu strony,
+którego w żądaniu AJAX nie ma — zwraca wtedy pustą tablicę, a pusty element
+w `tax_query` wywraca całe zapytanie.
+
+Wykluczenie produktów ukrytych w katalogu budujemy więc **jawnie**, klauzulą
+`product_visibility NOT IN (exclude-from-catalog)`.
+
+**Reguła na przyszłość:** każda funkcja WooCommerce opierająca się na *głównym
+zapytaniu* jest w kontekście AJAX bezużyteczna. W endpointach buduj zapytanie od
+zera zamiast pożyczać stan pętli.
+
+Zabezpieczenia endpointu opisuje `docs/security.md`.
+
 ## Edytor treści
 
 Motyw używa **wyłącznie klasycznego edytora** (TinyMCE). Edytor blokowy jest wyłączony
@@ -808,13 +945,26 @@ dla wpisów, stron i każdego CPT — także tych rejestrowanych przez wtyczki.
 | Wyłączenie bloków | `use_block_editor_for_post_type` → zawsze `false` (`inc/editor.php`). Filtr `gutenberg_can_edit_post_type` obsłużony tak samo, na wypadek instalacji wtyczki Gutenberg. |
 | Wtyczka Classic Editor | **Niepotrzebna.** Klasyczny edytor jest częścią rdzenia WordPressa — wystarczy odmówić użycia edytora blokowego. |
 | Style bloków na froncie | `wp-block-library`, `wp-block-library-theme`, `wp-components`, `global-styles` i `classic-theme-styles` są usuwane z kolejki na `wp_enqueue_scripts` (priorytet 100). |
+| Edytor widgetów | Również klasyczny — `use_widgets_block_editor` → `false`. To **osobny przełącznik**, którego filtr `use_block_editor_for_post_type` nie obejmuje. |
 | Zakres | Globalny i bezwarunkowy. Wyjątek dla pojedynczego typu treści = zmiana wyłącznie w `cyber_disable_block_editor()`. |
 
 **Konsekwencja do zapamiętania:** usunięcie `wp-block-library` zakłada, że na froncie
-nie renderuje się żaden blok. Gdyby kiedyś włączono blokowy edytor widgetów albo wtyczka
-zaczęła zwracać znaczniki blokowe, te style trzeba przywrócić — inaczej ich HTML straci
-formatowanie. Blokowy edytor widgetów (`use_widgets_block_editor`) **nie** jest obecnie
-wyłączany — to osobna decyzja, nieobjęta tą zmianą.
+nie renderuje się żaden blok. Gdyby wtyczka zaczęła zwracać znaczniki blokowe, te style
+trzeba przywrócić — inaczej ich HTML straci formatowanie.
+
+**Blokowy edytor widgetów jest wyłączony** — i to nie z powodu samej spójności.
+Zanim zapadła ta decyzja, widget dodany jako blok wypisywał na froncie markup
+w rodzaju `wp-block-paragraph` i `wp-block-button`, podczas gdy `wp-block-library`,
+`wp-block-library-theme` i `global-styles` były z frontu usunięte. Akapit to
+przeżywał, bo to zwykły `<p>`, ale przycisk, kolumny czy grupa wychodziły gołe.
+
+To była dokładnie ta sytuacja, przed którą ostrzegał akapit powyżej — i argument
+rozstrzygnął się sam, gdy pojawiły się pierwsze widgety sklepu.
+
+> Widgety dodane wcześniej jako bloki zostają w bazie jako instancje
+> `widget_block`. Klasyczny ekran pokazuje je jako widget „Blok" z surowym
+> markupem w polu tekstowym — nic nie ginie, ale warto je podmienić na klasyczne
+> odpowiedniki.
 
 ## Co jeszcze nie istnieje
 

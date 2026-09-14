@@ -65,6 +65,16 @@ function cyber_icons() {
 		'cart'      => '<path d="M2.5 3.5h2l1.8 8.5h8.2l1.6-6H5.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
 			. '<circle cx="8" cy="15.6" r="1.4"/>'
 			. '<circle cx="13.8" cy="15.6" r="1.4"/>',
+		'grid'      => '<rect x="2.5" y="2.5" width="6" height="6" rx="1"/>'
+			. '<rect x="11.5" y="2.5" width="6" height="6" rx="1"/>'
+			. '<rect x="2.5" y="11.5" width="6" height="6" rx="1"/>'
+			. '<rect x="11.5" y="11.5" width="6" height="6" rx="1"/>',
+		'list'      => '<rect x="2.5" y="3" width="4" height="4" rx="1"/>'
+			. '<rect x="8.5" y="4.2" width="9" height="1.6" rx="0.8"/>'
+			. '<rect x="2.5" y="8" width="4" height="4" rx="1"/>'
+			. '<rect x="8.5" y="9.2" width="9" height="1.6" rx="0.8"/>'
+			. '<rect x="2.5" y="13" width="4" height="4" rx="1"/>'
+			. '<rect x="8.5" y="14.2" width="9" height="1.6" rx="0.8"/>',
 	);
 }
 
@@ -886,6 +896,11 @@ function cyber_option_schema() {
 		'breadcrumb_wc_color_active'  => array(
 			'type'    => 'color_alpha',
 			'default' => '#111111',
+		),
+		'wc_pagination_type'          => array(
+			'type'    => 'choice',
+			'default' => 'pagination',
+			'choices' => array( 'pagination', 'loadmore' ),
 		),
 	);
 }

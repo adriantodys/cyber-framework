@@ -16,6 +16,10 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 - **Gutenberg wyłączony w całym motywie** — wpisy, strony i każdy CPT edytuje się
   klasycznym edytorem (TinyMCE). Wyłączenie realizuje `inc/editor.php` filtrem
   `use_block_editor_for_post_type`; wtyczka Classic Editor nie jest potrzebna.
+  **Widgety również są klasyczne** (`use_widgets_block_editor` → `false`) — to
+  osobny przełącznik, którego poprzedni filtr nie obejmuje. Powód nie jest
+  wyłącznie estetyczny: motyw usuwa z frontu `wp-block-library`, więc widget
+  blokowy renderowałby się bez stylów.
   Ponowne włączenie bloków dla jakiegokolwiek typu treści wymaga wyraźnej zgody
   (patrz sekcja 15) — layout buduje ACF, a nie drugi system edycji.
 - Cel: architektura czysta, bezpieczna, wydajna, zgodna z WordPress Coding Standards (WPCS).
@@ -377,6 +381,23 @@ poniższe elementy — nie wystarczy sam kod/JSON bez opisu:
 Zasada nadrzędna: użytkownik nigdy nie powinien się domyślać, jakie pola istnieją
 ani co ma zrobić w panelu WordPress — ta informacja ma być podana wprost, za każdym
 razem, bez pytania o to.
+
+### Znacznik `modified` w plikach `acf-json/`
+
+`modified` w pliku grupy to **czas ostatniej zmiany**, a nie licznik do podbijania.
+ACF porównuje tę wartość z `post_modified_gmt` posta grupy w bazie
+(`admin-internal-post-type-list.php`) i pokazuje „Sync available" wtedy i tylko
+wtedy, gdy plik jest **nowszy** niż wpis w bazie.
+
+**Nigdy nie wpisuj tam czasu z przyszłości.** Objaw jest mylący i kosztuje czas:
+synchronizacja przebiega poprawnie i pola faktycznie trafiają do bazy, ale ACF
+proponuje ją **w nieskończoność** — bo plik dalej twierdzi, że jest nowszy niż to,
+co przed chwilą zapisano. Redaktor klika Sync, dostaje komunikat o powodzeniu
+i widzi ten sam przycisk.
+
+Przy ręcznej edycji pliku ustawiaj `modified` na **bieżący czas**, nigdy na
+„poprzednia wartość plus trochę". Po synchronizacji wartość w pliku powinna być
+mniejsza lub równa `post_modified_gmt` grupy w bazie.
 
 ### Wzorzec paska dwustronnego
 

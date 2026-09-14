@@ -1,0 +1,386 @@
+/*
+ * Cyber Framework — lista produktow WooCommerce.
+ *
+ * Kolejkowany WYLACZNIE na stronie sklepu i archiwach taksonomii produktow
+ * (inc/woocommerce-shop.php), zgodnie z CLAUDE.md sekcja 10.
+ *
+ * Oba widoki — siatka i lista — maja TEN SAM markup i roznia sie wylacznie
+ * regulami z tego pliku. Dzieki temu przelaczenie widoku nie wymaga
+ * przeladowania strony ani zapytania do serwera.
+ *
+ * Wszystkie barwy i rozmiary pochodza ze zmiennych motywu.
+ */
+
+/* --- Uklad dwukolumnowy ---------------------------------------------------- */
+
+.cyber-shop {
+	display: grid;
+	grid-template-columns: 260px minmax(0, 1fr);
+	gap: 40px;
+	align-items: start;
+	padding-block: 40px;
+}
+
+.cyber-shop__sidebar {
+	min-width: 0;
+}
+
+.cyber-shop__main {
+	min-width: 0;
+}
+
+/*
+ * Neutralizacja ukladu WooCommerce — ten sam wzorzec co w koszyku i zamowieniu.
+ * woocommerce-layout.css ustawia procentowe szerokosci i floaty na wlasnych
+ * kontenerach sklepu, ktore w siatce tylko przeszkadzaja.
+ */
+.woocommerce .cyber-shop__main,
+.woocommerce-page .cyber-shop__main {
+	float: none;
+	width: 100%;
+}
+
+/* --- Widgety --------------------------------------------------------------- */
+
+.cyber-widget {
+	margin-bottom: 28px;
+}
+
+.cyber-widget:last-child {
+	margin-bottom: 0;
+}
+
+.cyber-widget__title {
+	margin: 0 0 12px;
+	font-size: var(--cyber-font-size-h6);
+}
+
+.cyber-widget ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-widget li {
+	margin-bottom: 8px;
+}
+
+/*
+ * Pasek widgetow nad lista. Obszary sklepu i kategorii sa osobne, ale wygladaja
+ * tak samo — rozne sa tylko tresci, ktore redaktor tam wstawi.
+ */
+.cyber-shop__widgets {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 24px;
+}
+
+/* --- Naglowek i opis ------------------------------------------------------- */
+
+.cyber-shop__main .woocommerce-products-header__title,
+.cyber-shop__main .page-title {
+	margin: 0 0 20px;
+	font-size: var(--cyber-font-size-h2);
+}
+
+.cyber-shop__description,
+.cyber-shop__main .term-description,
+.cyber-shop__main .woocommerce-product-description {
+	margin-bottom: 28px;
+	color: var(--cyber-color-text);
+}
+
+.cyber-shop__description > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-shop__description > *:last-child {
+	margin-bottom: 0;
+}
+
+/* --- Pasek narzedzi -------------------------------------------------------- */
+
+.cyber-shop__toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 28px;
+}
+
+.cyber-shop__toolbar-left,
+.cyber-shop__toolbar-right {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 16px;
+}
+
+/* Formularz sortowania WooCommerce trafia do lewej czesci paska. */
+.cyber-shop__toolbar .woocommerce-ordering {
+	margin: 0;
+	float: none;
+}
+
+.cyber-shop__toolbar select {
+	padding: 8px 12px;
+	border: 1px solid var(--cyber-color-border-1);
+	border-radius: 0;
+	background: none;
+	color: var(--cyber-color-text);
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-shop__per-page {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+/* --- Przelacznik widoku ---------------------------------------------------- */
+
+.cyber-shop__views {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.cyber-shop__view {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border: 1px solid transparent;
+	background: none;
+	color: var(--cyber-color-text);
+	cursor: pointer;
+}
+
+.cyber-shop__view svg {
+	display: block;
+	width: 18px;
+	height: 18px;
+}
+
+.cyber-shop__view:hover,
+.cyber-shop__view:focus-visible {
+	color: var(--cyber-color-links);
+}
+
+/* Aktywny widok rozpoznajemy po aria-pressed, a nie po osobnej klasie —
+   jeden stan zamiast dwoch, ktore moglyby sie rozjechac. */
+.cyber-shop__view[aria-pressed="true"] {
+	border-color: var(--cyber-color-border-1);
+	color: var(--cyber-color-links);
+}
+
+/* --- Lista produktow: wspolne ---------------------------------------------- */
+
+.cyber-shop__main ul.products {
+	display: grid;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-shop__main ul.products::before,
+.cyber-shop__main ul.products::after {
+	content: none;
+}
+
+/*
+ * WooCommerce nadaje pozycjom listy wlasne procentowe szerokosci i floaty
+ * (klasy first, last, columns-N). W siatce CSS sa zbedne i musza zniknac,
+ * inaczej produkty ukladaja sie w dwoch nakladajacych sie systemach naraz.
+ */
+.cyber-shop__main ul.products li.product {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	float: none;
+	clear: none;
+}
+
+.cyber-shop__main ul.products li.product a img {
+	display: block;
+	width: 100%;
+	height: auto;
+	margin: 0;
+}
+
+.cyber-shop__main ul.products li.product .woocommerce-loop-product__title {
+	margin: 0;
+	padding: 0;
+	font-size: var(--cyber-font-size-text);
+	font-weight: 700;
+	line-height: 1.35;
+}
+
+.cyber-shop__main ul.products li.product .price {
+	display: block;
+	margin: 0;
+	color: var(--cyber-color-headings);
+	font-size: var(--cyber-font-size-text);
+	font-weight: 700;
+}
+
+.cyber-shop__main ul.products li.product .price del {
+	margin-right: 6px;
+	opacity: 0.6;
+}
+
+/* --- Widok siatki ---------------------------------------------------------- */
+
+.cyber-shop--grid ul.products {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 28px;
+}
+
+.cyber-shop--grid ul.products li.product {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	border: 1px solid var(--cyber-color-border-1);
+	padding: 16px;
+}
+
+/*
+ * W siatce projekt pokazuje zdjecie, nazwe i cene. Skrocony opis i przycisk
+ * zakupu SA w markupie, tylko ukryte — dzieki temu przelaczenie na liste
+ * nie wymaga zapytania do serwera.
+ */
+.cyber-shop--grid ul.products li.product .cyber-product__excerpt,
+.cyber-shop--grid ul.products li.product .add_to_cart_button,
+.cyber-shop--grid ul.products li.product .added_to_cart {
+	display: none;
+}
+
+/* --- Widok listy ----------------------------------------------------------- */
+
+.cyber-shop--list ul.products {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 20px;
+}
+
+/*
+ * Kazda pozycja to wiersz: zdjecie po lewej, tresc po prawej. Zdjecie jest
+ * w markupie WooCommerce rodzenstwem tytulu wewnatrz odnosnika, wiec uklad
+ * robimy siatka na samym <li>, a nie na odnosniku.
+ */
+.cyber-shop--list ul.products li.product {
+	display: grid;
+	grid-template-columns: 220px minmax(0, 1fr);
+	gap: 24px;
+	align-items: start;
+	border: 1px solid var(--cyber-color-border-1);
+	padding: 20px;
+}
+
+.cyber-shop--list ul.products li.product > a:first-of-type {
+	display: contents;
+}
+
+.cyber-shop--list ul.products li.product .cyber-product__excerpt {
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+	line-height: 1.5;
+}
+
+.cyber-shop--list ul.products li.product .add_to_cart_button,
+.cyber-shop--list ul.products li.product .added_to_cart {
+	justify-self: start;
+}
+
+/* --- Paginacja i doladowywanie --------------------------------------------- */
+
+.cyber-shop__main .woocommerce-pagination {
+	margin-top: 36px;
+}
+
+.cyber-shop__main .woocommerce-pagination ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	list-style: none;
+}
+
+.cyber-shop__main .woocommerce-pagination ul li {
+	margin: 0;
+	border: 0;
+}
+
+.cyber-shop__main .woocommerce-pagination a,
+.cyber-shop__main .woocommerce-pagination span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 38px;
+	height: 38px;
+	padding: 0 10px;
+	border: 1px solid var(--cyber-color-border-1);
+	color: var(--cyber-color-text);
+	text-decoration: none;
+}
+
+.cyber-shop__main .woocommerce-pagination span.current {
+	border-color: var(--cyber-color-border-2);
+	color: var(--cyber-color-links);
+}
+
+.cyber-shop__more {
+	display: flex;
+	justify-content: center;
+	margin-top: 36px;
+}
+
+.cyber-shop__more-button.is-busy {
+	opacity: 0.6;
+	cursor: default;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+	.cyber-shop {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 32px;
+	}
+
+	.cyber-shop--grid ul.products {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-shop--grid ul.products {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;
+	}
+
+	.cyber-shop--list ul.products li.product {
+		grid-template-columns: 120px minmax(0, 1fr);
+		gap: 16px;
+		padding: 14px;
+	}
+}
+
+@media (max-width: 479px) {
+	.cyber-shop--list ul.products li.product {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.cyber-shop--list ul.products li.product > a:first-of-type {
+		display: block;
+	}
+}

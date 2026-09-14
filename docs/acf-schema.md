@@ -7,7 +7,8 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb” i „Breadcrumb WooCommerce”
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce” i „WooCommerce”.
+Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
 
 ---
 
@@ -996,6 +997,29 @@ Ten sam komplet pól, **niezależny** od powyższego.
 > konfiguracja, tak samo jak w Top Header i Copyright. Gdyby tło miało być
 > edytowalne, to osobne pole do zlecenia.
 
+### Zakładka: „WooCommerce”
+
+Ustawienia sklepu, które należą do motywu, a nie do wtyczki. Kolejne ustawienia
+WooCommerce trafiają **tutaj**, a nie do nowych zakładek.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Sposób wczytywania produktów | `cyber_wc_pagination_type` | Select | `pagination` | Decyduje, czy pod listą produktów jest paginacja, czy przycisk „Pokaż więcej” |
+
+| Wartość | Zachowanie |
+|---|---|
+| `pagination` | Numery stron, przeładowanie przy zmianie strony — domyślne zachowanie WooCommerce |
+| `loadmore` | Przycisk `btn-large` „Pokaż więcej”, który dokłada kolejne produkty pod spodem przez AJAX |
+
+> **Przełącznik działa w obie strony, nie tylko dodaje przycisk.** W trybie
+> `loadmore` moduł zdejmuje `woocommerce_pagination` z hooka
+> `woocommerce_after_shop_loop` i wstawia w to miejsce własny przycisk. Nie ma
+> stanu, w którym widać jedno i drugie.
+
+> **Obowiązuje na stronie sklepu i na wszystkich archiwach taksonomii
+> produktów** — kategoriach, tagach i atrybutach. To jedno ustawienie dla całej
+> listy produktów, nie osobne per widok.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1271,7 +1295,33 @@ pojawią się w komponentach etapu 4.
 
 ## Inne grupy pól
 
-*(brak — cała konfiguracja globalna mieści się w `group_global_options`)*
+### `group_product_category` — Kategoria produktu
+
+Plik: `acf-json/group_product_category.json`. Lokalizacja: **Taxonomy is equal to
+Product category** (`product_cat`).
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść kategorii | `cyber_category_content` | WYSIWYG | *(puste)* | Tekst pod nazwą kategorii, nad listą produktów |
+
+To **pierwsza grupa pól poza Global Options** w projekcie i jedyna przypięta do
+taksonomii, a nie do Options Page.
+
+> **Zastępuje natywny opis kategorii, który jest ukrywany w panelu.** WooCommerce
+> ma własne pole Opis i sam je wyświetla; moduł zdejmuje
+> `woocommerce_taxonomy_archive_description` z hooka `woocommerce_archive_description`
+> i wstawia w to miejsce treść z ACF. Natywne pole jest ukrywane CSS-em na ekranie
+> edycji terminu (`inc/woocommerce-shop.php`), żeby redaktor miał **jedno**
+> oczywiste miejsce do pisania.
+>
+> **Znany koszt tej decyzji, przyjęty świadomie:** wtyczki SEO, eksporty i kanały
+> produktowe czytają natywny opis terminu, który pozostaje pusty. Jeśli meta
+> description kategorii zacznie mieć znaczenie, trzeba będzie zasilić je osobno.
+> Pole jest **ukryte, nie usunięte** — dane zapisane w nim wcześniej zostają
+> w bazie i nic ich nie kasuje.
+
+Puste pole jest poprawnym i znaczącym stanem: zostaje wtedy sama nazwa kategorii,
+bez pustego kontenera na tekst.
 
 ---
 
@@ -1289,6 +1339,7 @@ pojawią się w komponentach etapu 4.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-14 — Nowa zakładka **„WooCommerce”** w Global Options z pierwszym ustawieniem `cyber_wc_pagination_type` (paginacja albo przycisk „Pokaż więcej” z AJAX). Nowa, druga w projekcie grupa pól: **`group_product_category`** z polem WYSIWYG `cyber_category_content` na taksonomii `product_cat`, zastępującym ukrywany natywny opis kategorii.
 - 2026-09-12 — Dwie nowe zakładki: **„Breadcrumb”** i **„Breadcrumb WooCommerce”**, po 4 pola każda (włącznik, rozmiar czcionki, kolor, kolor bieżącej strony). Rozdzielone celowo — osobne włączniki pozwalają mieć okruszki wyłącznie w sklepie albo wyłącznie poza nim. Oba domyślnie **wyłączone**, więc synchronizacja niczego nie zmienia. Wspólny markup i jedna mapa zmiennych CSS; ścieżkę poza sklepem składa `cyber_breadcrumb_items()`, w sklepie `woocommerce_breadcrumb()` we własnych znacznikach motywu. Nowy `inc/breadcrumb.php` i katalog `template-parts/breadcrumb/`.
 - 2026-09-12 — Header Desktop: **trzy warianty układu** (`cyber_header_variant`: `centered`, `cta`, `woocommerce` obok `default`) plus dwa pola przycisku CTA (`cyber_header_cta_text`, `cyber_header_cta_url`). Wariant jest modyfikatorem klasy, nie zmienną CSS. CTA dziedziczy cały wygląd z rozmiaru Medium — bez własnych pól stylu. Wariant WooCommerce wymaga wtyczki; jej brak nie wywraca strony (patrz `inc/woocommerce.php`). Nowe ikony `user` i `cart` w `cyber_icons()`.
 - 2026-09-12 — Header Desktop: dwa nowe pola — `cyber_header_bg_color` (Color Picker, `#ffffff`, zmienna `--cyber-header-bg`) i `cyber_header_sticky` (True/False, `false`). Sticky jest modyfikatorem klasy `.cyber-header--sticky`, nie zmienną CSS; wysokość paska administratora bierze z `--wp-admin--admin-bar--height`, więc nie wymagał nowego breakpointu. Pole tła powstało razem ze sticky, bo przezroczysty przyklejony header pokazywałby przewijaną treść.

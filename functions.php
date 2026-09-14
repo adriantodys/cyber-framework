@@ -56,6 +56,7 @@ function cyber_load_modules() {
 		'inc/breadcrumb.php',
 		'inc/woocommerce-cart.php',
 		'inc/woocommerce-checkout.php',
+		'inc/woocommerce-shop.php',
 	);
 
 	foreach ( $modules as $module ) {

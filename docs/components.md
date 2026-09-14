@@ -237,10 +237,25 @@ Pełny opis mechanizmów, pułapek i odstępstw: `docs/architecture.md`, sekcje
 | `inc/woocommerce.php` | warstwa ochronna miękkiej zależności: wykrywanie, komunikaty, dane konta i koszyka |
 | `inc/woocommerce-cart.php` | wygląd koszyka: hooki, etykiety, warunkowe assety |
 | `inc/woocommerce-checkout.php` | wygląd zamówienia: kolejność pól, kupon, licznik ilości, endpoint AJAX |
+| `inc/woocommerce-shop.php` | lista produktów: układ, widgety, pasek narzędzi, doładowywanie |
 | `assets/css/woocommerce-cart.css` | style koszyka — ładowany **tylko** na `is_cart()` |
 | `assets/css/woocommerce-checkout.css` | style zamówienia — ładowany **tylko** na `is_checkout()` |
 | `assets/js/cart.js` | licznik ilości w koszyku, automatyczne przeliczanie |
 | `assets/js/checkout.js` | licznik ilości i kupon na stronie zamówienia |
+| `assets/css/woocommerce-shop.css` | style listy produktów — ładowany **tylko** na sklepie i archiwach produktów |
+| `assets/js/shop.js` | przełącznik widoku siatka/lista i doładowywanie produktów |
+
+### Obszary widgetów
+
+Jedyne obszary widgetów w całym motywie. Rejestruje je `inc/woocommerce-shop.php`.
+
+| Obszar | Gdzie widoczny |
+|---|---|
+| `cyber-shop-sidebar` | kolumna boczna — sklep **i** kategorie |
+| `cyber-shop-top` | pasek nad listą — tylko sklep |
+| `cyber-category-top` | pasek nad listą — tylko archiwa taksonomii |
+
+Markup widgetu: `.cyber-widget` z tytułem `.cyber-widget__title` (`<h2>`).
 
 Żaden z tych assetów nie ma prawa załadować się poza swoją stroną
 (CLAUDE.md sekcja 10) — sprawdzone: `/koszyk/` ładuje wyłącznie arkusz koszyka,
@@ -268,6 +283,10 @@ Nie są to komponenty reużywalne — istnieją wyłącznie wewnątrz widoków s
 | `.cyber-wc-heading` | koszyk | hook `woocommerce_before_cart_table` |
 | `.cyber-wc-checkout-button` | koszyk | hook `woocommerce_proceed_to_checkout`, klasy `btn btn-large` |
 | `.cyber-wc-place-order` | zamówienie | filtr `woocommerce_order_button_html`, klasy `btn btn-large` |
+| `.cyber-shop__view` | lista produktów | `cyber_shop_toolbar_controls()`; aktywny stan niesie `aria-pressed`, bez osobnej klasy |
+| `.cyber-shop__per-page` | lista produktów | formularz GET z polami ukrytymi, żeby nie kasować sortowania |
+| `.cyber-shop__more-button` | lista produktów | `cyber_shop_load_more()`, klasy `btn btn-large`; kontekst archiwum w `data-*` |
+| `.cyber-product__excerpt` | lista produktów | hook `woocommerce_after_shop_loop_item_title`; w siatce ukryty CSS-em |
 
 Oba przyciski używają rozmiarów z zakładki **Przyciski** i nie mają własnych pól
 wyglądu — tak samo jak przycisk CTA w headerze.
