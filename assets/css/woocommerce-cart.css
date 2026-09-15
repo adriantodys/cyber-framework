@@ -37,7 +37,7 @@
  * wylacznie warstwe wizualna, nie strukture.
  */
 .woocommerce-cart .cyber-main h1 {
-	margin-bottom: 32px;
+	margin-bottom: var(--cyber-space-4);
 	font-size: var(--cyber-font-size-h2);
 }
 
@@ -48,7 +48,7 @@
  */
 .woocommerce-cart .cyber-wc-heading,
 .woocommerce-cart .cart_totals > h2 {
-	margin: 0 0 16px;
+	margin: 0 0 var(--cyber-space-2);
 	font-size: var(--cyber-font-size-h3);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .woocommerce-cart .woocommerce-cart-form__contents th {
-	padding: 18px 14px;
+	padding: var(--cyber-space-3) var(--cyber-space-2);
 	border-bottom: 1px solid var(--cyber-color-border-1);
 	color: var(--cyber-color-headings);
 	font-size: var(--cyber-font-size-text);
@@ -71,7 +71,7 @@
 }
 
 .woocommerce-cart .woocommerce-cart-form__contents td {
-	padding: 20px 14px;
+	padding: var(--cyber-space-3) var(--cyber-space-2);
 	vertical-align: middle;
 }
 
@@ -146,9 +146,11 @@
 	cursor: pointer;
 }
 
+/* Licznik ilosci to sterowanie sklepowe — idzie za kolorem sklepu,
+   tak samo jak .cyber-qty__button na stronie produktu. */
 .woocommerce-cart .quantity .cyber-qty-btn:hover,
 .woocommerce-cart .quantity .cyber-qty-btn:focus-visible {
-	color: var(--cyber-color-links);
+	color: var(--cyber-wc-color-main);
 }
 
 .woocommerce-cart .quantity input.qty {
@@ -199,7 +201,7 @@
 
 .woocommerce-cart .cart_totals th,
 .woocommerce-cart .cart_totals td {
-	padding: 20px 16px;
+	padding: var(--cyber-space-3) var(--cyber-space-2);
 	border: 0;
 	color: var(--cyber-color-headings);
 	font-weight: 700;
@@ -232,8 +234,31 @@
 .woocommerce-cart .wc-proceed-to-checkout {
 	display: flex;
 	justify-content: flex-end;
-	margin-top: 20px;
+	margin-top: var(--cyber-space-3);
 	padding: 0;
+}
+
+/* --- Glowny kolor sklepu --------------------------------------------------- */
+
+/*
+ * --cyber-wc-color-main (Global Options -> WooCommerce) jest wspolna barwa
+ * wszystkich widokow sklepu. Przycisk swiadomie NIE bierze barwy z zakladki
+ * Przyciski: tamta opisuje przyciski calej witryny, a wezwanie do zakupu ma
+ * isc za kolorem sklepu. Rozmiar, padding i grubosc czcionki nadal pochodza
+ * z btn-large, wiec zmiana rozmiaru w panelu dziala jak wszedzie.
+ */
+
+.woocommerce-cart .cyber-wc-checkout-button {
+	border-color: var(--cyber-wc-color-main);
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+}
+
+.woocommerce-cart .cyber-wc-checkout-button:hover,
+.woocommerce-cart .cyber-wc-checkout-button:focus-visible {
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	opacity: 0.85;
 }
 
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
@@ -251,6 +276,6 @@
 
 	.woocommerce-cart .woocommerce-cart-form__contents th,
 	.woocommerce-cart .woocommerce-cart-form__contents td {
-		padding: 12px 8px;
+		padding: var(--cyber-space-2) var(--cyber-space-1);
 	}
 }

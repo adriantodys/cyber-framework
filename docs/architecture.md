@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-12 (stan: etapy 1–3 z CLAUDE.md sekcja 17; Global Options ma jedenaście zakładek — od „Główne ustawienia strony” po „Copyright”; wprowadzone warianty komponentów i przyklejony header).
+Ostatnia aktualizacja: 2026-09-15 (Global Options ma czternaście zakładek i 166 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -480,6 +480,76 @@ z DOM — bez elementu WooCommerce nie miałby czego podmienić.
 `cyber_wc_cart_count()` sprawdza koszyk **podwójnie**: `WC()` istnieje także wtedy,
 gdy koszyk nie został jeszcze zainicjowany (REST, cron, część zadań w panelu),
 a odwołanie do niezainicjowanego koszyka jest błędem krytycznym.
+
+### Arkusze WooCommerce ładowane warunkowo
+
+WooCommerce kolejkuje trzy arkusze — `woocommerce-general`, `woocommerce-layout`
+i `woocommerce-smallscreen`, razem około **50 kB** — **bezwarunkowo, na każdej
+podstronie witryny**, także tam, gdzie nie ma ani jednego elementu sklepu.
+Motyw zdejmuje je poza widokami sklepu (`cyber_dequeue_woocommerce_styles()`).
+
+**Dlaczego `wp_dequeue_style()`, a nie filtr `woocommerce_enqueue_styles`.**
+Tamten filtr działa na etapie **rejestracji**, czyli zanim WordPress wie, jaką
+stronę wyświetla — da się nim wyłączyć arkusze na stałe albo wcale. Decyzja
+zależna od widoku musi zapaść później, stąd `wp_enqueue_scripts` na priorytecie
+99, po kolejkowaniu wtyczki.
+
+**`woocommerce-inline` zostaje.** Ten uchwyt nie ma źródła; jest wyłącznie
+zaczepem dla stylów dopisywanych inline (m.in. pasek informacyjny sklepu, który
+może pojawić się na dowolnej stronie). Nie kosztuje żadnego zapytania, więc nie
+ma czego oszczędzać, a zdjęcie go zepsułoby pasek.
+
+Arkusze zostają, gdy zachodzi którykolwiek warunek:
+
+| Warunek | Obejmuje |
+|---|---|
+| `is_woocommerce()` | sklep, archiwa taksonomii produktów, strona produktu |
+| `is_cart()` / `is_checkout()` / `is_account_page()` | strony na shortcode'ach — `is_woocommerce()` ich **nie** obejmuje |
+| `is_wc_endpoint_url()` | końcówki konta (zamówienia, adresy, wylogowanie) |
+| shortcode sklepu w treści wpisu | redaktor może wstawić `[products]` gdziekolwiek i nie ma obowiązku o tym uprzedzać |
+| filtr `cyber_woocommerce_needs_styles` | furtka na przypadki niewidoczne w treści |
+
+**Własny nagłówek z licznikiem koszyka nie jest powodem do ładowania tych
+arkuszy** — jego markup, ikony i style są w całości motywu
+(`template-parts/header/`, `assets/css/main.css`). Sprawdzone: strona główna
+i pojedynczy wpis ładują wyłącznie `main.css`.
+
+Przypadek, którego ta heurystyka **nie** złapie: widget WooCommerce w obszarze
+widgetów strony spoza sklepu albo widok zbudowany własnym szablonem PHP. Od tego
+jest filtr:
+
+```php
+add_filter( 'cyber_woocommerce_needs_styles', function ( $needed ) {
+	return $needed || is_page( 'promocje' );
+} );
+```
+
+### Główny kolor sklepu
+
+`cyber_wc_color_main` (Global Options → WooCommerce) jest wspólną barwą
+**wszystkich** widoków sklepu, nie tylko strony produktu. Trafia do CSS jako
+`--cyber-wc-color-main` przez `cyber_woocommerce_css_map()`.
+
+| Widok | Co bierze barwę |
+|---|---|
+| Lista produktów | cena, przycisk „Dodaj do koszyka”, przycisk „Pokaż więcej”, aktywny przełącznik widoku, bieżąca strona paginacji |
+| Strona produktu | cena, przycisk zakupu, licznik ilości, aktywna zakładka, plakietka promocji, ramka wybranej miniatury |
+| Koszyk | przycisk „Przejdź do zamówienia”, licznik ilości |
+| Zamówienie | przycisk „Kupuję i płacę”, przycisk kuponu, licznik ilości |
+
+**Przyciski sklepowe świadomie nie biorą barw z zakładki Przyciski.** Tamta
+opisuje przyciski całej witryny; wezwanie do zakupu ma iść za kolorem sklepu,
+inaczej zmiana barwy sklepu omijałaby najważniejszy element na stronie. Rozmiar,
+padding i grubość czcionki nadal pochodzą z `btn-large`, więc zmiana rozmiaru
+w panelu działa tak jak wszędzie.
+
+**Czego barwa celowo nie dotyka:** kwot w tabelach koszyka i zamówienia. Te
+zostają czarne, zgodnie z zatwierdzonym projektem tych dwóch widoków. Zmiana to
+jedna linia w każdym z dwóch arkuszy, jeśli kiedyś ma być inaczej.
+
+Kolejna barwa sklepu (np. osobny kolor ceny promocyjnej) to **jedna linia
+w `cyber_woocommerce_css_map()` plus jeden wpis w `cyber_option_schema()`** —
+bez dotykania plików CSS.
 
 ## Breadcrumb
 
@@ -1085,11 +1155,27 @@ samym napisem dwa razy pod sobą.
 
 ### Skala odstępów
 
-Moduł używa jednej, zamkniętej skali: **6, 12, 24, 36, 48, 64, 94px**. Żadna
-wartość `padding`/`margin` w `assets/css/woocommerce-product.css` nie wychodzi
-poza ten zestaw. Skala jest wypisana na `:root` jako `--cyber-space-1` …
-`--cyber-space-7`, żeby kolejne moduły miały czego reużywać zamiast wymyślać
-własne liczby (CLAUDE.md sekcja 6).
+Skala **6, 12, 24, 36, 48, 64, 94px** obowiązuje w całym motywie: żadna wartość
+`padding` ani `margin` w `assets/css/` nie jest zapisana liczbą px — wszystkie
+idą przez `var(--cyber-space-N)`.
+
+Przy porządkowaniu istniejących arkuszy każdą wartość przypisano do
+**najbliższego** progu (największa korekta: 6px, typowa: 2–4px). Jeden przypadek
+był remisem — `18px` w nagłówku tabeli koszyka leży dokładnie między 12 a 24;
+rozstrzygnięto w górę, żeby nagłówek zrównał się z wierszami tabeli, które szły
+z 20px na 24px.
+
+Poza skalą zostają wyłącznie dwie wartości ujemne o charakterze technicznym:
+`margin: -1px` w `.screen-reader-text` (standardowy clip dostępności) oraz
+`margin-bottom: -1px` nasuwające obramowanie aktywnej zakładki na obramowanie
+kontenera. To korekty o grubość krawędzi, nie odstępy.
+
+Same zmienne `--cyber-space-1` … `--cyber-space-7` są zadeklarowane na `:root`
+w **`assets/css/main.css`**, nie tutaj. Powód jest praktyczny: ten arkusz
+kolejkuje się wyłącznie na stronie produktu, więc gdyby trzymał definicje,
+każdy inny moduł sięgający po skalę dostawałby niezdefiniowane zmienne — a
+`padding: var(--cyber-space-3)` bez definicji nie jest błędem, tylko cicho
+znika (CLAUDE.md sekcja 6).
 
 ## Edytor treści
 
@@ -1124,8 +1210,13 @@ rozstrzygnął się sam, gdy pojawiły się pierwsze widgety sklepu.
 
 ## Co jeszcze nie istnieje
 
-Etapy 1–3 są zrealizowane i opisane w sekcjach powyżej: Global Options wraz
-z generowaniem CSS, Top Header, Header Desktop, Header Mobile, Footer i Copyright.
+Zrealizowane i opisane w sekcjach powyżej:
+
+- **Etapy 1–3** — Global Options wraz z generowaniem CSS, Top Header,
+  Header Desktop, Header Mobile, Footer, Copyright.
+- **Warstwa WooCommerce, poza kolejnością etapów** — okruszki, koszyk,
+  zamówienie, lista produktów (sklep i kategorie) oraz strona pojedynczego
+  produktu. Powstała na bieżące potrzeby sklepu, nie jako etap z sekcji 17.
 
 Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaimplementowane:
 
@@ -1136,8 +1227,15 @@ Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaim
   jest `index.php` w rootcie, wymagany przez WordPress fallback. `header.php`
   i `footer.php` w rootcie **nie** są już szkieletem — zbierają dane przez
   `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
-- **Etapy 6–8** — formularze / AJAX, podstawy SEO oraz audyt wydajności, dostępności
-  i bezpieczeństwa wraz z weryfikacją PHPCS (ruleset `WordPress`).
+- **Etap 7** — podstawy SEO.
+- **Etap 8** — audyt wydajności, dostępności i bezpieczeństwa wraz z weryfikacją
+  PHPCS (ruleset `WordPress`).
+
+**Etap 6 (formularze / AJAX) jest częściowo zrobiony**, wbrew kolejności z sekcji
+17: istnieją **dwa endpointy AJAX** — zmiana ilości pozycji na stronie zamówienia
+i doładowywanie produktów na liście. Oba powstały jako część widoków sklepu,
+oba mają nonce i pełną sanityzację, oba są opisane w `docs/security.md`.
+Nie ma natomiast żadnego formularza własnego motywu — i to zostaje na etap 6.
 
 Osobno, poza kolejnością etapów: kolumny 2 i 3 stopki oraz część pól zakładki
 „Kontakt” są **zarezerwowane**, nie zapomniane (CLAUDE.md sekcja 22).

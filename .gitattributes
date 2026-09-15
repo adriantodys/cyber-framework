@@ -1,0 +1,10 @@
+# Pliki pisane przez ACF: wtyczka zapisuje je czystym LF.
+# Bez tej reguly Git podmienia konce linii przy kazdym dotknieciu pliku
+# i generuje falszywy diff na liniach, ktorych nikt nie ruszal.
+acf-json/*.json text eol=lf
+
+# Kod motywu trzymamy na CRLF — tak jak powstal.
+*.php text eol=crlf
+*.css text eol=crlf
+*.js  text eol=crlf
+*.md  text eol=crlf

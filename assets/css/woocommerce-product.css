@@ -8,21 +8,12 @@
  * glowny kolor sklepu pochodza z Global Options i sa wypisywane w <head>
  * jako zmienne --cyber-product-* / --cyber-wc-* (inc/enqueue.php).
  *
- * ODSTEPY. Modul uzywa jednej, zamknietej skali odstepow: 6, 12, 24, 36, 48,
- * 64 i 94px. Zadna wartosc padding/margin w tym pliku nie wychodzi poza ten
- * zestaw. Skala jest wypisana ponizej jako zmienne, zeby kolejne moduly mialy
- * czego reuzywac zamiast wymyslac wlasne liczby.
+ * ODSTEPY. Modul uzywa jednej, zamknietej skali: 6, 12, 24, 36, 48, 64 i 94px
+ * (--cyber-space-1 ... --cyber-space-7). Zadna wartosc padding/margin w tym
+ * pliku nie wychodzi poza ten zestaw. Same zmienne sa zadeklarowane w
+ * assets/css/main.css — ten arkusz laduje sie warunkowo, wiec nie moze byc
+ * zrodlem wartosci, po ktore siega reszta projektu (CLAUDE.md sekcja 6).
  */
-
-:root {
-	--cyber-space-1: 6px;
-	--cyber-space-2: 12px;
-	--cyber-space-3: 24px;
-	--cyber-space-4: 36px;
-	--cyber-space-5: 48px;
-	--cyber-space-6: 64px;
-	--cyber-space-7: 94px;
-}
 
 /* --- Kontener -------------------------------------------------------------- */
 

@@ -215,3 +215,133 @@ function cyber_wc_cart_count_fragment( $fragments ) {
 	return $fragments;
 }
 add_filter( 'woocommerce_add_to_cart_fragments', 'cyber_wc_cart_count_fragment' );
+
+/**
+ * Uchwyty arkuszy WooCommerce zdejmowanych poza sklepem.
+ *
+ * Wtyczka kolejkuje te trzy pliki BEZWARUNKOWO, na kazdej podstronie witryny —
+ * lacznie okolo 50 kB CSS takze tam, gdzie nie ma ani jednego elementu sklepu.
+ *
+ * Swiadomie NIE ma tu 'woocommerce-inline'. Ten uchwyt nie ma zrodla, sluzy
+ * wylacznie jako zaczep dla stylow dopisywanych inline (m.in. pasek informacyjny
+ * sklepu, ktory moze pojawic sie na dowolnej stronie). Nie kosztuje zadnego
+ * zapytania, wiec nie ma czego oszczedzac, a jego zdjecie psuloby pasek.
+ *
+ * @return string[] Uchwyty stylow.
+ */
+function cyber_woocommerce_style_handles() {
+	return array(
+		'woocommerce-general',
+		'woocommerce-layout',
+		'woocommerce-smallscreen',
+	);
+}
+
+/**
+ * Shortcode'y WooCommerce, ktore wymagaja stylow wtyczki.
+ *
+ * Lista pochodzi z WC_Shortcodes::init(). Nie czytamy jej z rejestru
+ * shortcode'ow, bo tam siedza takze tagi innych wtyczek — a my pytamy wylacznie
+ * o te, ktore renderuja markup sklepu.
+ *
+ * @return string[] Tagi shortcode'ow.
+ */
+function cyber_woocommerce_shortcodes() {
+	return array(
+		'woocommerce_cart',
+		'woocommerce_checkout',
+		'woocommerce_my_account',
+		'woocommerce_order_tracking',
+		'shop_messages',
+		'products',
+		'product',
+		'product_page',
+		'product_category',
+		'product_categories',
+		'product_attribute',
+		'add_to_cart',
+		'add_to_cart_url',
+		'best_selling_products',
+		'featured_products',
+		'recent_products',
+		'related_products',
+		'sale_products',
+		'top_rated_products',
+	);
+}
+
+/**
+ * Czy biezacy widok potrzebuje arkuszy WooCommerce.
+ *
+ * Domyslnie TAK wszedzie, gdzie wtyczka cokolwiek renderuje: na wlasnych
+ * stronach sklepu, na koncowkach konta oraz na dowolnej stronie z shortcode'em
+ * sklepu — redaktor moze wstawic liste produktow gdziekolwiek i nie ma obowiazku
+ * o tym nikogo uprzedzac.
+ *
+ * NIE wystarczy sprawdzic is_woocommerce(): ta funkcja nie obejmuje koszyka,
+ * zamowienia ani konta, bo to zwykle strony z shortcode'em (CLAUDE.md sekcja 2).
+ *
+ * Wlasny naglowek z licznikiem koszyka NIE jest powodem do ladowania tych
+ * arkuszy — jego markup, ikony i style sa w calosci motywu
+ * (template-parts/header/, assets/css/main.css).
+ *
+ * @return bool
+ */
+function cyber_woocommerce_needs_styles() {
+	if ( ! cyber_is_woocommerce_active() ) {
+		return false;
+	}
+
+	$needed = is_woocommerce()
+		|| is_cart()
+		|| is_checkout()
+		|| is_account_page()
+		|| is_wc_endpoint_url();
+
+	if ( ! $needed && is_singular() ) {
+		$content = (string) get_post_field( 'post_content', get_queried_object_id() );
+
+		foreach ( cyber_woocommerce_shortcodes() as $shortcode ) {
+			if ( has_shortcode( $content, $shortcode ) ) {
+				$needed = true;
+
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Filtruje decyzje o zaladowaniu arkuszy WooCommerce.
+	 *
+	 * Furtka dla przypadkow, ktorych nie widac w tresci wpisu — widgetu sklepu
+	 * w obszarze widgetow, bloku renderowanego przez inna wtyczke albo widoku
+	 * zbudowanego wlasnym szablonem:
+	 *
+	 *     add_filter( 'cyber_woocommerce_needs_styles', function ( $needed ) {
+	 *         return $needed || is_page( 'promocje' );
+	 *     } );
+	 *
+	 * @param bool $needed Czy arkusze sa potrzebne.
+	 */
+	return (bool) apply_filters( 'cyber_woocommerce_needs_styles', $needed );
+}
+
+/**
+ * Zdejmuje arkusze WooCommerce poza widokami sklepu.
+ *
+ * Priorytet 99, zeby wejsc PO kolejkowaniu wtyczki. Dequeue zamiast filtra
+ * 'woocommerce_enqueue_styles' jest tu konieczny: tamten filtr dziala na
+ * etapie rejestracji, czyli zanim WordPress wie, jaka strone wyswietla.
+ *
+ * @return void
+ */
+function cyber_dequeue_woocommerce_styles() {
+	if ( cyber_woocommerce_needs_styles() ) {
+		return;
+	}
+
+	foreach ( cyber_woocommerce_style_handles() as $handle ) {
+		wp_dequeue_style( $handle );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'cyber_dequeue_woocommerce_styles', 99 );

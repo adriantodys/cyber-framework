@@ -266,17 +266,34 @@ Marginesy i paddingi w projekcie pochodzą z **jednej, zamkniętej skali**:
 6 · 12 · 24 · 36 · 48 · 64 · 94 px
 ```
 
-Skala jest wypisana jako zmienne `--cyber-space-1` … `--cyber-space-7`
-(pierwszy raz w `assets/css/woocommerce-product.css`, na `:root`).
+Skala jest zadeklarowana jako zmienne `--cyber-space-1` … `--cyber-space-7`
+na `:root` w **`assets/css/main.css`** — arkuszu ładowanym na każdej podstronie.
 
-Każdy nowy moduł **reużywa te wartości** zamiast wpisywać własne liczby.
+Zmiennych współdzielonych **nie deklaruje się w arkuszu kolejkowanym
+warunkowo**: moduł, który się nie załadował, milcząco zabiera wartości każdemu,
+kto po nie sięga, a `padding: var(--cyber-space-3)` bez definicji nie jest
+błędem — po prostu znika.
+
+**Skala obowiązuje we wszystkich arkuszach motywu.** Każda wartość `padding`
+i `margin` w `assets/css/` jest zapisana jako `var(--cyber-space-N)` — nie ma
+ani jednej liczby px wpisanej wprost. Nowy moduł **reużywa te wartości**
+zamiast wpisywać własne.
+
 Odstęp spoza skali wymaga takiego samego jawnego uzasadnienia jak nowy
 breakpoint (sekcja 18) — inaczej odstępy między sekcjami przestają do siebie
 pasować, a różnica 2px w dwudziestu miejscach jest nie do wyśledzenia.
 
-Wyjątek, który **nie jest** odstępem i skali nie podlega: wymiary elementu
-wynikające z jego proporcji (szerokość miniatury galerii, wysokość pola
-formularza). Te są ustalane wprost i opisywane w `docs/acf-schema.md`.
+**Co skali nie podlega i wpisuje się wprost:**
+
+- **Wymiary elementu** wynikające z jego proporcji, nie z rytmu strony:
+  szerokość miniatury galerii (150px), wysokość pola formularza, `min-width`
+  przycisku paginacji. Te są opisywane w `docs/acf-schema.md`.
+- **Wartości ujemne o charakterze technicznym**, np. `margin: -1px` w klasie
+  `.screen-reader-text` (standardowy clip dostępności) czy `margin-bottom: -1px`
+  nasuwające obramowanie zakładki na obramowanie kontenera. To nie są odstępy,
+  tylko korekty o grubość krawędzi.
+- **`gap`** — na razie nie został objęty sweepem; w arkuszach sklepu nadal
+  stoją tam liczby px. Do uporządkowania przy najbliższej okazji.
 - Moduł opisany **mapą pól** (klucz opcji → nazwa zmiennej + jednostka) **nie
   pisze własnej pętli** — wypisuje zmienne przez `cyber_css_vars_from_map()`.
 
@@ -419,6 +436,19 @@ Przy ręcznej edycji pliku ustawiaj `modified` na **bieżący czas**, nigdy na
 „poprzednia wartość plus trochę". Po synchronizacji wartość w pliku powinna być
 mniejsza lub równa `post_modified_gmt` grupy w bazie.
 
+### Format plików `acf-json/`
+
+ACF zapisuje te pliki `json_encode()` z `JSON_PRETTY_PRINT` i `JSON_UNESCAPED_UNICODE`,
+ale **bez** `JSON_UNESCAPED_SLASHES` — czyli wcięcie 4 spacje, polskie znaki
+dosłownie, ukośniki jako `\/`, końce linii LF. `.gitattributes` wymusza `eol=lf`
+na tym katalogu, żeby Git nie podmieniał końców linii pliku pisanego przez wtyczkę.
+
+Skrypt edytujący taki plik **musi odtworzyć ten format**. Inaczej pierwszy zapis
+w panelu przepisze plik po swojemu i wygeneruje diff na kilkunastu liniach,
+których nikt nie ruszał — a przy przeglądzie zmian nie da się odróżnić hałasu od
+prawdziwej edycji. Przed `git add` sprawdź `git diff --numstat` na tym katalogu:
+dodanie pól ma być **czysto addytywne**, z jedyną zmianą w linii `modified`.
+
 ### Wzorzec paska dwustronnego
 
 Sekcja Copyright (`template-parts/footer/copyright.php`) jest strukturalnie tożsama
@@ -432,10 +462,16 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 rozrósł się do jedenastu zakładek:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **czternastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
-   Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright.
-   To zamyka listę modułów podstawowych ustawień globalnych.
+   Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
+   Breadcrumb, Breadcrumb WooCommerce, WooCommerce — razem **166 pól**.
+
+   Trzy ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
+   Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
+   każdy moduł z ustawieniami globalnymi dokłada tu zakładkę. Zakładka
+   „WooCommerce” jest jedną zakładką na **cały** sklep i kolejne ustawienia
+   sklepowe idą do niej, a nie do nowych.
 3. Header / Footer (ACF + template-parts).
 
    **Stan: zrealizowane przy okazji etapu 2.** Istnieją `template-parts/header/`

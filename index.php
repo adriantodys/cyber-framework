@@ -16,8 +16,21 @@ get_header();
 <div class="cyber-container">
 	<?php if ( have_posts() ) : ?>
 
-		<?php if ( ! is_front_page() && ! is_singular() ) : ?>
-			<h1><?php echo esc_html( wp_get_document_title() ); ?></h1>
+		<?php if ( ! is_singular() ) : ?>
+			<?php
+			/*
+			 * Kazdy widok listy dostaje dokladnie jeden <h1> (CLAUDE.md sekcja 11) —
+			 * takze strona glowna ustawiona na liste wpisow. Wczesniej byla z tego
+			 * wylaczona i zostawala bez zadnego <h1>, bo naglowek witryny to logo,
+			 * a wpisy renderuja sie jako <h2>.
+			 *
+			 * Na stronie glownej tytul dokumentu to "Nazwa - opis", wiec bierzemy
+			 * sama nazwe witryny; dalej zostaje tytul dokumentu.
+			 */
+			?>
+			<h1>
+				<?php echo esc_html( is_front_page() ? get_bloginfo( 'name' ) : wp_get_document_title() ); ?>
+			</h1>
 		<?php endif; ?>
 
 		<?php

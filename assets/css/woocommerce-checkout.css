@@ -58,7 +58,7 @@
  * Projekt chce go w rozmiarze h2, wiec zmieniamy tylko warstwe wizualna.
  */
 .woocommerce-checkout .cyber-main h1 {
-	margin-bottom: 32px;
+	margin-bottom: var(--cyber-space-4);
 	font-size: var(--cyber-font-size-h2);
 }
 
@@ -69,7 +69,7 @@
  */
 .woocommerce-checkout .woocommerce-billing-fields > h3,
 .woocommerce-checkout #order_review_heading {
-	margin: 0 0 20px;
+	margin: 0 0 var(--cyber-space-3);
 	font-size: var(--cyber-font-size-h3);
 }
 
@@ -102,7 +102,7 @@
 .woocommerce-checkout .form-row {
 	float: none;
 	width: auto;
-	margin: 0 0 20px;
+	margin: 0 0 var(--cyber-space-3);
 	padding: 0;
 	grid-column: 1 / -1;
 }
@@ -145,7 +145,7 @@
 
 .woocommerce-checkout .form-row label {
 	display: block;
-	margin-bottom: 8px;
+	margin-bottom: var(--cyber-space-1);
 	color: var(--cyber-color-headings);
 	font-size: var(--cyber-font-size-text);
 }
@@ -163,7 +163,7 @@
 .woocommerce-checkout .select2-container .select2-selection--single {
 	width: 100%;
 	height: auto;
-	padding: 12px 14px;
+	padding: var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	border-radius: 0;
 	background: none;
@@ -193,7 +193,7 @@
 
 .woocommerce-checkout .woocommerce-checkout-review-order-table th,
 .woocommerce-checkout .woocommerce-checkout-review-order-table td {
-	padding: 16px 14px;
+	padding: var(--cyber-space-2);
 	color: var(--cyber-color-headings);
 	text-align: left;
 	vertical-align: middle;
@@ -240,9 +240,10 @@
 	cursor: pointer;
 }
 
+/* Licznik ilosci to sterowanie sklepowe — idzie za kolorem sklepu. */
 .woocommerce-checkout .cyber-qty-btn:hover,
 .woocommerce-checkout .cyber-qty-btn:focus-visible {
-	color: var(--cyber-color-links);
+	color: var(--cyber-wc-color-main);
 }
 
 .woocommerce-checkout .cyber-qty-btn:disabled {
@@ -323,7 +324,7 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	margin: 0 0 8px;
+	margin: 0 0 var(--cyber-space-1);
 	padding: 0;
 	color: var(--cyber-color-text);
 	font-size: var(--cyber-font-size-text);
@@ -346,8 +347,8 @@
  * przy cyber_wc_checkout_coupon_box() w inc/woocommerce-checkout.php.
  */
 .woocommerce-checkout .cyber-coupon {
-	margin-top: 24px;
-	padding: 20px;
+	margin-top: var(--cyber-space-3);
+	padding: var(--cyber-space-3);
 	border: 1px solid var(--cyber-color-border-1);
 }
 
@@ -388,7 +389,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
-	margin-top: 16px;
+	margin-top: var(--cyber-space-2);
 }
 
 .woocommerce-checkout .cyber-coupon__fields[hidden] {
@@ -398,7 +399,7 @@
 .woocommerce-checkout .cyber-coupon__fields input.input-text {
 	flex: 1;
 	min-width: 140px;
-	padding: 12px 14px;
+	padding: var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	border-radius: 0;
 	background: none;
@@ -413,14 +414,14 @@
 }
 
 .woocommerce-checkout .cyber-coupon__message {
-	margin-top: 16px;
+	margin-top: var(--cyber-space-2);
 }
 
 .woocommerce-checkout .cyber-coupon__message .woocommerce-error,
 .woocommerce-checkout .cyber-coupon__message .woocommerce-message,
 .woocommerce-checkout .cyber-coupon__message .woocommerce-info {
 	margin: 0;
-	padding: 12px 14px;
+	padding: var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	background: none;
 	color: var(--cyber-color-text);
@@ -437,8 +438,8 @@
 /* --- Platnosci ------------------------------------------------------------- */
 
 .woocommerce-checkout #payment {
-	margin-top: 24px;
-	padding: 20px;
+	margin-top: var(--cyber-space-3);
+	padding: var(--cyber-space-3);
 	border: 1px solid var(--cyber-color-border-1);
 	border-radius: 0;
 	background: none;
@@ -452,13 +453,13 @@
 }
 
 .woocommerce-checkout #payment li.wc_payment_method {
-	margin: 0 0 14px;
+	margin: 0 0 var(--cyber-space-2);
 	padding: 0;
 }
 
 .woocommerce-checkout #payment li.wc_payment_method label {
 	display: inline;
-	margin-left: 8px;
+	margin-left: var(--cyber-space-1);
 	color: var(--cyber-color-headings);
 	font-size: var(--cyber-font-size-text);
 }
@@ -468,8 +469,8 @@
  * projekt pokazuje zwykla ramke.
  */
 .woocommerce-checkout #payment .payment_box {
-	margin: 12px 0 0;
-	padding: 14px;
+	margin: var(--cyber-space-2) 0 0;
+	padding: var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	border-radius: 0;
 	background: none;
@@ -485,9 +486,35 @@
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
-	margin: 20px 0 0;
+	margin: var(--cyber-space-3) 0 0;
 	padding: 0;
 }
+
+/* --- Glowny kolor sklepu --------------------------------------------------- */
+
+/*
+ * --cyber-wc-color-main (Global Options -> WooCommerce) jest wspolna barwa
+ * wszystkich widokow sklepu. Przycisk swiadomie NIE bierze barwy z zakladki
+ * Przyciski: tamta opisuje przyciski calej witryny, a wezwanie do zakupu ma
+ * isc za kolorem sklepu. Rozmiar, padding i grubosc czcionki nadal pochodza
+ * z btn-large, wiec zmiana rozmiaru w panelu dziala jak wszedzie.
+ */
+
+.woocommerce-checkout .cyber-wc-place-order,
+.woocommerce-checkout .cyber-coupon__fields .button {
+	border-color: var(--cyber-wc-color-main);
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+}
+
+.woocommerce-checkout .cyber-wc-place-order:hover,
+.woocommerce-checkout .cyber-wc-place-order:focus-visible,
+.woocommerce-checkout .cyber-coupon__fields .button:hover {
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	opacity: 0.85;
+}
+
 
 /* Zgoda na regulamin idzie przez cala szerokosc, przycisk pod nia po prawej. */
 .woocommerce-checkout
@@ -495,7 +522,7 @@
 	.place-order
 	.woocommerce-terms-and-conditions-wrapper {
 	width: 100%;
-	margin-bottom: 16px;
+	margin-bottom: var(--cyber-space-2);
 }
 
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
@@ -513,7 +540,7 @@
 	}
 
 	.woocommerce-checkout #order_review_heading {
-		margin-top: 32px;
+		margin-top: var(--cyber-space-4);
 	}
 }
 

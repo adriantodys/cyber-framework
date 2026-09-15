@@ -13,6 +13,22 @@
 	--cyber-container-width: 1500px;
 	--cyber-container-margin: 40px;
 
+	/*
+	 * Skala odstepow (CLAUDE.md sekcja 6). Zamknieta lista wartosci, z ktorej
+	 * korzystaja WSZYSTKIE marginesy i paddingi w projekcie. W odroznieniu od
+	 * reszty tego bloku NIE sa to wartosci domyslne nadpisywane z panelu —
+	 * skala jest stala i nie ma pol ACF. Stad miejsce tutaj, w arkuszu
+	 * ladowanym na kazdej podstronie: modul kolejkowany warunkowo nie moze
+	 * definiowac zmiennych, po ktore siega ktokolwiek poza nim.
+	 */
+	--cyber-space-1: 6px;
+	--cyber-space-2: 12px;
+	--cyber-space-3: 24px;
+	--cyber-space-4: 36px;
+	--cyber-space-5: 48px;
+	--cyber-space-6: 64px;
+	--cyber-space-7: 94px;
+
 	--cyber-font-family-headings: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 	--cyber-font-family-text: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
@@ -115,6 +131,12 @@
 	--cyber-breadcrumb-wc-font-size: 14px;
 	--cyber-breadcrumb-wc-color: #666666;
 	--cyber-breadcrumb-wc-color-active: #111111;
+
+	--cyber-wc-color-main: #d32f2f;
+	--cyber-product-col-image: 40%;
+	--cyber-product-col-summary: 60%;
+	--cyber-product-media-height: 500px;
+	--cyber-product-thumb-height: 158px;
 
 	/*
 	 * Ponizsze NIE maja pola ACF — to swiadome decyzje motywu, nie konfiguracja.
@@ -269,7 +291,7 @@ h6 :is(a, span),
  */
 
 .cyber-topheader {
-	padding-block: 8px;
+	padding-block: var(--cyber-space-1);
 	background-color: var(--cyber-topheader-bg);
 	color: var(--cyber-topheader-color);
 	font-size: var(--cyber-topheader-font-size);
@@ -698,7 +720,7 @@ h6 :is(a, span),
 	top: 0;
 	right: 0;
 	min-width: 18px;
-	padding: 0 5px;
+	padding: 0 var(--cyber-space-1);
 	border-radius: 9px;
 	background-color: var(--cyber-btn-medium-bg-color);
 	color: var(--cyber-btn-medium-color);
@@ -722,7 +744,7 @@ h6 :is(a, span),
  * WooCommerce jest wybrany, a wtyczki nie ma. Gosc witryny nie dostaje niczego.
  */
 .cyber-wc-missing {
-	padding: 4px 8px;
+	padding: var(--cyber-space-1);
 	border: 1px dashed var(--cyber-color-border-1);
 	color: var(--cyber-color-text);
 	font-size: 12px;
@@ -847,7 +869,7 @@ h6 :is(a, span),
  * PONIZEJ niego i zostawil pod paskiem pas tla stopki.
  */
 .cyber-footer__main {
-	padding-block: 48px;
+	padding-block: var(--cyber-space-5);
 }
 
 /*
@@ -895,7 +917,7 @@ h6 :is(a, span),
 }
 
 .cyber-footer__brand {
-	margin: 0 0 16px;
+	margin: 0 0 var(--cyber-space-2);
 }
 
 .cyber-footer__logo {
@@ -933,7 +955,7 @@ h6 :is(a, span),
  */
 
 .cyber-copyright {
-	padding-block: 16px;
+	padding-block: var(--cyber-space-2);
 	background-color: var(--cyber-copyright-bg);
 }
 
@@ -978,7 +1000,7 @@ h6 :is(a, span),
 	display: inline-block;
 	width: 1px;
 	height: 1em;
-	margin-right: 16px;
+	margin-right: var(--cyber-space-2);
 	vertical-align: -0.15em;
 	background: currentColor;
 	opacity: 0.4;
@@ -1003,7 +1025,7 @@ h6 :is(a, span),
  */
 
 .cyber-breadcrumb {
-	padding-block: 10px;
+	padding-block: var(--cyber-space-2);
 	border-bottom: 1px solid var(--cyber-color-border-1);
 	font-size: var(--cyber-breadcrumb-font-size);
 	color: var(--cyber-breadcrumb-color);
@@ -1059,7 +1081,7 @@ h6 :is(a, span),
  */
 .cyber-breadcrumb__item + .cyber-breadcrumb__item::before {
 	content: "/";
-	margin-inline: 8px;
+	margin-inline: var(--cyber-space-1);
 	color: var(--cyber-breadcrumb-color);
 	opacity: 0.6;
 }

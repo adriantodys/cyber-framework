@@ -10,19 +10,20 @@ i obowiązkowa lektura przed każdą zmianą.
 
 | | |
 |---|---|
-| WordPress | 6.4+ |
+| WordPress | 6.4+ (testowane na 7.1) |
 | PHP | 8.0+ |
 | ACF PRO | wymagane (twarda zależność — bez niego motyw działa na wartościach domyślnych) |
+| WooCommerce | opcjonalne (zależność miękka — bez niego funkcje sklepu wyłączają się same) |
 
 ## Instalacja
 
 1. Skopiuj katalog motywu do `wp-content/themes/cyber-framework/`.
 2. Zainstaluj i aktywuj **ACF PRO**.
 3. Aktywuj motyw *Cyber Framework*.
-4. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj grupę
-   *Cyber Framework — Global Options*.
-   Grupa jest już w repozytorium jako `acf-json/group_global_options.json` — nie trzeba
-   klikać żadnego pola ręcznie.
+4. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj **obie**
+   grupy: *Cyber Framework — Global Options* oraz *Cyber Framework — Kategoria produktu*.
+   Obie są w repozytorium (`acf-json/`) — nie trzeba klikać żadnego pola ręcznie.
+   Druga dotyczy taksonomii `product_cat` i ma sens dopiero z WooCommerce.
 5. Ustawienia znajdziesz w menu **Cyber Framework** (slug `cyber-settings`).
 
 Jeśli pozycja *Sync* się nie pojawia, sprawdź, czy `acf-json/` jest zapisywalny
@@ -36,8 +37,9 @@ cyber-framework/
 ├── assets/            ← css / js / images
 ├── docs/              ← dokumentacja (patrz niżej)
 ├── inc/               ← logika motywu
-├── template-parts/    ← header/, footer/, components/; sections/ czeka na etap 4
+├── template-parts/    ← header/, footer/, breadcrumb/, components/; sections/ czeka na etap 4
 ├── templates/         ← szablony widoków (puste — etap 5)
+├── woocommerce/       ← nadpisania szablonów wtyczki (dwa, rejestr w CLAUDE.md sekcja 2)
 ├── functions.php      ← bootstrap, bez logiki
 └── style.css          ← wyłącznie nagłówek motywu; style są w assets/css/
 ```
@@ -69,13 +71,20 @@ gdy pole jest puste lub ACF niedostępne. Pełna lista kluczy: `docs/acf-schema.
 Kolejność budowy: CLAUDE.md sekcja 17.
 
 - [x] **Etap 1** — szkielet motywu (`style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`)
-- [x] **Etap 2** — Global Options: Options Page + jedenaście zakładek (od „Główne ustawienia strony” po „Copyright”)
+- [x] **Etap 2** — Global Options: Options Page + czternaście zakładek, 166 pól
 - [x] **Etap 3** — Header / Footer (ACF + template-parts): Top Header, Header Desktop, Header Mobile, Footer, Copyright
 - [ ] **Etap 4** — system komponentów / Flexible Content
 - [ ] **Etap 5** — szablony widoków (front-page, page, single, archive, 404, search)
-- [ ] **Etap 6** — formularze / AJAX
+- [~] **Etap 6** — formularze / AJAX: dwa endpointy AJAX istnieją (ilość w zamówieniu, doładowywanie produktów), własnych formularzy motywu jeszcze nie ma
 - [ ] **Etap 7** — podstawy SEO
 - [ ] **Etap 8** — audyt wydajności, dostępności, bezpieczeństwa + WPCS
+
+**Poza kolejnością etapów — warstwa WooCommerce.** Powstała na bieżące potrzeby
+sklepu: okruszki, koszyk, zamówienie, lista produktów (sklep i kategorie) oraz
+strona pojedynczego produktu. Wszystko z hooków i CSS; nadpisania szablonów
+wtyczki są **dwa** i mają rejestr w CLAUDE.md sekcja 2. WooCommerce jest
+zależnością **miękką** — bez wtyczki te funkcje wyłączają się same, a reszta
+witryny działa bez zmian.
 
 `header.php` i `footer.php` w rootcie są już docelowe — zbierają dane przez
 `cyber_get_option()` i przekazują je jawnie do `template-parts/` (CLAUDE.md sekcja 4).

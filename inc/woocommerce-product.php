@@ -97,12 +97,16 @@ function cyber_product_element_callbacks() {
  * Zastepuje opakowanie listy produktow (cyber_shop_wrapper_open), ktore ma
  * kolumne boczna z widgetami — na stronie produktu bylaby pusta.
  *
+ * Wrapper niesie klase wariantu tak jak kazdy inny modul (CLAUDE.md sekcja 20).
+ * Strona produktu nie ma jeszcze pola ACF na wariant, wiec wartoscia jest
+ * 'default' — klasa istnieje jako punkt zaczepienia, nie jako martwy kod.
+ *
  * @return void
  */
 function cyber_product_wrapper_open() {
 	?>
 	<div class="cyber-container">
-		<div class="cyber-product">
+		<div class="<?php echo esc_attr( cyber_variant_class( 'cyber-product' ) ); ?>">
 	<?php
 }
 

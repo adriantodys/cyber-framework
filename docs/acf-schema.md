@@ -1026,7 +1026,19 @@ WooCommerce trafiają **tutaj**, a nie do nowych zakładek.
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
-| Główny kolor sklepu | `cyber_wc_color_main` | Color Picker (alpha) | `#d32f2f` | Cena, przycisk „Dodaj do koszyka”, aktywna zakładka, plakietka promocji |
+| Główny kolor sklepu | `cyber_wc_color_main` | Color Picker (alpha) | `#d32f2f` | Wspólna barwa **wszystkich** widoków sklepu: ceny, przyciski zakupu, liczniki ilości, stany aktywne, plakietka promocji |
+
+> **Obowiązuje we wszystkich czterech widokach sklepu**, nie tylko na stronie
+> produktu: lista produktów, strona produktu, koszyk i zamówienie. Pełna mapa
+> „co bierze barwę” jest w `docs/architecture.md`, sekcja „Główny kolor sklepu”.
+
+> **Przyciski sklepowe świadomie nie biorą barw z zakładki Przyciski.** Tamta
+> opisuje przyciski całej witryny, a wezwanie do zakupu ma iść za kolorem
+> sklepu — inaczej zmiana barwy sklepu omijałaby najważniejszy element na
+> stronie. Rozmiar i padding nadal pochodzą z `btn-large`.
+>
+> Kwoty w tabelach koszyka i zamówienia zostają czarne, zgodnie z zatwierdzonym
+> projektem tych widoków.
 
 > **Jedno pole, ale nie na stałe.** Barwa jedzie do CSS przez
 > `cyber_woocommerce_css_map()` jako `--cyber-wc-color-main`. Kolejna barwa

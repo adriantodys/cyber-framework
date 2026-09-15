@@ -16,17 +16,26 @@ wyłącznie `template-parts/sections/`, który zapełni etap 4.
 
 ## Warianty wrapperów
 
-Każdy komponent-wrapper (Header, Top Header, Footer, Copyright) niesie klasę
-bazową **oraz** modyfikator wariantu, budowane przez `cyber_variant_class()`
+Każdy wrapper modułu — Header, Top Header, Footer, Copyright, Breadcrumb,
+lista produktów (`.cyber-shop`) i strona produktu (`.cyber-product`) — niesie
+klasę bazową **oraz** modyfikator wariantu, budowane przez `cyber_variant_class()`
 z `inc/components.php`:
 
 ```php
 $cyber_class = cyber_variant_class( 'cyber-footer', $variant ); // 'cyber-footer cyber-footer--default'
 ```
 
-Argument `variant` jest opcjonalny — brak w `$args` oznacza `default`. Na razie
-żaden moduł nie ma pola ACF na wariant i `default` jest jedyną wartością; klasa
-istnieje jako punkt zaczepienia wymagany przez CLAUDE.md sekcja 20.
+Argument `variant` jest opcjonalny — brak w `$args` oznacza `default`.
+
+Dwa moduły mają już realne warianty:
+
+| Moduł | Źródło wartości | Wartości |
+|---|---|---|
+| Header | pole ACF `cyber_header_variant` | `default`, `centered`, `cta`, `woocommerce` |
+| Lista produktów | ciasteczko `cyber_shop_view` | `grid`, `list` |
+
+Reszta stoi na `default` — tam klasa jest punktem zaczepienia wymaganym przez
+CLAUDE.md sekcja 20, nie martwym kodem.
 
 **Stany nie są wariantami.** Przyklejony header dokłada `.cyber-header--sticky`
 **obok** modyfikatora wariantu, nie zamiast niego — to druga, prostopadła oś:
@@ -235,7 +244,7 @@ pojedynczego produktu".
 
 | Plik | Rola |
 |---|---|
-| `inc/woocommerce.php` | warstwa ochronna miękkiej zależności: wykrywanie, komunikaty, dane konta i koszyka |
+| `inc/woocommerce.php` | warstwa ochronna miękkiej zależności: wykrywanie, komunikaty, dane konta i koszyka, warunkowe zdejmowanie arkuszy wtyczki |
 | `inc/woocommerce-cart.php` | wygląd koszyka: hooki, etykiety, warunkowe assety |
 | `inc/woocommerce-checkout.php` | wygląd zamówienia: kolejność pól, kupon, licznik ilości, endpoint AJAX |
 | `inc/woocommerce-shop.php` | lista produktów: układ, widgety, pasek narzędzi, doładowywanie |

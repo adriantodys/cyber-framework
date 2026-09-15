@@ -18,7 +18,7 @@
 	grid-template-columns: 260px minmax(0, 1fr);
 	gap: 40px;
 	align-items: start;
-	padding-block: 40px;
+	padding-block: var(--cyber-space-4);
 }
 
 .cyber-shop__sidebar {
@@ -43,7 +43,7 @@
 /* --- Widgety --------------------------------------------------------------- */
 
 .cyber-widget {
-	margin-bottom: 28px;
+	margin-bottom: var(--cyber-space-3);
 }
 
 .cyber-widget:last-child {
@@ -51,7 +51,7 @@
 }
 
 .cyber-widget__title {
-	margin: 0 0 12px;
+	margin: 0 0 var(--cyber-space-2);
 	font-size: var(--cyber-font-size-h6);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .cyber-widget li {
-	margin-bottom: 8px;
+	margin-bottom: var(--cyber-space-1);
 }
 
 /*
@@ -73,21 +73,21 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
-	margin-bottom: 24px;
+	margin-bottom: var(--cyber-space-3);
 }
 
 /* --- Naglowek i opis ------------------------------------------------------- */
 
 .cyber-shop__main .woocommerce-products-header__title,
 .cyber-shop__main .page-title {
-	margin: 0 0 20px;
+	margin: 0 0 var(--cyber-space-3);
 	font-size: var(--cyber-font-size-h2);
 }
 
 .cyber-shop__description,
 .cyber-shop__main .term-description,
 .cyber-shop__main .woocommerce-product-description {
-	margin-bottom: 28px;
+	margin-bottom: var(--cyber-space-3);
 	color: var(--cyber-color-text);
 }
 
@@ -107,7 +107,7 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	margin-bottom: 28px;
+	margin-bottom: var(--cyber-space-3);
 }
 
 .cyber-shop__toolbar-left,
@@ -125,7 +125,7 @@
 }
 
 .cyber-shop__toolbar select {
-	padding: 8px 12px;
+	padding: var(--cyber-space-1) var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	border-radius: 0;
 	background: none;
@@ -172,14 +172,14 @@
 
 .cyber-shop__view:hover,
 .cyber-shop__view:focus-visible {
-	color: var(--cyber-color-links);
+	color: var(--cyber-wc-color-main);
 }
 
 /* Aktywny widok rozpoznajemy po aria-pressed, a nie po osobnej klasie —
    jeden stan zamiast dwoch, ktore moglyby sie rozjechac. */
 .cyber-shop__view[aria-pressed="true"] {
-	border-color: var(--cyber-color-border-1);
-	color: var(--cyber-color-links);
+	border-color: var(--cyber-wc-color-main);
+	color: var(--cyber-wc-color-main);
 }
 
 /* --- Lista produktow: wspolne ---------------------------------------------- */
@@ -227,13 +227,13 @@
 .cyber-shop__main ul.products li.product .price {
 	display: block;
 	margin: 0;
-	color: var(--cyber-color-headings);
+	color: var(--cyber-wc-color-main);
 	font-size: var(--cyber-font-size-text);
 	font-weight: 700;
 }
 
 .cyber-shop__main ul.products li.product .price del {
-	margin-right: 6px;
+	margin-right: var(--cyber-space-1);
 	opacity: 0.6;
 }
 
@@ -249,7 +249,7 @@
 	flex-direction: column;
 	gap: 10px;
 	border: 1px solid var(--cyber-color-border-1);
-	padding: 16px;
+	padding: var(--cyber-space-2);
 }
 
 /*
@@ -281,7 +281,7 @@
 	gap: 24px;
 	align-items: start;
 	border: 1px solid var(--cyber-color-border-1);
-	padding: 20px;
+	padding: var(--cyber-space-3);
 }
 
 .cyber-shop--list ul.products li.product > a:first-of-type {
@@ -302,7 +302,7 @@
 /* --- Paginacja i doladowywanie --------------------------------------------- */
 
 .cyber-shop__main .woocommerce-pagination {
-	margin-top: 36px;
+	margin-top: var(--cyber-space-4);
 }
 
 .cyber-shop__main .woocommerce-pagination ul {
@@ -327,26 +327,57 @@
 	justify-content: center;
 	min-width: 38px;
 	height: 38px;
-	padding: 0 10px;
+	padding: 0 var(--cyber-space-2);
 	border: 1px solid var(--cyber-color-border-1);
 	color: var(--cyber-color-text);
 	text-decoration: none;
 }
 
 .cyber-shop__main .woocommerce-pagination span.current {
-	border-color: var(--cyber-color-border-2);
-	color: var(--cyber-color-links);
+	border-color: var(--cyber-wc-color-main);
+	color: var(--cyber-wc-color-main);
 }
 
 .cyber-shop__more {
 	display: flex;
 	justify-content: center;
-	margin-top: 36px;
+	margin-top: var(--cyber-space-4);
 }
 
 .cyber-shop__more-button.is-busy {
 	opacity: 0.6;
 	cursor: default;
+}
+
+/* --- Glowny kolor sklepu --------------------------------------------------- */
+
+/*
+ * --cyber-wc-color-main (Global Options -> WooCommerce) jest wspolna barwa
+ * WSZYSTKICH widokow sklepu, nie tylko strony produktu. Trzyma w jednej
+ * wartosci to, co klient czyta jako "kolor sklepu": cene, wezwania do akcji
+ * i stany aktywne.
+ *
+ * Przyciski sklepowe swiadomie NIE biora barw z zakladki Przyciski. Tamte
+ * opisuja przyciski calej witryny; przycisk zakupu ma isc za kolorem sklepu,
+ * inaczej zmiana barwy sklepu omijalaby najwazniejszy element na stronie.
+ * Rozmiar, padding i grubosc czcionki nadal pochodza z btn-large.
+ */
+
+.woocommerce .cyber-shop__main ul.products li.product .add_to_cart_button,
+.woocommerce .cyber-shop__main ul.products li.product .added_to_cart,
+.cyber-shop__more-button {
+	border-color: var(--cyber-wc-color-main);
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+}
+
+.woocommerce .cyber-shop__main ul.products li.product .add_to_cart_button:hover,
+.woocommerce .cyber-shop__main ul.products li.product .added_to_cart:hover,
+.cyber-shop__more-button:hover,
+.cyber-shop__more-button:focus-visible {
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	opacity: 0.85;
 }
 
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
@@ -371,7 +402,7 @@
 	.cyber-shop--list ul.products li.product {
 		grid-template-columns: 120px minmax(0, 1fr);
 		gap: 16px;
-		padding: 14px;
+		padding: var(--cyber-space-2);
 	}
 }
 
