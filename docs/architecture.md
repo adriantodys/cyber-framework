@@ -42,6 +42,7 @@ w ustalonej kolejności:
 | 13 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
 | 14 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
 | 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
+| 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
 
 ## Stałe
 
@@ -934,6 +935,161 @@ zapytaniu* jest w kontekście AJAX bezużyteczna. W endpointach buduj zapytanie 
 zera zamiast pożyczać stan pętli.
 
 Zabezpieczenia endpointu opisuje `docs/security.md`.
+
+## Strona pojedynczego produktu
+
+Piąty widok sklepu i — jak cztery poprzednie — **zero nadpisań szablonów**.
+`content-single-product.php` zostaje nietknięty; cały układ wchodzi hookami.
+
+### Kształt strony
+
+```
+.cyber-container
+└── .cyber-product
+    ├── .cyber-product__top              ← otwierany na woocommerce_before_single_product_summary @5
+    │   ├── .cyber-product__media        ← @20, zamiast woocommerce_show_product_images
+    │   │   ├── .cyber-product__stage    ← zdjęcie główne + plakietka promocji
+    │   │   └── .cyber-product__gallery  ← pionowy pasek miniatur
+    │   └── div.summary                  ← elementy z rejestru, na pozycjach z panelu
+    │                                       (zamykane na woocommerce_after_single_product_summary @1)
+    └── zakładki / upsell / podobne      ← te same hooki, priorytety z panelu
+```
+
+**Dlaczego `__top` jest osobnym opakowaniem.** Galeria i `div.summary` są
+w szablonie WooCommerce **rodzeństwem**, a zaraz za nimi lecą zakładki. Bez tego
+opakowania siatka dwukolumnowa objęłaby także zakładki i wrzuciła je do jednej
+z kolumn. Opakowanie otwiera się priorytetem `5` na hooku przed podsumowaniem
+i zamyka priorytetem `1` na hooku po nim — czyli dokładnie wokół tych dwóch
+elementów.
+
+**Opakowanie listy produktów jest zdejmowane.** `cyber_shop_wrapper_open()`
+z `inc/woocommerce-shop.php` wisi na `woocommerce_before_main_content`
+**globalnie** i ma kolumnę boczną z widgetami, która na produkcie byłaby pusta.
+`cyber_product_setup_hooks()` zdejmuje je i wstawia własne. Działa, bo oba moduły
+podpinają się do `wp` z tym samym priorytetem, a `inc/woocommerce-product.php`
+ładuje się **po** `inc/woocommerce-shop.php` (`functions.php`).
+
+### Dwie kolumny: flex, nie grid
+
+Szerokości kolumn to dwa niezależne pola procentowe (40 i 60). W siatce CSS
+druga ścieżka zjadłaby resztę miejsca **niezależnie od ustawienia**, a odstęp
+między kolumnami wypchnąłby układ poza kontener. Stąd flex z odstępem podzielonym
+po połowie na każdą kolumnę:
+
+```css
+gap: 48px;
+.cyber-product__media  { flex: 0 1 calc(var(--cyber-product-col-image)   - 24px); }
+.cyber-product__top .summary { flex: 0 1 calc(var(--cyber-product-col-summary) - 24px); }
+```
+
+40 + 60 daje wtedy dokładnie pełną szerokość, a inne ustawienie (np. 50/30) jest
+respektowane jako świadomy wybór admina, nie po cichu naprawiane.
+
+### Galeria — własna, nie WooCommerce
+
+Domyślna galeria WooCommerce to **flexslider + photoswipe + zoom**, włączane
+przez `add_theme_support( 'wc-product-gallery-*' )`. Motyw ich nie włącza
+i włączać nie będzie: projekt wymaga pionowego paska miniatur przewijanego
+przeciągnięciem, czego flexslider nie potrafi. Taniej zbudować pasek od zera niż
+przestawiać bibliotekę, której i tak nie ładujemy.
+
+WooCommerce mimo to kolejkuje `wc-single-product.js` na każdej stronie produktu.
+Skrypt szuka `.woocommerce-product-gallery` — u nas takiej klasy nie ma, więc
+nie robi nic. To nie jest przeoczenie, tylko akceptowany koszt jednego pliku.
+
+**Przewijanie idzie transformem, nie natywnym scrollem.** Natywny pasek trzeba
+by ukrywać osobnym hackiem w każdej przeglądarce, a i tak nie dałby przeciągania
+myszą. Pointer Events obsługują mysz i palec **jednym** zestawem zdarzeń — nie
+ma osobnej ścieżki dotykowej, która mogłaby się rozjechać z myszą.
+
+`touch-action: none` na pasku wyłącza natywne przewijanie strony **wyłącznie nad
+paskiem** — bez tego przeciągnięcie palcem w pionie przewijałoby stronę zamiast
+galerii. Poza paskiem strona zachowuje się normalnie.
+
+**Wybór zdjęcia rozstrzyga `pointerup`, a nie `click`** — i to nie jest
+optymalizacja, tylko konieczność. Pasek przechwytuje wskaźnik
+(`setPointerCapture`), żeby przeciąganie działało także po wyjechaniu kursorem
+poza pasek. Przechwycenie **przekierowuje `pointerup` na element
+przechwytujący**, więc przeglądarka wystawia potem `click` na pasku, nie na
+miniaturze — `event.target.closest( '.cyber-product__thumb' )` zwróciłby `null`
+i kliknięcie nigdy by nie zadziałało.
+
+Stąd układ:
+
+| Wejście | Ścieżka | Warunek |
+|---|---|---|
+| mysz, palec | `pointerdown` zapamiętuje miniaturę → `pointerup` wybiera | ruch ≤ **6px** |
+| klawiatura | `click` z `event.detail === 0` | — |
+
+Miniaturę czytamy na `pointerdown`, bo to **ostatnie zdarzenie wskaźnika
+trafiające w prawdziwy element** — od `setPointerCapture()` wszystko celuje już
+w pasek.
+
+Próg 6px oddziela klik od przeciągnięcia: bez niego każde przesunięcie paska
+podmieniałoby zdjęcie główne. Obie ścieżki wykluczają się same (`detail === 0`
+zachodzi wyłącznie przy klawiaturze), więc nie ma stanu, w którym jedno
+kliknięcie wybiera zdjęcie dwa razy.
+
+Poniżej 479px CSS kładzie pasek poziomo (`flex-direction: row`). Skrypt odczytuje
+to z wyliczonego stylu, więc kierunek przeciągania idzie za układem —
+**bez drugiego progu breakpointu w JS** (CLAUDE.md sekcja 18).
+
+### Elementy: pozycja = priorytet hooka
+
+Pełna tabela elementów: `docs/components.md`. Mechanizm:
+
+```
+cyber_product_elements()            ← rejestr (inc/helpers.php)
+        │
+        ├─→ cyber_product_option_schema()   ← wpisy w schemacie opcji
+        ├─→ pola ACF                        ← cyber_wc_product_show_* / _pos_*
+        └─→ cyber_product_setup_hooks()     ← add_action( $hook, $cb, $pozycja )
+```
+
+Liczba z panelu trafia **wprost** do priorytetu `add_action()`. Nie ma tablicy
+pośredniej, którą trzeba by trzymać w zgodzie z kodem, a wtyczka dopięta do tego
+samego hooka dalej ląduje tam, gdzie każe jej własny priorytet.
+
+### Trzy pułapki, które trzeba było obejść
+
+| Rzecz | Dlaczego nie „po prostu" | Rozwiązanie |
+|---|---|---|
+| **SKU pod tytułem** | WooCommerce renderuje SKU **wewnątrz** bloku `product_meta`, razem z kategoriami i tagami | `cyber_product_sku()` i `cyber_product_meta()` — dwa osobne elementy, każdy z własną pozycją |
+| **Dostępność nad przyciskiem** | `wc_get_stock_html()` woła szablon **przycisku zakupu**, więc samo wywołanie w nowym miejscu nie usunęłoby napisu ze starego | filtr `woocommerce_get_stock_html` zwraca pusty string — ale **tylko dla produktu, który jest treścią strony**; wariant podaje swoją dostępność przez tę samą funkcję i musi ją zachować. Własny markup wypisuje `cyber_product_stock()` |
+| **Plus i minus przy ilości** | `global/quantity-input.php` obsługuje także koszyk | hooki `woocommerce_before/after_quantity_input_field` + warunek `cyber_is_product_page()` — zero nadpisań, zero podwójnego licznika w koszyku |
+
+### Zakładki i ślad na przyszłość
+
+Na tym etapie widoczny jest **wyłącznie długi opis**. Zamiast wycinać resztę na
+sztywno, zestaw przechodzi przez własny filtr:
+
+```php
+add_filter( 'cyber_product_tabs', function ( $tabs, $all ) {
+	$tabs['care'] = array(
+		'title'    => 'Pielęgnacja',
+		'priority' => 20,
+		'callback' => 'moj_render_zakladki',
+	);
+
+	return $tabs;
+}, 10, 2 );
+```
+
+Drugi argument to **pełny, oryginalny zestaw WooCommerce** — przywrócenie
+wbudowanej zakładki („Informacje dodatkowe") to jedna linia, a nie odtwarzanie
+jej callbacku.
+
+Nagłówek `<h2>` wewnątrz panelu opisu jest wyciszany
+(`woocommerce_product_description_heading`) — przy jednej zakładce byłby tym
+samym napisem dwa razy pod sobą.
+
+### Skala odstępów
+
+Moduł używa jednej, zamkniętej skali: **6, 12, 24, 36, 48, 64, 94px**. Żadna
+wartość `padding`/`margin` w `assets/css/woocommerce-product.css` nie wychodzi
+poza ten zestaw. Skala jest wypisana na `:root` jako `--cyber-space-1` …
+`--cyber-space-7`, żeby kolejne moduły miały czego reużywać zamiast wymyślać
+własne liczby (CLAUDE.md sekcja 6).
 
 ## Edytor treści
 

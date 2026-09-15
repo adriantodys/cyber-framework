@@ -203,7 +203,7 @@ function cyber_header_variants() {
  *              tablica url / title / target).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
- * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' (walidacja zakresu, sekcja 9).
+ * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' / 'int' (walidacja zakresu, sekcja 9).
  * - nullable  : true = pusta wartosc jest poprawna i znaczaca (brak limitu,
  *              brak logo, niewypelnione pole kontaktowe).
  * - pattern   : wzorzec preg dla typu 'text' — wartosc niepasujaca jest odrzucana.
@@ -211,7 +211,7 @@ function cyber_header_variants() {
  * @return array<string, array<string, mixed>> Schemat opcji.
  */
 function cyber_option_schema() {
-	return array(
+	$schema = array(
 		'page_width_type'             => array(
 			'type'    => 'choice',
 			'default' => '80',
@@ -902,7 +902,181 @@ function cyber_option_schema() {
 			'default' => 'pagination',
 			'choices' => array( 'pagination', 'loadmore' ),
 		),
+		'wc_color_main'               => array(
+			'type'    => 'color_alpha',
+			'default' => '#d32f2f',
+		),
+		'wc_product_col_image'        => array(
+			'type'    => 'percent',
+			'default' => 40,
+			'min'     => 20,
+			'max'     => 80,
+		),
+		'wc_product_col_summary'      => array(
+			'type'    => 'percent',
+			'default' => 60,
+			'min'     => 20,
+			'max'     => 80,
+		),
+		'wc_product_media_height'     => array(
+			'type'    => 'px',
+			'default' => 500,
+			'min'     => 200,
+			'max'     => 1200,
+		),
+		'wc_product_thumb_height'     => array(
+			'type'    => 'px',
+			'default' => 158,
+			'min'     => 60,
+			'max'     => 400,
+		),
 	);
+
+	/*
+	 * Wylaczniki i pozycje elementow strony produktu doklejamy z rejestru,
+	 * zamiast wypisywac po dwa wpisy na element. Rejestr jest jedynym zrodlem
+	 * prawdy: dodanie elementu to jedna linia w cyber_product_elements(),
+	 * a nie trzy zmiany w trzech miejscach, ktore moga sie rozjechac.
+	 */
+	return $schema + cyber_product_option_schema();
+}
+
+/**
+ * Rejestr elementow strony pojedynczego produktu.
+ *
+ * Jedno zrodlo prawdy dla trzech rzeczy naraz: pol ACF (wylacznik i pozycja),
+ * schematu opcji oraz podpiecia hookow w inc/woocommerce-product.php.
+ *
+ * Klucze tablicy elementu:
+ *
+ * - label    : etykieta pola w panelu (widoczna tylko dla admina).
+ * - section  : miejsce w ukladzie strony. 'summary' = prawa kolumna,
+ *              'after' = sekcja pod kolumnami, 'cart' = wnetrze formularza
+ *              zakupu, 'media' = lewa kolumna ze zdjeciami.
+ * - show     : domyslny stan wylacznika.
+ * - position : domyslna pozycja w obrebie sekcji. Liczba trafia wprost do
+ *              priorytetu add_action(), wiec to, co admin wpisuje w panelu,
+ *              JEST kolejnoscia renderowania — bez warstwy posredniej.
+ *              Brak klucza = elementu nie da sie przestawic, bo jego miejsce
+ *              wynika z markupu (pole ilosci siedzi wewnatrz formularza
+ *              zakupu, plakietka promocji na zdjeciu).
+ *
+ * Dodanie kolejnego elementu WooCommerce sprowadza sie do jednego wpisu tutaj
+ * plus jednej pozycji w cyber_product_element_callbacks().
+ *
+ * @return array<string, array<string, mixed>> Klucz elementu => opis.
+ */
+function cyber_product_elements() {
+	return array(
+		'title'    => array(
+			'label'    => 'Tytul produktu',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 10,
+		),
+		'sku'      => array(
+			'label'    => 'SKU',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 20,
+		),
+		'rating'   => array(
+			'label'    => 'Ocena i liczba opinii',
+			'section'  => 'summary',
+			'show'     => false,
+			'position' => 25,
+		),
+		'excerpt'  => array(
+			'label'    => 'Krotki opis',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 30,
+		),
+		'price'    => array(
+			'label'    => 'Cena',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 40,
+		),
+		'stock'    => array(
+			'label'    => 'Dostepnosc w magazynie',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 50,
+		),
+		'cart'     => array(
+			'label'    => 'Ilosc i przycisk Dodaj do koszyka',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 60,
+		),
+		'meta'     => array(
+			'label'    => 'Kategorie i tagi',
+			'section'  => 'summary',
+			'show'     => false,
+			'position' => 70,
+		),
+		'quantity' => array(
+			'label'   => 'Pole ilosci',
+			'section' => 'cart',
+			'show'    => true,
+		),
+		'sale'     => array(
+			'label'   => 'Plakietka promocji',
+			'section' => 'media',
+			'show'    => true,
+		),
+		'tabs'     => array(
+			'label'    => 'Zakladki z opisem',
+			'section'  => 'after',
+			'show'     => true,
+			'position' => 10,
+		),
+		'upsells'  => array(
+			'label'    => 'Produkty polecane (upsell)',
+			'section'  => 'after',
+			'show'     => false,
+			'position' => 20,
+		),
+		'related'  => array(
+			'label'    => 'Podobne produkty',
+			'section'  => 'after',
+			'show'     => false,
+			'position' => 30,
+		),
+	);
+}
+
+/**
+ * Wpisy schematu opcji wygenerowane z rejestru elementow produktu.
+ *
+ * Nazwy kluczy sa scisle zwiazane z nazwami pol ACF:
+ * cyber_wc_product_show_[element] i cyber_wc_product_pos_[element].
+ *
+ * @return array<string, array<string, mixed>> Fragment schematu opcji.
+ */
+function cyber_product_option_schema() {
+	$schema = array();
+
+	foreach ( cyber_product_elements() as $key => $element ) {
+		$schema[ 'wc_product_show_' . $key ] = array(
+			'type'    => 'bool',
+			'default' => $element['show'],
+		);
+
+		if ( ! isset( $element['position'] ) ) {
+			continue;
+		}
+
+		$schema[ 'wc_product_pos_' . $key ] = array(
+			'type'    => 'int',
+			'default' => $element['position'],
+			'min'     => 1,
+			'max'     => 200,
+		);
+	}
+
+	return $schema;
 }
 
 /**
@@ -1134,7 +1308,7 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		return $value;
 	}
 
-	if ( 'px' === $config['type'] || 'percent' === $config['type'] ) {
+	if ( 'px' === $config['type'] || 'percent' === $config['type'] || 'int' === $config['type'] ) {
 		if ( ! is_numeric( $value ) ) {
 			return ! empty( $config['nullable'] ) ? '' : $fallback;
 		}

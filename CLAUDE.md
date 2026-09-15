@@ -257,6 +257,26 @@ Wartości z Global Options, które wpływają na wygląd frontu, są wypisywane 
   przez wspólną klasę `.cyber-container` — **nie** przez inline style w PHP.
 - Wartości responsywne wypisujemy na progach z sekcji 18; przy wielu powiązanych
   wartościach obowiązuje skalowanie procentowe z sekcji 19.
+
+### Konwencja: skala odstępów
+
+Marginesy i paddingi w projekcie pochodzą z **jednej, zamkniętej skali**:
+
+```
+6 · 12 · 24 · 36 · 48 · 64 · 94 px
+```
+
+Skala jest wypisana jako zmienne `--cyber-space-1` … `--cyber-space-7`
+(pierwszy raz w `assets/css/woocommerce-product.css`, na `:root`).
+
+Każdy nowy moduł **reużywa te wartości** zamiast wpisywać własne liczby.
+Odstęp spoza skali wymaga takiego samego jawnego uzasadnienia jak nowy
+breakpoint (sekcja 18) — inaczej odstępy między sekcjami przestają do siebie
+pasować, a różnica 2px w dwudziestu miejscach jest nie do wyśledzenia.
+
+Wyjątek, który **nie jest** odstępem i skali nie podlega: wymiary elementu
+wynikające z jego proporcji (szerokość miniatury galerii, wysokość pola
+formularza). Te są ustalane wprost i opisywane w `docs/acf-schema.md`.
 - Moduł opisany **mapą pól** (klucz opcji → nazwa zmiennej + jednostka) **nie
   pisze własnej pętli** — wypisuje zmienne przez `cyber_css_vars_from_map()`.
 

@@ -3894,6 +3894,772 @@
             "placeholder": "",
             "create_options": 0,
             "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_wc_colors",
+            "label": "Kolory sklepu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_wc_color_main",
+            "label": "Glowny kolor sklepu",
+            "name": "cyber_wc_color_main",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor uzywany przez elementy sklepu: cena, przycisk Dodaj do koszyka, aktywna zakladka, plakietka promocji. Kolejne barwy sklepu dopisuje sie obok tego pola, bez zmian w plikach CSS.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#d32f2f",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_msg_wc_product_layout",
+            "label": "Strona produktu — uklad",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_wc_product_col_image",
+            "label": "Szerokosc kolumny ze zdjeciami",
+            "name": "cyber_wc_product_col_image",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Lewa kolumna sekcji gornej. Razem z kolumna informacji powinno dawac 100.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "min": 20,
+            "max": 80,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_cyber_wc_product_col_summary",
+            "label": "Szerokosc kolumny z informacjami",
+            "name": "cyber_wc_product_col_summary",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Prawa kolumna sekcji gornej.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 60,
+            "min": 20,
+            "max": 80,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "%"
+        },
+        {
+            "key": "field_cyber_wc_product_media_height",
+            "label": "Wysokosc sekcji ze zdjeciem i galeria",
+            "name": "cyber_wc_product_media_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Wysokosc zdjecia glownego oraz widocznej czesci paska miniatur.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 500,
+            "min": 200,
+            "max": 1200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_wc_product_thumb_height",
+            "label": "Wysokosc miniatury w galerii",
+            "name": "cyber_wc_product_thumb_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Szerokosc miniatury jest stala i wynosi 150px. Przy wysokosci sekcji 500px i miniaturze 158px widac dokladnie trzy miniatury — reszta dojezdza przeciagnieciem.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 158,
+            "min": 60,
+            "max": 400,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_wc_product_elements",
+            "label": "Strona produktu — elementy",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_wc_product_show_title",
+            "label": "Tytul produktu",
+            "name": "cyber_wc_product_show_title",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_title",
+            "label": "Pozycja: Tytul produktu",
+            "name": "cyber_wc_product_pos_title",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_title",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_sku",
+            "label": "SKU",
+            "name": "cyber_wc_product_show_sku",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_sku",
+            "label": "Pozycja: SKU",
+            "name": "cyber_wc_product_pos_sku",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_sku",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 20,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_rating",
+            "label": "Ocena i liczba opinii",
+            "name": "cyber_wc_product_show_rating",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_rating",
+            "label": "Pozycja: Ocena i liczba opinii",
+            "name": "cyber_wc_product_pos_rating",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_rating",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 25,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_excerpt",
+            "label": "Krotki opis",
+            "name": "cyber_wc_product_show_excerpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_excerpt",
+            "label": "Pozycja: Krotki opis",
+            "name": "cyber_wc_product_pos_excerpt",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_excerpt",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 30,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_price",
+            "label": "Cena",
+            "name": "cyber_wc_product_show_price",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_price",
+            "label": "Pozycja: Cena",
+            "name": "cyber_wc_product_pos_price",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_price",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_stock",
+            "label": "Dostepnosc w magazynie",
+            "name": "cyber_wc_product_show_stock",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_stock",
+            "label": "Pozycja: Dostepnosc w magazynie",
+            "name": "cyber_wc_product_pos_stock",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_stock",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 50,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_cart",
+            "label": "Ilosc i przycisk Dodaj do koszyka",
+            "name": "cyber_wc_product_show_cart",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_cart",
+            "label": "Pozycja: Ilosc i przycisk Dodaj do koszyka",
+            "name": "cyber_wc_product_pos_cart",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_cart",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 60,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_meta",
+            "label": "Kategorie i tagi",
+            "name": "cyber_wc_product_show_meta",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_meta",
+            "label": "Pozycja: Kategorie i tagi",
+            "name": "cyber_wc_product_pos_meta",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_meta",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 70,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_quantity",
+            "label": "Pole ilosci",
+            "name": "cyber_wc_product_show_quantity",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Chowa licznik wewnatrz formularza zakupu. Nie zmienia regul sklepu — do koszyka trafia jedna sztuka.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_sale",
+            "label": "Plakietka promocji",
+            "name": "cyber_wc_product_show_sale",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Plakietka wyswietlana na zdjeciu glownym. Pozycji nie ustawia sie osobno, bo wynika ona ze zdjecia.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_tabs",
+            "label": "Zakladki z opisem",
+            "name": "cyber_wc_product_show_tabs",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_tabs",
+            "label": "Pozycja: Zakladki z opisem",
+            "name": "cyber_wc_product_pos_tabs",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_tabs",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 10,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_upsells",
+            "label": "Produkty polecane (upsell)",
+            "name": "cyber_wc_product_show_upsells",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_upsells",
+            "label": "Pozycja: Produkty polecane (upsell)",
+            "name": "cyber_wc_product_pos_upsells",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_upsells",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 20,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_related",
+            "label": "Podobne produkty",
+            "name": "cyber_wc_product_show_related",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pozycja decyduje o kolejnosci — im mniejsza liczba, tym wyzej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_related",
+            "label": "Pozycja: Podobne produkty",
+            "name": "cyber_wc_product_pos_related",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_related",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 30,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         }
     ],
     "location": [
@@ -3917,5 +4683,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789389233
+    "modified": 1789464584
 }

@@ -1,0 +1,516 @@
+/*
+ * Cyber Framework — strona pojedynczego produktu WooCommerce.
+ *
+ * Kolejkowany WYLACZNIE na stronie produktu (inc/woocommerce-product.php),
+ * zgodnie z CLAUDE.md sekcja 10.
+ *
+ * Szerokosci kolumn, wysokosc sekcji ze zdjeciami, wysokosc miniatur oraz
+ * glowny kolor sklepu pochodza z Global Options i sa wypisywane w <head>
+ * jako zmienne --cyber-product-* / --cyber-wc-* (inc/enqueue.php).
+ *
+ * ODSTEPY. Modul uzywa jednej, zamknietej skali odstepow: 6, 12, 24, 36, 48,
+ * 64 i 94px. Zadna wartosc padding/margin w tym pliku nie wychodzi poza ten
+ * zestaw. Skala jest wypisana ponizej jako zmienne, zeby kolejne moduly mialy
+ * czego reuzywac zamiast wymyslac wlasne liczby.
+ */
+
+:root {
+	--cyber-space-1: 6px;
+	--cyber-space-2: 12px;
+	--cyber-space-3: 24px;
+	--cyber-space-4: 36px;
+	--cyber-space-5: 48px;
+	--cyber-space-6: 64px;
+	--cyber-space-7: 94px;
+}
+
+/* --- Kontener -------------------------------------------------------------- */
+
+.cyber-product {
+	padding-block: var(--cyber-space-5);
+}
+
+/*
+ * Neutralizacja ukladu WooCommerce — ten sam wzorzec co w koszyku, zamowieniu
+ * i na liscie produktow. woocommerce-layout.css nadaje div.product procentowe
+ * szerokosci i floaty, ktore w naszym ukladzie tylko przeszkadzaja.
+ */
+.woocommerce .cyber-product div.product,
+.woocommerce-page .cyber-product div.product {
+	float: none;
+	width: 100%;
+	margin: 0;
+}
+
+/* --- Sekcja gorna: dwie kolumny -------------------------------------------- */
+
+/*
+ * Flex, a nie grid: obie szerokosci sa procentami z panelu i musza byc
+ * respektowane OBIE. W siatce druga sciezka zjadlaby reszte miejsca niezaleznie
+ * od ustawienia, a odstep miedzy kolumnami wypchnalby uklad poza kontener.
+ * Odstep 48px dzielimy po polowie na kazda kolumne, wiec 40 + 60 daje dokladnie
+ * pelna szerokosc.
+ */
+.cyber-product__top {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cyber-space-5);
+	align-items: flex-start;
+}
+
+.cyber-product__media {
+	flex: 0 1 calc(var(--cyber-product-col-image) - var(--cyber-space-3));
+	min-width: 0;
+}
+
+.woocommerce .cyber-product__top .summary,
+.woocommerce-page .cyber-product__top .summary {
+	flex: 0 1 calc(var(--cyber-product-col-summary) - var(--cyber-space-3));
+	float: none;
+	width: auto;
+	min-width: 0;
+	margin: 0;
+}
+
+/* --- Lewa kolumna: zdjecie glowne i galeria -------------------------------- */
+
+.cyber-product__media {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 150px;
+	gap: var(--cyber-space-2);
+	height: var(--cyber-product-media-height);
+}
+
+.cyber-product__stage {
+	position: relative;
+	min-width: 0;
+	height: 100%;
+	border: 1px solid var(--cyber-color-border-1);
+}
+
+.woocommerce .cyber-product__stage .cyber-product__image,
+.cyber-product__stage .cyber-product__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+.cyber-product__stage .onsale {
+	position: absolute;
+	top: var(--cyber-space-2);
+	left: var(--cyber-space-2);
+	z-index: 2;
+	min-width: 0;
+	min-height: 0;
+	margin: 0;
+	padding: var(--cyber-space-1) var(--cyber-space-2);
+	border-radius: 0;
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	font-size: var(--cyber-font-size-text);
+	line-height: 1.2;
+}
+
+/*
+ * Pasek miniatur. Wysokosc rowna calej sekcji, a zawartosc przesuwana
+ * transformem — dzieki temu widac dokladnie tyle miniatur, ile sie miesci
+ * (przy ustawieniach domyslnych: trzy), a reszta dojezdza przeciagnieciem.
+ *
+ * touch-action: none wylacza natywne przewijanie strony WYLACZNIE nad paskiem,
+ * inaczej przeciagniecie palcem w pionie przewijaloby cala strone zamiast
+ * galerii. Poza paskiem strona zachowuje sie normalnie.
+ */
+.cyber-product__gallery {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+	cursor: grab;
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.cyber-product__gallery.is-dragging {
+	cursor: grabbing;
+}
+
+.cyber-product__track {
+	display: flex;
+	flex-direction: column;
+	gap: var(--cyber-space-2);
+	will-change: transform;
+}
+
+.cyber-product__thumb {
+	flex: 0 0 var(--cyber-product-thumb-height);
+	width: 150px;
+	height: var(--cyber-product-thumb-height);
+	padding: 0;
+	overflow: hidden;
+	border: 1px solid var(--cyber-color-border-1);
+	background: none;
+	cursor: pointer;
+}
+
+.cyber-product__thumb img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	object-fit: cover;
+	pointer-events: none;
+}
+
+.cyber-product__thumb.is-active,
+.cyber-product__thumb:focus-visible {
+	border-color: var(--cyber-wc-color-main);
+}
+
+/* --- Prawa kolumna: informacje o produkcie --------------------------------- */
+
+.woocommerce .cyber-product__top .summary > *,
+.cyber-product__top .summary > * {
+	margin: 0 0 var(--cyber-space-3);
+}
+
+.cyber-product__top .summary > *:last-child {
+	margin-bottom: 0;
+}
+
+.cyber-product__top .product_title {
+	margin-bottom: var(--cyber-space-2);
+	font-size: var(--cyber-font-size-h3);
+	line-height: 1.2;
+}
+
+.cyber-product__sku {
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-product__top .woocommerce-product-details__short-description {
+	color: var(--cyber-color-text);
+	line-height: 1.6;
+}
+
+.cyber-product__top
+	.woocommerce-product-details__short-description
+	> *:last-child {
+	margin-bottom: 0;
+}
+
+.woocommerce .cyber-product__top .summary .price,
+.cyber-product__top .summary .price {
+	margin-bottom: var(--cyber-space-2);
+	color: var(--cyber-wc-color-main);
+	font-size: var(--cyber-font-size-h3);
+	font-weight: 700;
+	line-height: 1.2;
+}
+
+.cyber-product__top .summary .price del {
+	margin-right: var(--cyber-space-1);
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+	font-weight: 400;
+	opacity: 0.6;
+}
+
+.cyber-product__stock {
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-product__stock.out-of-stock {
+	color: var(--cyber-wc-color-main);
+}
+
+.cyber-product__meta {
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-product__meta span {
+	display: block;
+}
+
+/* --- Formularz zakupu ------------------------------------------------------ */
+
+/* Ilosc po lewej, przycisk zaraz obok — kolejnosc i odstep z flexa. */
+.woocommerce .cyber-product__top form.cart,
+.cyber-product__top form.cart {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-start;
+	gap: var(--cyber-space-3);
+	margin-bottom: 0;
+}
+
+/*
+ * WooCommerce domyka formularz zakupu clearfixem:
+ *
+ *     .woocommerce div.product form.cart::before { content: " "; display: table }
+ *     .woocommerce div.product form.cart::after  { clear: both }
+ *
+ * Sluzy on ukladowi na floatach, ktorego tu nie ma. W kontenerze flex
+ * `display: table` nie znika — pseudoelement staje sie pelnoprawnym elementem
+ * flex, wiec formularz ma nie dwoje dzieci, tylko czworo: pusty box, licznik,
+ * przycisk i drugi pusty box. Razem z `gap` doklada to dwa odstepy widmo
+ * i rozjezdza wiersz.
+ *
+ * Selektor musi byc TAK SAMO szczegolowy jak oryginalny (`div.product`),
+ * inaczej nie wygra specyficznosci.
+ */
+.woocommerce div.product .cyber-product__top form.cart::before,
+.woocommerce div.product .cyber-product__top form.cart::after,
+.woocommerce div.product form.cart::before,
+.woocommerce div.product form.cart::after {
+	display: none;
+}
+
+.woocommerce .cyber-product__top form.cart .quantity,
+.cyber-product__top form.cart .quantity {
+	display: inline-flex;
+	align-items: stretch;
+	float: none;
+	margin: 0;
+	border: 1px solid var(--cyber-color-border-1);
+}
+
+/* Wylacznik "Pole ilosci" w panelu chowa licznik, nie zmieniajac regul sklepu. */
+.cyber-product-no-quantity .cyber-product__top form.cart .quantity {
+	display: none;
+}
+
+.woocommerce .cyber-product__top form.cart .quantity input.qty,
+.cyber-product__top form.cart .quantity input.qty {
+	width: 56px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--cyber-color-text);
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-font-size-text);
+	text-align: center;
+	/* Strzalki przegladarki duplikowalyby nasze przyciski. */
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+.cyber-product__top form.cart .quantity input.qty::-webkit-outer-spin-button,
+.cyber-product__top form.cart .quantity input.qty::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+.cyber-qty__button {
+	width: var(--cyber-space-4);
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--cyber-color-text);
+	font-size: 18px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.cyber-qty__button:hover,
+.cyber-qty__button:focus-visible {
+	color: var(--cyber-wc-color-main);
+}
+
+.woocommerce .cyber-product__top form.cart .single_add_to_cart_button,
+.cyber-product__top form.cart .single_add_to_cart_button {
+	padding: var(--cyber-btn-medium-padding-y) var(--cyber-btn-medium-padding-x);
+	border: 0;
+	border-radius: 0;
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-btn-medium-font-size);
+	font-weight: var(--cyber-btn-medium-font-weight);
+	line-height: 1.2;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.woocommerce .cyber-product__top form.cart .single_add_to_cart_button:hover,
+.cyber-product__top form.cart .single_add_to_cart_button:hover {
+	opacity: 0.85;
+}
+
+/* --- Zakladki -------------------------------------------------------------- */
+
+.woocommerce .cyber-product .woocommerce-tabs,
+.cyber-product .woocommerce-tabs {
+	margin-top: var(--cyber-space-6);
+	padding: 0;
+}
+
+.woocommerce .cyber-product .woocommerce-tabs ul.tabs,
+.cyber-product .woocommerce-tabs ul.tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cyber-space-4);
+	margin: 0 0 var(--cyber-space-4);
+	padding: 0;
+	border-bottom: 1px solid var(--cyber-color-border-1);
+	list-style: none;
+}
+
+/* WooCommerce rysuje zakladkom zaokraglone "uszy" pseudoelementami. */
+.cyber-product .woocommerce-tabs ul.tabs::before,
+.cyber-product .woocommerce-tabs ul.tabs::after,
+.cyber-product .woocommerce-tabs ul.tabs li::before,
+.cyber-product .woocommerce-tabs ul.tabs li::after {
+	content: none;
+	display: none;
+}
+
+.woocommerce .cyber-product .woocommerce-tabs ul.tabs li,
+.cyber-product .woocommerce-tabs ul.tabs li {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	background: none;
+}
+
+.woocommerce .cyber-product .woocommerce-tabs ul.tabs li a,
+.cyber-product .woocommerce-tabs ul.tabs li a {
+	display: block;
+	margin-bottom: -1px;
+	padding: 0 0 var(--cyber-space-2);
+	border-bottom: 2px solid transparent;
+	color: var(--cyber-color-text);
+	font-size: var(--cyber-font-size-text);
+	font-weight: 700;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.woocommerce .cyber-product .woocommerce-tabs ul.tabs li.active a,
+.cyber-product .woocommerce-tabs ul.tabs li.active a {
+	border-bottom-color: var(--cyber-wc-color-main);
+	color: var(--cyber-wc-color-main);
+}
+
+.cyber-product .woocommerce-tabs .panel {
+	margin: 0;
+	padding: 0;
+	color: var(--cyber-color-text);
+	line-height: 1.6;
+}
+
+.cyber-product .woocommerce-tabs .panel > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-product .woocommerce-tabs .panel > *:last-child {
+	margin-bottom: 0;
+}
+
+/* --- Sekcje dodatkowe (upsell, podobne produkty) --------------------------- */
+
+.cyber-product .up-sells,
+.cyber-product .related {
+	margin-top: var(--cyber-space-6);
+}
+
+.cyber-product .up-sells > h2,
+.cyber-product .related > h2 {
+	margin: 0 0 var(--cyber-space-4);
+	font-size: var(--cyber-font-size-h3);
+}
+
+.cyber-product ul.products {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: var(--cyber-space-3);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-product ul.products::before,
+.cyber-product ul.products::after {
+	content: none;
+}
+
+.woocommerce .cyber-product ul.products li.product,
+.cyber-product ul.products li.product {
+	width: auto;
+	margin: 0;
+	padding: var(--cyber-space-2);
+	border: 1px solid var(--cyber-color-border-1);
+	float: none;
+	clear: none;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+	.cyber-product__media,
+	.woocommerce .cyber-product__top .summary,
+	.cyber-product__top .summary {
+		flex: 1 1 100%;
+	}
+
+	.cyber-product ul.products {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-product {
+		padding-block: var(--cyber-space-4);
+	}
+
+	.cyber-product__top {
+		gap: var(--cyber-space-4);
+	}
+
+	.cyber-product .woocommerce-tabs,
+	.cyber-product .up-sells,
+	.cyber-product .related {
+		margin-top: var(--cyber-space-5);
+	}
+
+	.cyber-product ul.products {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 479px) {
+	/*
+	 * Na waskim ekranie pasek miniatur schodzi pod zdjecie i przewija sie
+	 * w poziomie. Skrypt rozpoznaje orientacje po tej samej klasie, wiec
+	 * przeciagniecie dziala tak samo — tylko w drugiej osi.
+	 */
+	.cyber-product__media {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: minmax(0, 1fr) var(--cyber-product-thumb-height);
+	}
+
+	.cyber-product__gallery {
+		height: var(--cyber-product-thumb-height);
+		touch-action: pan-y;
+	}
+
+	.cyber-product__track {
+		flex-direction: row;
+	}
+
+	.cyber-product__thumb {
+		flex: 0 0 150px;
+	}
+
+	.woocommerce .cyber-product__top form.cart,
+	.cyber-product__top form.cart {
+		justify-content: flex-start;
+	}
+}

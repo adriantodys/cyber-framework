@@ -222,13 +222,14 @@ przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
 
 ## Warstwa WooCommerce
 
-Koszyk i strona zamówienia **nie mają template-partów** i nie pojawiają się
-w tabeli wyżej — to nie są komponenty motywu, tylko widoki WooCommerce, którym
-motyw nadaje wygląd z zewnątrz. Ta sekcja istnieje po to, żeby mapa komponentów
-o nich wiedziała.
+Koszyk, zamówienie, lista produktów i strona produktu **nie mają
+template-partów** i nie pojawiają się w tabeli wyżej — to nie są komponenty
+motywu, tylko widoki WooCommerce, którym motyw nadaje wygląd z zewnątrz.
+Ta sekcja istnieje po to, żeby mapa komponentów o nich wiedziała.
 
 Pełny opis mechanizmów, pułapek i odstępstw: `docs/architecture.md`, sekcje
-„Strona koszyka WooCommerce" i „Strona zamówienia (checkout)".
+„Strona koszyka WooCommerce", „Strona zamówienia (checkout)" i „Strona
+pojedynczego produktu".
 
 ### Pliki
 
@@ -244,6 +245,9 @@ Pełny opis mechanizmów, pułapek i odstępstw: `docs/architecture.md`, sekcje
 | `assets/js/checkout.js` | licznik ilości i kupon na stronie zamówienia |
 | `assets/css/woocommerce-shop.css` | style listy produktów — ładowany **tylko** na sklepie i archiwach produktów |
 | `assets/js/shop.js` | przełącznik widoku siatka/lista i doładowywanie produktów |
+| `inc/woocommerce-product.php` | strona produktu: układ dwukolumnowy, własna galeria, rejestr elementów, zakładki |
+| `assets/css/woocommerce-product.css` | style strony produktu — ładowany **tylko** na `is_product()` |
+| `assets/js/product.js` | przeciąganie galerii i licznik ilości na stronie produktu |
 
 ### Obszary widgetów
 
@@ -287,9 +291,64 @@ Nie są to komponenty reużywalne — istnieją wyłącznie wewnątrz widoków s
 | `.cyber-shop__per-page` | lista produktów | formularz GET z polami ukrytymi, żeby nie kasować sortowania |
 | `.cyber-shop__more-button` | lista produktów | `cyber_shop_load_more()`, klasy `btn btn-large`; kontekst archiwum w `data-*` |
 | `.cyber-product__excerpt` | lista produktów | hook `woocommerce_after_shop_loop_item_title`; w siatce ukryty CSS-em |
+| `.cyber-product__media` | strona produktu | `cyber_product_gallery()` — zdjęcie główne plus pionowy pasek miniatur |
+| `.cyber-product__thumb` | strona produktu | miniatura jako `<button>`; aktywny stan niesie `aria-pressed` i klasa `is-active` |
+| `.cyber-product__sku` | strona produktu | `cyber_product_sku()` — SKU wyjęte z bloku `product_meta`, żeby miało własną pozycję |
+| `.cyber-product__stock` | strona produktu | `cyber_product_stock()`; wersję wbudowaną gasi filtr `woocommerce_get_stock_html` |
+| `.cyber-qty__button` | strona produktu | hooki `woocommerce_before/after_quantity_input_field` — bez nadpisania `quantity-input.php` |
 
 Oba przyciski używają rozmiarów z zakładki **Przyciski** i nie mają własnych pól
 wyglądu — tak samo jak przycisk CTA w headerze.
+
+### Strona produktu — rejestr elementów
+
+Prawa kolumna strony produktu i sekcja pod nią są **budowane od zera**: moduł
+zdejmuje wszystkie domyślne callbacki hooków
+`woocommerce_single_product_summary` i `woocommerce_after_single_product_summary`,
+a potem dopina z powrotem tylko te włączone w panelu, na pozycjach z panelu.
+
+Jedno źródło prawdy to `cyber_product_elements()` w `inc/helpers.php`. Z niego
+powstają: pola ACF (wyłącznik + pozycja), wpisy w `cyber_option_schema()`
+i podpięcie hooków.
+
+| Element | Hook | Callback |
+|---|---|---|
+| `title` | `woocommerce_single_product_summary` | `woocommerce_template_single_title` |
+| `sku` | `woocommerce_single_product_summary` | `cyber_product_sku()` |
+| `rating` | `woocommerce_single_product_summary` | `woocommerce_template_single_rating` |
+| `excerpt` | `woocommerce_single_product_summary` | `woocommerce_template_single_excerpt` |
+| `price` | `woocommerce_single_product_summary` | `woocommerce_template_single_price` |
+| `stock` | `woocommerce_single_product_summary` | `cyber_product_stock()` |
+| `cart` | `woocommerce_single_product_summary` | `woocommerce_template_single_add_to_cart` |
+| `meta` | `woocommerce_single_product_summary` | `cyber_product_meta()` |
+| `tabs` | `woocommerce_after_single_product_summary` | `woocommerce_output_product_data_tabs` |
+| `upsells` | `woocommerce_after_single_product_summary` | `woocommerce_upsell_display` |
+| `related` | `woocommerce_after_single_product_summary` | `woocommerce_output_related_products` |
+
+Elementy `quantity` i `sale` nie mają wiersza w tej tabeli — nie renderują się
+własnym hookiem, więc mają w panelu sam wyłącznik.
+
+**Dołożenie kolejnego elementu:** wpis w `cyber_product_elements()`, wpis
+w `cyber_product_element_callbacks()`, dwa pola w `acf-json/`. Nic więcej.
+
+**`WC_Structured_Data::generate_product_data()` (priorytet 60) zostaje na
+miejscu** — dane strukturalne nie są elementem wyglądu i moduł ich nie rusza.
+
+### Strona produktu — punkty rozszerzenia
+
+| Punkt | Co nim zrobisz |
+|---|---|
+| filtr `cyber_product_tabs` | dołożenie zakładki (np. z pola ACF) albo przywrócenie wbudowanej; drugi argument to **pełny, oryginalny zestaw WooCommerce**, więc powrót „Informacji dodatkowych” to jedna linia |
+| `cyber_woocommerce_css_map()` | kolejna barwa sklepu — jedna linia mapy + jeden wpis w schemacie, zero zmian w CSS |
+| `cyber_product_elements()` | kolejny element z wyłącznikiem i pozycją |
+
+```php
+add_filter( 'cyber_product_tabs', function ( $tabs, $all ) {
+	$tabs['additional_information'] = $all['additional_information'];
+
+	return $tabs;
+}, 10, 2 );
+```
 
 ## Zasady
 

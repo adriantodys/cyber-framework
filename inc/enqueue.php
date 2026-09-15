@@ -258,7 +258,7 @@ function cyber_font_css() {
  * i zakresu (inc/helpers.php). Jednostka 'px' wymusza dodatkowo rzutowanie na
  * int, zeby do CSS nie trafil ulamek ani pusty string.
  *
- * @param array<string, array{0: string, 1: string}> $map Klucz opcji => nazwa zmiennej i jednostka.
+ * @param array<string, array{0: string, 1: string}> $map Klucz opcji => nazwa zmiennej i jednostka ('px', '%' albo pusty string).
  * @return string CSS bez znacznika <style>.
  */
 function cyber_css_vars_from_map( array $map ) {
@@ -271,6 +271,10 @@ function cyber_css_vars_from_map( array $map ) {
 
 		if ( 'px' === $unit ) {
 			$value = sprintf( '%dpx', (int) $value );
+		}
+
+		if ( '%' === $unit ) {
+			$value = sprintf( '%d%%', (int) $value );
 		}
 
 		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
@@ -428,6 +432,36 @@ function cyber_breadcrumb_css_map() {
  */
 function cyber_breadcrumb_css() {
 	return cyber_css_vars_from_map( cyber_breadcrumb_css_map() );
+}
+
+/**
+ * Mapa pol modulu "WooCommerce" na zmienne CSS.
+ *
+ * Obejmuje uklad strony pojedynczego produktu oraz barwy sklepu. Kolor glowny
+ * jest tu jedynym wpisem barwnym CELOWO: kolejne barwy sklepu (np. osobny
+ * kolor ceny promocyjnej albo obramowania karty produktu) dopisuje sie jako
+ * kolejne linie tej samej mapy i kolejne wpisy w cyber_option_schema(),
+ * bez dotykania ani jednego pliku CSS.
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_woocommerce_css_map() {
+	return array(
+		'wc_color_main'           => array( '--cyber-wc-color-main', '' ),
+		'wc_product_col_image'    => array( '--cyber-product-col-image', '%' ),
+		'wc_product_col_summary'  => array( '--cyber-product-col-summary', '%' ),
+		'wc_product_media_height' => array( '--cyber-product-media-height', 'px' ),
+		'wc_product_thumb_height' => array( '--cyber-product-thumb-height', 'px' ),
+	);
+}
+
+/**
+ * CSS modulu "WooCommerce".
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_woocommerce_css() {
+	return cyber_css_vars_from_map( cyber_woocommerce_css_map() );
 }
 
 /**
@@ -664,7 +698,8 @@ function cyber_print_inline_css() {
 		. cyber_top_header_css()
 		. cyber_footer_css()
 		. cyber_copyright_css()
-		. cyber_breadcrumb_css();
+		. cyber_breadcrumb_css()
+		. cyber_woocommerce_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

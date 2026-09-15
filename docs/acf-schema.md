@@ -1002,6 +1002,8 @@ Ten sam komplet pól, **niezależny** od powyższego.
 Ustawienia sklepu, które należą do motywu, a nie do wtyczki. Kolejne ustawienia
 WooCommerce trafiają **tutaj**, a nie do nowych zakładek.
 
+#### Lista produktów
+
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
 | Sposób wczytywania produktów | `cyber_wc_pagination_type` | Select | `pagination` | Decyduje, czy pod listą produktów jest paginacja, czy przycisk „Pokaż więcej” |
@@ -1019,6 +1021,85 @@ WooCommerce trafiają **tutaj**, a nie do nowych zakładek.
 > **Obowiązuje na stronie sklepu i na wszystkich archiwach taksonomii
 > produktów** — kategoriach, tagach i atrybutach. To jedno ustawienie dla całej
 > listy produktów, nie osobne per widok.
+
+#### Kolory sklepu
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Główny kolor sklepu | `cyber_wc_color_main` | Color Picker (alpha) | `#d32f2f` | Cena, przycisk „Dodaj do koszyka”, aktywna zakładka, plakietka promocji |
+
+> **Jedno pole, ale nie na stałe.** Barwa jedzie do CSS przez
+> `cyber_woocommerce_css_map()` jako `--cyber-wc-color-main`. Kolejna barwa
+> sklepu (np. osobny kolor ceny promocyjnej) to **jedna linia w tej mapie plus
+> jeden wpis w `cyber_option_schema()`** — bez dotykania plików CSS.
+
+#### Strona produktu — układ
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Szerokość kolumny ze zdjęciami | `cyber_wc_product_col_image` | Number (20–80) | `40` | Lewa kolumna sekcji górnej, w procentach |
+| Szerokość kolumny z informacjami | `cyber_wc_product_col_summary` | Number (20–80) | `60` | Prawa kolumna sekcji górnej, w procentach |
+| Wysokość sekcji ze zdjęciem i galerią | `cyber_wc_product_media_height` | Number (200–1200) | `500` | Wysokość zdjęcia głównego i widocznej części paska miniatur |
+| Wysokość miniatury w galerii | `cyber_wc_product_thumb_height` | Number (60–400) | `158` | Wysokość jednej miniatury; szerokość jest stała, 150px |
+
+> **Skąd `158`.** Szerokość miniatury jest stała (150px) i celowo nie ma pola —
+> to proporcja galerii, nie konfiguracja. Wysokość jest polem, bo od niej zależy,
+> ile miniatur mieści się w pasku. Przy ustawieniach domyślnych
+> `500 = 3 × 158 + 2 × 12` (odstęp), czyli widać **dokładnie trzy** miniatury,
+> a reszta zostaje pod krawędzią i dojeżdża przeciągnięciem.
+>
+> To dwa niezależne pokrętła, nie jedno — zmiana wysokości sekcji bez zmiany
+> wysokości miniatury zmienia liczbę widocznych zdjęć. Tak ma być: „trzy” jest
+> wynikiem ustawień, a nie trzecim polem, które musiałoby się z nimi kłócić.
+
+#### Strona produktu — elementy
+
+Każdy element ma **własny wyłącznik** i — jeśli jego miejsce nie wynika
+z markupu — **własną pozycję**. Pole pozycji pokazuje się tylko przy włączonym
+elemencie.
+
+| Element | Wyłącznik | Pozycja | Default | Sekcja |
+|---|---|---|---|---|
+| Tytuł produktu | `cyber_wc_product_show_title` | `cyber_wc_product_pos_title` | on / `10` | prawa kolumna |
+| SKU | `cyber_wc_product_show_sku` | `cyber_wc_product_pos_sku` | on / `20` | prawa kolumna |
+| Ocena i liczba opinii | `cyber_wc_product_show_rating` | `cyber_wc_product_pos_rating` | off / `25` | prawa kolumna |
+| Krótki opis | `cyber_wc_product_show_excerpt` | `cyber_wc_product_pos_excerpt` | on / `30` | prawa kolumna |
+| Cena | `cyber_wc_product_show_price` | `cyber_wc_product_pos_price` | on / `40` | prawa kolumna |
+| Dostępność w magazynie | `cyber_wc_product_show_stock` | `cyber_wc_product_pos_stock` | on / `50` | prawa kolumna |
+| Ilość i przycisk „Dodaj do koszyka” | `cyber_wc_product_show_cart` | `cyber_wc_product_pos_cart` | on / `60` | prawa kolumna |
+| Kategorie i tagi | `cyber_wc_product_show_meta` | `cyber_wc_product_pos_meta` | off / `70` | prawa kolumna |
+| Pole ilości | `cyber_wc_product_show_quantity` | — | on | wnętrze formularza zakupu |
+| Plakietka promocji | `cyber_wc_product_show_sale` | — | on | zdjęcie główne |
+| Zakładki z opisem | `cyber_wc_product_show_tabs` | `cyber_wc_product_pos_tabs` | on / `10` | sekcja pod kolumnami |
+| Produkty polecane (upsell) | `cyber_wc_product_show_upsells` | `cyber_wc_product_pos_upsells` | off / `20` | sekcja pod kolumnami |
+| Podobne produkty | `cyber_wc_product_show_related` | `cyber_wc_product_pos_related` | off / `30` | sekcja pod kolumnami |
+
+> **Liczba w polu „Pozycja” JEST priorytetem `add_action()`.** Nie ma między
+> polem a hookiem żadnej tablicy pośredniej, którą trzeba by trzymać w zgodzie
+> z kodem. Konsekwencja jest korzystna: wtyczka, która dopina się do tego samego
+> hooka WooCommerce, dalej ląduje dokładnie tam, gdzie każe jej własny priorytet,
+> i można ją „przeskoczyć”, wpisując mniejszą liczbę.
+>
+> Pozycje porównują się tylko **wewnątrz swojej sekcji** — element prawej kolumny
+> i zakładka siedzą na dwóch różnych hookach, więc ich liczby nigdy się nie
+> spotkają.
+
+> **Dwa elementy nie mają pozycji, i to jest decyzja, nie brak.** Pole ilości
+> leży wewnątrz `<form class="cart">` razem z przyciskiem — wyciągnięcie go poza
+> formularz zepsułoby wysyłkę. Plakietka promocji jest nałożona na zdjęcie
+> główne. Oba mają więc sam wyłącznik.
+
+> **Wyłącznik „Pole ilości” nie zmienia reguł sklepu.** Chowa licznik klasą CSS
+> (`body.cyber-product-no-quantity`), a nie filtrem
+> `woocommerce_is_sold_individually`, który zmieniałby dozwoloną ilość w koszyku.
+> Ukrycie jest stanem prezentacji (CLAUDE.md sekcja 20).
+
+> **Jedno źródło prawdy: `cyber_product_elements()` w `inc/helpers.php`.**
+> Z tego rejestru powstają zarówno wpisy w `cyber_option_schema()`
+> (`cyber_product_option_schema()`), jak i podpięcie hooków. Dołożenie kolejnego
+> elementu WooCommerce to **jeden wpis w rejestrze plus jeden
+> w `cyber_product_element_callbacks()`** i dwa pola w tym pliku JSON — reszta
+> wynika sama.
 
 ### Zasada dostępu w kodzie
 
@@ -1339,6 +1420,7 @@ bez pustego kontenera na tekst.
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
 - 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+- 2026-09-15 — Zakładka **„WooCommerce”** rozbudowana o stronę pojedynczego produktu: **32 nowe pola**. Główny kolor sklepu (`cyber_wc_color_main`), cztery pola układu (szerokości kolumn 40/60, wysokość sekcji ze zdjęciem 500px, wysokość miniatury 158px) oraz **13 wyłączników i 11 pozycji** dla elementów strony produktu. Wyłączniki i pozycje nie są wpisane ręcznie w `cyber_option_schema()` — generuje je `cyber_product_option_schema()` z rejestru `cyber_product_elements()`, żeby pola ACF, schemat i podpięcie hooków nie mogły się rozjechać. Liczba w polu „Pozycja” jest wprost priorytetem `add_action()`. Nowy `inc/woocommerce-product.php`.
 - 2026-09-14 — Nowa zakładka **„WooCommerce”** w Global Options z pierwszym ustawieniem `cyber_wc_pagination_type` (paginacja albo przycisk „Pokaż więcej” z AJAX). Nowa, druga w projekcie grupa pól: **`group_product_category`** z polem WYSIWYG `cyber_category_content` na taksonomii `product_cat`, zastępującym ukrywany natywny opis kategorii.
 - 2026-09-12 — Dwie nowe zakładki: **„Breadcrumb”** i **„Breadcrumb WooCommerce”**, po 4 pola każda (włącznik, rozmiar czcionki, kolor, kolor bieżącej strony). Rozdzielone celowo — osobne włączniki pozwalają mieć okruszki wyłącznie w sklepie albo wyłącznie poza nim. Oba domyślnie **wyłączone**, więc synchronizacja niczego nie zmienia. Wspólny markup i jedna mapa zmiennych CSS; ścieżkę poza sklepem składa `cyber_breadcrumb_items()`, w sklepie `woocommerce_breadcrumb()` we własnych znacznikach motywu. Nowy `inc/breadcrumb.php` i katalog `template-parts/breadcrumb/`.
 - 2026-09-12 — Header Desktop: **trzy warianty układu** (`cyber_header_variant`: `centered`, `cta`, `woocommerce` obok `default`) plus dwa pola przycisku CTA (`cyber_header_cta_text`, `cyber_header_cta_url`). Wariant jest modyfikatorem klasy, nie zmienną CSS. CTA dziedziczy cały wygląd z rozmiaru Medium — bez własnych pól stylu. Wariant WooCommerce wymaga wtyczki; jej brak nie wywraca strony (patrz `inc/woocommerce.php`). Nowe ikony `user` i `cart` w `cyber_icons()`.
