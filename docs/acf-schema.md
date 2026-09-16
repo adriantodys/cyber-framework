@@ -1471,6 +1471,70 @@ była pierwsza, a wygląd pod ręką.
 > sekcje różnią się między sobą za bardzo na wspólny mnożnik — hero i wąski pasek
 > z logotypami nie skalują się tak samo.
 
+#### Sekcja „Karty" (`group_section_cards`)
+
+Layout `cards`. Klon sekcji podstawowej z wypełnionym środkowym kontenerem:
+siatka powtarzalnych elementów. Grupa jest **źródłem klonowania** — nie
+renderuje się nigdzie w panelu, wchodzi tylko do swojego layoutu.
+
+**Elementy** — Repeater `cyber_cards_items`:
+
+| Field Label | Field Name | Typ | Przeznaczenie |
+|---|---|---|---|
+| Zdjęcie / ikona | `cyber_card_image` | Image (ID) | Obrazek karty albo, w trybie tła, tło całej karty |
+| Tytuł | `cyber_card_title` | Text | Renderowany jako `<h3>` |
+| Treść | `cyber_card_text` | Textarea | Zwykły tekst; puste linie zamieniają się w akapity |
+| Odnośnik | `cyber_card_link` | Link | Adres i etykieta; wygląd ustawia się raz dla całej sekcji |
+
+Element bez zdjęcia, tytułu i tekstu jest **pomijany** — pusty wiersz repeatera
+zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
+
+**Ustawienia** — akordeon „Ustawienia kart", domyślnie zwinięty:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Kolumny (desktop / tablet / mobile) | `cyber_cards_columns` `_tablet` `_mobile` | Select | `3` / `2` / `1` |
+| Odstęp między kolumnami / wierszami | `cyber_cards_gap_x` `_gap_y` | Select (skala) | `24` / `24` |
+| Odstęp wewnętrzny X / Y | `cyber_cards_pad_x` `_pad_y` | Select (skala) | `24` / `24` |
+| Tło elementu / po najechaniu | `cyber_cards_bg` `_bg_hover` | Color (alpha) | `''` |
+| Zaokrąglenie rogów | `cyber_cards_radius` | Number 0–200 | `0` |
+| Cień | `cyber_cards_shadow` | True/False | `false` |
+| Obramowanie | `cyber_cards_border` | True/False | `false` |
+| Zdjęcie jako tło elementu | `cyber_cards_image_as_bg` | True/False | `false` |
+| Minimalna wysokość elementu | `cyber_cards_min_height` | Number 0–2000 | `320` |
+| Wyrównanie: zdjęcie / tytuł / tekst | `cyber_cards_align_media` `_title` `_text` | Select | `left` |
+| Odstęp pod zdjęciem / tytułem / tekstem | `cyber_cards_gap_media` `_title` `_text` | Select (skala) | `12` / `12` / `24` |
+| Kolor tytułu / tekstu | `cyber_cards_title_color` `_text_color` | Color (alpha) | `''` |
+| Grubość tytułu / tekstu | `cyber_cards_title_weight` `_text_weight` | Select | `700` / `400` |
+| Wygląd odnośnika | `cyber_cards_link_style` | Select | `button` |
+| Rozmiar przycisku | `cyber_cards_button_size` | Select | `medium` |
+
+> **Nie ma pola „liczba wierszy" i to jest decyzja, nie przeoczenie.** Liczba
+> wierszy siatki wynika z liczby elementów podzielonej przez liczbę kolumn —
+> nie da się jej ustawić niezależnie. Pole sterowałoby albo obcinaniem
+> elementów, albo tworzeniem pustych wierszy. Gdyby kiedyś trzeba było pokazać
+> tylko część elementów, to osobna funkcja („pokaż pierwsze N"), a nie wiersze.
+
+> **Cień i obramowanie to włączniki, nie pola koloru.** Barwy pochodzą
+> z zakładki **Kolory** (`--cyber-color-shadow`, `--cyber-color-shadow-hover`,
+> `--cyber-color-border-1`, `--cyber-color-border-2`), a wartość cienia
+> i grubość ramki stoją na sztywno w arkuszu. Dzięki temu karty wyglądają tak
+> samo w całym projekcie, a zmiana palety działa wszędzie naraz.
+
+> **Przycisk nie ma własnych pól wyglądu** — dziedziczy wszystko z zakładki
+> **Przyciski**, tak samo jak CTA w headerze i przyciski sklepu. Sekcja wybiera
+> wyłącznie rozmiar.
+
+> **Tryb „zdjęcie jako tło" wymaga wysokości.** W tym trybie obrazek nie jest
+> osobnym elementem, tylko tłem całej karty — bez własnej wysokości nie miałby
+> się na czym pokazać. Pole minimalnej wysokości pokazuje się wtedy
+> automatycznie (conditional logic) i znika po wyłączeniu trybu.
+
+> **Wyrównanie jest klasą, nie zmienną** (CLAUDE.md sekcja 20) — zmienia
+> `text-align`, a przy zdjęciu także `margin-inline`, czyli więcej niż jedną
+> właściwość. Wartości pochodzą z kanonicznego zestawu `cyber_alignments()`.
+> Odnośnik idzie za wyrównaniem tekstu i nie ma osobnego pola.
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -1534,6 +1598,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-16 — Sekcja **„Karty (icon boxes)"** — layout `cards` i nowa grupa źródłowa `group_section_cards`: repeater elementów (zdjęcie, tytuł, treść, odnośnik) plus 22 pola siatki i wyglądu. Cień, obramowanie i przycisk czerpią barwy oraz wymiary z ustawień globalnych — sekcja ma tylko włączniki. Świadomie **bez** pola „liczba wierszy": wynika ona z liczby elementów i kolumn. Nowy kanoniczny helper `cyber_alignments()` (CLAUDE.md sekcja 20), z którego korzystają też dwa istniejące pola wyrównania headera.
 
 - 2026-09-16 — Moduł **Sekcje** (etap 4). Trzy nowe grupy: `group_sections` (pole Flexible Content `cyber_sections` na stronach i wpisach) oraz dwie grupy źródłowe do klonowania — `group_section_content` (WYSIWYG góra/dół) i `group_section_settings` (18 pól wyglądu: tło, nakładka, szerokość, odstępy, kotwica, klasy, wyłącznik). Grupy źródłowe mają lokalizację celowo niepasującą do niczego, więc istnieją wyłącznie dla pola Clone — dzięki temu wspólne pola sekcji mają **jedną** definicję zamiast kopii w każdym layoucie. Pierwszy layout: `basic`.
 

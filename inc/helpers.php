@@ -384,7 +384,7 @@ function cyber_option_schema() {
 		'header_menu_alignment'       => array(
 			'type'    => 'choice',
 			'default' => 'right',
-			'choices' => array( 'left', 'center', 'right' ),
+			'choices' => cyber_alignments(),
 		),
 		'header_padding_top'          => array(
 			'type'    => 'px',
@@ -463,7 +463,7 @@ function cyber_option_schema() {
 		'header_submenu_alignment'    => array(
 			'type'    => 'choice',
 			'default' => 'left',
-			'choices' => array( 'left', 'center', 'right' ),
+			'choices' => cyber_alignments(),
 		),
 		'header_submenu_item_gap'     => array(
 			'type'    => 'px',
@@ -1110,6 +1110,23 @@ function cyber_sanitize_color( $value ) {
 	$pattern = '/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:0|1|0?\.\d+)\s*)?\)$/';
 
 	return preg_match( $pattern, $raw ) ? $raw : '';
+}
+
+/**
+ * Kanoniczny zestaw wartosci wyrownania.
+ *
+ * Jedno zrodlo prawdy dla WSZYSTKICH pol typu "wyrownaj" w projekcie
+ * (CLAUDE.md sekcja 20). Zaden modul nie definiuje wlasnego zestawu — bez tego
+ * po kilku modulach pojawiaja sie rownolegle warianty start/end albo l/c/r.
+ *
+ * UWAGA: to NIE jest to samo co pozycja tla (background-position), ktora
+ * przypadkiem ma te same trzy wartosci w poziomie. Tamta opisuje punkt
+ * zaczepienia obrazka, nie uklad tresci, i ma wlasny rejestr.
+ *
+ * @return string[] Dozwolone wartosci.
+ */
+function cyber_alignments() {
+	return array( 'left', 'center', 'right' );
 }
 
 /**

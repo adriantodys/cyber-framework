@@ -1,0 +1,1040 @@
+{
+    "key": "group_section_cards",
+    "title": "Cyber Framework — Sekcje: karty",
+    "fields": [
+        {
+            "key": "field_cyber_cards_items",
+            "label": "Elementy",
+            "name": "cyber_cards_items",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Kazdy element to jedna karta. Kolejnosc zmienia sie przeciagnieciem. Element bez zdjecia, tytulu i tekstu jest pomijany.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_cyber_card_title",
+            "button_label": "Dodaj element",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_cyber_card_image",
+                    "label": "Zdjecie \/ ikona",
+                    "name": "cyber_card_image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "preview_size": "thumbnail",
+                    "allow_in_bindings": 0,
+                    "preview": 1,
+                    "upload_folder": ""
+                },
+                {
+                    "key": "field_cyber_card_title",
+                    "label": "Tytul",
+                    "name": "cyber_card_title",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_cyber_card_text",
+                    "label": "Tresc",
+                    "name": "cyber_card_text",
+                    "aria-label": "",
+                    "type": "textarea",
+                    "instructions": "Zwykly tekst. Puste linie zamieniaja sie w akapity.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "rows": 4,
+                    "placeholder": "",
+                    "new_lines": ""
+                },
+                {
+                    "key": "field_cyber_card_link",
+                    "label": "Odnosnik",
+                    "name": "cyber_card_link",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "Wyglad odnosnika - przycisk albo zwykly link - ustawia sie raz dla calej sekcji, w Ustawieniach kart.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "allow_in_bindings": 0
+                }
+            ]
+        },
+        {
+            "key": "field_cyber_cards_acc",
+            "label": "Ustawienia kart",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_cards_grid",
+            "label": "Siatka",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_columns",
+            "label": "Kolumny (desktop)",
+            "name": "cyber_cards_columns",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Liczba wierszy nie jest ustawieniem - wynika z liczby elementow podzielonej przez liczbe kolumn.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6"
+            },
+            "default_value": "3",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_columns_tablet",
+            "label": "Kolumny (tablet)",
+            "name": "cyber_cards_columns_tablet",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Ponizej 980px.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_columns_mobile",
+            "label": "Kolumny (mobile)",
+            "name": "cyber_cards_columns_mobile",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Ponizej 767px.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2"
+            },
+            "default_value": "1",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_gap_x",
+            "label": "Odstep miedzy kolumnami",
+            "name": "cyber_cards_gap_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_gap_y",
+            "label": "Odstep miedzy wierszami",
+            "name": "cyber_cards_gap_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_cards_box",
+            "label": "Wyglad elementu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_pad_x",
+            "label": "Odstep wewnetrzny X",
+            "name": "cyber_cards_pad_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_pad_y",
+            "label": "Odstep wewnetrzny Y",
+            "name": "cyber_cards_pad_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_bg",
+            "label": "Tlo elementu",
+            "name": "cyber_cards_bg",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_cards_bg_hover",
+            "label": "Tlo elementu po najechaniu",
+            "name": "cyber_cards_bg_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste pole = brak zmiany po najechaniu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_cards_radius",
+            "label": "Zaokraglenie rogow",
+            "name": "cyber_cards_radius",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_cards_shadow",
+            "label": "Cien",
+            "name": "cyber_cards_shadow",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Barwa pochodzi z zakladki Kolory (Cien \/ Cien po najechaniu). Sama wartosc cienia jest stala w motywie, zeby karty wygladaly tak samo w calym projekcie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_cards_border",
+            "label": "Obramowanie",
+            "name": "cyber_cards_border",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Barwa z zakladki Kolory (Obramowanie 1, po najechaniu Obramowanie 2). Grubosc jest stala w motywie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_cards_image_as_bg",
+            "label": "Zdjecie jako tlo elementu",
+            "name": "cyber_cards_image_as_bg",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Zamiast osobnego obrazka zdjecie wypelnia cala karte. W tym trybie karta musi miec wlasna wysokosc - pole ponizej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_cards_min_height",
+            "label": "Minimalna wysokosc elementu",
+            "name": "cyber_cards_min_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Bez tego tlo nie mialoby sie na czym pokazac.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_cards_image_as_bg",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 320,
+            "min": 0,
+            "max": 2000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_cards_align",
+            "label": "Wyrownanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_align_media",
+            "label": "Zdjecie",
+            "name": "cyber_cards_align_media",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_align_title",
+            "label": "Tytul",
+            "name": "cyber_cards_align_title",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_align_text",
+            "label": "Tekst",
+            "name": "cyber_cards_align_text",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Odnosnik idzie za wyrownaniem tekstu.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_cards_inner",
+            "label": "Odstepy wewnatrz elementu",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_gap_media",
+            "label": "Odstep pod zdjeciem",
+            "name": "cyber_cards_gap_media",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "12",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_gap_title",
+            "label": "Odstep pod tytulem",
+            "name": "cyber_cards_gap_title",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "12",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_gap_text",
+            "label": "Odstep pod tekstem",
+            "name": "cyber_cards_gap_text",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_cards_type",
+            "label": "Typografia",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_title_color",
+            "label": "Kolor tytulu",
+            "name": "cyber_cards_title_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste pole = kolor naglowkow z zakladki Kolory.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_cards_title_weight",
+            "label": "Grubosc tytulu",
+            "name": "cyber_cards_title_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "700",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_text_color",
+            "label": "Kolor tekstu",
+            "name": "cyber_cards_text_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste pole = kolor tekstu z zakladki Kolory.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_cards_text_weight",
+            "label": "Grubosc tekstu",
+            "name": "cyber_cards_text_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "400",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_cards_link",
+            "label": "Odnosnik",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_cards_link_style",
+            "label": "Wyglad odnosnika",
+            "name": "cyber_cards_link_style",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dotyczy wszystkich elementow sekcji naraz.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "button": "Przycisk",
+                "link": "Zwykly link"
+            },
+            "default_value": "button",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_button_size",
+            "label": "Rozmiar przycisku",
+            "name": "cyber_cards_button_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wyglad w calosci z zakladki Przyciski - sekcja nie ma wlasnych pol koloru ani paddingu przycisku.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_cards_link_style",
+                        "operator": "==",
+                        "value": "button"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "large": "Large",
+                "medium": "Medium",
+                "small": "Small"
+            },
+            "default_value": "medium",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_cards_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Karty (icon boxes): repeater elementow plus ustawienia siatki i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789595769
+}

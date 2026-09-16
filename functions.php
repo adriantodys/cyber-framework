@@ -59,6 +59,7 @@ function cyber_load_modules() {
 		'inc/woocommerce-shop.php',
 		'inc/woocommerce-product.php',
 		'inc/sections.php',
+		'inc/sections-cards.php',
 	);
 
 	foreach ( $modules as $module ) {

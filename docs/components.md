@@ -256,6 +256,9 @@ rozjazdu.
 |---|---|
 | `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, assety |
 | `template-parts/sections/basic.php` | layout `basic` — WYSIWYG → kontener → WYSIWYG |
+| `inc/sections-cards.php` | layout `cards` — logika siatki i elementów |
+| `template-parts/sections/cards.php` | layout `cards` — widok |
+| `acf-json/group_section_cards.json` | źródło klonowania: pola sekcji Karty |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
 | `acf-json/group_sections.json` | pole Flexible Content |
 | `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
@@ -268,6 +271,7 @@ rozjazdu.
 | Klucz | Etykieta | Szablon | Konteksty |
 |---|---|---|---|
 | `basic` | Sekcja podstawowa | `basic` | `page`, `post` |
+| `cards` | Karty (icon boxes) | `cards` | `page`, `post` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
 dostępności layoutów per typ treści to osobny krok.
@@ -293,6 +297,35 @@ Dodatkowe klasy z pola ACF dokładane są do `.cyber-section`, każda przez
 
 Layout `basic` ma w środku hook `cyber_section_basic_body` — dołożenie
 zawartości nie wymaga przepisywania pliku szablonu.
+
+
+### Sekcja `cards` — Karty (icon boxes)
+
+Ten sam szkielet co `basic`, ze środkowym kontenerem wypełnionym siatką
+powtarzalnych elementów.
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-cards.php` | walidacja ustawień siatki, normalizacja elementów repeatera |
+| `template-parts/sections/cards.php` | widok |
+| `acf-json/group_section_cards.json` | pola: repeater + ustawienia |
+
+Podział odpowiedzialności: opakowanie sekcji, oba pola WYSIWYG i ustawienia tła
+obsługuje `inc/sections.php`. Moduł kart zajmuje się **wyłącznie** siatką —
+dzięki temu zmiana w opakowaniu nie wymaga dotykania żadnej sekcji.
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-cards` | kontener siatki; liczba kolumn i odstępy ze zmiennych |
+| `.cyber-cards--hover` | dokładana tylko przy ustawionym tle po najechaniu — bez niej karta nie niesie `transition`, którego nigdy nie użyje |
+| `.cyber-cards--shadow` / `--border` | włączniki; barwy z zakładki Kolory, wartości na sztywno w arkuszu |
+| `.cyber-cards--image-bg` | tryb „zdjęcie jako tło": brak `<img>`, adres idzie zmienną `--cyber-card-image` na karcie |
+| `.cyber-cards--{media,title,text}-{left,center,right}` | wyrównanie jako modyfikator klasy |
+| `.cyber-card` | pojedynczy element; kolumna flex, żeby stopka dosuwała się do dołu |
+| `.cyber-card__footer` | `margin-top: auto` — przyciski wszystkich kart w wierszu stoją w jednej linii |
+
+Przycisk renderuje wspólny komponent `cyber_button()`, więc karty nie mają
+własnego markupu przycisku ani własnych pól jego wyglądu.
 
 ## Warstwa WooCommerce
 

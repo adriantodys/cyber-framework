@@ -112,3 +112,180 @@
 		margin-bottom: var(--cyber-space-3);
 	}
 }
+
+/* --- Karty (icon boxes) ---------------------------------------------------- */
+
+/*
+ * Siatka. Liczba kolumn przychodzi zmienna, wiec jeden zestaw regul obsluguje
+ * kazda konfiguracje — nie ma klas w rodzaju --cols-4 ani pisania po jednej
+ * regule na kazda liczbe kolumn.
+ *
+ * minmax(0, 1fr) zamiast samego 1fr: domyslny minimalny rozmiar elementu
+ * siatki to auto, wiec dlugie slowo albo szerokie zdjecie rozpychaja kolumne
+ * ponad przydzial i cala siatka wyjezdza poza kontener.
+ */
+.cyber-cards {
+	display: grid;
+	grid-template-columns: repeat(var(--cyber-cards-cols, 3), minmax(0, 1fr));
+	column-gap: var(--cyber-cards-gap-x, 24px);
+	row-gap: var(--cyber-cards-gap-y, 24px);
+}
+
+.cyber-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: var(--cyber-cards-pad-y, 24px) var(--cyber-cards-pad-x, 24px);
+	border-radius: var(--cyber-cards-radius, 0);
+	background-color: var(--cyber-cards-bg, transparent);
+}
+
+/*
+ * Przejscie tylko wtedy, gdy jest co animowac. Bez tego warunku kazda karta
+ * niesie transition, ktorego nigdy nie uzyje.
+ */
+.cyber-cards--hover .cyber-card {
+	transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.cyber-cards--hover .cyber-card:hover {
+	background-color: var(--cyber-cards-bg-hover, var(--cyber-cards-bg, transparent));
+}
+
+/*
+ * Cien i obramowanie: wlacznik w panelu, barwa z zakladki Kolory, a same
+ * wartosci na sztywno tutaj. Dzieki temu karty w calym projekcie wygladaja
+ * tak samo, a zmiana palety dziala wszedzie naraz — bez pola koloru przy
+ * kazdej sekcji z osobna.
+ */
+.cyber-cards--shadow .cyber-card {
+	box-shadow: 0 2px 12px var(--cyber-color-shadow);
+}
+
+.cyber-cards--shadow.cyber-cards--hover .cyber-card:hover {
+	box-shadow: 0 6px 24px var(--cyber-color-shadow-hover);
+}
+
+.cyber-cards--border .cyber-card {
+	border: 1px solid var(--cyber-color-border-1);
+}
+
+.cyber-cards--border.cyber-cards--hover .cyber-card:hover {
+	border-color: var(--cyber-color-border-2);
+}
+
+/* --- Zdjecie jako tlo karty ------------------------------------------------ */
+
+/*
+ * W tym trybie zdjecie nie jest osobnym elementem, tylko tlem calej karty —
+ * dlatego karta musi miec wlasna wysokosc, inaczej tlo nie mialoby sie na czym
+ * pokazac. Minimalna wysokosc ma wlasne pole, widoczne tylko przy wlaczonym
+ * trybie.
+ */
+.cyber-cards--image-bg .cyber-card {
+	min-height: var(--cyber-cards-min-height, 320px);
+	background-image: var(--cyber-card-image, none);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
+
+/* --- Czesci karty ---------------------------------------------------------- */
+
+.cyber-card__media {
+	margin-bottom: var(--cyber-cards-gap-media, 12px);
+}
+
+.cyber-card__media:last-child,
+.cyber-card__title:last-child,
+.cyber-card__text:last-child {
+	margin-bottom: 0;
+}
+
+.cyber-card__image {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+.cyber-card__title {
+	margin: 0 0 var(--cyber-cards-gap-title, 12px);
+	color: var(--cyber-cards-title-color, var(--cyber-color-headings));
+	font-size: var(--cyber-font-size-h5);
+	font-weight: var(--cyber-cards-title-weight, var(--cyber-font-weight-headings));
+	line-height: 1.3;
+}
+
+.cyber-card__text {
+	margin-bottom: var(--cyber-cards-gap-text, 24px);
+	color: var(--cyber-cards-text-color, var(--cyber-color-text));
+	font-weight: var(--cyber-cards-text-weight, var(--cyber-font-weight-text));
+	line-height: 1.6;
+}
+
+.cyber-card__text > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-card__text > *:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ * Stopka dosuwa sie do dolu, wiec przyciski wszystkich kart w wierszu stoja
+ * w jednej linii niezaleznie od dlugosci tekstu. To dlatego karta jest
+ * kolumna flex, a nie zwyklym blokiem.
+ */
+.cyber-card__footer {
+	margin-top: auto;
+}
+
+.cyber-card__link {
+	color: var(--cyber-color-links);
+	font-size: var(--cyber-font-size-links);
+	text-decoration: underline;
+}
+
+.cyber-card__link:hover,
+.cyber-card__link:focus-visible {
+	color: var(--cyber-color-hover);
+}
+
+/* --- Wyrownanie: klasa, nie zmienna (CLAUDE.md sekcja 20) ------------------- */
+
+/*
+ * Wyrownanie zmienia wiecej niz jedna wlasciwosc — przy zdjeciu takze
+ * margin-inline — wiec jest modyfikatorem klasy. Stopka idzie za tekstem,
+ * bo przycisk pod wysrodkowanym akapitem wysrodkowany na ogol byc powinien.
+ */
+.cyber-cards--media-left .cyber-card__media { text-align: left; }
+.cyber-cards--media-center .cyber-card__media { text-align: center; }
+.cyber-cards--media-right .cyber-card__media { text-align: right; }
+
+.cyber-cards--media-center .cyber-card__image { margin-inline: auto; }
+.cyber-cards--media-right .cyber-card__image { margin-inline-start: auto; }
+
+.cyber-cards--title-left .cyber-card__title { text-align: left; }
+.cyber-cards--title-center .cyber-card__title { text-align: center; }
+.cyber-cards--title-right .cyber-card__title { text-align: right; }
+
+.cyber-cards--text-left .cyber-card__text,
+.cyber-cards--text-left .cyber-card__footer { text-align: left; }
+.cyber-cards--text-center .cyber-card__text,
+.cyber-cards--text-center .cyber-card__footer { text-align: center; }
+.cyber-cards--text-right .cyber-card__text,
+.cyber-cards--text-right .cyber-card__footer { text-align: right; }
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+	.cyber-cards {
+		grid-template-columns: repeat(var(--cyber-cards-cols-t, 2), minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-cards {
+		grid-template-columns: repeat(var(--cyber-cards-cols-m, 1), minmax(0, 1fr));
+	}
+}

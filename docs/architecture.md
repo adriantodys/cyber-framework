@@ -44,6 +44,7 @@ w ustalonej kolejności:
 | 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
 | 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
 | 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
+| 18 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
 
 ## Stałe
 
@@ -1261,6 +1262,31 @@ Moduł wypisuje teraz wszystkie trzy obok siebie — `--cyber-width-100`,
 `--cyber-width-80`, `--cyber-width-60` — a `--cyber-container-width` dalej
 wskazuje wybór globalny i jest tym, co dziedziczy sekcja ustawiona na `inherit`.
 To rozszerzenie istniejącego modułu, nie drugi, równoległy system szerokości.
+
+### Sekcja z własną treścią: podział na dwa moduły
+
+`cards` jest pierwszą sekcją, która ma coś w środkowym kontenerze, więc ustala
+wzorzec dla kolejnych:
+
+| Moduł | Odpowiada za |
+|---|---|
+| `inc/sections.php` | opakowanie, oba pola WYSIWYG, tło, szerokość, odstępy sekcji |
+| `inc/sections-cards.php` | **wyłącznie** siatkę i elementy |
+
+Moduł sekcji nie wie nic o kartach, a moduł kart nie wie nic o tle sekcji.
+Dzięki temu zmiana w opakowaniu nie wymaga dotykania żadnej sekcji, a kolejna
+sekcja z własną treścią dopisuje się obok, nie zamiast.
+
+Ten sam podział obowiązuje w ACF: layout `cards` klonuje **cztery** rzeczy —
+WYSIWYG górę, grupę `group_section_cards`, WYSIWYG dół i wspólne ustawienia
+sekcji. Sprawdzone: rozwija się do **63 podpól** o płaskich nazwach.
+
+**Barwy cienia i obramowania nie mają pól w sekcji.** Włącznik jest w panelu,
+barwa przychodzi z zakładki Kolory (`--cyber-color-shadow`,
+`--cyber-color-border-1`), a wartość cienia i grubość ramki stoją na sztywno
+w arkuszu. To świadoma rezygnacja z kontroli na rzecz spójności: karty w całym
+projekcie wyglądają tak samo, a zmiana palety działa wszędzie naraz. Tak samo
+przycisk — cały wygląd z zakładki Przyciski, sekcja wybiera tylko rozmiar.
 
 ### Pułapka: klucz layoutu kasuje treść
 

@@ -68,6 +68,11 @@ function cyber_section_types() {
 			'template' => 'basic',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'cards' => array(
+			'label'    => 'Karty (icon boxes)',
+			'template' => 'cards',
+			'contexts' => array( 'page', 'post' ),
+		),
 	);
 }
 
