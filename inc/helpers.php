@@ -1080,6 +1080,39 @@ function cyber_product_option_schema() {
 }
 
 /**
+ * Sanityzuje wartosc koloru z pola Color Picker z wlaczona przezroczystoscia.
+ *
+ * ACF z enable_opacity zwraca przy pelnym kryciu HEX, a ponizej rgb()/rgba().
+ * sanitize_hex_color() dwoch ostatnich nie przepusci, a kolor bez kanalu alfa
+ * jest w tym projekcie w praktyce bezuzyteczny — stad wlasny, scisly wzorzec.
+ *
+ * Funkcja stoi osobno, bo korzystaja z niej dwa niezalezne swiaty: walidacja
+ * opcji globalnych (cyber_validate_option_value) oraz pola per instancja
+ * w sekcjach (inc/sections.php). Druga kopia tego wzorca rozjechalaby sie
+ * przy pierwszej poprawce.
+ *
+ * @param mixed $value Wartosc surowa z pola.
+ * @return string Kolor gotowy do uzycia w CSS albo pusty string.
+ */
+function cyber_sanitize_color( $value ) {
+	$raw = trim( (string) $value );
+
+	if ( '' === $raw ) {
+		return '';
+	}
+
+	$hex = sanitize_hex_color( $raw );
+
+	if ( null !== $hex && '' !== $hex ) {
+		return $hex;
+	}
+
+	$pattern = '/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:0|1|0?\.\d+)\s*)?\)$/';
+
+	return preg_match( $pattern, $raw ) ? $raw : '';
+}
+
+/**
  * Kanoniczne breakpointy projektu.
  *
  * Jedno zrodlo prawdy dla WSZYSTKICH modulow (CLAUDE.md sekcja 18). Klucz to
@@ -1273,21 +1306,9 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 	}
 
 	if ( 'color_alpha' === $config['type'] ) {
-		$raw = trim( (string) $value );
-		$hex = sanitize_hex_color( $raw );
+		$color = cyber_sanitize_color( $value );
 
-		if ( null !== $hex && '' !== $hex ) {
-			return $hex;
-		}
-
-		/*
-		 * ACF z enable_opacity zwraca rgba(). sanitize_hex_color() takiej wartosci
-		 * nie przepusci, a cien bez kanalu alfa jest w praktyce bezuzyteczny —
-		 * stad osobny typ z wlasnym, scislym wzorcem.
-		 */
-		$pattern = '/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(?:,\s*(?:0|1|0?\.\d+)\s*)?\)$/';
-
-		return preg_match( $pattern, $raw ) ? $raw : $fallback;
+		return ( '' === $color ) ? $fallback : $color;
 	}
 
 	if ( 'url' === $config['type'] ) {

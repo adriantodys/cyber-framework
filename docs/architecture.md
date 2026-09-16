@@ -43,6 +43,7 @@ w ustalonej kolejności:
 | 14 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
 | 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
 | 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
+| 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
 
 ## Stałe
 
@@ -1176,6 +1177,110 @@ kolejkuje się wyłącznie na stronie produktu, więc gdyby trzymał definicje,
 każdy inny moduł sięgający po skalę dostawałby niezdefiniowane zmienne — a
 `padding: var(--cyber-space-3)` bez definicji nie jest błędem, tylko cicho
 znika (CLAUDE.md sekcja 6).
+
+## Sekcje — Flexible Content
+
+Etap 4 z CLAUDE.md sekcja 17. Treść strony składana z klocków: jedno pole
+`cyber_sections`, jeden rejestr, jeden wspólny szkielet.
+
+### Przepływ
+
+```
+group_sections.json           ← pole Flexible Content (strony, wpisy)
+        │
+        │  layout klonuje wspólne pola z dwóch grup źródłowych
+        ├──→ group_section_content.json    (WYSIWYG góra/dół)
+        └──→ group_section_settings.json   (18 pól wyglądu)
+        │
+        ▼
+cyber_render_sections()       ← pętla po wierszach
+        │
+        ├──→ cyber_section_types()        ← rejestr: klucz → szablon
+        ├──→ cyber_section_attributes()   ← klasy + zmienne CSS
+        │
+        ▼
+template-parts/sections/[szablon].php     ← dane jawnie w $args
+        │
+        ▼
+.cyber-section + assets/css/sections.css
+```
+
+### Trzy grupy pól zamiast jednej
+
+Wspólne części sekcji mają **jedną** definicję. Grupy `group_section_content`
+i `group_section_settings` istnieją wyłącznie jako źródło dla pola **Clone** —
+ich reguła lokalizacji (`options_page == cyber-clone-source`) celowo nie pasuje
+do niczego, więc nie renderują się nigdzie w panelu.
+
+Klon działa w trybie **seamless bez prefiksu nazw**, więc PHP czyta pola płasko
+(`$row['cyber_section_bg_color']`). Sprawdzone: layout `basic` rozwija się do
+**28 podpól** o płaskich nazwach.
+
+Alternatywa — skopiowanie pól do każdego layoutu — to ta sama pułapka, co przy
+kopiowaniu pól ACF: przy dwunastu sekcjach powstaje dwanaście definicji, z czego
+połowa po roku różni się od reszty.
+
+### Dlaczego renderer nie używa `have_rows()`
+
+Idiom ACF (`have_rows()` + `get_sub_field()` wewnątrz szablonu) wymusza, żeby
+plik widoku sam wołał ACF — czyli dokładnie to, czego zakazuje CLAUDE.md
+sekcja 4. Renderer pobiera więc cały wiersz i przekazuje go jawnie w `$args`.
+Koszt: kilka linii. Zysk: sekcję da się wyrenderować w innym kontekście, a plik
+szablonu nie zależy od tego, czy akurat jesteśmy w pętli ACF.
+
+### Wartości per instancja w atrybucie `style`
+
+Udokumentowane odstępstwo od CLAUDE.md sekcja 6 — uzasadnienie i granice
+opisuje sama sekcja 6. Tutaj tylko konsekwencja techniczna: **PHP nie generuje
+żadnej reguły CSS ani media query**. Wypisuje wyłącznie zmienne, a arkusz je
+konsumuje:
+
+```css
+.cyber-section { padding-top: var(--cyber-section-pt, 0px); }
+
+@media (max-width: 767px) {
+	.cyber-section {
+		padding-top: var(--cyber-section-pt-m, var(--cyber-section-pt, 0px));
+		background-image: var(--cyber-section-bg-image-mobile, var(--cyber-section-bg-image, none));
+	}
+}
+```
+
+Łańcuch zapasowy w `var()` robi tu realną robotę: zmienna mobilna powstaje
+**tylko wtedy**, gdy pole ma wartość. Gdyby PHP wypisywał ją zawsze, sekcja bez
+ustawionego odstępu mobilnego dostawałaby na telefonie zero zamiast odziedziczyć
+wartość desktopową. To był błąd wychwycony na testach, nie teoria.
+
+### Trzy szerokości zamiast jednej
+
+`cyber_container_css()` wypisywał dotąd **jedną** zmienną
+`--cyber-container-width` — wynik wyboru 100/80/60 w Global Options. Sekcja
+ustawiona na 80% na stronie ustawionej na 60% nie miała z czego skorzystać.
+
+Moduł wypisuje teraz wszystkie trzy obok siebie — `--cyber-width-100`,
+`--cyber-width-80`, `--cyber-width-60` — a `--cyber-container-width` dalej
+wskazuje wybór globalny i jest tym, co dziedziczy sekcja ustawiona na `inherit`.
+To rozszerzenie istniejącego modułu, nie drugi, równoległy system szerokości.
+
+### Pułapka: klucz layoutu kasuje treść
+
+ACF, nie znajdując layoutu o zapisanej nazwie, **pomija wiersz i przy
+renderowaniu, i przy zapisie**
+(`pro/fields/class-acf-field-flexible-content.php` — „bail early if no layout").
+
+Skutek praktyczny: zmiana nazwy klucza albo odebranie layoutowi dostępności
+w danym typie treści **kasuje treść** przy najbliższym zapisaniu wpisu, bez
+ostrzeżenia i bez kosza. Dodawanie jest bezpieczne zawsze, odbieranie jest
+migracją.
+
+### Pułapka PHP: klucze tablicy wyglądające na liczbę
+
+`cyber_section_widths()` ma klucze `'100'`, `'80'`, `'60'`. PHP zamienia takie
+klucze na `int`, więc `array_keys()` zwraca `array( 'inherit', 100, 80, 60 )`,
+a ścisłe `in_array( '80', ..., true )` w nie nie trafia — każda szerokość poza
+`inherit` po cichu wracała do wartości domyślnej. Stąd `array_map( 'strval', … )`
+przed porównaniem. Błąd wyszedł na testach jednostkowych wartości, nie w kodzie
+z przeglądu.
 
 ## Edytor treści
 

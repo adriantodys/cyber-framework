@@ -10,6 +10,9 @@
  */
 
 :root {
+	--cyber-width-100: 100%;
+	--cyber-width-80: 1500px;
+	--cyber-width-60: 1150px;
 	--cyber-container-width: 1500px;
 	--cyber-container-margin: 40px;
 

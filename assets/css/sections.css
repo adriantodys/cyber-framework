@@ -1,0 +1,114 @@
+/*
+ * Cyber Framework — sekcje Flexible Content.
+ *
+ * Kolejkowany WYLACZNIE tam, gdzie wpis ma choc jedna sekcje
+ * (inc/sections.php), zgodnie z CLAUDE.md sekcja 10.
+ *
+ * WSZYSTKIE wartosci per instancja przychodza jako zmienne CSS w atrybucie
+ * style opakowania. Ten arkusz ich nie zna — tylko je konsumuje. Dzieki temu
+ * PHP nie generuje ani jednej reguly CSS, a media query zyje tam, gdzie jego
+ * miejsce: w arkuszu.
+ *
+ * Kazda zmienna ma wartosc zapasowa w var(), wiec sekcja bez wypelnionego pola
+ * nie zostawia po sobie "background-image: ;" ani pustego paddingu.
+ */
+
+/* --- Opakowanie ------------------------------------------------------------ */
+
+.cyber-section {
+	position: relative;
+	padding-top: var(--cyber-section-pt, 0px);
+	padding-right: var(--cyber-section-pr, 0px);
+	padding-bottom: var(--cyber-section-pb, 0px);
+	padding-left: var(--cyber-section-pl, 0px);
+	background-color: var(--cyber-section-bg, transparent);
+	background-image: var(--cyber-section-bg-image, none);
+	background-repeat: var(--cyber-section-bg-repeat, no-repeat);
+	background-position: var(--cyber-section-bg-position, center center);
+	background-size: var(--cyber-section-bg-size, cover);
+}
+
+/*
+ * Tlo idzie na PELNA szerokosc okna, a szerokosc steruje wylacznie wnetrzem.
+ * Odwrotnie — gdyby szerokosc obejmowala cala sekcje — kolor i zdjecie nie
+ * dobijalyby do krawedzi ekranu i kazda realizacja wymagalaby obejscia.
+ *
+ * Wnetrze dziedziczy marginesy boczne po .cyber-container, wiec trzyma jedna
+ * linie z headerem, stopka i reszta tresci na kazdym breakpoincie.
+ */
+.cyber-section__inner {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: var(--cyber-section-width, var(--cyber-container-width));
+	margin-inline: auto;
+	padding-inline: var(--cyber-container-margin);
+}
+
+/*
+ * Nakladka. Osobna warstwa, bo background-color jest malowany POD
+ * background-image — kolor z kanalem alfa nie przyciemni zdjecia, tylko
+ * schowa sie za nim. Pudelko wchodzi wylacznie wtedy, gdy kolor nakladki
+ * jest ustawiony (klasa --has-overlay z PHP).
+ */
+.cyber-section__overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-color: var(--cyber-section-overlay, transparent);
+	pointer-events: none;
+}
+
+/* --- Czesci skladowe ------------------------------------------------------- */
+
+.cyber-section__top > *:first-child,
+.cyber-section__bottom > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-section__top > *:last-child,
+.cyber-section__bottom > *:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ * Odstepy MIEDZY czesciami sekcji sa stale i nie maja pola w panelu — to
+ * proporcja szkieletu, nie konfiguracja. Odstepy sekcji od sasiadow reguluje
+ * padding, ktory pole ma.
+ */
+.cyber-section__top:not(:last-child),
+.cyber-section__body:not(:last-child) {
+	margin-bottom: var(--cyber-space-4);
+}
+
+/* Pusty kontener na elementy nie ma zostawiac po sobie odstepu. */
+.cyber-section__body:empty {
+	display: none;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+/*
+ * Prog 767px obsluguje OBA warianty mobilne naraz: wlasny kadr zdjecia i wlasne
+ * odstepy. Zdjecie mobilne ma wartosc zapasowa w postaci zdjecia desktopowego,
+ * wiec niewypelnione pole nie gasi tla, tylko zostawia oryginal.
+ *
+ * Odstepy per instancja sa swiadomym ODSTEPSTWEM od CLAUDE.md sekcja 19, ktora
+ * dla wielu powiazanych wartosci nakazuje jedno pole procentowe na breakpoint.
+ * Uzasadnienie: sekcje roznia sie miedzy soba za bardzo, zeby wspolny mnoznik
+ * mial sens — hero i waski pasek z logotypami nie skaluja sie tak samo.
+ */
+@media (max-width: 767px) {
+	.cyber-section {
+		padding-top: var(--cyber-section-pt-m, var(--cyber-section-pt, 0px));
+		padding-right: var(--cyber-section-pr-m, var(--cyber-section-pr, 0px));
+		padding-bottom: var(--cyber-section-pb-m, var(--cyber-section-pb, 0px));
+		padding-left: var(--cyber-section-pl-m, var(--cyber-section-pl, 0px));
+		background-image: var(--cyber-section-bg-image-mobile, var(--cyber-section-bg-image, none));
+	}
+
+	.cyber-section__top:not(:last-child),
+	.cyber-section__body:not(:last-child) {
+		margin-bottom: var(--cyber-space-3);
+	}
+}

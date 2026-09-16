@@ -86,18 +86,30 @@ add_action( 'wp_enqueue_scripts', 'cyber_enqueue_assets' );
  */
 function cyber_container_css() {
 	$type = cyber_get_option( 'page_width_type' );
+	$cap  = cyber_get_option( 'page_width_100' );
+
+	// Pustka jest tu znaczaca: brak limitu, kontener idzie na pelna szerokosc.
+	$full = ( '' === $cap ) ? '100%' : sprintf( '%dpx', (int) $cap );
 
 	if ( '100' === $type ) {
-		$cap = cyber_get_option( 'page_width_100' );
-
-		// Pustka jest tu znaczaca: brak limitu, kontener idzie na pelna szerokosc.
-		$width = ( '' === $cap ) ? '100%' : sprintf( '%dpx', (int) $cap );
+		$width = $full;
 	} else {
 		$width = sprintf( '%dpx', (int) cyber_get_option( 'page_width_' . $type ) );
 	}
 
+	/*
+	 * Trzy szerokosci wypisujemy ZAWSZE, obok tej wybranej w Global Options.
+	 * Powod: sekcja moze miec wlasna szerokosc niezalezna od ustawienia strony
+	 * (np. 80% na stronie ustawionej na 60%), wiec musi miec z czego wybrac.
+	 * --cyber-container-width dalej wskazuje wybor globalny i to ona jest
+	 * wartoscia dziedziczona przez sekcje ustawione na "inherit".
+	 */
 	$css = sprintf(
-		':root{--cyber-container-width:%1$s;--cyber-container-margin:%2$dpx;}',
+		':root{--cyber-width-100:%1$s;--cyber-width-80:%2$dpx;--cyber-width-60:%3$dpx;'
+			. '--cyber-container-width:%4$s;--cyber-container-margin:%5$dpx;}',
+		$full,
+		(int) cyber_get_option( 'page_width_80' ),
+		(int) cyber_get_option( 'page_width_60' ),
 		$width,
 		(int) cyber_get_option( 'page_margin_desktop' )
 	);

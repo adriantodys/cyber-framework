@@ -229,6 +229,71 @@ przyklejania leży w CSS (`position: sticky`), bez JavaScriptu. Wartości liczbo
 przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
 (patrz `docs/acf-schema.md`, sekcja „Stan: generowanie CSS”).
 
+## Sekcje — Flexible Content
+
+Treść strony budowana z klocków. Jedno pole `cyber_sections`, każdy klocek to
+layout ACF z odpowiednikiem w rejestrze i jednym plikiem w
+`template-parts/sections/`.
+
+### Szkielet wspólny dla wszystkich sekcji
+
+```
+<section class="cyber-section cyber-section--[layout]" style="--cyber-section-*">
+  <div class="cyber-section__overlay">        ← tylko gdy ustawiono nakładkę
+  <div class="cyber-section__inner">          ← tu działa szerokość
+    <div class="cyber-section__top">          ← WYSIWYG góra
+    <div class="cyber-section__body">         ← treść layoutu
+    <div class="cyber-section__bottom">       ← WYSIWYG dół
+```
+
+Opakowanie wypisują `cyber_section_open()` i `cyber_section_close()`, nie każdy
+plik sekcji z osobna — zmiana struktury w dwunastu plikach naraz to gwarancja
+rozjazdu.
+
+### Pliki
+
+| Plik | Rola |
+|---|---|
+| `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, assety |
+| `template-parts/sections/basic.php` | layout `basic` — WYSIWYG → kontener → WYSIWYG |
+| `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
+| `acf-json/group_sections.json` | pole Flexible Content |
+| `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
+| `acf-json/group_section_settings.json` | źródło klonowania: ustawienia wyglądu |
+
+### Rejestr
+
+`cyber_section_types()` w `inc/sections.php` — jedno źródło prawdy:
+
+| Klucz | Etykieta | Szablon | Konteksty |
+|---|---|---|---|
+| `basic` | Sekcja podstawowa | `basic` | `page`, `post` |
+
+Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
+dostępności layoutów per typ treści to osobny krok.
+
+**Dołożenie sekcji:** wpis w rejestrze + plik w `template-parts/sections/` +
+layout w `group_sections.json` (klon ustawień w środku) + blok CSS. Wspólnych
+pól się **nie kopiuje** — wchodzą polem Clone.
+
+### Klasy
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-section` | `cyber_section_open()`, wspólna dla wszystkich layoutów |
+| `.cyber-section--[layout]` | klucz layoutu, punkt zaczepienia dla stylów jednego typu sekcji |
+| `.cyber-section--has-overlay` | dokładana tylko wtedy, gdy kolor nakładki jest ustawiony |
+| `.cyber-section__inner` | kontener treści; szerokość ze zmiennej, marginesy boczne wspólne z resztą strony |
+| `.cyber-section__overlay` | warstwa nad zdjęciem, `aria-hidden` |
+
+Dodatkowe klasy z pola ACF dokładane są do `.cyber-section`, każda przez
+`sanitize_html_class()`.
+
+### Punkt rozszerzenia
+
+Layout `basic` ma w środku hook `cyber_section_basic_body` — dołożenie
+zawartości nie wymaga przepisywania pliku szablonu.
+
 ## Warstwa WooCommerce
 
 Koszyk, zamówienie, lista produktów i strona produktu **nie mają

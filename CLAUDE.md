@@ -294,6 +294,31 @@ pasować, a różnica 2px w dwudziestu miejscach jest nie do wyśledzenia.
   tylko korekty o grubość krawędzi.
 - **`gap`** — na razie nie został objęty sweepem; w arkuszach sklepu nadal
   stoją tam liczby px. Do uporządkowania przy najbliższej okazji.
+
+### Wyjątek: wartości per instancja idą w atrybut `style`
+
+Reguła „zero inline style" powyżej dotyczy wartości **globalnych** — tych, które
+istnieją w jednym egzemplarzu i da się je wypisać raz w `wp_head`.
+
+**Sekcje Flexible Content są od niej wyjątkiem** i jest to decyzja świadoma.
+Sekcja ma N instancji na jednej stronie, każda z innym tłem i innymi odstępami,
+więc nie ma czego wypisać raz. Wartości jadą jako custom properties w atrybucie
+`style` opakowania:
+
+```html
+<section class="cyber-section cyber-section--basic"
+         style="--cyber-section-bg:#f5f5f5;--cyber-section-pt:64px;">
+```
+
+Alternatywy są gorsze, nie lepsze: blok `<style>` z regułami na `#id` wymagałby
+przelecenia całej pętli sekcji **przed** `<head>`, albo lądowałby w stopce
+i powodował przeskok layoutu przy ładowaniu.
+
+Zasada pozostaje w mocy w drugą stronę: **PHP nie generuje reguł CSS ani media
+query**. Media query siedzi w arkuszu i konsumuje wariant mobilny tej samej
+zmiennej (`--cyber-section-pt-m`). Każda wartość wstawiana w `style` przechodzi
+przez białą listę albo sanitizer, a całość przez `esc_attr()`.
+
 - Moduł opisany **mapą pól** (klucz opcji → nazwa zmiennej + jednostka) **nie
   pisze własnej pętli** — wypisuje zmienne przez `cyber_css_vars_from_map()`.
 
@@ -315,6 +340,34 @@ robi sąsiedni moduł" jest błędem — wcześniej istniały trzy jej identyczn
 ```
 ACF layout → template-part → HTML → CSS
 ```
+
+### Sekcje: klucz layoutu jest kontraktem
+
+Layout Flexible Content ma **etykietę** (dowolna, zmienialna) i **klucz**
+(`basic`, `cards`…), który jest nazwą zapisywaną przy każdym wierszu w bazie.
+
+**Klucza nie wolno zmienić ani usunąć po tym, jak ktokolwiek go użył.** ACF,
+nie znajdując layoutu o danej nazwie, po cichu pomija wiersz — i przy
+renderowaniu, i **przy zapisie** (`pro/fields/class-acf-field-flexible-content.php`,
+„bail early if no layout"). Efekt: przy najbliższym zapisaniu wpisu treść tej
+sekcji znika. Bez ostrzeżenia i bez kosza.
+
+Ta sama pułapka dotyczy **odbierania layoutowi kontekstu** (np. „ta sekcja
+przestaje być dostępna na wpisach"). Dodanie kontekstu jest bezpieczne zawsze,
+odebranie jest operacją destrukcyjną i wymaga potraktowania jak migracja.
+
+### Sekcje: jedna definicja, nie kopie
+
+Wspólne części sekcji — WYSIWYG góra/dół i komplet ustawień wyglądu — są
+zdefiniowane **raz**, w grupach źródłowych `group_section_content`
+i `group_section_settings`, i wchodzą do layoutów polem **Clone**. Grupy
+źródłowe mają lokalizację, która celowo nie pasuje do niczego
+(`options_page == cyber-clone-source`), więc nie renderują się nigdzie
+w panelu.
+
+Nowy layout **nie kopiuje** tych pól. Skopiowany zestaw to ta sama pułapka, co
+przy kopiowaniu pól ACF: piąta kopia różni się od pierwszej, bo poprawkę
+zrobiono w jednej.
 
 ## 8. WordPress Coding Standards
 
@@ -520,6 +573,12 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    Do uzupełnienia zostaje zawartość kolumn 2 i 3 stopki (sekcja 22) — czyli
    drobne dopełnienie, nie praca od zera.
 4. System komponentów / Flexible Content dla stron podstawowych.
+
+   **Stan: w toku.** Istnieje szkielet — pole `cyber_sections`, rejestr
+   `cyber_section_types()` (`inc/sections.php`), wspólne opakowanie `.cyber-section`
+   i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
+   Do zrobienia: kolejne layouty, filtrowanie dostępności per typ treści oraz
+   sekcje globalne.
 5. Szablony kluczowych widoków: front page, page, single, archive, 404, search.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).

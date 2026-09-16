@@ -1,0 +1,67 @@
+{
+    "key": "group_section_content",
+    "title": "Cyber Framework — Sekcje: tresc",
+    "fields": [
+        {
+            "key": "field_cyber_section_wysiwyg_top",
+            "label": "Tresc nad elementami",
+            "name": "cyber_section_wysiwyg_top",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Naglowek, wstep, cokolwiek nad wlasciwa trescia sekcji. Puste pole jest poprawnym stanem - blok wtedy nie powstaje.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        },
+        {
+            "key": "field_cyber_section_wysiwyg_bottom",
+            "label": "Tresc pod elementami",
+            "name": "cyber_section_wysiwyg_bottom",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Dopisek, przycisk, zastrzezenie. Puste pole nie tworzy bloku.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone. Nie renderuje sie nigdzie w panelu - lokalizacja celowo nie pasuje do niczego. Kazdy layout sekcji klonuje stad pojedyncze pola, wiec istnieje jedna ich definicja. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789567095
+}

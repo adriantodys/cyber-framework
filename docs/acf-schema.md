@@ -1386,6 +1386,91 @@ pojawią się w komponentach etapu 4.
 
 ---
 
+
+### Sekcje — trzy grupy pól
+
+Moduł sekcji używa **trzech** grup, nie jednej. Podział nie jest kosmetyczny:
+dwie pierwsze istnieją wyłącznie po to, żeby wspólne pola miały jedną definicję.
+
+| Grupa | Plik | Lokalizacja | Rola |
+|---|---|---|---|
+| `group_sections` | `acf-json/group_sections.json` | strony, wpisy | pole Flexible Content `cyber_sections` |
+| `group_section_content` | `acf-json/group_section_content.json` | **żadna** | źródło klonowania: WYSIWYG góra/dół |
+| `group_section_settings` | `acf-json/group_section_settings.json` | **żadna** | źródło klonowania: ustawienia wyglądu |
+
+> **„Żadna lokalizacja" to nie błąd.** Obie grupy źródłowe mają regułę
+> `options_page == cyber-clone-source`, a taka strona ustawień nie istnieje —
+> więc nie pojawiają się nigdzie w panelu. Pole **Clone** sięga po nie po kluczu,
+> niezależnie od lokalizacji. Dzięki temu redaktor widzi je tylko tam, gdzie mają
+> sens: wewnątrz sekcji.
+
+Klon działa w trybie **seamless, bez prefiksu nazw**, więc w PHP pola czyta się
+płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
+
+#### `cyber_sections` — pole Flexible Content
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
+
+Layouty: **`basic`** („Sekcja podstawowa"). Każdy layout ma odpowiednik
+w rejestrze `cyber_section_types()` i jeden plik w `template-parts/sections/`.
+
+#### Treść sekcji (`group_section_content`)
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść nad elementami | `cyber_section_wysiwyg_top` | WYSIWYG | `''` | Nagłówek i wstęp nad właściwą treścią sekcji |
+| Treść pod elementami | `cyber_section_wysiwyg_bottom` | WYSIWYG | `''` | Dopisek, przycisk, zastrzeżenie |
+
+Puste pole jest poprawnym stanem — blok wtedy w ogóle nie powstaje.
+
+#### Ustawienia wyglądu (`group_section_settings`)
+
+Wszystkie pola siedzą w zwiniętym akordeonie „Ustawienia sekcji", żeby treść
+była pierwsza, a wygląd pod ręką.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Szerokość sekcji | `cyber_section_width` | Select | `inherit` | Szerokość **wnętrza**: `inherit` / `100` / `80` / `60` |
+| Kolor tła | `cyber_section_bg_color` | Color (alpha) | `''` | Warstwa najniższa |
+| Nakładka na tło | `cyber_section_overlay_color` | Color (alpha) | `''` | Warstwa nad zdjęciem, pod treścią |
+| Zdjęcie w tle | `cyber_section_bg_image` | Image (ID) | `''` | Od 768px w górę |
+| Zdjęcie w tle (mobile) | `cyber_section_bg_image_mobile` | Image (ID) | `''` | Poniżej 767px; puste = zostaje zdjęcie główne |
+| Rozmiar tła | `cyber_section_bg_size` | Select | `cover` | `cover` / `contain` / `auto` |
+| Powtarzaj tło | `cyber_section_bg_repeat` | True/False | `false` | Dla tekstur, nie dla zdjęć |
+| Pozycja tła — poziom | `cyber_section_bg_position_x` | Select | `center` | `left` / `center` / `right` |
+| Pozycja tła — pion | `cyber_section_bg_position_y` | Select | `center` | `top` / `center` / `bottom` |
+| Odstęp: Góra / Prawo / Dół / Lewo | `cyber_section_pt` `_pr` `_pb` `_pl` | Select | `64` / `0` / `64` / `0` | Padding desktop, wartości ze skali |
+| Odstęp mobile: Góra / Prawo / Dół / Lewo | `cyber_section_pt_m` `_pr_m` `_pb_m` `_pl_m` | Select | `36` / `0` / `36` / `0` | Padding poniżej 767px |
+| Kotwica (ID) | `cyber_section_anchor` | Text | `''` | Bez `#`; pozwala linkować do sekcji |
+| Dodatkowe klasy CSS | `cyber_section_class` | Text | `''` | Dowolna liczba klas rozdzielonych spacją |
+| Sekcja włączona | `cyber_section_enabled` | True/False | `true` | Wyłączenie chowa sekcję, **zostawiając treść** |
+
+> **Kolor tła NIE przyciemni zdjęcia.** W CSS `background-color` jest malowany
+> **pod** `background-image`, więc kolor z kanałem alfa schowa się za zdjęciem.
+> Do przyciemnienia służy osobne pole **Nakładka**, renderowane jako własna
+> warstwa nad zdjęciem. To nie jest duplikat pola koloru, tylko inna warstwa.
+
+> **Szerokość dotyczy wnętrza, nie całej sekcji.** Tło — kolor i zdjęcie — zawsze
+> idzie na pełną szerokość okna. Odwrotnie nie dałoby się zrobić pasa
+> z kolorowym tłem na całą szerokość ekranu, a to najczęstszy układ w projektach.
+
+> **`inherit` jest domyślne i takie powinno zostać.** Sekcja z wpisaną na sztywno
+> szerokością przestaje reagować na zmianę „Szerokość główna" w Global Options,
+> a wtedy zmiana szerokości witryny wymaga obejścia wszystkich sekcji na
+> wszystkich podstronach.
+
+> **Odstępy są Selectem, nie liczbą.** Wartości pochodzą z zamkniętej skali
+> 0/6/12/24/36/48/64/94 (CLAUDE.md sekcja 6). Przy polu liczbowym redaktor wpisze
+> 35 i po trzech stronach skala przestanie istnieć; Select czyni ją egzekwowalną
+> przez panel, a nie przez dyscyplinę.
+
+> **Osobne odstępy mobilne to świadome odstępstwo od sekcji 19**, która dla wielu
+> powiązanych wartości nakazuje jedno pole procentowe na breakpoint. Uzasadnienie:
+> sekcje różnią się między sobą za bardzo na wspólny mnożnik — hero i wąski pasek
+> z logotypami nie skalują się tak samo.
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -1449,6 +1534,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-16 — Moduł **Sekcje** (etap 4). Trzy nowe grupy: `group_sections` (pole Flexible Content `cyber_sections` na stronach i wpisach) oraz dwie grupy źródłowe do klonowania — `group_section_content` (WYSIWYG góra/dół) i `group_section_settings` (18 pól wyglądu: tło, nakładka, szerokość, odstępy, kotwica, klasy, wyłącznik). Grupy źródłowe mają lokalizację celowo niepasującą do niczego, więc istnieją wyłącznie dla pola Clone — dzięki temu wspólne pola sekcji mają **jedną** definicję zamiast kopii w każdym layoucie. Pierwszy layout: `basic`.
 
 - 2026-09-16 — Dodano `default-acf.php` — formularz wdrożeniowy ze wszystkimi 166 kluczami Global Options, pogrupowanymi jak zakładki w panelu, z wartością domyślną, typem/zakresem i etykietą pola. Cztery pola (logo, logo stopki, dwa odnośniki Page Link) są zakomentowane jako `TYLKO PANEL`, bo ACF trzyma tam ID załącznika albo strony. Nowa reguła: **każde nowe pole Global Options trafia także do tego pliku** (CLAUDE.md sekcja 16, punkt 3).
 
