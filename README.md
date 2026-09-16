@@ -20,11 +20,22 @@ i obowiązkowa lektura przed każdą zmianą.
 1. Skopiuj katalog motywu do `wp-content/themes/cyber-framework/`.
 2. Zainstaluj i aktywuj **ACF PRO**.
 3. Aktywuj motyw *Cyber Framework*.
-4. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj **obie**
+4. **Nowe wdrożenie z gotowym projektem graficznym — krok opcjonalny.**
+   Wypełnij `default-acf.php` wartościami z projektu (kolory, czcionki, dane
+   kontaktowe) i przenieś je do `acf-json/group_global_options.json`, **zanim**
+   zsynchronizujesz pola. Dzięki temu krok 5 wciągnie od razu docelowe wartości,
+   zamiast domyślnych motywu, i nie trzeba przeklikiwać czternastu zakładek.
+   Pełny przebieg opisuje nagłówek tego pliku; zasady — CLAUDE.md sekcja 16.
+5. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj **obie**
    grupy: *Cyber Framework — Global Options* oraz *Cyber Framework — Kategoria produktu*.
    Obie są w repozytorium (`acf-json/`) — nie trzeba klikać żadnego pola ręcznie.
    Druga dotyczy taksonomii `product_cat` i ma sens dopiero z WooCommerce.
-5. Ustawienia znajdziesz w menu **Cyber Framework** (slug `cyber-settings`).
+6. Ustawienia znajdziesz w menu **Cyber Framework** (slug `cyber-settings`).
+   Zapisz je raz — wartości trafią do `wp_options` i od tej chwili to one
+   decydują o wyglądzie.
+7. Jeśli robiłeś krok 4, posprzątaj: usuń `default-acf.php` i przywróć plik pól
+   (`git checkout acf-json/`). Wygląd zostaje, bo mieszka już w bazie, a motyw
+   wraca do stanu z repozytorium — bez forka na tego klienta.
 
 Jeśli pozycja *Sync* się nie pojawia, sprawdź, czy `acf-json/` jest zapisywalny
 i czy motyw jest aktywny (ścieżki Local JSON rejestruje `inc/acf.php`).
@@ -40,6 +51,7 @@ cyber-framework/
 ├── template-parts/    ← header/, footer/, breadcrumb/, components/; sections/ czeka na etap 4
 ├── templates/         ← szablony widoków (puste — etap 5)
 ├── woocommerce/       ← nadpisania szablonów wtyczki (dwa, rejestr w CLAUDE.md sekcja 2)
+├── default-acf.php    ← formularz wdrożeniowy: wartości domyślne dla nowego projektu
 ├── functions.php      ← bootstrap, bez logiki
 └── style.css          ← wyłącznie nagłówek motywu; style są w assets/css/
 ```

@@ -1427,7 +1427,30 @@ bez pustego kontenera na tekst.
 - Do czasu powstania takiego generatora: **każda zmiana pola w ACF = ręczna aktualizacja
   tego pliku w tym samym commicie.**
 
+### Nowe pole trafia także do `default-acf.php`
+
+Pole dodane do **Global Options** musi pojawić się również w `default-acf.php`
+w katalogu motywu — w sekcji odpowiadającej swojej zakładce, w formacie:
+
+```php
+	'font_size_h2'                            => 40,            // px 8-200       | Naglowek H2
+```
+
+Kolejno: klucz bez prefiksu `cyber_`, wartość domyślna, typ z zakresem lub listą
+dozwolonych wartości, etykieta pola z panelu.
+
+`default-acf.php` to formularz wdrożeniowy: wypełnia się go raz, wartościami
+z zatwierdzonego projektu, przed pierwszą synchronizacją pól, a po skonfigurowaniu
+strony kasuje. Pole, którego w nim nie ma, jest niewidoczne na tym etapie i wyjdzie
+dopiero u klienta. Zasady i pełny przebieg: **CLAUDE.md sekcja 16**.
+
+Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taksonomii
+(np. `group_product_category`) nie mają tu nic do roboty — ich wartości są treścią,
+nie ustawieniem globalnym.
+
 ## Historia zmian
+
+- 2026-09-16 — Dodano `default-acf.php` — formularz wdrożeniowy ze wszystkimi 166 kluczami Global Options, pogrupowanymi jak zakładki w panelu, z wartością domyślną, typem/zakresem i etykietą pola. Cztery pola (logo, logo stopki, dwa odnośniki Page Link) są zakomentowane jako `TYLKO PANEL`, bo ACF trzyma tam ID załącznika albo strony. Nowa reguła: **każde nowe pole Global Options trafia także do tego pliku** (CLAUDE.md sekcja 16, punkt 3).
 
 - 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
 - 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.

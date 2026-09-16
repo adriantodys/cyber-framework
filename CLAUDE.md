@@ -402,7 +402,7 @@ Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
 ## 16. Obowiązkowy output po każdej pracy z ACF
 
 Za każdym razem, gdy Claude tworzy lub zmienia moduł związany z ACF (nowa grupa pól,
-nowy layout, nowe pole w istniejącej grupie), musi dostarczyć **wszystkie trzy**
+nowy layout, nowe pole w istniejącej grupie), musi dostarczyć **wszystkie cztery**
 poniższe elementy — nie wystarczy sam kod/JSON bez opisu:
 
 1. **Plik `acf-json/*.json`** gotowy do wgrania i zsynchronizowania w ACF
@@ -411,13 +411,53 @@ poniższe elementy — nie wystarczy sam kod/JSON bez opisu:
 2. **Zaktualizowany `docs/acf-schema.md`** — tabela z Field Label / Field Name /
    Typ / Default / Przeznaczenie dla każdego nowego/zmienionego pola, w tym samym
    kroku, w którym powstał kod (nie "później").
-3. **Czytelne podsumowanie w odpowiedzi dla użytkownika** — krótka lista "co się
+3. **Nowy klucz w `default-acf.php`** — z wartością domyślną, typem/zakresem
+   w komentarzu i etykietą pola, w sekcji odpowiadającej zakładce ACF.
+   Dotyczy **wyłącznie** pól Global Options; grupy przypięte do wpisów czy
+   taksonomii tego pliku nie dotyczą.
+4. **Czytelne podsumowanie w odpowiedzi dla użytkownika** — krótka lista "co się
    zmieniło i co musisz zrobić w adminie WP" (np. "wgraj plik X do acf-json/,
    kliknij Sync" albo "nic nie musisz robić ręcznie, JSON zrobi to sam po synchronizacji").
 
 Zasada nadrzędna: użytkownik nigdy nie powinien się domyślać, jakie pola istnieją
 ani co ma zrobić w panelu WordPress — ta informacja ma być podana wprost, za każdym
 razem, bez pytania o to.
+
+
+### Plik `default-acf.php` — formularz wdrożeniowy projektu
+
+W katalogu motywu leży `default-acf.php`: płaska lista **wszystkich** kluczy Global
+Options, każdy z wartością domyślną, typem/zakresem i etykietą pola, pogrupowana
+dokładnie tak jak zakładki w panelu. Plik jest wersjonowany w Git, więc świeży klon
+repozytorium już go ma.
+
+**Do czego służy.** Przy nowym wdrożeniu wypełnia się go wartościami z zatwierdzonego
+projektu graficznego **zanim** zsynchronizuje się pola, przenosi te wartości do
+`acf-json/group_global_options.json`, synchronizuje i zapisuje ustawienia. Od tej
+chwili wartości żyją w `wp_options` i to one decydują o wyglądzie, więc plik oraz
+zmiany w JSON-ie są już niepotrzebne — jedno się kasuje, drugie wraca przez
+`git checkout acf-json/`. Instalacja klienta zostaje identyczna z frameworkiem.
+Pełny przebieg opisuje nagłówek samego pliku oraz `README.md`.
+
+**Trzy reguły, które obowiązują zawsze:**
+
+1. **Nowe pole Global Options = nowy wpis w tym pliku** (punkt 3 listy wyżej).
+   Pola, którego tu nie ma, nie da się ustawić przy starcie projektu — brak wyjdzie
+   na jaw dopiero u klienta, przy wypełnianiu formularza.
+2. **Wartości przed zapisem do `acf-json/` przechodzą walidację przez
+   `cyber_option_schema()`** — typ, zakres, lista dozwolonych. Wartość spoza
+   zakresu zatrzymuje **cały** zapis, z listą odrzuconych kluczy i powodów.
+   Bez tego panel pokazuje jedno, a front drugie: `cyber_validate_option_value()`
+   odrzuci taką wartość i po cichu podstawi domyślną motywu — dokładnie ten sam
+   mechanizm, który wywrócił pola z przezroczystością (sekcja 5).
+3. **Plik nigdy nie jest ładowany w czasie działania motywu.** Nic go nie
+   `require`uje; jego obecność ani brak nie zmieniają zachowania strony. To dane
+   wejściowe jednorazowej operacji, nie warstwa konfiguracji.
+
+Pola, których wartością jest ID załącznika albo ID strony — logo, logo stopki
+i odnośniki Page Link — są w pliku **zakomentowane i oznaczone `TYLKO PANEL`**.
+Tych wartości nie da się znać przed wgraniem plików na serwer, więc ustawia się
+je w panelu.
 
 ### Znacznik `modified` w plikach `acf-json/`
 
