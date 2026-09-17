@@ -289,3 +289,77 @@
 		grid-template-columns: repeat(var(--cyber-cards-cols-m, 1), minmax(0, 1fr));
 	}
 }
+
+/* --- Kolumny tekstowe (WYSIWYG) -------------------------------------------- */
+
+/*
+ * Sciezki siatki przychodza gotowe ze zmiennej, w jednostkach fr, nie w
+ * procentach. 40% + 60% plus odstep przekracza 100% i wiersz wyjezdza poza
+ * kontener; fr dzieli to, co zostaje PO odjeciu odstepu, wiec proporcja
+ * zostaje dokladna przy kazdej wartosci gap.
+ */
+.cyber-columns {
+	display: grid;
+	grid-template-columns: var(--cyber-columns-template, minmax(0, 1fr));
+	column-gap: var(--cyber-columns-gap-x, 24px);
+	row-gap: var(--cyber-columns-gap-y, 24px);
+}
+
+.cyber-column {
+	min-width: 0;
+	padding: var(--cyber-columns-pad-y, 0px) var(--cyber-columns-pad-x, 0px);
+	border-radius: var(--cyber-columns-radius, 0);
+	background-color: var(--cyber-columns-bg, transparent);
+	background-image: var(--cyber-columns-bg-image, none);
+	background-repeat: var(--cyber-columns-bg-repeat, no-repeat);
+	background-position: var(--cyber-columns-bg-position, center center);
+	background-size: var(--cyber-columns-bg-size, cover);
+}
+
+.cyber-column > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-column > *:last-child {
+	margin-bottom: 0;
+}
+
+/* WYSIWYG potrafi wstawic obrazek szerszy niz kolumna. */
+.cyber-column img {
+	max-width: 100%;
+	height: auto;
+}
+
+.cyber-columns--hover .cyber-column {
+	transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.cyber-columns--hover .cyber-column:hover {
+	background-color: var(--cyber-columns-bg-hover, var(--cyber-columns-bg, transparent));
+}
+
+/* Barwa z zakladki Kolory, grubosc na sztywno — ten sam wzorzec co w kartach. */
+.cyber-columns--border .cyber-column {
+	border: 1px solid var(--cyber-color-border-1);
+}
+
+.cyber-columns--border.cyber-columns--hover .cyber-column:hover {
+	border-color: var(--cyber-color-border-2);
+}
+
+/*
+ * Tablet: dwie kolumny zostaja przy proporcji z desktopu (brak zmiennej -t,
+ * wiec dziala wartosc zapasowa), trzy ida w rowne, cztery w dwie na dwie.
+ * Mobile: zawsze jedna pod druga.
+ */
+@media (max-width: 980px) {
+	.cyber-columns {
+		grid-template-columns: var(--cyber-columns-template-t, var(--cyber-columns-template, minmax(0, 1fr)));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-columns {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

@@ -45,6 +45,7 @@ w ustalonej kolejności:
 | 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
 | 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
 | 18 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
+| 19 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
 
 ## Stałe
 
@@ -1277,9 +1278,42 @@ Moduł sekcji nie wie nic o kartach, a moduł kart nie wie nic o tle sekcji.
 Dzięki temu zmiana w opakowaniu nie wymaga dotykania żadnej sekcji, a kolejna
 sekcja z własną treścią dopisuje się obok, nie zamiast.
 
-Ten sam podział obowiązuje w ACF: layout `cards` klonuje **cztery** rzeczy —
-WYSIWYG górę, grupę `group_section_cards`, WYSIWYG dół i wspólne ustawienia
-sekcji. Sprawdzone: rozwija się do **63 podpól** o płaskich nazwach.
+Ten sam podział obowiązuje w ACF. Kolejność w panelu jest stała dla
+wszystkich sekcji — **najpierw ustawienia, potem treść**:
+
+```
+basic:    Ustawienia sekcji → WYSIWYG góra → WYSIWYG dół
+cards:    Ustawienia sekcji → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
+columns:  Ustawienia sekcji → Ustawienia kolumn → Układ + kolumny
+```
+
+**Warunki widoczności w sklonowanych polach działają, choć w PHP wyglądają na
+zepsute.** W trybie seamless ACF zmienia klucz pola na
+`{klucz_klonu}_{klucz_pola}`, więc `acf_get_field()` pokazuje warunek wskazujący
+na nieistniejący już klucz `field_cyber_columns_count`. To celowe: przy
+rysowaniu formularza `acf_prepare_field()` przywraca oryginalny klucz
+(`pro/fields/class-acf-field-clone.php`, komentarz *„allowing conditional logic
+JS to work"*). Warunek musi jednak wskazywać pole z **tego samego klonu** —
+dlatego liczba kolumn, proporcje i wszystkie cztery WYSIWYG siedzą w jednym
+klonie `field_cyber_section_columns_items`.
+
+Oba akordeony ustawień są domyślnie zwinięte, więc mimo że stoją pierwsze,
+nie zasłaniają treści. Sprawdzone: `cards` rozwija się do **63 podpól**
+o płaskich nazwach.
+
+**Klucze klonów są kontraktem, kolejność nie.** ACF zapisuje przy każdej
+wartości odwołanie do klucza klonu
+(`_cyber_sections_0_cyber_section_pt` → `field_cyber_section_basic_settings_…`),
+więc zmiana kolejności **nie może** zmieniać kluczy. Grupa `group_section_cards`
+trzyma repeater i akordeon ustawień w jednym pliku; żeby między nimi wszedł
+WYSIWYG górny, istniejący klon `field_cyber_section_cards_body` bierze teraz
+**listę pól ustawień** zamiast całej grupy, a repeater dostał osobny klon
+`field_cyber_section_cards_items`. Porównanie odczytu wszystkich 12 wpisów
+z sekcjami przed zmianą i po niej: wartości identyczne, różni się wyłącznie
+kolejność kluczy w tablicy.
+
+Nowy layout **zachowuje tę kolejność**: klon `group_section_settings` jako
+pierwszy, potem ustawienia własne, potem treść.
 
 **Barwy cienia i obramowania nie mają pól w sekcji.** Włącznik jest w panelu,
 barwa przychodzi z zakładki Kolory (`--cyber-color-shadow`,

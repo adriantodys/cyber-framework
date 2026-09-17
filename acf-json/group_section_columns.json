@@ -1,0 +1,733 @@
+{
+    "key": "group_section_columns",
+    "title": "Cyber Framework — Sekcje: kolumny tekstowe",
+    "fields": [
+        {
+            "key": "field_cyber_columns_acc",
+            "label": "Ustawienia kolumn",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_columns_spacing",
+            "label": "Odstepy",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_columns_gap_x",
+            "label": "Odstep miedzy kolumnami (X)",
+            "name": "cyber_columns_gap_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_gap_y",
+            "label": "Odstep miedzy kolumnami (Y)",
+            "name": "cyber_columns_gap_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Dziala, gdy kolumny ukladaja sie jedna pod druga - na telefonie i przy czterech kolumnach na tablecie.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_pad_x",
+            "label": "Odstep wewnetrzny (X)",
+            "name": "cyber_columns_pad_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "0",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_pad_y",
+            "label": "Odstep wewnetrzny (Y)",
+            "name": "cyber_columns_pad_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "0",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_columns_bg",
+            "label": "Tlo kolumny",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_columns_bg",
+            "label": "Kolor tla",
+            "name": "cyber_columns_bg",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Wspolne dla wszystkich kolumn sekcji.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_columns_bg_hover",
+            "label": "Kolor tla po najechaniu",
+            "name": "cyber_columns_bg_hover",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste pole = brak zmiany po najechaniu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_columns_bg_image",
+            "label": "Zdjecie w tle",
+            "name": "cyber_columns_bg_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Powtarzane w kazdej kolumnie. Wspolne tlo za calym wierszem ustawia sie w Ustawieniach sekcji.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium",
+            "allow_in_bindings": 0,
+            "preview": 1,
+            "upload_folder": ""
+        },
+        {
+            "key": "field_cyber_columns_bg_size",
+            "label": "Rozmiar tla",
+            "name": "cyber_columns_bg_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "cover": "cover - wypelnia kolumne",
+                "contain": "contain - miesci sie w calosci",
+                "auto": "auto - rozmiar oryginalu"
+            },
+            "default_value": "cover",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_bg_position_x",
+            "label": "Pozycja tla - poziom",
+            "name": "cyber_columns_bg_position_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_bg_position_y",
+            "label": "Pozycja tla - pion",
+            "name": "cyber_columns_bg_position_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "top": "Do gory",
+                "center": "Do srodka",
+                "bottom": "Do dolu"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_bg_repeat",
+            "label": "Powtarzaj tlo",
+            "name": "cyber_columns_bg_repeat",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_columns_border",
+            "label": "Obramowanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_columns_border",
+            "label": "Obramowanie",
+            "name": "cyber_columns_border",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Barwa z zakladki Kolory (Obramowanie 1, po najechaniu Obramowanie 2). Grubosc jest stala w motywie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_columns_radius",
+            "label": "Zaokraglenie rogow",
+            "name": "cyber_columns_radius",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_columns_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        },
+        {
+            "key": "field_cyber_msg_columns_layout",
+            "label": "Uklad kolumn",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_columns_count",
+            "label": "Liczba kolumn",
+            "name": "cyber_columns_count",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Na desktopie wszystkie kolumny stoja w jednym wierszu. Na tablecie i telefonie uklad dostosowuje sie sam.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_layout_2",
+            "label": "Proporcje (2 kolumny)",
+            "name": "cyber_columns_layout_2",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "50-50": "50 \/ 50",
+                "40-60": "40 \/ 60",
+                "60-40": "60 \/ 40"
+            },
+            "default_value": "50-50",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_layout_3",
+            "label": "Proporcje (3 kolumny)",
+            "name": "cyber_columns_layout_3",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "3"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "33-33-33": "33 \/ 33 \/ 33",
+                "20-60-20": "20 \/ 60 \/ 20",
+                "40-20-40": "40 \/ 20 \/ 40"
+            },
+            "default_value": "33-33-33",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_columns_1",
+            "label": "Kolumna 1",
+            "name": "cyber_columns_1",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        },
+        {
+            "key": "field_cyber_columns_2",
+            "label": "Kolumna 2",
+            "name": "cyber_columns_2",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "3"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "4"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        },
+        {
+            "key": "field_cyber_columns_3",
+            "label": "Kolumna 3",
+            "name": "cyber_columns_3",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "3"
+                    }
+                ],
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "4"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        },
+        {
+            "key": "field_cyber_columns_4",
+            "label": "Kolumna 4",
+            "name": "cyber_columns_4",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_columns_count",
+                        "operator": "==",
+                        "value": "4"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Kolumny tekstowe: od 1 do 4 pol WYSIWYG w jednym wierszu plus wspolne ustawienia wygladu kolumn. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789627644
+}

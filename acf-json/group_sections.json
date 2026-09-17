@@ -24,6 +24,29 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_cyber_section_basic_settings",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "group_section_settings"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
                             "key": "field_cyber_section_basic_top",
                             "label": "",
                             "name": "",
@@ -68,9 +91,19 @@
                             "prefix_label": 0,
                             "prefix_name": 0,
                             "allow_in_bindings": 0
-                        },
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_cyber_section_cards": {
+                    "key": "layout_cyber_section_cards",
+                    "name": "cards",
+                    "label": "Karty (icon boxes)",
+                    "display": "block",
+                    "sub_fields": [
                         {
-                            "key": "field_cyber_section_basic_settings",
+                            "key": "field_cyber_section_cards_settings",
                             "label": "",
                             "name": "",
                             "aria-label": "",
@@ -91,17 +124,86 @@
                             "prefix_label": 0,
                             "prefix_name": 0,
                             "allow_in_bindings": 0
-                        }
-                    ],
-                    "min": "",
-                    "max": ""
-                },
-                "layout_cyber_section_cards": {
-                    "key": "layout_cyber_section_cards",
-                    "name": "cards",
-                    "label": "Karty (icon boxes)",
-                    "display": "block",
-                    "sub_fields": [
+                        },
+                        {
+                            "key": "field_cyber_section_cards_body",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_cards_acc",
+                                "field_cyber_msg_cards_grid",
+                                "field_cyber_cards_columns",
+                                "field_cyber_cards_columns_tablet",
+                                "field_cyber_cards_columns_mobile",
+                                "field_cyber_cards_gap_x",
+                                "field_cyber_cards_gap_y",
+                                "field_cyber_msg_cards_box",
+                                "field_cyber_cards_pad_x",
+                                "field_cyber_cards_pad_y",
+                                "field_cyber_cards_bg",
+                                "field_cyber_cards_bg_hover",
+                                "field_cyber_cards_radius",
+                                "field_cyber_cards_shadow",
+                                "field_cyber_cards_border",
+                                "field_cyber_cards_image_as_bg",
+                                "field_cyber_cards_min_height",
+                                "field_cyber_msg_cards_align",
+                                "field_cyber_cards_align_media",
+                                "field_cyber_cards_align_title",
+                                "field_cyber_cards_align_text",
+                                "field_cyber_msg_cards_inner",
+                                "field_cyber_cards_gap_media",
+                                "field_cyber_cards_gap_title",
+                                "field_cyber_cards_gap_text",
+                                "field_cyber_msg_cards_type",
+                                "field_cyber_cards_title_color",
+                                "field_cyber_cards_title_weight",
+                                "field_cyber_cards_text_color",
+                                "field_cyber_cards_text_weight",
+                                "field_cyber_msg_cards_link",
+                                "field_cyber_cards_link_style",
+                                "field_cyber_cards_button_size",
+                                "field_cyber_cards_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_cards_show_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_cards_show_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
                         {
                             "key": "field_cyber_section_cards_top",
                             "label": "",
@@ -126,7 +228,7 @@
                             "allow_in_bindings": 0
                         },
                         {
-                            "key": "field_cyber_section_cards_body",
+                            "key": "field_cyber_section_cards_items",
                             "label": "",
                             "name": "",
                             "aria-label": "",
@@ -140,7 +242,30 @@
                                 "id": ""
                             },
                             "clone": [
-                                "group_section_cards"
+                                "field_cyber_cards_items"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_cards_show_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_cards_show_bottom"
                             ],
                             "display": "seamless",
                             "layout": "block",
@@ -170,9 +295,19 @@
                             "prefix_label": 0,
                             "prefix_name": 0,
                             "allow_in_bindings": 0
-                        },
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_cyber_section_columns": {
+                    "key": "layout_cyber_section_columns",
+                    "name": "columns",
+                    "label": "Kolumny tekstowe (WYSIWYG)",
+                    "display": "block",
+                    "sub_fields": [
                         {
-                            "key": "field_cyber_section_cards_settings",
+                            "key": "field_cyber_section_columns_settings",
                             "label": "",
                             "name": "",
                             "aria-label": "",
@@ -187,6 +322,76 @@
                             },
                             "clone": [
                                 "group_section_settings"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_columns_body",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_columns_acc",
+                                "field_cyber_msg_columns_spacing",
+                                "field_cyber_columns_gap_x",
+                                "field_cyber_columns_gap_y",
+                                "field_cyber_columns_pad_x",
+                                "field_cyber_columns_pad_y",
+                                "field_cyber_msg_columns_bg",
+                                "field_cyber_columns_bg",
+                                "field_cyber_columns_bg_hover",
+                                "field_cyber_columns_bg_image",
+                                "field_cyber_columns_bg_size",
+                                "field_cyber_columns_bg_position_x",
+                                "field_cyber_columns_bg_position_y",
+                                "field_cyber_columns_bg_repeat",
+                                "field_cyber_msg_columns_border",
+                                "field_cyber_columns_border",
+                                "field_cyber_columns_radius",
+                                "field_cyber_columns_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_columns_items",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_msg_columns_layout",
+                                "field_cyber_columns_count",
+                                "field_cyber_columns_layout_2",
+                                "field_cyber_columns_layout_3",
+                                "field_cyber_columns_1",
+                                "field_cyber_columns_2",
+                                "field_cyber_columns_3",
+                                "field_cyber_columns_4"
                             ],
                             "display": "seamless",
                             "layout": "block",
@@ -229,5 +434,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789595769
+    "modified": 1789628787
 }

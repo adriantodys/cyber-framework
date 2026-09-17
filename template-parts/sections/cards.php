@@ -30,7 +30,9 @@ $cyber_cards = cyber_cards_attributes( $cyber_row );
 $cyber_items = cyber_cards_items( $cyber_row );
 
 cyber_section_open( $cyber_attributes );
-cyber_section_wysiwyg( $cyber_row, 'top' );
+if ( cyber_cards_shows_wysiwyg( $cyber_row, 'top' ) ) {
+	cyber_section_wysiwyg( $cyber_row, 'top' );
+}
 
 if ( $cyber_items ) :
 	?>
@@ -98,5 +100,7 @@ if ( $cyber_items ) :
 	<?php
 endif;
 
-cyber_section_wysiwyg( $cyber_row, 'bottom' );
+if ( cyber_cards_shows_wysiwyg( $cyber_row, 'bottom' ) ) {
+	cyber_section_wysiwyg( $cyber_row, 'bottom' );
+}
 cyber_section_close();

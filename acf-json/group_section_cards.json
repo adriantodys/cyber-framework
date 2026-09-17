@@ -1016,6 +1016,48 @@
             "open": 0,
             "multi_expand": 1,
             "endpoint": 1
+        },
+        {
+            "key": "field_cyber_cards_show_top",
+            "label": "Pokaz tresc nad elementami",
+            "name": "cyber_cards_show_top",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_cards_show_bottom",
+            "label": "Pokaz tresc pod elementami",
+            "name": "cyber_cards_show_bottom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -1036,5 +1078,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Karty (icon boxes): repeater elementow plus ustawienia siatki i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789595769
+    "modified": 1789629144
 }

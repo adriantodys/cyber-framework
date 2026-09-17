@@ -259,6 +259,9 @@ rozjazdu.
 | `inc/sections-cards.php` | layout `cards` — logika siatki i elementów |
 | `template-parts/sections/cards.php` | layout `cards` — widok |
 | `acf-json/group_section_cards.json` | źródło klonowania: pola sekcji Karty |
+| `inc/sections-columns.php` | layout `columns` — proporcje i siatka |
+| `template-parts/sections/columns.php` | layout `columns` — widok |
+| `acf-json/group_section_columns.json` | źródło klonowania: pola sekcji Kolumny |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
 | `acf-json/group_sections.json` | pole Flexible Content |
 | `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
@@ -272,6 +275,7 @@ rozjazdu.
 |---|---|---|---|
 | `basic` | Sekcja podstawowa | `basic` | `page`, `post` |
 | `cards` | Karty (icon boxes) | `cards` | `page`, `post` |
+| `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
 dostępności layoutów per typ treści to osobny krok.
@@ -326,6 +330,39 @@ dzięki temu zmiana w opakowaniu nie wymaga dotykania żadnej sekcji.
 
 Przycisk renderuje wspólny komponent `cyber_button()`, więc karty nie mają
 własnego markupu przycisku ani własnych pól jego wyglądu.
+
+Treść nad i pod siatką ma **osobne włączniki** (`cyber_cards_show_top`,
+`cyber_cards_show_bottom`), stojące w panelu bezpośrednio nad swoim edytorem.
+Na froncie sprawdza je `cyber_cards_shows_wysiwyg()`, w panelu edytor chowa
+filtr `cyber_cards_wysiwyg_condition()` — warunek nie może siedzieć w JSON-ie,
+bo edytory są wspólne z sekcją podstawową.
+Oba są **domyślnie wyłączone**; brak wartości liczy się jako wyłączony,
+zgodnie z `default_value` pola w ACF.
+
+
+### Sekcja `columns` — Kolumny tekstowe (WYSIWYG)
+
+Opakowanie i ustawienia sekcji jak w `basic`, ale **bez WYSIWYG nad i pod
+treścią** — kolumny same są polami WYSIWYG, więc dodatkowe pola treści byłyby
+powtórzeniem. Nagłówek sekcji wpisuje się w pierwszej kolumnie albo w osobnej
+sekcji podstawowej nad tą.
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-columns.php` | rejestr proporcji, walidacja liczby kolumn, zmienne siatki |
+| `template-parts/sections/columns.php` | widok |
+| `acf-json/group_section_columns.json` | pola: układ, 4 × WYSIWYG, ustawienia |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-columns` | kontener; ścieżki siatki ze zmiennej `--cyber-columns-template` |
+| `.cyber-columns--{1..4}` | liczba kolumn, punkt zaczepienia dla stylów |
+| `.cyber-columns--hover` / `--border` | jak w kartach |
+| `.cyber-column` | pojedyncza kolumna |
+
+**Proporcje są w `fr`, nie w procentach.** 40% + 60% plus odstęp przekracza
+100% i wiersz wyjeżdża poza kontener; `fr` dzieli miejsce, które zostaje po
+odjęciu odstępu, więc `2fr 3fr` daje dokładne 40/60 przy każdym `gap`.
 
 ## Warstwa WooCommerce
 

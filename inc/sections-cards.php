@@ -229,6 +229,67 @@ function cyber_cards_attributes( array $row ) {
 }
 
 /**
+ * Czy blok WYSIWYG nad albo pod kartami ma sie wyswietlic.
+ *
+ * Domyslnie NIE — wlacznik trzeba swiadomie wlaczyc. Brak wartosci liczy sie
+ * jako wylaczony, zgodnie z default_value pola w ACF, zeby front i panel
+ * zawsze pokazywaly ten sam stan.
+ *
+ * @param array  $row  Wiersz Flexible Content.
+ * @param string $slot 'top' albo 'bottom'.
+ * @return bool
+ */
+function cyber_cards_shows_wysiwyg( array $row, $slot ) {
+	$key = 'cyber_cards_show_' . $slot;
+
+	return ! empty( $row[ $key ] );
+}
+
+/**
+ * Chowa w panelu edytor WYSIWYG kart, gdy jego wlacznik jest wylaczony.
+ *
+ * Edytory nad i pod kartami pochodza ze WSPOLNEJ grupy group_section_content,
+ * z ktorej korzysta tez sekcja podstawowa. Warunek wpisany w tej grupie
+ * dzialalby wiec we wszystkich sekcjach naraz — a sekcja podstawowa zadnych
+ * wlacznikow nie ma. Dlatego warunek dokladamy tutaj, w locie, i tylko polom
+ * przyniesionym przez klon kart.
+ *
+ * $field['_clone'] niesie klucz klonu, ktory przyniosl pole
+ * (includes/acf-field-functions.php), wiec ten sam edytor w sekcji podstawowej
+ * ma tam inna wartosc i filtr go nie dotyka.
+ *
+ * Priorytet 20, po filtrze ACF (10), ktory przywraca polu oryginalny klucz —
+ * warunek odwoluje sie do oryginalnego klucza wlacznika, tak jak widzi go
+ * JavaScript formularza.
+ *
+ * @param array $field Pole ACF przygotowywane do wyswietlenia w formularzu.
+ * @return array Pole z warunkiem albo bez zmian.
+ */
+function cyber_cards_wysiwyg_condition( $field ) {
+	$map = array(
+		'field_cyber_section_cards_top'    => 'field_cyber_cards_show_top',
+		'field_cyber_section_cards_bottom' => 'field_cyber_cards_show_bottom',
+	);
+
+	if ( empty( $field['_clone'] ) || ! isset( $map[ $field['_clone'] ] ) ) {
+		return $field;
+	}
+
+	$field['conditional_logic'] = array(
+		array(
+			array(
+				'field'    => $map[ $field['_clone'] ],
+				'operator' => '==',
+				'value'    => '1',
+			),
+		),
+	);
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'cyber_cards_wysiwyg_condition', 20 );
+
+/**
  * Normalizuje elementy repeatera do postaci gotowej dla widoku.
  *
  * Widok nie dostaje surowych wartosci ACF, tylko gotowe dane (CLAUDE.md

@@ -1427,6 +1427,7 @@ Puste pole jest poprawnym stanem — blok wtedy w ogóle nie powstaje.
 
 #### Ustawienia wyglądu (`group_section_settings`)
 
+W każdym layoucie ten akordeon stoi **jako pierwszy**, przed treścią sekcji.
 Wszystkie pola siedzą w zwiniętym akordeonie „Ustawienia sekcji", żeby treść
 była pierwsza, a wygląd pod ręką.
 
@@ -1509,6 +1510,30 @@ zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 | Wygląd odnośnika | `cyber_cards_link_style` | Select | `button` |
 | Rozmiar przycisku | `cyber_cards_button_size` | Select | `medium` |
 
+**Włączniki treści** — poza akordeonem, każdy bezpośrednio nad swoim edytorem:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Pokaż treść nad elementami | `cyber_cards_show_top` | True/False | `false` |
+| Pokaż treść pod elementami | `cyber_cards_show_bottom` | True/False | `false` |
+
+Kolejność w panelu: Ustawienia sekcji → Ustawienia kart → **włącznik górny →
+edytor górny** → Elementy → **włącznik dolny → edytor dolny**.
+
+> **Wyłączenie chowa edytor w panelu i blok na stronie.** Wpisany tekst zostaje
+> w bazie. Warunek widoczności edytora **nie siedzi w pliku JSON**: edytory
+> pochodzą ze wspólnej grupy `group_section_content`, z której korzysta też
+> sekcja podstawowa, więc warunek wpisany tam działałby we wszystkich sekcjach.
+> Dokłada go w locie filtr `cyber_cards_wysiwyg_condition()`
+> (`inc/sections-cards.php`), wyłącznie polom przyniesionym przez klon kart.
+>
+> **Domyślnie wyłączone.** Nowa sekcja kart startuje bez treści nad i pod
+> siatką; edytor pojawia się dopiero po włączeniu. Brak wartości liczy się jako
+> wyłączony, zgodnie z `default_value` pola, więc front i panel zawsze pokazują
+> ten sam stan. Przy zmianie domyślnej wartości z `true` na `false` żaden
+> opublikowany wpis nie miał kart z treścią nad ani pod siatką — sprawdzone
+> w bazie, bez migracji.
+
 > **Nie ma pola „liczba wierszy" i to jest decyzja, nie przeoczenie.** Liczba
 > wierszy siatki wynika z liczby elementów podzielonej przez liczbę kolumn —
 > nie da się jej ustawić niezależnie. Pole sterowałoby albo obcinaniem
@@ -1534,6 +1559,70 @@ zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 > `text-align`, a przy zdjęciu także `margin-inline`, czyli więcej niż jedną
 > właściwość. Wartości pochodzą z kanonicznego zestawu `cyber_alignments()`.
 > Odnośnik idzie za wyrównaniem tekstu i nie ma osobnego pola.
+
+#### Sekcja „Kolumny tekstowe" (`group_section_columns`)
+
+Layout `columns`. Od jednej do czterech kolumn, każda z własnym polem WYSIWYG,
+na desktopie zawsze w jednym wierszu. Grupa jest **źródłem klonowania**.
+
+Jako jedyna sekcja **nie klonuje** `group_section_content` — nie ma pól
+„Treść nad elementami" ani „Treść pod elementami". Kolumny same są polami
+WYSIWYG, więc byłyby powtórzeniem.
+
+**Układ i treść** — widoczne od razu, poza akordeonem, bo od liczby kolumn
+zależy, ile pól WYSIWYG pokaże panel:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Liczba kolumn | `cyber_columns_count` | Select | `2` | `1` / `2` / `3` / `4` |
+| Proporcje (2 kolumny) | `cyber_columns_layout_2` | Select | `50-50` | `50-50` / `40-60` / `60-40`; widoczne tylko przy 2 kolumnach |
+| Proporcje (3 kolumny) | `cyber_columns_layout_3` | Select | `33-33-33` | `33-33-33` / `20-60-20` / `40-20-40`; widoczne tylko przy 3 kolumnach |
+| Kolumna 1–4 | `cyber_columns_1` … `_4` | WYSIWYG | `''` | Treść kolumny; pole pokazuje się, gdy liczba kolumn je obejmuje |
+
+Jedna kolumna ma zawsze 100%, cztery zawsze 25/25/25/25 — dlatego nie mają pola
+proporcji.
+
+**Ustawienia** — akordeon „Ustawienia kolumn", wspólne dla wszystkich kolumn sekcji:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Odstęp między kolumnami X / Y | `cyber_columns_gap_x` `_gap_y` | Select (skala) | `24` / `24` |
+| Odstęp wewnętrzny X / Y | `cyber_columns_pad_x` `_pad_y` | Select (skala) | `0` / `0` |
+| Kolor tła / po najechaniu | `cyber_columns_bg` `_bg_hover` | Color (alpha) | `''` |
+| Zdjęcie w tle | `cyber_columns_bg_image` | Image (ID) | `''` |
+| Rozmiar tła | `cyber_columns_bg_size` | Select | `cover` |
+| Pozycja tła — poziom / pion | `cyber_columns_bg_position_x` `_y` | Select | `center` / `center` |
+| Powtarzaj tło | `cyber_columns_bg_repeat` | True/False | `false` |
+| Obramowanie | `cyber_columns_border` | True/False | `false` |
+| Zaokrąglenie rogów | `cyber_columns_radius` | Number 0–200 | `0` |
+
+> **Wartości `50-50`, `40-60` itd. są kontraktem**, tak jak klucz layoutu —
+> zapisuje je baza. Etykietę można zmienić, wartości nie.
+
+> **Proporcje dla 2 i 3 kolumn to dwa osobne pola**, bo zestaw dozwolonych
+> wartości zależy od liczby kolumn. Pole ukryte przez zmianę liczby kolumn
+> zachowuje wartość w bazie, więc kod czyta **wyłącznie** pole pasujące do
+> bieżącej liczby.
+
+> **Tło kolumny powtarza się w każdej kolumnie.** Wspólne tło za całym wierszem
+> ustawia się w „Ustawieniach sekcji". Obramowanie: włącznik, barwa z zakładki
+> Kolory, grubość stała w motywie — jak w kartach.
+
+> **Pusta kolumna zostaje pustym miejscem**, inaczej niż pusta karta. Kolumny
+> tworzą układ: przy 20/60/20 pominięcie pustej lewej kolumny przesunęłoby
+> środek na lewą krawędź.
+
+> **Responsywność bez pól w panelu:**
+>
+> | Kolumny | Desktop | Tablet (≤980px) | Mobile (≤767px) |
+> |---|---|---|---|
+> | 1 | 100% | 100% | 100% |
+> | 2 | wybrana proporcja | wybrana proporcja | jedna pod drugą |
+> | 3 | wybrana proporcja | trzy równe | jedna pod drugą |
+> | 4 | cztery równe | dwie na dwie | jedna pod drugą |
+>
+> Trzy kolumny na tablecie idą w równe, bo 20/60/20 przy ok. 900px zostawia
+> kolumnom bocznym ok. 170px — za mało na akapit.
 
 ## Inne grupy pól
 
@@ -1598,6 +1687,10 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-17 — Sekcja **„Karty"**: dwa włączniki `cyber_cards_show_top` i `cyber_cards_show_bottom` (domyślnie **wyłączone**) sterujące wyświetlaniem treści nad i pod siatką. Treść nie jest kasowana. Sekcja **„Kolumny tekstowe"** bez pól WYSIWYG nad i pod kolumnami — kolumny same są polami WYSIWYG.
+
+- 2026-09-17 — Sekcja **„Kolumny tekstowe (WYSIWYG)"** — layout `columns` i grupa źródłowa `group_section_columns`: 1–4 pola WYSIWYG w jednym wierszu, proporcje dla 2 i 3 kolumn z zamkniętej listy, 14 wspólnych ustawień wyglądu kolumn. Responsywność automatyczna, bez pól. Ta sama zmiana: w layoutach `basic` i `cards` ustawienia stoją teraz **przed** treścią; klucze klonów bez zmian, zapisane dane odczytują się identycznie.
 
 - 2026-09-16 — Sekcja **„Karty (icon boxes)"** — layout `cards` i nowa grupa źródłowa `group_section_cards`: repeater elementów (zdjęcie, tytuł, treść, odnośnik) plus 22 pola siatki i wyglądu. Cień, obramowanie i przycisk czerpią barwy oraz wymiary z ustawień globalnych — sekcja ma tylko włączniki. Świadomie **bez** pola „liczba wierszy": wynika ona z liczby elementów i kolumn. Nowy kanoniczny helper `cyber_alignments()` (CLAUDE.md sekcja 20), z którego korzystają też dwa istniejące pola wyrównania headera.
 
