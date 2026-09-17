@@ -45,7 +45,7 @@ i czy motyw jest aktywny (ścieżki Local JSON rejestruje `inc/acf.php`).
 ```
 cyber-framework/
 ├── acf-json/          ← źródło prawdy dla pól ACF (wersjonowane w Git)
-├── assets/            ← css / js / images
+├── assets/            ← css / js / images / vendor (biblioteki zewnętrzne)
 ├── docs/              ← dokumentacja (patrz niżej)
 ├── inc/               ← logika motywu
 ├── template-parts/    ← header/, footer/, breadcrumb/, components/; sections/ czeka na etap 4

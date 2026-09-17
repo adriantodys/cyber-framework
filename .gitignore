@@ -13,6 +13,11 @@ desktop.ini
 node_modules/
 vendor/
 
+# ...ale NIE biblioteki dolaczone do motywu. Regula vendor/ powyzej dotyczy
+# Composera i lapie kazdy katalog o tej nazwie — bez tego wyjatku Swiper
+# nie trafilby do repozytorium, a slider na serwerze by nie dzialal.
+!/assets/vendor/
+
 # Logi
 *.log
 

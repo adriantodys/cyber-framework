@@ -262,6 +262,10 @@ rozjazdu.
 | `inc/sections-columns.php` | layout `columns` — proporcje i siatka |
 | `template-parts/sections/columns.php` | layout `columns` — widok |
 | `acf-json/group_section_columns.json` | źródło klonowania: pola sekcji Kolumny |
+| `inc/sections-slider.php` | layout `slider` — logika i assety |
+| `template-parts/sections/slider.php` | layout `slider` — widok |
+| `assets/js/slider.js` | layout `slider` — inicjalizacja Swipera |
+| `acf-json/group_section_slider.json` | źródło klonowania: pola sekcji Slider |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
 | `acf-json/group_sections.json` | pole Flexible Content |
 | `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
@@ -276,6 +280,7 @@ rozjazdu.
 | `basic` | Sekcja podstawowa | `basic` | `page`, `post` |
 | `cards` | Karty (icon boxes) | `cards` | `page`, `post` |
 | `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
+| `slider` | Slider | `slider` | `page`, `post` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
 dostępności layoutów per typ treści to osobny krok.
@@ -363,6 +368,35 @@ sekcji podstawowej nad tą.
 **Proporcje są w `fr`, nie w procentach.** 40% + 60% plus odstęp przekracza
 100% i wiersz wyjeżdża poza kontener; `fr` dzieli miejsce, które zostaje po
 odjęciu odstępu, więc `2fr 3fr` daje dokładne 40/60 przy każdym `gap`.
+
+
+### Sekcja `slider` — Slider
+
+Karuzela na **Swiperze 14.2.0** (rejestr bibliotek: CLAUDE.md sekcja 2).
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-slider.php` | walidacja, konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe assety |
+| `template-parts/sections/slider.php` | widok; konfiguracja w atrybutach `data-*` |
+| `assets/js/slider.js` | inicjalizacja Swipera — **moduł ES** |
+| `assets/vendor/swiper-14.2.0/` | rdzeń + 5 modułów, bajt w bajt z npm |
+| `acf-json/group_section_slider.json` | pola: ustawienia + repeater slajdów |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-slider` (+ `.swiper`) | kontener karuzeli; wysokość, dopasowanie i pozycja zdjęcia ze zmiennych |
+| `.cyber-slider--section` / `--full` | tryb szerokości zdjęcia |
+| `.cyber-slider--x-*` / `--y-*` | położenie treści — klasa, nie zmienna (sekcja 20) |
+| `.cyber-slider--has-overlay` | tylko przy ustawionym kolorze nakładki |
+| `.cyber-slider--has-pagination` | większy dolny odstęp treści, żeby przycisk nie wchodził na kropki |
+| `.cyber-slide__media` / `__image` | `<picture>` z osobnym `<source>` dla telefonu |
+| `.cyber-slide__body` / `__content` | warstwa treści nad zdjęciem |
+
+**Zdjęcie jako `<picture>`, nie tło CSS.** Telefon pobiera wyłącznie swój kadr,
+zdjęcie ma tekst alternatywny i `srcset`. Pierwszy slajd ładuje się z
+`fetchpriority="high"`, kolejne z `loading="lazy"`.
+
+Przycisk renderuje wspólny `cyber_button()` — wygląd z zakładki Przyciski.
 
 ## Warstwa WooCommerce
 

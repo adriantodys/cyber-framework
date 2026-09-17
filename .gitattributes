@@ -8,3 +8,8 @@ acf-json/*.json text eol=lf
 *.css text eol=crlf
 *.js  text eol=crlf
 *.md  text eol=crlf
+
+# Biblioteki zewnetrzne trzymamy BAJT W BAJT jak w paczce npm — bez konwersji
+# koncow linii. Inaczej regula *.css powyzej zmienialaby pliki dostawcy przy
+# kazdym checkoucie i nie daloby sie ich porownac z oryginalem.
+assets/vendor/** -text

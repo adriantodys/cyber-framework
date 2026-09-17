@@ -402,6 +402,155 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_cyber_section_slider": {
+                    "key": "layout_cyber_section_slider",
+                    "name": "slider",
+                    "label": "Slider",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cyber_section_slider_section_a",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_acc",
+                                "field_cyber_section_width"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_slider_section_b",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_slider_image_width",
+                                "field_cyber_slider_pad_x",
+                                "field_cyber_slider_pad_y"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_slider_section_c",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_anchor",
+                                "field_cyber_section_class",
+                                "field_cyber_section_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_slider_settings",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_slider_acc",
+                                "field_cyber_msg_slider_size",
+                                "field_cyber_slider_height",
+                                "field_cyber_slider_height_mobile",
+                                "field_cyber_msg_slider_image",
+                                "field_cyber_slider_image_fit",
+                                "field_cyber_slider_image_position_x",
+                                "field_cyber_slider_image_position_y",
+                                "field_cyber_slider_overlay",
+                                "field_cyber_msg_slider_content",
+                                "field_cyber_slider_content_x",
+                                "field_cyber_slider_content_y",
+                                "field_cyber_slider_button_size",
+                                "field_cyber_msg_slider_motion",
+                                "field_cyber_slider_autoplay",
+                                "field_cyber_slider_delay",
+                                "field_cyber_slider_loop",
+                                "field_cyber_slider_navigation",
+                                "field_cyber_slider_pagination",
+                                "field_cyber_slider_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_slider_slides",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_slider_slides"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "min": "",
@@ -434,5 +583,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789628787
+    "modified": 1789632512
 }

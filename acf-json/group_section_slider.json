@@ -1,0 +1,709 @@
+{
+    "key": "group_section_slider",
+    "title": "Cyber Framework — Sekcje: slider",
+    "fields": [
+        {
+            "key": "field_cyber_slider_image_width",
+            "label": "Szerokosc zdjecia",
+            "name": "cyber_slider_image_width",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Tresc slajdu zawsze trzyma szerokosc sekcji. \"100% przegladarki\" rozciaga samo zdjecie od krawedzi do krawedzi okna.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "section": "100% szerokosci sekcji",
+                "full": "100% szerokosci przegladarki"
+            },
+            "default_value": "section",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_pad_x",
+            "label": "Odstep X",
+            "name": "cyber_slider_pad_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Odstep tresci slajdu od lewego i prawego brzegu.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "0",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_pad_y",
+            "label": "Odstep Y",
+            "name": "cyber_slider_pad_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Odstep calej sekcji od sekcji powyzej i ponizej.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "0",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_acc",
+            "label": "Ustawienia slidera",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_slider_size",
+            "label": "Wysokosc",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_slider_height",
+            "label": "Wysokosc (desktop)",
+            "name": "cyber_slider_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 600,
+            "min": 100,
+            "max": 2000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_slider_height_mobile",
+            "label": "Wysokosc (mobile)",
+            "name": "cyber_slider_height_mobile",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Ponizej 767px.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 400,
+            "min": 100,
+            "max": 2000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_slider_image",
+            "label": "Zdjecie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_slider_image_fit",
+            "label": "Rozmiar zdjecia",
+            "name": "cyber_slider_image_fit",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "cover": "cover - wypelnia slajd",
+                "contain": "contain - miesci sie w calosci",
+                "auto": "auto - rozmiar oryginalu"
+            },
+            "default_value": "cover",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_image_position_x",
+            "label": "Pozycja zdjecia - poziom",
+            "name": "cyber_slider_image_position_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_image_position_y",
+            "label": "Pozycja zdjecia - pion",
+            "name": "cyber_slider_image_position_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "top": "Do gory",
+                "center": "Do srodka",
+                "bottom": "Do dolu"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_overlay",
+            "label": "Nakladka na zdjecie",
+            "name": "cyber_slider_overlay",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor z przezroczystoscia nad zdjeciem, pod trescia - przyciemnia albo rozjasnia zdjecie, zeby tekst byl czytelny. Puste pole = brak nakladki.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_msg_slider_content",
+            "label": "Tresc",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_slider_content_x",
+            "label": "Polozenie tresci - poziom",
+            "name": "cyber_slider_content_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do srodka",
+                "right": "Do prawej"
+            },
+            "default_value": "left",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_content_y",
+            "label": "Polozenie tresci - pion",
+            "name": "cyber_slider_content_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "top": "Do gory",
+                "center": "Do srodka",
+                "bottom": "Do dolu"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_slider_button_size",
+            "label": "Rozmiar przycisku",
+            "name": "cyber_slider_button_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wyglad przycisku w calosci z zakladki Przyciski.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "large": "Large",
+                "medium": "Medium",
+                "small": "Small"
+            },
+            "default_value": "medium",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_slider_motion",
+            "label": "Przewijanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_slider_autoplay",
+            "label": "Autoplay",
+            "name": "cyber_slider_autoplay",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wstrzymuje sie po najechaniu mysza. Wylaczony dla osob, ktore w systemie wlaczyly ograniczenie animacji.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_slider_delay",
+            "label": "Czas slajdu",
+            "name": "cyber_slider_delay",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_slider_autoplay",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 5000,
+            "min": 1000,
+            "max": 30000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "ms"
+        },
+        {
+            "key": "field_cyber_slider_loop",
+            "label": "Petla",
+            "name": "cyber_slider_loop",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Po ostatnim slajdzie wraca do pierwszego.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_slider_navigation",
+            "label": "Strzalki",
+            "name": "cyber_slider_navigation",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_slider_pagination",
+            "label": "Kropki (paginacja)",
+            "name": "cyber_slider_pagination",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Przy jednym slajdzie strzalki, kropki, petla i autoplay wylaczaja sie same.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_slider_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        },
+        {
+            "key": "field_cyber_slider_slides",
+            "label": "Slajdy",
+            "name": "cyber_slider_slides",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Kolejnosc zmienia sie przeciagnieciem. Slajd bez zdjecia i bez tresci jest pomijany.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "",
+            "button_label": "Dodaj slajd",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_cyber_slide_image",
+                    "label": "Zdjecie (desktop)",
+                    "name": "cyber_slide_image",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Wgrywaj w docelowym kadrze - motyw bierze plik w pelnym rozmiarze.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "preview_size": "medium",
+                    "allow_in_bindings": 0,
+                    "preview": 1,
+                    "upload_folder": ""
+                },
+                {
+                    "key": "field_cyber_slide_image_mobile",
+                    "label": "Zdjecie (mobile)",
+                    "name": "cyber_slide_image_mobile",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Osobny kadr ponizej 767px. Telefon pobiera WYLACZNIE ten plik. Puste pole = zdjecie desktopowe.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "",
+                    "preview_size": "medium",
+                    "allow_in_bindings": 0,
+                    "preview": 1,
+                    "upload_folder": ""
+                },
+                {
+                    "key": "field_cyber_slide_content",
+                    "label": "Tresc",
+                    "name": "cyber_slide_content",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 0,
+                    "delay": 1
+                },
+                {
+                    "key": "field_cyber_slide_link",
+                    "label": "Przycisk",
+                    "name": "cyber_slide_link",
+                    "aria-label": "",
+                    "type": "link",
+                    "instructions": "Adres i tekst przycisku. Rozmiar ustawia sie raz dla calego slidera.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array",
+                    "allow_in_bindings": 0
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Slider: ustawienia karuzeli i repeater slajdow. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789632512
+}

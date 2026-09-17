@@ -1624,6 +1624,70 @@ proporcji.
 > Trzy kolumny na tablecie idą w równe, bo 20/60/20 przy ok. 900px zostawia
 > kolumnom bocznym ok. 170px — za mało na akapit.
 
+#### Sekcja „Slider" (`group_section_slider`)
+
+Layout `slider`. Karuzela slajdów na **Swiperze 14.2.0**. Grupa jest **źródłem
+klonowania**.
+
+**Ustawienia sekcji są inne niż w pozostałych layoutach.** Slider nie klonuje
+całej grupy `group_section_settings` — bierze z niej tylko **szerokość sekcji,
+kotwicę i klasy CSS**. Nie ma tła, nakładki sekcji ani czterech odstępów; ma za
+to własne pola wewnątrz tego samego akordeonu:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Szerokość zdjęcia | `cyber_slider_image_width` | Select | `section` | `section` — karuzela w szerokości sekcji; `full` — zdjęcie od krawędzi do krawędzi okna |
+| Odstęp X | `cyber_slider_pad_x` | Select (skala) | `0` | Odstęp **treści slajdu** od lewego i prawego brzegu |
+| Odstęp Y | `cyber_slider_pad_y` | Select (skala) | `0` | Odstęp **sekcji** od sąsiednich sekcji |
+
+> **Szerokość sekcji i szerokość zdjęcia to dwie osobne rzeczy.** Treść slajdu
+> zawsze trzyma szerokość sekcji. Przy `full` rozciąga się samo zdjęcie —
+> opakowanie otwiera się wtedy bez kontenera `.cyber-section__inner`, a treść
+> zwęża się w slajdzie tym samym wzorem co `.cyber-container`.
+
+> **Odstęp X działa na treść, nie na sekcję.** Gdyby zwężał sekcję, zdjęcie
+> w trybie `full` nie dobiłoby do krawędzi okna.
+
+**Ustawienia slidera** — akordeon „Ustawienia slidera":
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Wysokość (desktop / mobile) | `cyber_slider_height` `_height_mobile` | Number 100–2000 px | `600` / `400` |
+| Rozmiar zdjęcia | `cyber_slider_image_fit` | Select | `cover` |
+| Pozycja zdjęcia — poziom / pion | `cyber_slider_image_position_x` `_y` | Select | `center` / `center` |
+| Nakładka na zdjęcie | `cyber_slider_overlay` | Color (alpha) | `''` |
+| Położenie treści — poziom | `cyber_slider_content_x` | Select | `left` |
+| Położenie treści — pion | `cyber_slider_content_y` | Select | `center` |
+| Rozmiar przycisku | `cyber_slider_button_size` | Select | `medium` |
+| Autoplay | `cyber_slider_autoplay` | True/False | `true` |
+| Czas slajdu | `cyber_slider_delay` | Number 1000–30000 ms | `5000` |
+| Pętla | `cyber_slider_loop` | True/False | `true` |
+| Strzałki | `cyber_slider_navigation` | True/False | `false` |
+| Kropki (paginacja) | `cyber_slider_pagination` | True/False | `false` |
+
+**Slajdy** — Repeater `cyber_slider_slides`:
+
+| Field Label | Field Name | Typ | Przeznaczenie |
+|---|---|---|---|
+| Zdjęcie (desktop) | `cyber_slide_image` | Image (ID) | Zdjęcie slajdu |
+| Zdjęcie (mobile) | `cyber_slide_image_mobile` | Image (ID) | Osobny kadr poniżej 767px; puste = zdjęcie desktopowe |
+| Treść | `cyber_slide_content` | WYSIWYG | Treść na zdjęciu |
+| Przycisk | `cyber_slide_link` | Link | Adres i tekst przycisku |
+
+> **Rozmiar „auto" to w CSS `object-fit: none`.** Zdjęcie jest znacznikiem
+> `<img>`, nie tłem, a `object-fit` nie zna wartości `auto`. Etykieta w panelu
+> zostaje jak przy tle, bo tak myśli o tym redaktor.
+
+> **Przy jednym slajdzie** pętla, autoplay, strzałki i kropki wyłączają się
+> same, niezależnie od ustawień.
+
+> **Autoplay wyłącza się** dla osób, które w systemie włączyły ograniczenie
+> animacji (`prefers-reduced-motion`), i wstrzymuje po najechaniu myszą.
+
+> **Kolor treści pochodzi z ustawień globalnych** (Kolory → nagłówki, tekst).
+> Na ciemnej nakładce domyślnie ciemny tekst jest słabo czytelny — kolor zmienia
+> się w edytorze WYSIWYG slajdu.
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -1687,6 +1751,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-17 — Sekcja **„Slider"** — layout `slider` i grupa źródłowa `group_section_slider`: repeater slajdów (zdjęcie desktop/mobile, treść, przycisk), 15 ustawień karuzeli i 3 pola sekcji własne slidera. Z `group_section_settings` klonuje tylko szerokość, kotwicę i klasy. Pierwsza zewnętrzna biblioteka w motywie: **Swiper 14.2.0**, zatwierdzony jawnie i wpisany do rejestru w CLAUDE.md sekcja 2.
 
 - 2026-09-17 — Sekcja **„Karty"**: dwa włączniki `cyber_cards_show_top` i `cyber_cards_show_bottom` (domyślnie **wyłączone**) sterujące wyświetlaniem treści nad i pod siatką. Treść nie jest kasowana. Sekcja **„Kolumny tekstowe"** bez pól WYSIWYG nad i pod kolumnami — kolumny same są polami WYSIWYG.
 

@@ -41,6 +41,34 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 | **ACF PRO** | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). |
 | **WooCommerce** | miękka | Funkcje sklepowe wyłączają się same, reszta witryny działa bez zmian (`inc/woocommerce.php`). |
 
+#### Biblioteki zewnętrzne — rejestr
+
+Każda biblioteka JS/CSS dołączona do motywu ma wiersz w tej tabeli. Nowa
+biblioteka wymaga jawnej zgody (zasada wyżej) i wpisu tutaj w tym samym commicie.
+
+| Biblioteka | Wersja | Licencja | Gdzie | Zatwierdzona | Używa |
+|---|---|---|---|---|---|
+| **Swiper** | 14.2.0 | MIT | `assets/vendor/swiper-14.2.0/` | 2026-09-17 | sekcja Slider |
+
+Zasady dla bibliotek:
+
+1. **Pliki lokalnie, nie z CDN** — motyw działa bez zewnętrznego serwera,
+   a wersja jest przypięta.
+2. **Bajt w bajt jak w paczce npm.** Żadnych edycji w plikach dostawcy;
+   `.gitattributes` wyłącza dla `assets/vendor/**` konwersję końców linii, żeby
+   dało się je porównać z oryginałem.
+3. **Wersja w nazwie katalogu** (`swiper-14.2.0`). Aktualizacja zmienia adresy
+   plików i sama unieważnia cache przeglądarki — pliki dostawcy nie potrzebują
+   `?ver=` z `filemtime()`.
+4. **Tylko potrzebne moduły.** Swiper wchodzi jako rdzeń + 5 modułów
+   (27,7 kB gzip) zamiast pełnej paczki (43,8 kB).
+5. **Enqueue warunkowy** (sekcja 10) — biblioteka ładuje się wyłącznie na
+   stronie, która jej używa.
+6. **`.gitignore` ma wyjątek `!/assets/vendor/`.** Reguła `vendor/` (Composer)
+   łapie każdy katalog o tej nazwie — bez wyjątku biblioteka nie trafiłaby do
+   repozytorium, a na serwerze funkcja by nie działała. Po dodaniu biblioteki
+   sprawdź `git status --untracked-files=all`.
+
 Każda zależność miękka musi mieć **jeden plik**, który o niej decyduje. Moduły pytają
 tam, zamiast wołać `class_exists()` u siebie — rozsypanie tego warunku po plikach
 kończy się tym, że po wyłączeniu wtyczki część miejsc milknie cicho, a część głośno.
@@ -144,7 +172,8 @@ cyber-framework/
 └── assets/
     ├── css/
     ├── js/
-    └── images/
+    ├── images/
+    └── vendor/                    ← biblioteki zewnętrzne, bajt w bajt, wersja w nazwie katalogu
 ```
 
 ## 4. Separacja danych / logiki / widoku

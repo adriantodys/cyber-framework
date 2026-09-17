@@ -1,0 +1,10 @@
+# Pliki .mjs to moduly ES. Przegladarka odrzuca modul wyslany z innym typem
+# MIME niz JavaScript (np. application/octet-stream) - bez komunikatu na stronie,
+# slider po prostu sie nie uruchamia. Starsze konfiguracje Apache nie znaja
+# rozszerzenia .mjs, stad jawne przypisanie typu.
+#
+# Na nginx ten plik nie dziala - tam .mjs musi byc w mime.types
+# (docs/architecture.md, sekcja o sliderze).
+<IfModule mod_mime.c>
+	AddType text/javascript .mjs
+</IfModule>

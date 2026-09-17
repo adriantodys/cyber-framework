@@ -363,3 +363,161 @@
 		grid-template-columns: minmax(0, 1fr);
 	}
 }
+
+/* --- Slider ---------------------------------------------------------------- */
+
+/*
+ * Wysokosc karuzeli jest stala i ustawiana w px (osobno desktop i telefon).
+ * Slajd nie rosnie z trescia — tekst dluzszy niz miejsce zostanie przyciety,
+ * dlatego wysokosc wybiera redaktor pod konkretne slajdy.
+ */
+.cyber-slider {
+	--swiper-theme-color: var(--cyber-color-links);
+	--swiper-navigation-color: #ffffff;
+	--swiper-pagination-color: #ffffff;
+	--swiper-pagination-bullet-inactive-color: #ffffff;
+	--swiper-pagination-bullet-inactive-opacity: 0.5;
+	--swiper-pagination-bottom: var(--cyber-space-3);
+	--swiper-navigation-sides-offset: var(--cyber-space-3);
+
+	position: relative;
+	width: 100%;
+	height: var(--cyber-slider-h, 600px);
+}
+
+.cyber-slide {
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+
+/*
+ * Zdjecie wypelnia slajd jako img z object-fit, nie jako tlo. Pole "rozmiar"
+ * nazywa sie jak background-size, a PHP tlumaczy "auto" na "none", ktore jest
+ * odpowiednikiem dla object-fit.
+ */
+.cyber-slide__media,
+.cyber-slide__image {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.cyber-slide__image {
+	object-fit: var(--cyber-slider-fit, cover);
+	object-position: var(--cyber-slider-position, center center);
+}
+
+/* Nakladka tylko przy ustawionym kolorze — bez niej pudelko nie istnieje w CSS. */
+.cyber-slide__overlay {
+	display: none;
+}
+
+.cyber-slider--has-overlay .cyber-slide__overlay {
+	position: absolute;
+	inset: 0;
+	display: block;
+	background-color: var(--cyber-slider-overlay, transparent);
+	pointer-events: none;
+}
+
+/* --- Tresc slajdu ---------------------------------------------------------- */
+
+/*
+ * Warstwa tresci lezy nad zdjeciem i nakladka. Polozenie w pionie steruje
+ * justify-content, w poziomie align-items plus text-align — dlatego wyrownanie
+ * jest klasa, nie zmienna (CLAUDE.md sekcja 20).
+ */
+.cyber-slide__body {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	margin-inline: auto;
+	padding-block: var(--cyber-space-5);
+	padding-inline: var(--cyber-slider-pad-x, 0px);
+}
+
+/*
+ * Tryb "100% przegladarki": zdjecie siega krawedzi okna, a tresc zweza sie do
+ * szerokosci sekcji — tym samym wzorem co .cyber-container, wiec lewy brzeg
+ * tekstu stoi w jednej linii z headerem i reszta strony.
+ */
+.cyber-slider--full .cyber-slide__body {
+	max-width: var(--cyber-section-width, var(--cyber-container-width));
+	padding-inline: calc(var(--cyber-container-margin) + var(--cyber-slider-pad-x, 0px));
+}
+
+.cyber-slide__content {
+	max-width: 100%;
+}
+
+.cyber-slide__text > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-slide__text > *:last-child {
+	margin-bottom: 0;
+}
+
+.cyber-slide__footer {
+	margin-top: var(--cyber-space-3);
+}
+
+/*
+ * Strzalki sa znacznikami <button> (dostepne z klawiatury), a Swiper stylizuje
+ * je jak zwykle pudelka. Bez tego resetu przegladarka dokleja im wlasne tlo
+ * i ramke przycisku formularza — szare prostokaty pod ikona strzalki.
+ */
+.cyber-slider .swiper-button-prev,
+.cyber-slider .swiper-button-next {
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+/*
+ * Kropki leza na dole slajdu. Przy tresci przyklejonej do dolu przycisk
+ * wchodzilby na nie, wiec tresc dostaje wiekszy odstep od dolnej krawedzi
+ * wylacznie wtedy, gdy paginacja jest wlaczona.
+ */
+.cyber-slider--has-pagination .cyber-slide__body {
+	padding-bottom: var(--cyber-space-6);
+}
+
+.cyber-slider--y-top .cyber-slide__body { justify-content: flex-start; }
+.cyber-slider--y-center .cyber-slide__body { justify-content: center; }
+.cyber-slider--y-bottom .cyber-slide__body { justify-content: flex-end; }
+
+.cyber-slider--x-left .cyber-slide__body { align-items: flex-start; text-align: left; }
+.cyber-slider--x-center .cyber-slide__body { align-items: center; text-align: center; }
+.cyber-slider--x-right .cyber-slide__body { align-items: flex-end; text-align: right; }
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 767px) {
+	.cyber-slider {
+		--swiper-navigation-size: 32px;
+
+		height: var(--cyber-slider-h-m, var(--cyber-slider-h, 400px));
+	}
+
+	.cyber-slide__body {
+		padding-block: var(--cyber-space-4);
+	}
+}
+
+/*
+ * Uzytkownik z wylaczonymi animacjami w systemie: bez plynnego przejscia.
+ * Autoplay wylacza sam skrypt, tutaj gasimy reszte ruchu.
+ */
+@media (prefers-reduced-motion: reduce) {
+	.cyber-slider .swiper-wrapper {
+		transition-duration: 0s !important;
+	}
+}

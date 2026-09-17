@@ -78,6 +78,11 @@ function cyber_section_types() {
 			'template' => 'columns',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'slider'  => array(
+			'label'    => 'Slider',
+			'template' => 'slider',
+			'contexts' => array( 'page', 'post' ),
+		),
 	);
 }
 
@@ -460,10 +465,16 @@ function cyber_render_sections( $post_id = null ) {
  * wlasna trescia. Markup jest tu, a nie w kazdym pliku z osobna, bo zmiana
  * struktury opakowania w dwunastu plikach naraz to gwarancja rozjazdu.
  *
+ * $with_inner = false pomija kontener .cyber-section__inner. Potrzebuje tego
+ * sekcja, ktorej tresc ma wyjsc na pelna szerokosc okna (slider ze zdjeciem
+ * "100% przegladarki") — kontener z max-width by ja przycial. Taka sekcja sama
+ * odpowiada wtedy za zwezenie tresci i zamyka opakowanie z tym samym argumentem.
+ *
  * @param array $attributes Wynik cyber_section_attributes().
+ * @param bool  $with_inner Czy otworzyc kontener szerokosci. Domyslnie tak.
  * @return void
  */
-function cyber_section_open( array $attributes ) {
+function cyber_section_open( array $attributes, $with_inner = true ) {
 	printf(
 		'<section%1$s class="%2$s" style="%3$s">',
 		$attributes['id'] ? sprintf( ' id="%s"', esc_attr( $attributes['id'] ) ) : '',
@@ -476,16 +487,19 @@ function cyber_section_open( array $attributes ) {
 		echo '<div class="cyber-section__overlay" aria-hidden="true"></div>';
 	}
 
-	echo '<div class="cyber-section__inner">';
+	if ( $with_inner ) {
+		echo '<div class="cyber-section__inner">';
+	}
 }
 
 /**
  * Zamyka opakowanie sekcji.
  *
+ * @param bool $with_inner Musi byc taki sam jak przy cyber_section_open().
  * @return void
  */
-function cyber_section_close() {
-	echo '</div></section>';
+function cyber_section_close( $with_inner = true ) {
+	echo $with_inner ? '</div></section>' : '</section>';
 }
 
 /**

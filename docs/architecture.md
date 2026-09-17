@@ -46,6 +46,7 @@ w ustalonej kolejności:
 | 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
 | 18 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
 | 19 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
+| 20 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
 
 ## Stałe
 
@@ -1285,6 +1286,7 @@ wszystkich sekcji — **najpierw ustawienia, potem treść**:
 basic:    Ustawienia sekcji → WYSIWYG góra → WYSIWYG dół
 cards:    Ustawienia sekcji → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
 columns:  Ustawienia sekcji → Ustawienia kolumn → Układ + kolumny
+slider:   Ustawienia sekcji (szerokość, zdjęcie, odstępy, kotwica, klasy) → Ustawienia slidera → Slajdy
 ```
 
 **Warunki widoczności w sklonowanych polach działają, choć w PHP wyglądają na
@@ -1321,6 +1323,55 @@ barwa przychodzi z zakładki Kolory (`--cyber-color-shadow`,
 w arkuszu. To świadoma rezygnacja z kontroli na rzecz spójności: karty w całym
 projekcie wyglądają tak samo, a zmiana palety działa wszędzie naraz. Tak samo
 przycisk — cały wygląd z zakładki Przyciski, sekcja wybiera tylko rozmiar.
+
+### Slider: Swiper jako moduły ES
+
+Slider jest pierwszym miejscem w motywie z biblioteką zewnętrzną. Kilka decyzji
+wymaga zapisu, bo nie wynikają z kodu wprost.
+
+**Rdzeń + 5 modułów zamiast pełnej paczki.** Pełny `swiper-bundle` to 43,8 kB
+gzip. Rdzeń z nawigacją, paginacją, autoplay, dostępnością i klawiaturą to
+27,7 kB. Pliki `.mjs` są importowane bezpośrednio z `assets/vendor/`, więc
+motyw nadal nie ma żadnego narzędzia do budowania.
+
+**`slider.js` jest ładowany jako `type="module"`.** WordPress wypisuje
+`<script>` bez tego atrybutu, więc dokłada go filtr
+`cyber_slider_module_tag()` — podmienia istniejący `type` albo dopisuje brakujący,
+żeby nie powstały dwa. `wp_localize_script()` dalej działa: dane lądują w
+zwykłym `<script>` przed modułem.
+
+**Rdzeń eksportuje klasę pod nazwą `S`** (`export{Swiper as S}`). To wewnętrzna
+nazwa pliku `swiper-core.min.mjs`, nie publiczne API — przy aktualizacji
+biblioteki trzeba ją sprawdzić. Zweryfikowane w Node dla 14.2.0: `S` to klasa
+`Swiper`, moduły eksportują `default`.
+
+**Typ MIME plików `.mjs` — ryzyko na produkcji.** Przeglądarka odrzuca moduł
+wysłany z typem innym niż JavaScript, **bez komunikatu na stronie** — slider po
+prostu stoi. Laragon wysyła `text/javascript` poprawnie. Na Apache chroni przed
+tym `assets/vendor/.htaccess` (`AddType text/javascript .mjs`). **Na nginx ten
+plik nie działa** — przy wdrożeniu sprawdź, że `mime.types` zawiera `mjs`:
+
+```
+curl -sI https://domena.pl/wp-content/themes/cyber-framework/assets/vendor/swiper-14.2.0/shared/swiper-core.min.mjs | grep -i content-type
+```
+
+**Pętla od dwóch slajdów.** Swiper wymaga
+`slides.length >= slidesPerView + loopedSlides`, czyli 1 + 1. Przy jednym
+slajdzie PHP gasi pętlę, autoplay, strzałki i kropki
+(`cyber_slider_config()`), zanim cokolwiek trafi do JavaScriptu.
+
+**Opakowanie bez kontenera.** Tryb zdjęcia `full` potrzebuje, żeby
+`.cyber-section__inner` nie powstał — jego `max-width` przyciąłby zdjęcie.
+`cyber_section_open()` i `cyber_section_close()` przyjmują do tego drugi
+argument `$with_inner`, domyślnie `true`, więc pozostałe sekcje działają bez zmian.
+
+**Sprawdzone w przeglądarce.** Tymczasowa strona z dwoma sliderami w Chrome
+headless: oba `swiper-initialized`, autoplay przełączył slajd po 4 s, strzałki
+i kropki z polskimi etykietami ARIA, slajd w trybie `section` ma szerokość
+kontenera (1289 px), w trybie `full` — okna (1369 px przy 1400 px). Strona
+usunięta po teście. Widoku mobilnego **nie** dało się tak zweryfikować: Chrome
+headless nie zmniejsza okna poniżej ok. 500 px, więc zrzut 390 px ucina układ
+także na stronie głównej, bez slidera.
 
 ### Pułapka: klucz layoutu kasuje treść
 
