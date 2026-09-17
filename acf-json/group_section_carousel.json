@@ -1,0 +1,448 @@
+{
+    "key": "group_section_carousel",
+    "title": "Cyber Framework — Sekcje: karuzela kart",
+    "fields": [
+        {
+            "key": "field_cyber_carousel_acc",
+            "label": "Ustawienia karuzeli",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_carousel_layout",
+            "label": "Uklad",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_carousel_width",
+            "label": "Szerokosc karuzeli",
+            "name": "cyber_carousel_width",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Tresc nad i pod karuzela zawsze trzyma szerokosc sekcji. \"100% przegladarki\" rozciaga sam rzad kart od krawedzi do krawedzi okna.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "section": "Jak sekcja (za ustawieniem szerokosci)",
+                "full": "100% szerokosci przegladarki"
+            },
+            "default_value": "section",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_carousel_per_view",
+            "label": "Kart na widoku (desktop)",
+            "name": "cyber_carousel_per_view",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6"
+            },
+            "default_value": "4",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_carousel_per_view_tablet",
+            "label": "Kart na widoku (tablet)",
+            "name": "cyber_carousel_per_view_tablet",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Ponizej 980px.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_carousel_per_view_mobile",
+            "label": "Kart na widoku (mobile)",
+            "name": "cyber_carousel_per_view_mobile",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Ponizej 767px.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2"
+            },
+            "default_value": "1",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_carousel_gap",
+            "label": "Odstep miedzy kartami",
+            "name": "cyber_carousel_gap",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_carousel_motion",
+            "label": "Przewijanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_carousel_continuous",
+            "label": "Ciagle przewijanie",
+            "name": "cyber_carousel_continuous",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Karty przesuwaja sie stale i jednostajnie, bez zatrzymywania na kazdej karcie (animacja CSS, bez przeskokow). Zatrzymuje sie po najechaniu mysza, zeby dalo sie kliknac przycisk. Wylacza strzalki, kropki, petle i autoplay - w tym trybie nie maja sensu. Dla osob z ograniczeniem animacji w systemie rzad stoi i da sie go przewinac recznie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_carousel_speed",
+            "label": "Szybkosc przesuwania",
+            "name": "cyber_carousel_speed",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Czas przejazdu jednej karty - im wieksza liczba, tym wolniej. Przy przewijaniu krokowym zwykle 400-800 ms, przy ciaglym 3000-8000 ms. Szybkosc nie zalezy od liczby kart.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 600,
+            "min": 100,
+            "max": 30000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "ms"
+        },
+        {
+            "key": "field_cyber_carousel_navigation",
+            "label": "Strzalki",
+            "name": "cyber_carousel_navigation",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_carousel_continuous",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_carousel_pagination",
+            "label": "Kropki (paginacja)",
+            "name": "cyber_carousel_pagination",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wyswietlane pod rzedem kart.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_carousel_continuous",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_carousel_autoplay",
+            "label": "Autoplay",
+            "name": "cyber_carousel_autoplay",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wstrzymuje sie po najechaniu mysza. Wylaczony dla osob z ograniczeniem animacji w systemie.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_carousel_continuous",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_carousel_delay",
+            "label": "Czas miedzy przesunieciami",
+            "name": "cyber_carousel_delay",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_carousel_autoplay",
+                        "operator": "==",
+                        "value": "1"
+                    },
+                    {
+                        "field": "field_cyber_carousel_continuous",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 5000,
+            "min": 1000,
+            "max": 30000,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "ms"
+        },
+        {
+            "key": "field_cyber_carousel_loop",
+            "label": "Petla",
+            "name": "cyber_carousel_loop",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Dziala tylko, gdy kart jest wiecej niz miesci sie naraz na najszerszym ekranie — inaczej wylacza sie sama.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_carousel_continuous",
+                        "operator": "!=",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "25",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_carousel_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Wylacznie ustawienia przewijania. Elementy i wyglad kart karuzela klonuje z group_section_cards. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789637455
+}

@@ -266,6 +266,10 @@ rozjazdu.
 | `template-parts/sections/slider.php` | layout `slider` — widok |
 | `assets/js/slider.js` | layout `slider` — inicjalizacja Swipera |
 | `acf-json/group_section_slider.json` | źródło klonowania: pola sekcji Slider |
+| `inc/sections-carousel.php` | layout `carousel` — konfiguracja przewijania |
+| `template-parts/sections/carousel.php` | layout `carousel` — widok |
+| `template-parts/components/card.php` | wspólny markup karty dla `cards` i `carousel` |
+| `acf-json/group_section_carousel.json` | źródło klonowania: ustawienia karuzeli |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
 | `acf-json/group_sections.json` | pole Flexible Content |
 | `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
@@ -281,6 +285,7 @@ rozjazdu.
 | `cards` | Karty (icon boxes) | `cards` | `page`, `post` |
 | `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
 | `slider` | Slider | `slider` | `page`, `post` |
+| `carousel` | Karuzela kart | `carousel` | `page`, `post` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
 dostępności layoutów per typ treści to osobny krok.
@@ -397,6 +402,34 @@ zdjęcie ma tekst alternatywny i `srcset`. Pierwszy slajd ładuje się z
 `fetchpriority="high"`, kolejne z `loading="lazy"`.
 
 Przycisk renderuje wspólny `cyber_button()` — wygląd z zakładki Przyciski.
+
+
+### Sekcja `carousel` — Karuzela kart
+
+Karty z sekcji `cards` w przewijanym rzędzie, na tym samym Swiperze co Slider.
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-carousel.php` | konfiguracja przewijania, klasy kontenera, warunek edytorów w panelu |
+| `template-parts/sections/carousel.php` | widok |
+| `template-parts/components/card.php` | **wspólny** z sekcją `cards` markup karty |
+| `assets/js/slider.js` | inicjalizacja — ten sam skrypt co Slider (`initCarousel`) |
+| `acf-json/group_section_carousel.json` | pola: wyłącznie ustawienia przewijania |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-carousel` (+ `.swiper`) | kontener; nosi **również** klasy siatki kart `.cyber-cards--*`, które dają kartom wygląd — sam układ siatki arkusz wyłącza |
+| `.cyber-carousel--section` / `--full` | tryb szerokości |
+| `.cyber-carousel-wrap` | opakowanie karuzeli i paska sterowania |
+| `.cyber-carousel__slide` | slajd; `height:auto`, żeby karty w rzędzie miały równą wysokość |
+| `.cyber-carousel__controls` | pasek pod rzędem: strzałka, kropki, strzałka |
+| `.cyber-carousel--continuous` | tryb ciągły — taśma z animacją CSS, Swiper się nie uruchamia |
+| `.cyber-carousel__band` | taśma: zestaw kart wypisany dwa razy, animowany o `-50%` |
+| `.cyber-carousel__slide--copy` | kopia karty w taśmie: `aria-hidden`, linki z `tabindex="-1"` |
+
+**Jedna definicja karty w dwóch sekcjach.** Pola karty są klonowane
+z `group_section_cards`, normalizację robi `cyber_cards_items()`, wygląd
+`cyber_cards_attributes()`, a markup komponent `components/card.php`.
 
 ## Warstwa WooCommerce
 

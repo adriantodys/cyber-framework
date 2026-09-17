@@ -323,7 +323,10 @@ function cyber_slider_picture( array $slide, $first ) {
  * -------------------------------------------------------------------------- */
 
 /**
- * Czy wpis ma choc jedna wlaczona sekcje slidera.
+ * Czy wpis ma choc jedna sekcje korzystajaca ze Swipera.
+ *
+ * Swipera uzywaja dwie sekcje: "Slider" i "Karuzela kart". Obie obsluguje
+ * ten sam skrypt assets/js/slider.js, wiec assety sa wspolne.
  *
  * @param int $post_id Identyfikator wpisu.
  * @return bool
@@ -340,7 +343,7 @@ function cyber_slider_on_page( $post_id ) {
 	}
 
 	foreach ( $rows as $row ) {
-		if ( isset( $row['acf_fc_layout'] ) && 'slider' === $row['acf_fc_layout'] ) {
+		if ( isset( $row['acf_fc_layout'] ) && in_array( $row['acf_fc_layout'], array( 'slider', 'carousel' ), true ) ) {
 			return true;
 		}
 	}

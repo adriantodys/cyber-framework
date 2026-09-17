@@ -63,24 +63,29 @@ const CYBER_SECTIONS_FIELD = 'cyber_sections';
  */
 function cyber_section_types() {
 	return array(
-		'basic'   => array(
+		'basic'    => array(
 			'label'    => 'Sekcja podstawowa',
 			'template' => 'basic',
 			'contexts' => array( 'page', 'post' ),
 		),
-		'cards'   => array(
+		'cards'    => array(
 			'label'    => 'Karty (icon boxes)',
 			'template' => 'cards',
 			'contexts' => array( 'page', 'post' ),
 		),
-		'columns' => array(
+		'columns'  => array(
 			'label'    => 'Kolumny tekstowe (WYSIWYG)',
 			'template' => 'columns',
 			'contexts' => array( 'page', 'post' ),
 		),
-		'slider'  => array(
+		'slider'   => array(
 			'label'    => 'Slider',
 			'template' => 'slider',
+			'contexts' => array( 'page', 'post' ),
+		),
+		'carousel' => array(
+			'label'    => 'Karuzela kart',
+			'template' => 'carousel',
 			'contexts' => array( 'page', 'post' ),
 		),
 	);

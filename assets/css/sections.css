@@ -521,3 +521,214 @@
 		transition-duration: 0s !important;
 	}
 }
+
+/* --- Karuzela kart --------------------------------------------------------- */
+
+/*
+ * Ciagle przewijanie — tasma z animacja CSS, bez Swipera.
+ *
+ * Karty sa wypisane dwa razy pod rzad, a tasma jedzie o polowe swojej dlugosci
+ * w nieskonczonej petli. Koniec animacji to dokladnie jej poczatek, wiec nie ma
+ * przeskoku. Tempo liniowe — bez zwalniania i przyspieszania.
+ *
+ * Szerokosc karty liczona jest od szerokosci KARUZELI (jednostka cqw), nie od
+ * tasmy. Tasma ma szerokosc tresci (max-content), wiec procenty liczylyby sie
+ * od niej samej i powstalaby zaleznosc w kolko. Kontener zapytan na karuzeli
+ * daje stala podstawe.
+ */
+.cyber-carousel--continuous {
+	container-type: inline-size;
+}
+
+.cyber-carousel--continuous .cyber-carousel__band {
+	width: max-content;
+	animation: cyber-carousel-band var(--cyber-carousel-duration, 20000ms) linear infinite;
+	will-change: transform;
+}
+
+.cyber-carousel.cyber-carousel--continuous:not(.swiper-initialized) .cyber-carousel__slide {
+	width: calc((100cqw - (var(--cyber-carousel-pv, 4) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv, 4));
+	margin-right: var(--cyber-carousel-gap, 0px);
+}
+
+/*
+ * Pauza po najechaniu mysza albo po wejsciu klawiatura — plynna, bo animacja
+ * CSS zatrzymuje sie w miejscu. Bez niej w przycisk jadacej karty trudno trafic.
+ */
+.cyber-carousel--continuous:hover .cyber-carousel__band,
+.cyber-carousel--continuous:focus-within .cyber-carousel__band {
+	animation-play-state: paused;
+}
+
+@keyframes cyber-carousel-band {
+	from {
+		transform: translateX(0);
+	}
+
+	to {
+		transform: translateX(-50%);
+	}
+}
+
+@media (max-width: 980px) {
+	.cyber-carousel.cyber-carousel--continuous:not(.swiper-initialized) .cyber-carousel__slide {
+		width: calc((100cqw - (var(--cyber-carousel-pv-t, 2) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv-t, 2));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-carousel.cyber-carousel--continuous:not(.swiper-initialized) .cyber-carousel__slide {
+		width: calc((100cqw - (var(--cyber-carousel-pv-m, 1) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv-m, 1));
+	}
+}
+
+/*
+ * Ograniczenie animacji w systemie: tasma stoi, kopie znikaja, a rzad
+ * oryginalnych kart da sie przewinac recznie.
+ */
+@media (prefers-reduced-motion: reduce) {
+	/*
+	 * Podwojne klasy celowo: arkusz Swipera (.swiper { overflow: hidden }) laduje
+	 * sie PO tym arkuszu, a .cyber-carousel .cyber-carousel__slide ustawia
+	 * display: flex nizej w pliku. Przy rownej specyficznosci obie reguly
+	 * wygrywaly — zmierzone w Chrome z emulacja ograniczenia animacji.
+	 */
+	.cyber-carousel.cyber-carousel--continuous {
+		overflow-x: auto;
+	}
+
+	.cyber-carousel--continuous .cyber-carousel__band {
+		animation: none;
+	}
+
+	.cyber-carousel.cyber-carousel--continuous .cyber-carousel__slide--copy {
+		display: none;
+	}
+}
+
+/*
+ * Kontener karuzeli nosi JEDNOCZESNIE klasy siatki kart (.cyber-cards--*),
+ * bo to one daja kartom tlo, cien, obramowanie i wyrownanie. Samo ukladanie
+ * w siatke trzeba mu jednak odebrac — Swiper potrzebuje zwyklego bloku.
+ * Dwie klasy w selektorze wygrywaja z pojedynczym .cyber-cards niezaleznie
+ * od kolejnosci regul w arkuszu.
+ */
+.cyber-carousel.cyber-cards {
+	display: block;
+}
+
+/*
+ * Opakowanie trzyma strzalki i kropki, ktore leza obok kontenera .swiper.
+ * z-index stawia je nad nakladka sekcji: w trybie "full" karuzela nie siedzi
+ * w .cyber-section__inner, ktory normalnie to zapewnia.
+ */
+.cyber-carousel-wrap {
+	--swiper-navigation-color: var(--cyber-color-links);
+	--swiper-pagination-color: var(--cyber-color-links);
+	--swiper-pagination-bullet-inactive-color: var(--cyber-color-text);
+	--swiper-pagination-bullet-inactive-opacity: 0.3;
+	--swiper-navigation-sides-offset: var(--cyber-space-2);
+
+	position: relative;
+	z-index: 1;
+}
+
+/*
+ * Karty w jednym rzedzie maja rowna wysokosc. Swiper daje slajdom height:100%,
+ * co w rzedzie flex nie rozciaga ich do najwyzszego sasiada — height:auto
+ * oddaje to rozciaganiu (align-items: stretch), a karta wypelnia slajd.
+ * Dzieki temu stopki z przyciskami stoja w jednej linii, tak jak w siatce.
+ *
+ * Selektor ma DWIE klasy celowo: arkusz Swipera laduje sie po tym arkuszu,
+ * wiec przy tej samej specyficznosci jego .swiper-slide { height: 100% }
+ * wygrywa kolejnoscia. Sprawdzone na zrzucie — z jedna klasa karty mialy
+ * rozna wysokosc.
+ */
+.cyber-carousel .cyber-carousel__slide {
+	display: flex;
+	height: auto;
+}
+
+.cyber-carousel__slide > .cyber-card {
+	width: 100%;
+}
+
+/*
+ * Uklad PRZED uruchomieniem Swipera. Skrypt jest modulem ES i startuje po
+ * wyrenderowaniu strony; bez tych regul kazda karta zajmowalaby do tego czasu
+ * cala szerokosc, a po starcie rzad nagle by sie przebudowal.
+ *
+ * Po starcie Swiper sam wylicza szerokosci i marginesy (styl inline), a klasa
+ * .swiper-initialized wylacza te reguly — nie ma dwoch zrodel szerokosci naraz.
+ */
+.cyber-carousel:not(.swiper-initialized) .cyber-carousel__slide {
+	width: calc((100% - (var(--cyber-carousel-pv, 4) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv, 4));
+	margin-right: var(--cyber-carousel-gap, 0px);
+}
+
+@media (max-width: 980px) {
+	.cyber-carousel:not(.swiper-initialized) .cyber-carousel__slide {
+		width: calc((100% - (var(--cyber-carousel-pv-t, 2) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv-t, 2));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-carousel:not(.swiper-initialized) .cyber-carousel__slide {
+		width: calc((100% - (var(--cyber-carousel-pv-m, 1) - 1) * var(--cyber-carousel-gap, 0px)) / var(--cyber-carousel-pv-m, 1));
+	}
+}
+
+/*
+ * Pasek sterowania pod karuzela: strzalka, kropki, strzalka. Swiper ustawia
+ * strzalki i kropki absolutnie na karuzeli — tutaj wracaja do zwyklego
+ * przeplywu, zeby nie przykrywaly kart.
+ */
+.cyber-carousel__controls {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--cyber-space-3);
+	margin-top: var(--cyber-space-3);
+}
+
+/* Strzalki sa znacznikami <button> — bez resetu dostaja wyglad pola formularza. */
+.cyber-carousel__controls .swiper-button-prev,
+.cyber-carousel__controls .swiper-button-next {
+	position: static;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+
+/*
+ * Trzy klasy w selektorze celowo: arkusz Swipera laduje sie pozniej i ma
+ * .swiper-pagination-bullets.swiper-pagination-horizontal { width: 100% }
+ * (dwie klasy) — przy rownej specyficznosci kropki zajelyby caly pasek,
+ * a strzalki odjechalyby do krawedzi zamiast stac obok nich.
+ */
+.cyber-carousel__controls .swiper-pagination.cyber-carousel__pagination {
+	position: static;
+	width: auto;
+	transform: none;
+}
+
+/*
+ * Odstepy miedzy czesciami sekcji. Karuzela otwiera opakowanie bez wspolnego
+ * kontenera, wiec tresc nad, karuzela i tresc pod to osobne dzieci sekcji —
+ * reguly szkieletu (.cyber-section__top:not(:last-child)) ich nie obejmuja.
+ */
+.cyber-section--carousel > .cyber-section__inner + .cyber-carousel-wrap,
+.cyber-section--carousel > .cyber-section__inner + .cyber-section__inner,
+.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner {
+	margin-top: var(--cyber-space-4);
+}
+
+@media (max-width: 767px) {
+	.cyber-section--carousel > .cyber-section__inner + .cyber-carousel-wrap,
+	.cyber-section--carousel > .cyber-section__inner + .cyber-section__inner,
+	.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner {
+		margin-top: var(--cyber-space-3);
+	}
+}

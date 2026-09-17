@@ -48,7 +48,7 @@ biblioteka wymaga jawnej zgody (zasada wyżej) i wpisu tutaj w tym samym commici
 
 | Biblioteka | Wersja | Licencja | Gdzie | Zatwierdzona | Używa |
 |---|---|---|---|---|---|
-| **Swiper** | 14.2.0 | MIT | `assets/vendor/swiper-14.2.0/` | 2026-09-17 | sekcja Slider |
+| **Swiper** | 14.2.0 | MIT | `assets/vendor/swiper-14.2.0/` | 2026-09-17 | sekcje Slider i Karuzela kart |
 
 Zasady dla bibliotek:
 

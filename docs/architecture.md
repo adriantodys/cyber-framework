@@ -47,6 +47,7 @@ w ustalonej kolejności:
 | 18 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
 | 19 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
 | 20 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 21 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
 
 ## Stałe
 
@@ -1287,6 +1288,7 @@ basic:    Ustawienia sekcji → WYSIWYG góra → WYSIWYG dół
 cards:    Ustawienia sekcji → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
 columns:  Ustawienia sekcji → Ustawienia kolumn → Układ + kolumny
 slider:   Ustawienia sekcji (szerokość, zdjęcie, odstępy, kotwica, klasy) → Ustawienia slidera → Slajdy
+carousel: Ustawienia sekcji → Ustawienia karuzeli → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
 ```
 
 **Warunki widoczności w sklonowanych polach działają, choć w PHP wyglądają na
@@ -1372,6 +1374,106 @@ kontenera (1289 px), w trybie `full` — okna (1369 px przy 1400 px). Strona
 usunięta po teście. Widoku mobilnego **nie** dało się tak zweryfikować: Chrome
 headless nie zmniejsza okna poniżej ok. 500 px, więc zrzut 390 px ucina układ
 także na stronie głównej, bez slidera.
+
+### Karuzela kart: jedna karta, dwie sekcje
+
+Karuzela nie definiuje karty od nowa. Wszystkie cztery warstwy karty są wspólne
+z sekcją `cards`:
+
+| Warstwa | Wspólne źródło |
+|---|---|
+| pola | klon z `group_section_cards` (bez 6 pól siatki) |
+| normalizacja elementów | `cyber_cards_items()` |
+| wygląd (tło, cień, wyrównanie…) | `cyber_cards_attributes()` — klasy i zmienne na kontenerze |
+| markup | `template-parts/components/card.php` |
+
+Wydzielenie markupu do komponentu zmieniło plik sekcji `cards`, więc render
+sprawdzono porównaniem: 4 warianty (przycisk, link, zdjęcie jako tło, treść
+nad i pod), 12 kart — HTML identyczny przed i po.
+
+**Kontener karuzeli nosi klasy siatki kart** (`.cyber-cards--shadow` itd.),
+bo to one niosą wygląd. Samą siatkę arkusz wyłącza regułą
+`.cyber-carousel.cyber-cards { display: block }` — dwie klasy wygrywają
+z `.cyber-cards` niezależnie od kolejności reguł.
+
+**Kolejność arkuszy ma znaczenie.** Arkusz Swipera ładuje się **po**
+`sections.css`, więc przy równej specyficzności wygrywa. Dwie reguły karuzeli
+mają przez to celowo podwyższoną specyficzność — obie wyszły na zrzutach, nie
+w kodzie: `.swiper-slide { height: 100% }` psuło równą wysokość kart,
+a `.swiper-pagination-horizontal { width: 100% }` odpychało strzałki od kropek.
+
+**Układ przed startem skryptu.** `slider.js` jest modułem ES i uruchamia się
+po wyrenderowaniu strony. Do tego czasu Swiper nie ustawił szerokości slajdów
+i każda karta zajmowała całą szerokość — widać to było na zrzucie zrobionym
+zbyt wcześnie. Liczba kart na widoku i odstęp jadą więc także do CSS
+(`--cyber-carousel-pv`, `-pv-t`, `-pv-m`, `--cyber-carousel-gap`), a reguły
+`.cyber-carousel:not(.swiper-initialized)` układają rząd od razu. Po starcie
+klasa `.swiper-initialized` je wyłącza, więc szerokość ma jedno źródło.
+Sprawdzone na kopii HTML z serwera z usuniętymi wszystkimi `<script>`: 4 karty
+w rzędzie, równe wysokości, jak po inicjalizacji.
+
+**Breakpointy Swipera liczone od dołu.** Swiper przyjmuje `min-width`, motyw
+trzyma progi jako `max-width` 767/980 (CLAUDE.md sekcja 18) — skrypt tłumaczy je
+na 768 i 981. Arkusz dla stanu przed startem używa zwykłych `max-width`.
+
+**Pętla** wyłącza się w skrypcie, gdy kart jest nie więcej niż największa
+liczba widocznych naraz — porównanie z maksimum, a nie z bieżącym ekranem, żeby
+zachowanie nie zależało od szerokości okna przy wczytaniu.
+
+**Sprawdzone w Chrome:** karuzela w szerokości sekcji (7 kart, 4 na widoku,
+slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full`
+(3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
+zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
+wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Karuzela: tryb ciągły bez Swipera
+
+Pierwsza implementacja ciągłego przewijania była na Swiperze: autoplay
+z `delay: 0` i liniowym tempem przejścia. Pomiar w Chrome (pozycja każdej karty
+co 50 ms przez protokół DevTools) wykazał, że **rząd przeskakiwał na starcie** —
+przed inicjalizacją widoczna była Karta 1, chwilę po niej już Karta 3, przy
+prędkości, która nie pozwala przejechać dwóch kart w tym czasie. Ten sam układ
+w trybie krokowym, z pętlą i bez, startował poprawnie od Karty 1. Przyczyną jest
+pętla Swipera, która w trakcie ruchu przestawia karty z końca rzędu na początek
+(`loopFix`).
+
+Zamiast łatać ustawienia Swipera, tryb ciągły jest **taśmą z animacją CSS**:
+
+```
+.cyber-carousel__band        ← szerokość max-content, animacja translateX(0 → -50%)
+  [zestaw kart] [ten sam zestaw jeszcze raz]
+```
+
+Koniec animacji wypada dokładnie w miejscu jej początku, więc przeskoku nie ma
+**z geometrii**, a nie dzięki synchronizacji zegarów. Swiper w tym trybie się
+nie uruchamia (`initCarousel()` wychodzi wcześniej) — nadpisałby transform taśmy.
+
+Szczegóły, które mają znaczenie:
+
+- **Szerokość karty w `cqw`, nie w procentach.** Taśma ma szerokość treści,
+  więc procenty liczyłyby się od niej samej. Karuzela jest kontenerem zapytań
+  (`container-type: inline-size`) i karty liczą się od jej szerokości.
+- **Zestaw musi być co najmniej tak szeroki jak ekran** — inaczej przy końcu
+  zestawu pojawiłaby się dziura. `cyber_carousel_continuous_items()` powiela
+  karty, aż ich liczba dorówna największej liczbie widocznych naraz.
+- **Kopie** mają `aria-hidden="true"`, a ich linki i przyciski `tabindex="-1"` —
+  czytnik ekranu i klawiatura przechodzą przez każdą kartę raz.
+- **Czas animacji = szybkość na kartę × liczba kart w zestawie**, więc pole
+  „Szybkość" znaczy to samo niezależnie od liczby kart.
+- **Pauza po najechaniu** to `animation-play-state: paused` — animacja CSS
+  staje w miejscu, bez szarpnięcia, którego nie dało się uniknąć w Swiperze.
+
+**Zmierzone po zmianie:** 1071 odczytów przez 12,5 s, obejmujących zawinięcie
+taśmy po 10 s — **0 przeskoków, 0 zatrzymań**, mediana prędkości 164,5 px/s przy
+oczekiwanych 166. Pauza po najechaniu myszą zatrzymuje taśmę, a po zjechaniu
+kursora ruch wraca. Przy emulowanym `prefers-reduced-motion` animacja jest
+wyłączona, kopie ukryte, a rząd przewijalny ręcznie.
+
+**Dwa błędy wychwycone pomiarem, nie przeglądem kodu:**
+`cyber_carousel_attributes()` pytał o konfigurację z liczbą kart 0, więc klasa
+trybu ciągłego nie trafiała na kontener mimo wyrenderowanej taśmy; reguły dla
+ograniczenia animacji przegrywały specyficznością z arkuszem Swipera
+(`overflow: hidden`) i regułą `display: flex` slajdu.
 
 ### Pułapka: klucz layoutu kasuje treść
 

@@ -1688,6 +1688,59 @@ to własne pola wewnątrz tego samego akordeonu:
 > Na ciemnej nakładce domyślnie ciemny tekst jest słabo czytelny — kolor zmienia
 > się w edytorze WYSIWYG slajdu.
 
+#### Sekcja „Karuzela kart" (`group_section_carousel`)
+
+Layout `carousel`. Te same karty co w sekcji „Karty", ułożone w przewijany rząd.
+Grupa jest **źródłem klonowania** i zawiera **wyłącznie ustawienia przewijania**.
+
+**Karuzela nie ma własnych pól karty.** Repeater elementów, włączniki treści
+nad i pod oraz wszystkie ustawienia wyglądu karty klonuje z
+`group_section_cards` — **bez** sześciu pól siatki (kolumny ×3, odstępy X/Y,
+nagłówek „Siatka"), bo karuzela ma własny układ. W wierszu pola nazywają się
+więc `cyber_cards_*`, tak jak w sekcji Karty. Zmiana wyglądu karty działa
+w obu sekcjach naraz.
+
+Kolejność w panelu: Ustawienia sekcji (pełny zestaw, jak w Kartach) →
+Ustawienia karuzeli → Ustawienia kart → [wł.] treść nad → Elementy →
+[wł.] treść pod.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Szerokość karuzeli | `cyber_carousel_width` | Select | `section` | `section` — za ustawieniem „Szerokość sekcji"; `full` — rząd kart od krawędzi do krawędzi okna |
+| Kart na widoku (desktop) | `cyber_carousel_per_view` | Select 1–6 | `4` | |
+| Kart na widoku (tablet) | `cyber_carousel_per_view_tablet` | Select 1–4 | `2` | poniżej 980px |
+| Kart na widoku (mobile) | `cyber_carousel_per_view_mobile` | Select 1–2 | `1` | poniżej 767px |
+| Odstęp między kartami | `cyber_carousel_gap` | Select (skala) | `24` | |
+| Ciągłe przewijanie | `cyber_carousel_continuous` | True/False | `false` | Stały, jednostajny ruch bez zatrzymań; osobny tryb, patrz niżej |
+| Szybkość przesuwania | `cyber_carousel_speed` | Number 100–30000 ms | `600` | Czas przejazdu **jednej karty**; dotyczy obu trybów |
+| Strzałki | `cyber_carousel_navigation` | True/False | `false` | ukryte w trybie ciągłym |
+| Kropki (paginacja) | `cyber_carousel_pagination` | True/False | `false` | ukryte w trybie ciągłym |
+| Autoplay | `cyber_carousel_autoplay` | True/False | `false` | ukryte w trybie ciągłym |
+| Czas między przesunięciami | `cyber_carousel_delay` | Number 1000–30000 ms | `5000` | widoczne przy autoplay **i** bez trybu ciągłego |
+| Pętla | `cyber_carousel_loop` | True/False | `false` | ukryte w trybie ciągłym |
+
+> **Ciągłe przewijanie to osobny tryb, nie kombinacja przełączników.** Karty
+> jadą stale i jednostajnie. Strzałki, kropki, pętla i autoplay są w nim
+> ukryte w panelu i nie powstają na stronie, nawet jeśli w bazie zostały
+> włączone wcześniej. Taśma **zatrzymuje się po najechaniu myszą** (i po wejściu
+> klawiaturą), żeby dało się kliknąć przycisk karty. Przy ograniczeniu animacji
+> w systemie rząd stoi, kopie znikają, a karty da się przewinąć ręcznie.
+
+> **Szybkość nie zależy od liczby kart.** Pole mówi, ile trwa przejazd jednej
+> karty; czas całej animacji taśmy liczy się z tego automatycznie. Praktyczne
+> wartości: krokowo 400–800 ms, ciągle 3000–8000 ms.
+
+> **Treść nad i pod karuzelą zawsze trzyma szerokość sekcji**, także w trybie
+> `full` — rozciąga się wyłącznie rząd kart.
+
+> **Pętla wyłącza się sama**, gdy kart jest nie więcej niż mieści się naraz na
+> najszerszym ekranie. Swiper nie potrafi zapętlić rzędu, który w całości
+> widać; bez tego warunku wypisałby ostrzeżenie w konsoli.
+
+> **Strzałki i kropki stoją pod rzędem kart**, w jednym pasku: ← • • • →.
+> W odróżnieniu od slidera karty wypełniają całą szerokość, więc strzałki na
+> kartach zasłaniałyby ich treść.
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -1751,6 +1804,9 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-17 — **„Karuzela kart"**: tryb ciągłego przewijania (`cyber_carousel_continuous`) i szybkość przesuwania (`cyber_carousel_speed`). Pola strzałek, kropek, pętli i autoplay chowają się w trybie ciągłym; czas między przesunięciami ma warunek AND (autoplay i brak trybu ciągłego). Tryb ciągły działa na animacji CSS, bez Swipera.
+- 2026-09-17 — Sekcja **„Karuzela kart"** — layout `carousel` i grupa źródłowa `group_section_carousel` z 10 ustawieniami przewijania. Elementy, włączniki treści i wygląd karty klonowane z `group_section_cards` (bez 6 pól siatki), więc karta ma jedną definicję w dwóch sekcjach. Markup karty przeniesiony do wspólnego komponentu `template-parts/components/card.php` — render sekcji Karty sprawdzony jako identyczny przed i po. Swiper z sekcji Slider obsługuje oba rodzaje karuzel.
 
 - 2026-09-17 — Sekcja **„Slider"** — layout `slider` i grupa źródłowa `group_section_slider`: repeater slajdów (zdjęcie desktop/mobile, treść, przycisk), 15 ustawień karuzeli i 3 pola sekcji własne slidera. Z `group_section_settings` klonuje tylko szerokość, kotwicę i klasy. Pierwsza zewnętrzna biblioteka w motywie: **Swiper 14.2.0**, zatwierdzony jawnie i wpisany do rejestru w CLAUDE.md sekcja 2.
 

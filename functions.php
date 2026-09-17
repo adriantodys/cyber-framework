@@ -62,6 +62,7 @@ function cyber_load_modules() {
 		'inc/sections-cards.php',
 		'inc/sections-columns.php',
 		'inc/sections-slider.php',
+		'inc/sections-carousel.php',
 	);
 
 	foreach ( $modules as $module ) {

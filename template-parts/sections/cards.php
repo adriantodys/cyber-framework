@@ -5,6 +5,9 @@
  * Ten sam szkielet co sekcja podstawowa — WYSIWYG gora, kontener, WYSIWYG dol
  * — z tym, ze kontener jest wypelniony siatka powtarzalnych elementow.
  *
+ * Markup pojedynczej karty jest w template-parts/components/card.php —
+ * wspolny z sekcja "Karuzela kart".
+ *
  * Widok nie siega po ACF ani po stan globalny: komplet danych przychodzi
  * jawnie w $args z cyber_render_sections() (CLAUDE.md sekcja 4), a elementy
  * sa juz znormalizowane przez cyber_cards_items().
@@ -37,65 +40,12 @@ if ( cyber_cards_shows_wysiwyg( $cyber_row, 'top' ) ) {
 if ( $cyber_items ) :
 	?>
 	<div class="<?php echo esc_attr( $cyber_cards['class'] ); ?>" style="<?php echo esc_attr( $cyber_cards['style'] ); ?>">
-		<?php foreach ( $cyber_items as $cyber_item ) : ?>
-			<?php
-			// Zdjecie jako tlo karty — adres idzie zmienna, nie atrybutem src.
-			printf(
-				'<article class="cyber-card"%s>',
-				'' !== $cyber_item['image_url']
-					? sprintf( ' style="--cyber-card-image:url(%s);"', esc_url( $cyber_item['image_url'] ) )
-					: ''
-			);
-			?>
-				<?php if ( '' === $cyber_item['image_url'] && $cyber_item['image_id'] ) : ?>
-					<div class="cyber-card__media">
-						<?php
-						echo wp_get_attachment_image(
-							$cyber_item['image_id'],
-							'large',
-							false,
-							array( 'class' => 'cyber-card__image' )
-						);
-						?>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( '' !== $cyber_item['title'] ) : ?>
-					<h3 class="cyber-card__title"><?php echo esc_html( $cyber_item['title'] ); ?></h3>
-				<?php endif; ?>
-
-				<?php if ( '' !== trim( $cyber_item['text'] ) ) : ?>
-					<div class="cyber-card__text">
-						<?php echo wp_kses_post( wpautop( $cyber_item['text'] ) ); ?>
-					</div>
-				<?php endif; ?>
-
-				<?php if ( '' !== $cyber_item['url'] && '' !== $cyber_item['label'] ) : ?>
-					<div class="cyber-card__footer">
-						<?php
-						if ( 'button' === $cyber_item['link_style'] ) {
-							// Przycisk dziedziczy caly wyglad z zakladki Przyciski.
-							cyber_button(
-								array(
-									'text'   => $cyber_item['label'],
-									'url'    => $cyber_item['url'],
-									'size'   => $cyber_item['button_size'],
-									'target' => $cyber_item['target'],
-								)
-							);
-						} else {
-							printf(
-								'<a class="cyber-card__link" href="%1$s"%2$s>%3$s</a>',
-								esc_url( $cyber_item['url'] ),
-								'_blank' === $cyber_item['target'] ? ' target="_blank" rel="noopener"' : '',
-								esc_html( $cyber_item['label'] )
-							);
-						}
-						?>
-					</div>
-				<?php endif; ?>
-			</article>
-		<?php endforeach; ?>
+		<?php
+		foreach ( $cyber_items as $cyber_item ) {
+			// Wspolny komponent z sekcja "Karuzela kart" — jeden markup karty.
+			get_template_part( 'template-parts/components/card', null, array( 'item' => $cyber_item ) );
+		}
+		?>
 	</div>
 	<?php
 endif;
