@@ -1423,7 +1423,7 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
 Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
-**`faq`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+**`faq`**, **`counter`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
 
 #### Layout „Sekcja globalna” (`global`)
@@ -1575,8 +1575,8 @@ edytor górny** → Elementy → **włącznik dolny → edytor dolny**.
 > w bazie. Warunek widoczności edytora **nie siedzi w pliku JSON**: edytory
 > pochodzą ze wspólnej grupy `group_section_content`, z której korzysta też
 > sekcja podstawowa, więc warunek wpisany tam działałby we wszystkich sekcjach.
-> Dokłada go w locie filtr `cyber_cards_wysiwyg_condition()`
-> (`inc/sections-cards.php`), wyłącznie polom przyniesionym przez klon kart.
+> Dokłada go w locie wspólny filtr `cyber_section_wysiwyg_condition()`
+> (`inc/sections.php`), wyłącznie polom przyniesionym przez klon kart.
 >
 > **Domyślnie wyłączone.** Nowa sekcja kart startuje bez treści nad i pod
 > siatką; edytor pojawia się dopiero po włączeniu. Brak wartości liczy się jako
@@ -1816,8 +1816,8 @@ wyglądu sekcji, z `group_section_content` — treść nad i pod pytaniami.
 | Pokaż treść pod pytaniami | `cyber_faq_show_bottom` | True/False | `false` | To samo dla `cyber_section_wysiwyg_bottom` |
 
 Wyłączenie chowa edytor i blok, ale wpisana treść zostaje w bazie. Warunek
-nakłada `cyber_faq_wysiwyg_condition()` w locie, tylko na edytory przyniesione
-przez klon FAQ — ten sam mechanizm co w Kartach.
+nakłada w locie wspólny filtr `cyber_section_wysiwyg_condition()`, tylko na
+edytory przyniesione przez klon FAQ — ten sam mechanizm co w Kartach.
 
 **Pytania** — Repeater `cyber_faq_items`:
 
@@ -1856,6 +1856,60 @@ przez klon FAQ — ten sam mechanizm co w Kartach.
 > **Ikona z lewej** ma trzy źródła, w tej kolejności: ikona pytania z repeatera,
 > ikona sekcji, ikona motywu (znak zapytania, `.cyber-icon--question`, kolor
 > z Kolory → Ikony). Obrazek jest dekoracyjny (`alt=""`).
+
+#### Sekcja „Licznik” (`group_section_counter`)
+
+Layout `counter`. Liczby z opisem, odliczane od zera, gdy sekcja pojawi się na
+ekranie. Grupa jest **źródłem klonowania**; z `group_section_settings` bierze
+komplet ustawień wyglądu sekcji, z `group_section_content` — treść nad i pod
+licznikami.
+
+**Liczniki** — Repeater `cyber_counter_items`:
+
+| Field Label | Field Name | Typ | Przeznaczenie |
+|---|---|---|---|
+| Przed liczbą | `cyber_counter_prefix` | Text (40) | Np. `~`, `$`, `ponad` |
+| Liczba | `cyber_counter_number` | Number (krok dowolny), wymagane | Wartość końcowa; `4.5` → na stronie `4,5`. Liczba miejsc po przecinku wynika z wpisanej wartości (maks. 3) |
+| Po liczbie | `cyber_counter_suffix` | Text (40) | Np. `+`, `%`, `lat` |
+| Ikona | `cyber_counter_icon` | Image (ID) | Opcjonalna, nad liczbą, 48×48 px |
+| Tytuł | `cyber_counter_title` | Text | Opcjonalny, pod liczbą i nad opisem; `<h3>`, wielkość z „Rozmiar tytułu” |
+| Opis | `cyber_counter_label` | Text | Tekst pod liczbą |
+
+Element bez liczby jest pomijany. Między prefiksem, liczbą i sufiksem stoi
+spacja (`10 +`, jak na makiecie).
+
+**Treść nad i pod licznikami** — poza akordeonem, z włącznikami:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Pokaż treść nad licznikami | `cyber_counter_show_top` | True/False | `false` |
+| Pokaż treść pod licznikami | `cyber_counter_show_bottom` | True/False | `false` |
+
+**Ustawienia** — akordeon „Ustawienia licznika”, domyślnie zwinięty:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Kolumny (desktop / tablet / telefon) | `cyber_counter_columns` `_tablet` `_mobile` | Select 1–6 / 1–4 / 1–2 | `4` / `2` / `1` | |
+| Odstęp między kolumnami / wierszami | `cyber_counter_gap_x` `_gap_y` | Select (skala) | `24` / `48` | Linia pionowa stoi w połowie odstępu między kolumnami |
+| Wyrównanie | `cyber_counter_align` | Select (CLAUDE.md sekcja 20) | `center` | |
+| Odstęp liczba — opis | `cyber_counter_gap_label` | Select (skala) | `12` | |
+| Linia między elementami | `cyber_counter_divider` | True/False | `true` | Pionowa linia między kolumnami; pierwsza kolumna wiersza jej nie ma |
+| Kolor linii | `cyber_counter_divider_color` | Color (alpha) | `''` | Widoczne przy włączonej linii; puste = Obramowanie 1 |
+| Animacja liczenia | `cyber_counter_animate` | True/False | `true` | Wyłączona przy ograniczeniu animacji w systemie |
+| Czas animacji | `cyber_counter_duration` | Number 300–10000 ms | `2000` | Widoczne przy włączonej animacji |
+| Separator tysięcy | `cyber_counter_thousands` | True/False | `false` | `12 500` zamiast `12500` (twarda spacja) |
+| Rozmiar liczby | `cyber_counter_number_size` | Select `h1`–`h6` | `h1` | Wielkość z Ustawień czcionki |
+| Grubość liczby | `cyber_counter_number_weight` | Select 300–900 | `800` | |
+| Rozmiar tytułu | `cyber_counter_title_size` | Select `h1`–`h6` | `h5` | Wielkość z Ustawień czcionki; znacznik zawsze `<h3>`, kolor jak liczba |
+| Kolor liczby / opisu | `cyber_counter_number_color` `_label_color` | Color (alpha) | `''` | Puste = nagłówki / tekst z Global Options |
+
+> **Liczba jest w HTML od początku.** Bez JavaScriptu, dla wyszukiwarki i dla
+> czytnika ekranu widać wartość końcową. Skrypt `assets/js/counter.js` (własny,
+> bez biblioteki) cofa ją do zera w chwili, gdy sekcja wchodzi na ekran,
+> i odlicza w górę. Czytnik ekranu czyta ukryty tekst z wartością końcową,
+> a animowana liczba ma `aria-hidden`. Skrypt ładuje się wyłącznie na stronie
+> z animowanym licznikiem — także takim z sekcji globalnej.
+
 
 ## Inne grupy pól
 
@@ -1920,6 +1974,10 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-19 — **„Licznik”**: tytuł przy każdym liczniku (`cyber_counter_title`) i wspólny rozmiar tytułu dla sekcji (`cyber_counter_title_size`, `h1`–`h6`, default `h5`).
+
+- 2026-09-19 — Sekcja **„Licznik”** — layout `counter` i grupa źródłowa `group_section_counter`: repeater liczb (prefiks, liczba, sufiks, ikona, opis) i 17 ustawień — kolumny per breakpoint, odstępy, wyrównanie, linia pionowa z kolorem, animacja z czasem, separator tysięcy, typografia — oraz włączniki treści nad i pod (domyślnie wyłączone). Animacja we własnym skrypcie `assets/js/counter.js`, bez biblioteki. Warunek edytorów WYSIWYG z włącznikami przeniesiony do jednej funkcji `cyber_section_wysiwyg_condition()` (wcześniej trzy kopie w kartach, karuzeli i FAQ).
 
 - 2026-09-19 — **„FAQ”**: włączniki treści nad i pod pytaniami (`cyber_faq_show_top`, `cyber_faq_show_bottom`), domyślnie wyłączone — jak w Kartach.
 - 2026-09-19 — Sekcja **„FAQ”** — layout `faq` i grupa źródłowa `group_section_faq`: repeater pytań (pytanie, odpowiedź WYSIWYG, własna ikona) i 16 ustawień — jedna lub dwie kolumny, tryb jednej otwartej odpowiedzi, pierwsze pytanie otwarte, włączniki ikony z lewej i plusa z prawej, odstępy, linia, kolory, rozmiar pytania. Natywne `<details>`, bez biblioteki i bez JS. Nowa ikona motywu `question`. Poprawka w **Kartach**: kolor i grubość tekstu z panelu nie dochodziły do akapitów (arkusz bazowy nadaje `<p>` własny kolor).

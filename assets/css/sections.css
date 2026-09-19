@@ -946,3 +946,116 @@
 		transition: none;
 	}
 }
+
+/* --- Licznik (counter) ----------------------------------------------------- */
+
+/*
+ * Siatka jak w kartach: liczba kolumn per breakpoint w zmiennych.
+ * overflow: hidden przycina linie pionowa pierwszej kolumny kazdego wiersza —
+ * linia stoi po lewej stronie elementu, w polowie odstepu, wiec u pierwszego
+ * elementu w wierszu wystaje poza kontener. Dziala przy kazdej liczbie kolumn.
+ */
+.cyber-counter {
+	display: grid;
+	grid-template-columns: repeat(var(--cyber-counter-cols, 4), minmax(0, 1fr));
+	column-gap: var(--cyber-counter-gap-x, 24px);
+	row-gap: var(--cyber-counter-gap-y, 48px);
+	overflow: hidden;
+}
+
+.cyber-counter__item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-width: 0;
+}
+
+.cyber-counter--divider .cyber-counter__item::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: calc(var(--cyber-counter-gap-x, 24px) / -2 - 1px);
+	width: 1px;
+	background-color: var(--cyber-counter-divider, var(--cyber-color-border-1));
+}
+
+.cyber-counter--left .cyber-counter__item {
+	align-items: flex-start;
+	text-align: left;
+}
+
+.cyber-counter--center .cyber-counter__item {
+	align-items: center;
+	text-align: center;
+}
+
+.cyber-counter--right .cyber-counter__item {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.cyber-counter__icon {
+	margin-bottom: var(--cyber-space-2);
+}
+
+.cyber-counter__icon-image {
+	display: block;
+	width: 48px;
+	height: 48px;
+	object-fit: contain;
+}
+
+/*
+ * Cyfry o stalej szerokosci (tabular-nums) — liczba w trakcie odliczania nie
+ * drga. Prefiks i sufiks dziedzicza kroj i rozmiar liczby.
+ */
+.cyber-counter__value {
+	margin: 0;
+	color: var(--cyber-counter-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-counter-size, var(--cyber-font-size-h1));
+	font-weight: var(--cyber-counter-weight, 800);
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+}
+
+.cyber-counter__value span {
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+}
+
+.cyber-counter__number {
+	display: inline-block;
+}
+
+/*
+ * Tytul pod liczba. Rozmiar z pola "Rozmiar tytulu" (globalna wielkosc
+ * naglowka), kolor jak liczba. Odstepy te same co przy opisie.
+ */
+.cyber-counter__title {
+	margin: var(--cyber-counter-gap-label, 12px) 0 0;
+	color: var(--cyber-counter-color, var(--cyber-color-headings));
+	font-size: var(--cyber-counter-title-size, var(--cyber-font-size-h5));
+	line-height: 1.3;
+}
+
+.cyber-counter__label {
+	margin: var(--cyber-counter-gap-label, 12px) 0 0;
+	color: var(--cyber-counter-label-color, var(--cyber-color-text));
+}
+
+@media (max-width: 980px) {
+	.cyber-counter {
+		grid-template-columns: repeat(var(--cyber-counter-cols-t, 2), minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-counter {
+		grid-template-columns: repeat(var(--cyber-counter-cols-m, 1), minmax(0, 1fr));
+	}
+}

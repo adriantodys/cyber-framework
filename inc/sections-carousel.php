@@ -214,37 +214,3 @@ function cyber_carousel_continuous_items( array $items, $max_view ) {
 		'per_set' => $per_set,
 	);
 }
-
-/**
- * Chowa w panelu edytory WYSIWYG karuzeli przy wylaczonym wlaczniku.
- *
- * Ten sam mechanizm co w kartach (cyber_cards_wysiwyg_condition) — wlaczniki
- * sa zreszta tymi samymi polami, sklonowanymi z group_section_cards. Rozni sie
- * wylacznie klucz klonu, ktory przyniosl edytor.
- *
- * @param array $field Pole ACF przygotowywane do wyswietlenia w formularzu.
- * @return array
- */
-function cyber_carousel_wysiwyg_condition( $field ) {
-	$map = array(
-		'field_cyber_section_carousel_top'    => 'field_cyber_cards_show_top',
-		'field_cyber_section_carousel_bottom' => 'field_cyber_cards_show_bottom',
-	);
-
-	if ( empty( $field['_clone'] ) || ! isset( $map[ $field['_clone'] ] ) ) {
-		return $field;
-	}
-
-	$field['conditional_logic'] = array(
-		array(
-			array(
-				'field'    => $map[ $field['_clone'] ],
-				'operator' => '==',
-				'value'    => '1',
-			),
-		),
-	);
-
-	return $field;
-}
-add_filter( 'acf/prepare_field', 'cyber_carousel_wysiwyg_condition', 20 );

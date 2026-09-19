@@ -93,6 +93,11 @@ function cyber_section_types() {
 			'template' => 'faq',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'counter'  => array(
+			'label'    => 'Licznik (counter)',
+			'template' => 'counter',
+			'contexts' => array( 'page', 'post' ),
+		),
 		/*
 		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
 		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje
@@ -610,6 +615,84 @@ function cyber_section_wysiwyg( array $row, $slot ) {
 		cyber_kses_content( $row[ $key ] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() w srodku.
 	);
 }
+
+/**
+ * Czy blok WYSIWYG nad albo pod sekcja ma sie wyswietlic.
+ *
+ * Dla sekcji, w ktorych edytory maja wlaczniki (domyslnie wylaczone). Brak
+ * wartosci liczy sie jako wylaczony, zgodnie z default_value pola, wiec panel
+ * i front pokazuja ten sam stan. Pusty edytor tez nie daje bloku.
+ *
+ * @param array  $row    Wiersz Flexible Content.
+ * @param string $toggle Przedrostek wlacznika, np. 'cyber_faq_show'.
+ * @param string $slot   'top' albo 'bottom'.
+ * @return bool
+ */
+function cyber_section_shows_wysiwyg( array $row, $toggle, $slot ) {
+	return ! empty( $row[ $toggle . '_' . $slot ] ) && ! empty( $row[ 'cyber_section_wysiwyg_' . $slot ] );
+}
+
+/**
+ * Wlaczniki edytorow WYSIWYG: klucz klonu edytora => klucz pola wlacznika.
+ *
+ * JEDNO miejsce dla wszystkich sekcji z wlacznikami tresci nad i pod.
+ * Wczesniej kazda sekcja miala wlasna, identyczna kopie filtra — nowa sekcja
+ * dopisuje tu dwa wiersze zamiast kopiowac funkcje.
+ *
+ * Karuzela uzywa wlacznikow kart (klonuje je z group_section_cards), wiec
+ * rozni sie tylko klucz klonu edytora.
+ *
+ * @return array<string, string>
+ */
+function cyber_section_wysiwyg_toggles() {
+	return array(
+		'field_cyber_section_cards_top'       => 'field_cyber_cards_show_top',
+		'field_cyber_section_cards_bottom'    => 'field_cyber_cards_show_bottom',
+		'field_cyber_section_carousel_top'    => 'field_cyber_cards_show_top',
+		'field_cyber_section_carousel_bottom' => 'field_cyber_cards_show_bottom',
+		'field_cyber_section_faq_top'         => 'field_cyber_faq_show_top',
+		'field_cyber_section_faq_bottom'      => 'field_cyber_faq_show_bottom',
+		'field_cyber_section_counter_top'     => 'field_cyber_counter_show_top',
+		'field_cyber_section_counter_bottom'  => 'field_cyber_counter_show_bottom',
+	);
+}
+
+/**
+ * Chowa w panelu edytor WYSIWYG, gdy jego wlacznik jest wylaczony.
+ *
+ * Edytory nad i pod sekcja pochodza ze WSPOLNEJ grupy group_section_content,
+ * z ktorej korzysta tez sekcja podstawowa (bez wlacznikow). Warunek wpisany
+ * w tej grupie dzialalby we wszystkich sekcjach naraz — dlatego dokladamy go
+ * w locie i tylko polom przyniesionym przez konkretny klon.
+ *
+ * $field['_clone'] niesie klucz klonu, ktory przyniosl pole
+ * (includes/acf-field-functions.php). Priorytet 20, po filtrze ACF (10), ktory
+ * przywraca polu oryginalny klucz — warunek odwoluje sie do oryginalnego
+ * klucza wlacznika, tak jak widzi go JavaScript formularza.
+ *
+ * @param array $field Pole ACF przygotowywane do wyswietlenia w formularzu.
+ * @return array Pole z warunkiem albo bez zmian.
+ */
+function cyber_section_wysiwyg_condition( $field ) {
+	$map = cyber_section_wysiwyg_toggles();
+
+	if ( empty( $field['_clone'] ) || ! isset( $map[ $field['_clone'] ] ) ) {
+		return $field;
+	}
+
+	$field['conditional_logic'] = array(
+		array(
+			array(
+				'field'    => $map[ $field['_clone'] ],
+				'operator' => '==',
+				'value'    => '1',
+			),
+		),
+	);
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'cyber_section_wysiwyg_condition', 20 );
 
 /**
  * Lista znacznikow dozwolonych w tresci WYSIWYG sekcji.

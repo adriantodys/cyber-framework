@@ -50,6 +50,7 @@ w ustalonej kolejności:
 | 21 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
 | 22 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
 | 23 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
+| 24 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
 
 ## Stałe
 
@@ -1427,6 +1428,27 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Licznik: własny skrypt, linia bez znajomości liczby kolumn
+
+**Animacja bez biblioteki.** Odliczanie to IntersectionObserver
+i requestAnimationFrame z wygaszeniem tempa — około 60 linii
+(`assets/js/counter.js`). Gotowa biblioteka (np. CountUp.js) byłaby wpisem
+w rejestrze (CLAUDE.md sekcja 2) za to samo. Wartość końcowa stoi w HTML;
+skrypt cofa ją do zera dopiero na pierwszym pikselu sekcji w oknie, więc nie
+widać przeskoku. Szerokość liczby jest zamrażana na czas animacji.
+
+**Linia pionowa działa przy każdej liczbie kolumn.** Liczba kolumn zależy od
+breakpointu i ustawień, a selektor `:nth-child()` nie przyjmuje zmiennej CSS.
+Zamiast tego każdy element ma linię po lewej, w połowie odstępu, a kontener
+ma `overflow: hidden` — linia pierwszej kolumny każdego wiersza wystaje poza
+kontener i zostaje ucięta. Zmierzone w Chrome: 4 kolumny → `ucięta, linia,
+linia, linia`; 3 kolumny i 4 elementy → drugi wiersz zaczyna się od uciętej.
+
+**Jeden filtr włączników zamiast kopii.** Czwarta sekcja z włącznikami treści
+nad i pod byłaby czwartą identyczną kopią filtra `acf/prepare_field`. Filtr
+żyje teraz raz w `inc/sections.php` (`cyber_section_wysiwyg_condition()`)
+i czyta mapę `cyber_section_wysiwyg_toggles()`.
 
 ### FAQ: natywne `<details>` zamiast biblioteki
 

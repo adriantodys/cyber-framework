@@ -74,42 +74,8 @@ function cyber_faq_items( array $row ) {
  * @return bool
  */
 function cyber_faq_shows_wysiwyg( array $row, $slot ) {
-	return ! empty( $row[ 'cyber_faq_show_' . $slot ] ) && ! empty( $row[ 'cyber_section_wysiwyg_' . $slot ] );
+	return cyber_section_shows_wysiwyg( $row, 'cyber_faq_show', $slot );
 }
-
-/**
- * Chowa w panelu edytor WYSIWYG FAQ, gdy jego wlacznik jest wylaczony.
- *
- * Ten sam mechanizm co cyber_cards_wysiwyg_condition(): edytory pochodza ze
- * wspolnej grupy group_section_content, wiec warunek dokladamy w locie i tylko
- * polom przyniesionym przez klon FAQ (rozpoznanym po $field['_clone']).
- *
- * @param array $field Pole ACF przygotowywane do wyswietlenia w formularzu.
- * @return array
- */
-function cyber_faq_wysiwyg_condition( $field ) {
-	$map = array(
-		'field_cyber_section_faq_top'    => 'field_cyber_faq_show_top',
-		'field_cyber_section_faq_bottom' => 'field_cyber_faq_show_bottom',
-	);
-
-	if ( empty( $field['_clone'] ) || ! isset( $map[ $field['_clone'] ] ) ) {
-		return $field;
-	}
-
-	$field['conditional_logic'] = array(
-		array(
-			array(
-				'field'    => $map[ $field['_clone'] ],
-				'operator' => '==',
-				'value'    => '1',
-			),
-		),
-	);
-
-	return $field;
-}
-add_filter( 'acf/prepare_field', 'cyber_faq_wysiwyg_condition', 20 );
 
 /**
  * Pytania rozdzielone na kolumny.

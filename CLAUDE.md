@@ -607,7 +607,8 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    `cyber_section_types()` (`inc/sections.php`), wspólne opakowanie `.cyber-section`
    i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
    Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`,
-   `faq` (natywne `<details>`, bez biblioteki) oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
+   `faq` (natywne `<details>`, bez biblioteki), `counter` (własny skrypt
+   odliczania) oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
    z tym samym polem `cyber_sections` i layout `global`, który wstawia jego
    sekcje na stronę (`inc/sections-global.php`). Sekcja globalna nie może
    zawierać innej sekcji globalnej.

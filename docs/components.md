@@ -273,6 +273,10 @@ rozjazdu.
 | `inc/sections-faq.php` | layout `faq` — normalizacja pytań, kolumny, klasy i zmienne |
 | `template-parts/sections/faq.php` | layout `faq` — widok (`<details>`/`<summary>`) |
 | `acf-json/group_section_faq.json` | źródło klonowania: pola sekcji FAQ |
+| `inc/sections-counter.php` | layout `counter` — normalizacja liczb, formatowanie, klasy i zmienne, warunkowy skrypt |
+| `template-parts/sections/counter.php` | layout `counter` — widok |
+| `assets/js/counter.js` | layout `counter` — odliczanie (IntersectionObserver + requestAnimationFrame) |
+| `acf-json/group_section_counter.json` | źródło klonowania: pola sekcji Licznik |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -292,6 +296,7 @@ rozjazdu.
 | `slider` | Slider | `slider` | `page`, `post` |
 | `carousel` | Karuzela kart | `carousel` | `page`, `post` |
 | `faq` | FAQ (pytania i odpowiedzi) | `faq` | `page`, `post` |
+| `counter` | Licznik (counter) | `counter` | `page`, `post` |
 | `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
@@ -351,7 +356,7 @@ własnego markupu przycisku ani własnych pól jego wyglądu.
 Treść nad i pod siatką ma **osobne włączniki** (`cyber_cards_show_top`,
 `cyber_cards_show_bottom`), stojące w panelu bezpośrednio nad swoim edytorem.
 Na froncie sprawdza je `cyber_cards_shows_wysiwyg()`, w panelu edytor chowa
-filtr `cyber_cards_wysiwyg_condition()` — warunek nie może siedzieć w JSON-ie,
+wspólny filtr `cyber_section_wysiwyg_condition()` — warunek nie może siedzieć w JSON-ie,
 bo edytory są wspólne z sekcją podstawową.
 Oba są **domyślnie wyłączone**; brak wartości liczy się jako wyłączony,
 zgodnie z `default_value` pola w ACF.
@@ -418,7 +423,7 @@ i bez JavaScriptu.
 
 | Plik | Rola |
 |---|---|
-| `inc/sections-faq.php` | normalizacja pytań, podział na kolumny, konfiguracja, klasy i zmienne, ikona z lewej, włączniki treści nad/pod (`cyber_faq_shows_wysiwyg()`, `cyber_faq_wysiwyg_condition()`) |
+| `inc/sections-faq.php` | normalizacja pytań, podział na kolumny, konfiguracja, klasy i zmienne, ikona z lewej, włącznik treści nad/pod (`cyber_faq_shows_wysiwyg()`) |
 | `template-parts/sections/faq.php` | widok |
 | `acf-json/group_section_faq.json` | pola: repeater pytań i ustawienia |
 
@@ -434,6 +439,35 @@ i bez JavaScriptu.
 | `.cyber-faq__icon` | ikona z lewej: `<img>` z panelu albo `.cyber-icon--question` |
 | `.cyber-faq__toggle` | plus/minus rysowany w CSS; kolor `--cyber-color-icons`, do nadpisania tą klasą |
 | `.cyber-faq__answer` | odpowiedź; niesie też `.cyber-wysiwyg` |
+
+### Włączniki treści nad i pod sekcją — wspólne
+
+Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`) nie mają własnych
+filtrów. Mapa „klucz klonu edytora → klucz włącznika” jest jedna:
+`cyber_section_wysiwyg_toggles()` w `inc/sections.php`, a warunek nakłada
+`cyber_section_wysiwyg_condition()`. Na froncie sprawdza je
+`cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )`.
+**Nowa sekcja z włącznikami dopisuje dwa wiersze do mapy** zamiast kopiować filtr.
+
+### Sekcja `counter` — Licznik
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-counter.php` | normalizacja liczb, `cyber_counter_format()`, konfiguracja, klasy i zmienne, enqueue skryptu |
+| `template-parts/sections/counter.php` | widok |
+| `assets/js/counter.js` | odliczanie; ładowany tylko przy animowanym liczniku |
+| `acf-json/group_section_counter.json` | pola |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-counter` | siatka; zmienne `--cyber-counter-*` w `style`; `data-counter-*` przy animacji |
+| `.cyber-counter--left` / `--center` / `--right` | wyrównanie |
+| `.cyber-counter--divider` | linia pionowa (`::before` elementu, przycinana przez `overflow: hidden` kontenera) |
+| `.cyber-counter__item` | jeden licznik |
+| `.cyber-counter__icon` | opcjonalna ikona nad liczbą |
+| `.cyber-counter__value` | wiersz liczby: `__prefix`, `__number`, `__suffix` (`aria-hidden`) + `.screen-reader-text` |
+| `.cyber-counter__title` | tytuł pod liczbą (`<h3>`), rozmiar z `--cyber-counter-title-size` |
+| `.cyber-counter__label` | opis pod liczbą |
 
 ### Sekcja `global` — Sekcja globalna
 
