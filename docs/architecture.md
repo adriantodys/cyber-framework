@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-15 (Global Options ma czternaście zakładek i 166 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-15 (Global Options ma czternaście zakładek i 167 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -1460,13 +1460,15 @@ Szczegóły, które mają znaczenie:
   czytnik ekranu i klawiatura przechodzą przez każdą kartę raz.
 - **Czas animacji = szybkość na kartę × liczba kart w zestawie**, więc pole
   „Szybkość" znaczy to samo niezależnie od liczby kart.
-- **Pauza po najechaniu** to `animation-play-state: paused` — animacja CSS
-  staje w miejscu, bez szarpnięcia, którego nie dało się uniknąć w Swiperze.
+- **Bez pauzy po najechaniu** (od 2026-09-19). Pierwsza wersja zatrzymywała
+  taśmę przez `animation-play-state: paused`; decyzją projektową ruch ma być
+  ciągły, więc reguła została usunięta. Autoplay krokowy karuzeli też nie
+  zatrzymuje się pod kursorem (`pauseOnMouseEnter: false`); slider — tak.
 
 **Zmierzone po zmianie:** 1071 odczytów przez 12,5 s, obejmujących zawinięcie
 taśmy po 10 s — **0 przeskoków, 0 zatrzymań**, mediana prędkości 164,5 px/s przy
-oczekiwanych 166. Pauza po najechaniu myszą zatrzymuje taśmę, a po zjechaniu
-kursora ruch wraca. Przy emulowanym `prefers-reduced-motion` animacja jest
+oczekiwanych 166. (Pomiar pauzy po najechaniu dotyczył wersji sprzed
+2026-09-19; po jej usunięciu ten sam test pokazuje ruch także pod kursorem.) Przy emulowanym `prefers-reduced-motion` animacja jest
 wyłączona, kopie ukryte, a rząd przewijalny ręcznie.
 
 **Dwa błędy wychwycone pomiarem, nie przeglądem kodu:**
@@ -1538,13 +1540,21 @@ Zrealizowane i opisane w sekcjach powyżej:
 
 Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaimplementowane:
 
-- **Etap 4** — Flexible Content i system sekcji. `template-parts/sections/` jest pusty.
-  `template-parts/components/` ma już dwa komponenty ogólnego użytku (`button.php`,
-  `social-icons.php`), ale żaden z nich nie jest layoutem ACF.
+- **Etap 4** — Flexible Content i system sekcji: **w toku, nie zamknięty**.
+  Istnieje pole `cyber_sections`, rejestr `cyber_section_types()` i pięć layoutów
+  (`basic`, `cards`, `columns`, `slider`, `carousel`) z plikami
+  w `template-parts/sections/`; karta jest wspólnym komponentem
+  `template-parts/components/card.php`. Brakuje filtrowania layoutów per typ
+  treści (pole `contexts` w rejestrze jest jeszcze nieużywane) i sekcji globalnych.
 - **Etap 5** — szablony widoków w `templates/`. Katalog jest pusty; jedynym widokiem
   jest `index.php` w rootcie, wymagany przez WordPress fallback. `header.php`
   i `footer.php` w rootcie **nie** są już szkieletem — zbierają dane przez
   `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
+  **Strony (`page`) nie wypisują tytułu** (od 2026-09-19) — nagłówek strony
+  (page-header) powstanie jako osobny moduł. Do tego czasu strona **nie ma
+  `<h1>`**, dopóki redaktor nie da go w treści albo w sekcji. Wpisy zachowują
+  tytuł. Pusta treść edytora nie zostawia pustego kontenera; treść zostaje,
+  bo stoją na niej strony sklepu (shortcode koszyka i zamówienia).
 - **Etap 7** — podstawy SEO.
 - **Etap 8** — audyt wydajności, dostępności i bezpieczeństwa wraz z weryfikacją
   PHPCS (ruleset `WordPress`).

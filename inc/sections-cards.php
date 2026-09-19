@@ -53,6 +53,15 @@ function cyber_cards_columns_mobile() {
 }
 
 /**
+ * Dozwolone rozmiary tytulu karty — nazwy globalnych wielkosci naglowkow.
+ *
+ * @return string[]
+ */
+function cyber_cards_title_sizes() {
+	return array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+}
+
+/**
  * Sposoby prezentacji odnosnika w karcie.
  *
  * @return string[]
@@ -182,6 +191,20 @@ function cyber_cards_attributes( array $row ) {
 	if ( '' !== $text_color ) {
 		$vars['--cyber-cards-text-color'] = $text_color;
 	}
+
+	/*
+	 * Rozmiar tytulu to odwolanie do globalnej wielkosci naglowka, nie liczba.
+	 * Zmienne --cyber-font-size-hN skaluja sie na breakpointach (Ustawienia
+	 * czcionki), wiec tytul karty skaluje sie razem z nimi. Znacznik <h3>
+	 * zostaje — rozmiar nie zmienia hierarchii naglowkow na stronie.
+	 */
+	$title_size = cyber_section_choice(
+		isset( $row['cyber_cards_title_size'] ) ? $row['cyber_cards_title_size'] : 'h5',
+		cyber_cards_title_sizes(),
+		'h5'
+	);
+
+	$vars['--cyber-cards-title-size'] = sprintf( 'var(--cyber-font-size-%s)', $title_size );
 
 	$weights = cyber_font_weight_choices();
 
@@ -329,10 +352,11 @@ function cyber_cards_items( array $row ) {
 
 		$image_id = absint( isset( $item['cyber_card_image'] ) ? $item['cyber_card_image'] : 0 );
 		$title    = isset( $item['cyber_card_title'] ) ? sanitize_text_field( (string) $item['cyber_card_title'] ) : '';
+		$over     = isset( $item['cyber_card_overtitle'] ) ? sanitize_text_field( (string) $item['cyber_card_overtitle'] ) : '';
 		$text     = isset( $item['cyber_card_text'] ) ? (string) $item['cyber_card_text'] : '';
 		$link     = isset( $item['cyber_card_link'] ) ? $item['cyber_card_link'] : array();
 
-		if ( ! $image_id && '' === $title && '' === trim( $text ) ) {
+		if ( ! $image_id && '' === $title && '' === $over && '' === trim( $text ) ) {
 			continue;
 		}
 
@@ -349,6 +373,7 @@ function cyber_cards_items( array $row ) {
 		$out[] = array(
 			'image_id'    => $image_id,
 			'image_url'   => $as_background && $image_id ? (string) wp_get_attachment_image_url( $image_id, 'large' ) : '',
+			'overtitle'   => $over,
 			'title'       => $title,
 			'text'        => $text,
 			'url'         => $url,

@@ -34,12 +34,37 @@ get_header();
 	while ( have_posts() ) :
 		the_post();
 		?>
-		<div class="cyber-container">
-			<article <?php post_class(); ?>>
-				<h1><?php the_title(); ?></h1>
-				<?php the_content(); ?>
-			</article>
-		</div>
+		<?php
+		/*
+		 * Strony (page) nie wypisuja tytulu — naglowek strony (page-header)
+		 * powstanie jako osobny modul. Do tego czasu strona NIE MA <h1>
+		 * i pierwszy naglowek musi dac redaktor w tresci albo w sekcji.
+		 * Wpisy i pozostale typy tresci zachowuja tytul.
+		 *
+		 * Pusta tresc edytora nie zostawia po sobie pustego kontenera — strona
+		 * zlozona wylacznie z sekcji zaczyna sie od pierwszej sekcji.
+		 * Tresc zostaje, bo na niej stoja m.in. strony sklepu (shortcode koszyka
+		 * i zamowienia).
+		 */
+		$cyber_show_title = ! is_page();
+		$cyber_has_body   = '' !== trim( (string) get_the_content() );
+		?>
+
+		<?php if ( $cyber_show_title || $cyber_has_body ) : ?>
+			<div class="cyber-container">
+				<article <?php post_class(); ?>>
+					<?php if ( $cyber_show_title ) : ?>
+						<h1><?php the_title(); ?></h1>
+					<?php endif; ?>
+
+					<?php if ( $cyber_has_body ) : ?>
+						<div class="cyber-wysiwyg">
+							<?php the_content(); ?>
+						</div>
+					<?php endif; ?>
+				</article>
+			</div>
+		<?php endif; ?>
 
 		<?php cyber_render_sections(); ?>
 	<?php endwhile; ?>

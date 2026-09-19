@@ -541,6 +541,15 @@ grupie, patrz konwencja przy nagłówku „Field Group: Global Options”.
 | Overtitle 1 | `cyber_color_overtitle_1` | `#0057ff` | `.cyber-overtitle` | `--cyber-color-overtitle-1` |
 | Overtitle 2 | `cyber_color_overtitle_2` | `#666666` | `.cyber-overtitle--secondary` | `--cyber-color-overtitle-2` |
 | Linki | `cyber_color_links` | `#0057ff` | `a` — selektor bazowy, globalnie | `--cyber-color-links` |
+| Ikony | `cyber_color_icons` | `#0057ff` | `.cyber-icon` — każda ikona SVG z `cyber_get_icon()` | `--cyber-color-icons` |
+
+> **Ikony: kolor wspólny, klasa własna.** Każda ikona ma dwie klasy:
+> `.cyber-icon` (kolor z tego pola) i `.cyber-icon--[nazwa]` (`--phone`,
+> `--envelope`, `--cart`, `--user`, `--location`, `--facebook`…). Kolor jednej
+> ikony nadpisuje się w arkuszu, np. `.cyber-icon--cart { color: #f00; }`.
+> Pole jest **semantyczne** (aplikuje się samo). Wyjątek: przełącznik widoku
+> siatka/lista w sklepie — tam ikona idzie za kolorem przycisku, bo kolor
+> pokazuje stan aktywny.
 
 > **Linki bez wykluczeń — i dlaczego to wystarcza.** Reguła `a { color: … }` ma
 > specyficzność `(0,0,1)`, czyli najniższą możliwą. Linki menu (`.cyber-menu a`,
@@ -1425,6 +1434,14 @@ w rejestrze `cyber_section_types()` i jeden plik w `template-parts/sections/`.
 
 Puste pole jest poprawnym stanem — blok wtedy w ogóle nie powstaje.
 
+> **Ramki `<iframe>` (mapa, film) są dozwolone** we wszystkich polach WYSIWYG
+> sekcji: treść nad i pod sekcją, kolumny, treść slajdu. Wyjście przechodzi przez
+> `cyber_kses_content()` — lista `wp_kses_post()` plus `<iframe>` z atrybutami
+> osadzenia (`src`, `width`, `height`, `title`, `style`, `allow`,
+> `allowfullscreen`, `loading`, `referrerpolicy`, `frameborder`, `class`).
+> `srcdoc` i zdarzenia `on*` są wycinane, `javascript:` i `data:` w `src` nie
+> przechodzą. Wcześniej samo `wp_kses_post()` usuwało ramkę w całości.
+
 #### Ustawienia wyglądu (`group_section_settings`)
 
 W każdym layoucie ten akordeon stoi **jako pierwszy**, przed treścią sekcji.
@@ -1483,11 +1500,12 @@ renderuje się nigdzie w panelu, wchodzi tylko do swojego layoutu.
 | Field Label | Field Name | Typ | Przeznaczenie |
 |---|---|---|---|
 | Zdjęcie / ikona | `cyber_card_image` | Image (ID) | Obrazek karty albo, w trybie tła, tło całej karty |
-| Tytuł | `cyber_card_title` | Text | Renderowany jako `<h3>` |
+| Nadtytuł (overtitle) | `cyber_card_overtitle` | Text | Krótki tekst nad tytułem; `<p class="cyber-overtitle">` — krój, wielkość i kolor z Global Options (Overtitle 1) |
+| Tytuł | `cyber_card_title` | Text | Renderowany jako `<h3>`; wielkość z pola „Rozmiar tytułu” |
 | Treść | `cyber_card_text` | Textarea | Zwykły tekst; puste linie zamieniają się w akapity |
 | Odnośnik | `cyber_card_link` | Link | Adres i etykieta; wygląd ustawia się raz dla całej sekcji |
 
-Element bez zdjęcia, tytułu i tekstu jest **pomijany** — pusty wiersz repeatera
+Element bez zdjęcia, nadtytułu, tytułu i tekstu jest **pomijany** — pusty wiersz repeatera
 zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 
 **Ustawienia** — akordeon „Ustawienia kart", domyślnie zwinięty:
@@ -1505,10 +1523,18 @@ zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 | Minimalna wysokość elementu | `cyber_cards_min_height` | Number 0–2000 | `320` |
 | Wyrównanie: zdjęcie / tytuł / tekst | `cyber_cards_align_media` `_title` `_text` | Select | `left` |
 | Odstęp pod zdjęciem / tytułem / tekstem | `cyber_cards_gap_media` `_title` `_text` | Select (skala) | `12` / `12` / `24` |
+| Rozmiar tytułu | `cyber_cards_title_size` | Select `h1`–`h6` | `h5` |
 | Kolor tytułu / tekstu | `cyber_cards_title_color` `_text_color` | Color (alpha) | `''` |
 | Grubość tytułu / tekstu | `cyber_cards_title_weight` `_text_weight` | Select | `700` / `400` |
 | Wygląd odnośnika | `cyber_cards_link_style` | Select | `button` |
 | Rozmiar przycisku | `cyber_cards_button_size` | Select | `medium` |
+
+> **„Rozmiar tytułu” zmienia wielkość, nie znacznik.** Wybór `H2` ustawia
+> `font-size: var(--cyber-font-size-h2)` — wartość z Global Options → Ustawienia
+> czcionki, razem z jej skalowaniem na breakpointach. Znacznik zostaje `<h3>`,
+> żeby rozmiar karty nie psuł hierarchii nagłówków strony (CLAUDE.md sekcja 11).
+> Default `h5` to dokładnie rozmiar sprzed dodania pola, więc istniejące karty
+> wyglądają bez zmian. Pole wchodzi też do „Karuzeli kart” (lista klonu).
 
 **Włączniki treści** — poza akordeonem, każdy bezpośrednio nad swoim edytorem:
 
@@ -1671,6 +1697,8 @@ to własne pola wewnątrz tego samego akordeonu:
 |---|---|---|---|
 | Zdjęcie (desktop) | `cyber_slide_image` | Image (ID) | Zdjęcie slajdu |
 | Zdjęcie (mobile) | `cyber_slide_image_mobile` | Image (ID) | Osobny kadr poniżej 767px; puste = zdjęcie desktopowe |
+| Wideo w tle | `cyber_slide_video_on` | True/False, default `false` | Włącznik pola wideo w tym slajdzie |
+| Plik wideo | `cyber_slide_video` | File (ID), `mp4, webm` | Widoczne przy włączniku (warunek ACF); wideo w tle zamiast zdjęcia |
 | Treść | `cyber_slide_content` | WYSIWYG | Treść na zdjęciu |
 | Przycisk | `cyber_slide_link` | Link | Adres i tekst przycisku |
 
@@ -1683,6 +1711,14 @@ to własne pola wewnątrz tego samego akordeonu:
 
 > **Autoplay wyłącza się** dla osób, które w systemie włączyły ograniczenie
 > animacji (`prefers-reduced-motion`), i wstrzymuje po najechaniu myszą.
+
+> **Wideo w tle** leży nad zdjęciem, które zostaje pod spodem: widać je, zanim
+> wideo wczyta pierwszą klatkę, bez JavaScriptu i przy ograniczeniu animacji
+> (wtedy wideo jest ukryte). Gra bez dźwięku, w pętli, **tylko na aktywnym
+> slajdzie** — pozostałe stoją. Bez kontrolek i ukryte przed czytnikami ekranu,
+> bo to dekoracja tła. Wyłączony włącznik ignoruje plik, nawet jeśli został
+> w bazie. Typ pliku sprawdza też motyw (`video/mp4`, `video/webm`) — inny
+> załącznik jest pomijany. Zalecane: plik do ~10 MB, bez ścieżki audio.
 
 > **Kolor treści pochodzi z ustawień globalnych** (Kolory → nagłówki, tekst).
 > Na ciemnej nakładce domyślnie ciemny tekst jest słabo czytelny — kolor zmienia
@@ -1722,8 +1758,8 @@ Ustawienia karuzeli → Ustawienia kart → [wł.] treść nad → Elementy →
 > **Ciągłe przewijanie to osobny tryb, nie kombinacja przełączników.** Karty
 > jadą stale i jednostajnie. Strzałki, kropki, pętla i autoplay są w nim
 > ukryte w panelu i nie powstają na stronie, nawet jeśli w bazie zostały
-> włączone wcześniej. Taśma **zatrzymuje się po najechaniu myszą** (i po wejściu
-> klawiaturą), żeby dało się kliknąć przycisk karty. Przy ograniczeniu animacji
+> włączone wcześniej. Taśma **nie zatrzymuje się po najechaniu myszą** ani po
+> wejściu klawiaturą — ruch jest ciągły (decyzja z 2026-09-19). Przy ograniczeniu animacji
 > w systemie rząd stoi, kopie znikają, a karty da się przewinąć ręcznie.
 
 > **Szybkość nie zależy od liczby kart.** Pole mówi, ile trwa przejazd jednej
@@ -1804,6 +1840,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-19 — **Karty**: nadtytuł `cyber_card_overtitle` (w repeaterze) i rozmiar tytułu `cyber_cards_title_size` (`h1`–`h6`, default `h5`); oba działają też w „Karuzeli kart”. **Slider**: wideo w tle slajdu — `cyber_slide_video_on` + `cyber_slide_video` (warunek ACF). **Karuzela**: taśma trybu ciągłego i autoplay krokowy nie zatrzymują się po najechaniu myszą. **WYSIWYG sekcji**: dozwolony `<iframe>` (`cyber_kses_content()`). **Kolory**: nowe pole semantyczne `cyber_color_icons` — Global Options ma teraz 167 pól.
 
 - 2026-09-17 — **„Karuzela kart"**: tryb ciągłego przewijania (`cyber_carousel_continuous`) i szybkość przesuwania (`cyber_carousel_speed`). Pola strzałek, kropek, pętli i autoplay chowają się w trybie ciągłym; czas między przesunięciami ma warunek AND (autoplay i brak trybu ciągłego). Tryb ciągły działa na animacji CSS, bez Swipera.
 - 2026-09-17 — Sekcja **„Karuzela kart"** — layout `carousel` i grupa źródłowa `group_section_carousel` z 10 ustawieniami przewijania. Elementy, włączniki treści i wygląd karty klonowane z `group_section_cards` (bez 6 pól siatki), więc karta ma jedną definicję w dwóch sekcjach. Markup karty przeniesiony do wspólnego komponentu `template-parts/components/card.php` — render sekcji Karty sprawdzony jako identyczny przed i po. Swiper z sekcji Slider obsługuje oba rodzaje karuzel.

@@ -178,7 +178,7 @@ function cyber_carousel_attributes( array $row, $count ) {
  * a arkusz przesuwa cala tasme o polowe jej dlugosci w nieskonczonej, liniowej
  * petli. Koniec animacji wypada dokladnie w miejscu jej poczatku, wiec przeskoku
  * nie ma z definicji — to geometria, nie synchronizacja zegarow. Dziala bez
- * JavaScriptu i pozwala na plynna pauze po najechaniu mysza.
+ * JavaScriptu.
  *
  * Jeden zestaw musi byc co najmniej tak szeroki jak ekran, inaczej przy
  * koncu zestawu w rzedzie pojawilaby sie dziura. Zestaw jest wiec powielany,

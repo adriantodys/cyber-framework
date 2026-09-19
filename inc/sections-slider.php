@@ -238,8 +238,11 @@ function cyber_slider_slides( array $row ) {
 		$mobile  = absint( isset( $slide['cyber_slide_image_mobile'] ) ? $slide['cyber_slide_image_mobile'] : 0 );
 		$content = isset( $slide['cyber_slide_content'] ) ? (string) $slide['cyber_slide_content'] : '';
 		$link    = isset( $slide['cyber_slide_link'] ) ? $slide['cyber_slide_link'] : array();
+		$video   = ! empty( $slide['cyber_slide_video_on'] )
+			? cyber_slider_video_source( isset( $slide['cyber_slide_video'] ) ? $slide['cyber_slide_video'] : 0 )
+			: array();
 
-		if ( ! $image && ! $mobile && '' === trim( wp_strip_all_tags( $content ) ) ) {
+		if ( ! $image && ! $mobile && ! $video && '' === trim( wp_strip_all_tags( $content ) ) && false === stripos( $content, '<iframe' ) ) {
 			continue;
 		}
 
@@ -257,6 +260,7 @@ function cyber_slider_slides( array $row ) {
 			// Bez zdjecia desktopowego mobilne gra obie role.
 			'image'       => $image ? $image : $mobile,
 			'image_m'     => $image ? $mobile : 0,
+			'video'       => $video,
 			'content'     => $content,
 			'url'         => $url,
 			'label'       => $label,
@@ -266,6 +270,76 @@ function cyber_slider_slides( array $row ) {
 	}
 
 	return $out;
+}
+
+/**
+ * Dozwolone formaty wideo slajdu: typ MIME => typ dla <source>.
+ *
+ * @return array<string, string>
+ */
+function cyber_slider_video_types() {
+	return array(
+		'video/mp4'  => 'video/mp4',
+		'video/webm' => 'video/webm',
+	);
+}
+
+/**
+ * Plik wideo slajdu po walidacji.
+ *
+ * Pole File zwraca ID zalacznika. Typ sprawdzamy po stronie motywu, nie tylko
+ * w ustawieniu pola (mime_types): pole mozna przestawic w panelu, a plik
+ * w innym formacie i tak by sie nie odtworzyl.
+ *
+ * @param mixed $id Identyfikator zalacznika.
+ * @return array{url?: string, type?: string} Pusta tablica, gdy nie ma czego odtworzyc.
+ */
+function cyber_slider_video_source( $id ) {
+	$id    = absint( $id );
+	$types = cyber_slider_video_types();
+
+	if ( ! $id ) {
+		return array();
+	}
+
+	$mime = (string) get_post_mime_type( $id );
+	$url  = wp_get_attachment_url( $id );
+
+	if ( ! $url || ! isset( $types[ $mime ] ) ) {
+		return array();
+	}
+
+	return array(
+		'url'  => esc_url_raw( $url ),
+		'type' => $types[ $mime ],
+	);
+}
+
+/**
+ * Wypisuje wideo w tle slajdu.
+ *
+ * Wideo lezy NAD zdjeciem, ktore zostaje pod spodem jako kadr zastepczy:
+ * widac je, zanim wideo zaladuje pierwsza klatke, bez JavaScriptu i przy
+ * ograniczeniu animacji w systemie (wtedy arkusz chowa wideo w ogole).
+ *
+ * Bez atrybutu autoplay: odtwarzanie wlacza assets/js/slider.js, i to tylko
+ * na aktywnym slajdzie — reszta stoi i nie pobiera danych bez potrzeby.
+ * Wideo jest dekoracja tla, wiec bez kontrolek, bez dzwieku i ukryte przed
+ * czytnikami ekranu. Tresc slajdu niesie WYSIWYG, nie film.
+ *
+ * @param array $slide Slajd z cyber_slider_slides().
+ * @return void
+ */
+function cyber_slider_video( array $slide ) {
+	if ( empty( $slide['video'] ) ) {
+		return;
+	}
+
+	printf(
+		'<video class="cyber-slide__video" muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="%1$s" type="%2$s" /></video>',
+		esc_url( $slide['video']['url'] ),
+		esc_attr( $slide['video']['type'] )
+	);
 }
 
 /**

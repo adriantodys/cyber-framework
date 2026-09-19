@@ -2377,6 +2377,27 @@
             "show_color_wheel": true
         },
         {
+            "key": "field_cyber_color_icons",
+            "label": "Ikony",
+            "name": "cyber_color_icons",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Kolor wszystkich ikon SVG motywu (telefon, e-mail, koszyk, konto, lokalizacja, social media). Każda ikona ma też własną klasę, np. .cyber-icon--cart, więc kolor pojedynczej ikony da się nadpisać w CSS.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
             "key": "field_cyber_msg_colors_utility",
             "label": "Kolory narzędziowe (utility)",
             "name": "",
@@ -4683,5 +4704,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789464584
+    "modified": 1789806431
 }

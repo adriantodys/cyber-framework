@@ -114,7 +114,44 @@ function commonOptions( el, scope, base ) {
  * @return {void}
  */
 function initSlider( el ) {
-	new Swiper( el, commonOptions( el, el, 'cyber-slider' ) );
+	const options = commonOptions( el, el, 'cyber-slider' );
+
+	// Wideo w tle gra tylko na aktywnym slajdzie.
+	if ( el.querySelector( '.cyber-slide__video' ) ) {
+		options.on = {
+			init: syncVideos,
+			slideChange: syncVideos,
+		};
+	}
+
+	new Swiper( el, options );
+}
+
+/**
+ * Odtwarza wideo aktywnego slajdu, a pozostale zatrzymuje.
+ *
+ * Wideo nie ma atrybutu autoplay: przy kilku slajdach z filmem przegladarka
+ * pobieralaby i dekodowala wszystkie naraz. Przy ograniczeniu animacji
+ * w systemie nic nie startuje (arkusz dodatkowo chowa wideo).
+ *
+ * @param {Object} swiper Instancja Swipera.
+ * @return {void}
+ */
+function syncVideos( swiper ) {
+	swiper.slides.forEach( ( slide, index ) => {
+		const video = slide.querySelector( '.cyber-slide__video' );
+
+		if ( ! video ) {
+			return;
+		}
+
+		if ( index === swiper.activeIndex && ! reducedMotion ) {
+			// Odrzucenie odtwarzania (np. tryb oszczedzania energii) zostawia zdjecie.
+			video.play().catch( () => {} );
+		} else {
+			video.pause();
+		}
+	} );
 }
 
 /**
@@ -141,6 +178,11 @@ function initCarousel( el ) {
 
 	const scope = el.closest( '.cyber-carousel-wrap' ) || el;
 	const options = commonOptions( el, scope, 'cyber-carousel' );
+
+	// Karuzela jedzie dalej rowniez pod kursorem — inaczej niz slider.
+	if ( options.autoplay ) {
+		options.autoplay.pauseOnMouseEnter = false;
+	}
 
 	const perView = number( el, 'per-view', 4 );
 	const perViewTablet = number( el, 'per-view-tablet', 2 );

@@ -35,8 +35,8 @@ cyber_section_open( $cyber_attributes );
 
 	<div class="<?php echo esc_attr( $cyber_columns['class'] ); ?>" style="<?php echo esc_attr( $cyber_columns['style'] ); ?>">
 		<?php foreach ( $cyber_items as $cyber_content ) : ?>
-			<div class="cyber-column">
-				<?php echo wp_kses_post( $cyber_content ); ?>
+			<div class="cyber-column cyber-wysiwyg">
+				<?php echo cyber_kses_content( $cyber_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() w srodku. ?>
 			</div>
 		<?php endforeach; ?>
 	</div>

@@ -240,7 +240,7 @@ function cyber_columns_attributes( array $row ) {
  * liczbe kolumn), ale nie sa renderowane.
  *
  * @param array $row Wiersz Flexible Content.
- * @return string[] Tresc kolumn, gotowa do przepuszczenia przez wp_kses_post().
+ * @return string[] Tresc kolumn, gotowa do przepuszczenia przez cyber_kses_content().
  */
 function cyber_columns_items( array $row ) {
 	$resolved = cyber_columns_resolve( $row );

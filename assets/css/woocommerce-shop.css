@@ -170,6 +170,15 @@
 	height: 18px;
 }
 
+/*
+ * Wyjatek od globalnego koloru ikon (Kolory -> Ikony): przelacznik widoku
+ * pokazuje kolorem swoj stan (aktywny, hover), wiec ikona idzie za kolorem
+ * przycisku, a nie za stalym kolorem ikon.
+ */
+.cyber-shop__view .cyber-icon {
+	color: inherit;
+}
+
 .cyber-shop__view:hover,
 .cyber-shop__view:focus-visible {
 	color: var(--cyber-wc-color-main);

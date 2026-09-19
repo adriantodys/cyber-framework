@@ -196,7 +196,16 @@
 	margin-bottom: var(--cyber-cards-gap-media, 12px);
 }
 
+/*
+ * Nadtytul: kroj, wielkosc i kolor z globalnej klasy .cyber-overtitle
+ * (Global Options). Tutaj wylacznie odstep od tytulu.
+ */
+.cyber-card__overtitle {
+	margin: 0 0 var(--cyber-space-1);
+}
+
 .cyber-card__media:last-child,
+.cyber-card__overtitle:last-child,
 .cyber-card__title:last-child,
 .cyber-card__text:last-child {
 	margin-bottom: 0;
@@ -211,7 +220,7 @@
 .cyber-card__title {
 	margin: 0 0 var(--cyber-cards-gap-title, 12px);
 	color: var(--cyber-cards-title-color, var(--cyber-color-headings));
-	font-size: var(--cyber-font-size-h5);
+	font-size: var(--cyber-cards-title-size, var(--cyber-font-size-h5));
 	font-weight: var(--cyber-cards-title-weight, var(--cyber-font-weight-headings));
 	line-height: 1.3;
 }
@@ -265,9 +274,9 @@
 .cyber-cards--media-center .cyber-card__image { margin-inline: auto; }
 .cyber-cards--media-right .cyber-card__image { margin-inline-start: auto; }
 
-.cyber-cards--title-left .cyber-card__title { text-align: left; }
-.cyber-cards--title-center .cyber-card__title { text-align: center; }
-.cyber-cards--title-right .cyber-card__title { text-align: right; }
+.cyber-cards--title-left :is(.cyber-card__overtitle, .cyber-card__title) { text-align: left; }
+.cyber-cards--title-center :is(.cyber-card__overtitle, .cyber-card__title) { text-align: center; }
+.cyber-cards--title-right :is(.cyber-card__overtitle, .cyber-card__title) { text-align: right; }
 
 .cyber-cards--text-left .cyber-card__text,
 .cyber-cards--text-left .cyber-card__footer { text-align: left; }
@@ -397,7 +406,8 @@
  * odpowiednikiem dla object-fit.
  */
 .cyber-slide__media,
-.cyber-slide__image {
+.cyber-slide__image,
+.cyber-slide__video {
 	position: absolute;
 	inset: 0;
 	display: block;
@@ -405,7 +415,8 @@
 	height: 100%;
 }
 
-.cyber-slide__image {
+.cyber-slide__image,
+.cyber-slide__video {
 	object-fit: var(--cyber-slider-fit, cover);
 	object-position: var(--cyber-slider-position, center center);
 }
@@ -520,6 +531,11 @@
 	.cyber-slider .swiper-wrapper {
 		transition-duration: 0s !important;
 	}
+
+	/* Wideo tla znika — zostaje zdjecie spod spodu. */
+	.cyber-slide__video {
+		display: none;
+	}
 }
 
 /* --- Karuzela kart --------------------------------------------------------- */
@@ -552,13 +568,10 @@
 }
 
 /*
- * Pauza po najechaniu mysza albo po wejsciu klawiatura — plynna, bo animacja
- * CSS zatrzymuje sie w miejscu. Bez niej w przycisk jadacej karty trudno trafic.
+ * Tasma NIE zatrzymuje sie po najechaniu mysza ani po wejsciu klawiatura —
+ * decyzja projektowa: ruch ma byc ciagly. Osoby z ograniczeniem animacji
+ * w systemie dostaja rzad nieruchomy (blok prefers-reduced-motion nizej).
  */
-.cyber-carousel--continuous:hover .cyber-carousel__band,
-.cyber-carousel--continuous:focus-within .cyber-carousel__band {
-	animation-play-state: paused;
-}
 
 @keyframes cyber-carousel-band {
 	from {

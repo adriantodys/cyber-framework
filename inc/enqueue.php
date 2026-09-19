@@ -517,6 +517,7 @@ function cyber_color_keys() {
 		'color_overtitle_1',
 		'color_overtitle_2',
 		'color_links',
+		'color_icons',
 
 		// Narzedziowe.
 		'color_hover',

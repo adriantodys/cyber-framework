@@ -34,7 +34,7 @@
                     "required": 0,
                     "conditional_logic": 0,
                     "wrapper": {
-                        "width": "50",
+                        "width": "",
                         "class": "",
                         "id": ""
                     },
@@ -51,6 +51,27 @@
                     "allow_in_bindings": 0,
                     "preview": 1,
                     "upload_folder": ""
+                },
+                {
+                    "key": "field_cyber_card_overtitle",
+                    "label": "Nadtytul (overtitle)",
+                    "name": "cyber_card_overtitle",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "Krotki tekst nad tytulem. Wyglad z Global Options (Ustawienia czcionki, Kolory - overtitle).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "50",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
                 },
                 {
                     "key": "field_cyber_card_title",
@@ -807,6 +828,39 @@
             "esc_html": 0
         },
         {
+            "key": "field_cyber_cards_title_size",
+            "label": "Rozmiar tytulu",
+            "name": "cyber_cards_title_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wielkosc czcionki tytulu wg Global Options -> Ustawienia czcionki. Zmienia tylko rozmiar, znacznik w HTML zostaje <h3>.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "h1": "H1",
+                "h2": "H2",
+                "h3": "H3",
+                "h4": "H4",
+                "h5": "H5",
+                "h6": "H6"
+            },
+            "default_value": "h5",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
             "key": "field_cyber_cards_title_color",
             "label": "Kolor tytulu",
             "name": "cyber_cards_title_color",
@@ -1078,5 +1132,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Karty (icon boxes): repeater elementow plus ustawienia siatki i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789629144
+    "modified": 1789806248
 }

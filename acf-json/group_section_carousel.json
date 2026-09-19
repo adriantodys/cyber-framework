@@ -219,7 +219,7 @@
             "name": "cyber_carousel_continuous",
             "aria-label": "",
             "type": "true_false",
-            "instructions": "Karty przesuwaja sie stale i jednostajnie, bez zatrzymywania na kazdej karcie (animacja CSS, bez przeskokow). Zatrzymuje sie po najechaniu mysza, zeby dalo sie kliknac przycisk. Wylacza strzalki, kropki, petle i autoplay - w tym trybie nie maja sensu. Dla osob z ograniczeniem animacji w systemie rzad stoi i da sie go przewinac recznie.",
+            "instructions": "Karty przesuwaja sie stale i jednostajnie, bez zatrzymywania na kazdej karcie (animacja CSS, bez przeskokow). Wylacza strzalki, kropki, petle i autoplay - w tym trybie nie maja sensu. Dla osob z ograniczeniem animacji w systemie rzad stoi i da sie go przewinac recznie.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -320,7 +320,7 @@
             "name": "cyber_carousel_autoplay",
             "aria-label": "",
             "type": "true_false",
-            "instructions": "Wstrzymuje sie po najechaniu mysza. Wylaczony dla osob z ograniczeniem animacji w systemie.",
+            "instructions": "Nie zatrzymuje sie po najechaniu mysza. Wylaczony dla osob z ograniczeniem animacji w systemie.",
             "required": 0,
             "conditional_logic": [
                 [
@@ -444,5 +444,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Wylacznie ustawienia przewijania. Elementy i wyglad kart karuzela klonuje z group_section_cards. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789637455
+    "modified": 1789806220
 }

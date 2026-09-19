@@ -49,6 +49,10 @@ printf(
 		</div>
 	<?php endif; ?>
 
+	<?php if ( '' !== $cyber_item['overtitle'] ) : ?>
+		<p class="cyber-overtitle cyber-card__overtitle"><?php echo esc_html( $cyber_item['overtitle'] ); ?></p>
+	<?php endif; ?>
+
 	<?php if ( '' !== $cyber_item['title'] ) : ?>
 		<h3 class="cyber-card__title"><?php echo esc_html( $cyber_item['title'] ); ?></h3>
 	<?php endif; ?>

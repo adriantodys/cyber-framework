@@ -166,6 +166,7 @@
                                 "field_cyber_cards_gap_title",
                                 "field_cyber_cards_gap_text",
                                 "field_cyber_msg_cards_type",
+                                "field_cyber_cards_title_size",
                                 "field_cyber_cards_title_color",
                                 "field_cyber_cards_title_weight",
                                 "field_cyber_cards_text_color",
@@ -654,6 +655,7 @@
                                 "field_cyber_cards_gap_title",
                                 "field_cyber_cards_gap_text",
                                 "field_cyber_msg_cards_type",
+                                "field_cyber_cards_title_size",
                                 "field_cyber_cards_title_color",
                                 "field_cyber_cards_title_weight",
                                 "field_cyber_cards_text_color",
@@ -819,5 +821,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789636764
+    "modified": 1789806248
 }

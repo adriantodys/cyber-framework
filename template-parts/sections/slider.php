@@ -59,11 +59,13 @@ cyber_section_open( $cyber_attributes, $cyber_inner );
 			<?php foreach ( $cyber_slides as $cyber_index => $cyber_slide ) : ?>
 				<div class="swiper-slide cyber-slide">
 					<?php cyber_slider_picture( $cyber_slide, 0 === $cyber_index ); ?>
+					<?php cyber_slider_video( $cyber_slide ); ?>
 
 					<div class="cyber-slide__overlay" aria-hidden="true"></div>
 
 					<?php
-					$cyber_has_text   = '' !== trim( wp_strip_all_tags( $cyber_slide['content'] ) );
+					// Sama ramka (np. mapa) tez jest trescia, choc nie ma w niej tekstu.
+					$cyber_has_text   = '' !== trim( wp_strip_all_tags( $cyber_slide['content'] ) ) || false !== stripos( $cyber_slide['content'], '<iframe' );
 					$cyber_has_button = '' !== $cyber_slide['url'] && '' !== $cyber_slide['label'];
 					?>
 
@@ -71,8 +73,8 @@ cyber_section_open( $cyber_attributes, $cyber_inner );
 						<div class="cyber-slide__body">
 							<div class="cyber-slide__content">
 								<?php if ( $cyber_has_text ) : ?>
-									<div class="cyber-slide__text">
-										<?php echo wp_kses_post( $cyber_slide['content'] ); ?>
+									<div class="cyber-slide__text cyber-wysiwyg">
+										<?php echo cyber_kses_content( $cyber_slide['content'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() w srodku. ?>
 									</div>
 								<?php endif; ?>
 

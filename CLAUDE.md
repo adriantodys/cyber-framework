@@ -587,7 +587,7 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    **Stan: zakończone.** W praktyce moduł 1 urósł do **czternastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
-   Breadcrumb, Breadcrumb WooCommerce, WooCommerce — razem **166 pól**.
+   Breadcrumb, Breadcrumb WooCommerce, WooCommerce — razem **167 pól**.
 
    Trzy ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
@@ -820,3 +820,7 @@ odczytywany przez `cyber_get_icon()` (dowolna ikona) i `cyber_get_social_icon()`
 Kolejne miejsca w projekcie potrzebujące ikon (np. stopka) mają **reużywać te same
 funkcje**, nie duplikować SVG. Nowa ikona = nowy wpis w `cyber_icons()`, nie nowy
 plik ani nowa zależność.
+
+Każda ikona ma klasy `cyber-icon cyber-icon--[nazwa]`. Kolor daje wspólna
+`.cyber-icon` z pola Global Options → Kolory → Ikony (`--cyber-color-icons`);
+klasa z nazwą służy do nadpisania koloru jednej ikony w arkuszu.

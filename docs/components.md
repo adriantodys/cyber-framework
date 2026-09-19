@@ -423,6 +423,9 @@ Karty z sekcji `cards` w przewijanym rzędzie, na tym samym Swiperze co Slider.
 | `.cyber-carousel-wrap` | opakowanie karuzeli i paska sterowania |
 | `.cyber-carousel__slide` | slajd; `height:auto`, żeby karty w rzędzie miały równą wysokość |
 | `.cyber-carousel__controls` | pasek pod rzędem: strzałka, kropki, strzałka |
+| `.cyber-card__overtitle` | nadtytuł karty; razem z globalną `.cyber-overtitle` (wygląd z Global Options) |
+| `.cyber-slide__video` | wideo w tle slajdu, nad `<picture>`; gra tylko na aktywnym slajdzie |
+| `.cyber-wysiwyg` | każde opakowanie treści edytora (sekcje, kolumny, slajd, treść strony); odstępy nagłówków z `--cyber-wysiwyg-heading-mt` / `-mb` w `main.css` |
 | `.cyber-carousel--continuous` | tryb ciągły — taśma z animacją CSS, Swiper się nie uruchamia |
 | `.cyber-carousel__band` | taśma: zestaw kart wypisany dwa razy, animowany o `-50%` |
 | `.cyber-carousel__slide--copy` | kopia karty w taśmie: `aria-hidden`, linki z `tabindex="-1"` |

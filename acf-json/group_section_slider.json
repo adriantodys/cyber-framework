@@ -647,6 +647,56 @@
                     "upload_folder": ""
                 },
                 {
+                    "key": "field_cyber_slide_video_on",
+                    "label": "Wideo w tle",
+                    "name": "cyber_slide_video_on",
+                    "aria-label": "",
+                    "type": "true_false",
+                    "instructions": "Wlacz, aby zamiast zdjecia w tle slajdu gralo wideo. Zdjecie zostaje jako kadr startowy (poster) i zastepstwo, gdy wideo nie gra.",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "25",
+                        "class": "",
+                        "id": ""
+                    },
+                    "message": "",
+                    "default_value": 0,
+                    "allow_in_bindings": 0,
+                    "ui": 1,
+                    "ui_on_text": "",
+                    "ui_off_text": ""
+                },
+                {
+                    "key": "field_cyber_slide_video",
+                    "label": "Plik wideo",
+                    "name": "cyber_slide_video",
+                    "aria-label": "",
+                    "type": "file",
+                    "instructions": "MP4 (H.264) albo WebM. Gra bez dzwieku, w petli. Zalecane: do 10 MB, bez sciezki audio.",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_cyber_slide_video_on",
+                                "operator": "==",
+                                "value": "1"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "75",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_size": "",
+                    "max_size": "",
+                    "mime_types": "mp4, webm",
+                    "allow_in_bindings": 0
+                },
+                {
                     "key": "field_cyber_slide_content",
                     "label": "Tresc",
                     "name": "cyber_slide_content",
@@ -705,5 +755,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Slider: ustawienia karuzeli i repeater slajdow. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789632512
+    "modified": 1789806330
 }

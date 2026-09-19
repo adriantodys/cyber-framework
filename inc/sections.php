@@ -522,10 +522,57 @@ function cyber_section_wysiwyg( array $row, $slot ) {
 	}
 
 	printf(
-		'<div class="cyber-section__%1$s">%2$s</div>',
+		'<div class="cyber-section__%1$s cyber-wysiwyg">%2$s</div>',
 		esc_attr( $slot ),
-		wp_kses_post( $row[ $key ] )
+		cyber_kses_content( $row[ $key ] ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_kses() w srodku.
 	);
+}
+
+/**
+ * Lista znacznikow dozwolonych w tresci WYSIWYG sekcji.
+ *
+ * To lista wp_kses_post() poszerzona o <iframe>. Samo wp_kses_post() wycina
+ * ramki w calosci — mapa Google albo film wklejony do edytora znikal z frontu,
+ * choc w panelu byl widoczny.
+ *
+ * Ramka dostaje wylacznie atrybuty potrzebne osadzeniu. Bez srcdoc (tresc
+ * HTML wprost w atrybucie) i bez zdarzen on* — wp_kses() odrzuca kazdy
+ * atrybut spoza listy, a src przechodzi przez jego filtr protokolow, wiec
+ * javascript: i data: nie przejda.
+ *
+ * @return array<string, array<string, bool>>
+ */
+function cyber_kses_content_tags() {
+	$tags = wp_kses_allowed_html( 'post' );
+
+	$tags['iframe'] = array(
+		'src'             => true,
+		'width'           => true,
+		'height'          => true,
+		'title'           => true,
+		'style'           => true,
+		'class'           => true,
+		'frameborder'     => true,
+		'allow'           => true,
+		'allowfullscreen' => true,
+		'loading'         => true,
+		'referrerpolicy'  => true,
+	);
+
+	return $tags;
+}
+
+/**
+ * Filtruje tresc WYSIWYG sekcji przed wypisaniem.
+ *
+ * Uzywane przez kazda sekcje, ktora wypisuje tresc edytora: WYSIWYG nad i pod
+ * sekcja, kolumny tekstowe, tresc slajdu.
+ *
+ * @param string $html Tresc pola.
+ * @return string
+ */
+function cyber_kses_content( $html ) {
+	return wp_kses( (string) $html, cyber_kses_content_tags() );
 }
 
 /* -------------------------------------------------------------------------- *

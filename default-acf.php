@@ -189,6 +189,7 @@ return array(
 	'color_overtitle_1'                       => '#0057ff',     // kolor          | Overtitle 1
 	'color_overtitle_2'                       => '#666666',     // kolor          | Overtitle 2
 	'color_links'                             => '#0057ff',     // kolor          | Linki
+	'color_icons'                             => '#0057ff',     // kolor          | Ikony
 
 	/* --- Kolory narzedziowe (utility) -------------------------------------- */
 	'color_hover'                             => '#0041c2',     // kolor          | Kolor tekstu po najechaniu

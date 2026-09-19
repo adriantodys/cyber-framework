@@ -32,6 +32,13 @@
 	--cyber-space-6: 64px;
 	--cyber-space-7: 94px;
 
+	/*
+	 * Odstepy naglowkow h1-h6 w tresci edytora (.cyber-wysiwyg). Tak jak skala
+	 * odstepow nie maja pol w panelu — zmienia sie je tutaj, w arkuszu.
+	 */
+	--cyber-wysiwyg-heading-mt: 0;
+	--cyber-wysiwyg-heading-mb: var(--cyber-space-2);
+
 	--cyber-font-family-headings: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 	--cyber-font-family-text: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
@@ -102,6 +109,7 @@
 	--cyber-color-overtitle-1: #0057ff;
 	--cyber-color-overtitle-2: #666666;
 	--cyber-color-links: #0057ff;
+	--cyber-color-icons: #0057ff;
 
 	--cyber-color-hover: #0041c2;
 	--cyber-color-border-1: #e0e0e0;
@@ -223,6 +231,26 @@ h4 { font-size: var(--cyber-font-size-h4); }
 h5 { font-size: var(--cyber-font-size-h5); }
 h6 { font-size: var(--cyber-font-size-h6); }
 
+/*
+ * Tresc edytora WYSIWYG — w sekcjach (nad i pod sekcja, kolumny, slajd)
+ * i w tresci strony. Klase .cyber-wysiwyg niesie kazde opakowanie tresci
+ * edytora, wiec odstepy naglowkow sa wszedzie takie same.
+ */
+.cyber-wysiwyg :is(h1, h2, h3, h4, h5, h6) {
+	margin-top: var(--cyber-wysiwyg-heading-mt);
+	margin-bottom: var(--cyber-wysiwyg-heading-mb);
+}
+
+/* Obrazek i ramka (mapa, film) nie moga wyjsc poza kolumne tresci. */
+.cyber-wysiwyg img,
+.cyber-wysiwyg iframe {
+	max-width: 100%;
+}
+
+.cyber-wysiwyg img {
+	height: auto;
+}
+
 .cyber-overtitle {
 	font-size: var(--cyber-font-size-overtitle-1);
 	color: var(--cyber-color-overtitle-1);
@@ -320,6 +348,17 @@ h6 :is(a, span),
  * klase .cyber-social-icons oraz klase kontekstu przekazana w argumencie.
  * Uklad jest wspolny, wiec definiujemy go raz na klasie bazowej.
  */
+/*
+ * Ikony SVG motywu (cyber_get_icon()). Ksztalty rysuja sie currentColor,
+ * wiec kolor ustawiony na samym <svg> barwi wypelnienie i obrys naraz.
+ * Kolor jednej ikony nadpisuje sie klasa z nazwa ikony, np.:
+ *
+ *   .cyber-icon--cart { color: #ff0000; }
+ */
+.cyber-icon {
+	color: var(--cyber-color-icons);
+}
+
 .cyber-social-icons {
 	display: flex;
 	flex-wrap: nowrap;

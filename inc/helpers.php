@@ -62,6 +62,8 @@ function cyber_icons() {
 			. '<path d="M3.2 6.2 10 10.9l6.8-4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>',
 		'user'      => '<circle cx="10" cy="6.6" r="3.3" fill="none" stroke="currentColor" stroke-width="1.6"/>'
 			. '<path d="M3.8 17.4c0-3.2 2.8-5.4 6.2-5.4s6.2 2.2 6.2 5.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+		'location'  => '<path d="M10 18.2s-5.6-5.3-5.6-9.6a5.6 5.6 0 0 1 11.2 0c0 4.3-5.6 9.6-5.6 9.6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>'
+			. '<circle cx="10" cy="8.4" r="2.1" fill="none" stroke="currentColor" stroke-width="1.6"/>',
 		'cart'      => '<path d="M2.5 3.5h2l1.8 8.5h8.2l1.6-6H5.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
 			. '<circle cx="8" cy="15.6" r="1.4"/>'
 			. '<circle cx="13.8" cy="15.6" r="1.4"/>',
@@ -99,7 +101,12 @@ function cyber_get_icon( $name ) {
 		return '';
 	}
 
-	return '<svg class="cyber-icon" viewBox="0 0 20 20" fill="currentColor" '
+	/*
+	 * Dwie klasy: wspolna .cyber-icon niesie kolor z Global Options (Kolory ->
+	 * Ikony), a .cyber-icon--[nazwa] pozwala nadpisac kolor jednej ikony
+	 * w arkuszu. Nazwa pochodzi z kluczy rejestru, nie z danych uzytkownika.
+	 */
+	return '<svg class="cyber-icon cyber-icon--' . $name . '" viewBox="0 0 20 20" fill="currentColor" '
 		. 'aria-hidden="true" focusable="false">' . $icons[ $name ] . '</svg>';
 }
 
@@ -640,6 +647,10 @@ function cyber_option_schema() {
 			'default' => '#666666',
 		),
 		'color_links'                 => array(
+			'type'    => 'color_alpha',
+			'default' => '#0057ff',
+		),
+		'color_icons'                 => array(
 			'type'    => 'color_alpha',
 			'default' => '#0057ff',
 		),
