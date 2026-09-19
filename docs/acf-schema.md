@@ -1423,7 +1423,7 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
 Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
-**`faq`**, **`counter`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+**`faq`**, **`counter`**, **`contact`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
 
 #### Layout „Sekcja globalna” (`global`)
@@ -1910,6 +1910,80 @@ spacja (`10 +`, jak na makiecie).
 > a animowana liczba ma `aria-hidden`. Skrypt ładuje się wyłącznie na stronie
 > z animowanym licznikiem — także takim z sekcji globalnej.
 
+#### Sekcja „Kontakt” (`group_section_contact`)
+
+Layout `contact`. Dwie kolumny: z lewej treść, dane kontaktowe i social media,
+z prawej treść i formularz **Contact Form 7**. Grupa jest **źródłem
+klonowania**; z `group_section_settings` bierze ustawienia wyglądu sekcji,
+z `group_section_content` — treść nad i pod kolumnami.
+
+> **Dane kontaktowe NIE są wpisywane w sekcji.** Pochodzą z Global Options
+> (zakładki **Kontakt** i **Social Media**, CLAUDE.md sekcja 22), a sekcja ma
+> wyłącznie włączniki. Pozycja pojawia się, gdy włącznik jest włączony **i**
+> pole w Global Options jest wypełnione. Etykiety („Email”, „Telefon”, „Adres”,
+> „NIP”, „REGON”) są stałe w kodzie.
+
+**Treść nad i pod kolumnami** — poza akordeonem:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Pokaż treść nad kolumnami | `cyber_contact_section_show_top` | True/False | `false` |
+| Pokaż treść pod kolumnami | `cyber_contact_section_show_bottom` | True/False | `false` |
+
+**Lewa kolumna:**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść lewej kolumny | `cyber_contact_section_left` | WYSIWYG | `''` | Nagłówek i wstęp nad danymi |
+| Email / Telefon | `cyber_contact_section_show_email` `_show_phone` | True/False | `true` | `mailto:` / `tel:` z Global Options → Kontakt |
+| Adres / NIP / REGON | `cyber_contact_section_show_address` `_show_nip` `_show_regon` | True/False | `false` | Adres wieloliniowy (`nl2br`) |
+| Ikony przy danych | `cyber_contact_section_show_icons` | True/False | `false` | Koperta, telefon, lokalizacja; kolor z Kolory → Ikony |
+| Social media | `cyber_contact_section_show_social` | True/False | `true` | Profile z Global Options → Social Media |
+| Nagłówek social media | `cyber_contact_section_social_title` | Text | `Nasze social media` | Puste = bez nagłówka |
+| Nazwy obok ikon | `cyber_contact_section_social_labels` | True/False | `true` | „Facebook”, „Instagram”… obok ikony |
+
+**Prawa kolumna:**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść prawej kolumny | `cyber_contact_section_right` | WYSIWYG | `''` | Np. nagłówek „Formularz kontaktowy” |
+| Formularz Contact Form 7 | `cyber_contact_section_form` | Post Object (ID), `wpcf7_contact_form`, opublikowane, może być puste | — | Pusta lista w panelu = wtyczka nieaktywna |
+
+**Ustawienia** — akordeon „Ustawienia sekcji kontaktowej”:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Proporcje kolumn | `cyber_contact_section_ratio` | Select `50-50` / `60-40` / `40-60` | `50-50` | Poniżej 980px kolumny jedna pod drugą |
+| Odstęp między kolumnami | `cyber_contact_section_gap_x` | Select (skala) | `64` | |
+| Kolor etykiet / danych | `cyber_contact_section_label_color` `_value_color` | Color (alpha) | `''` | Puste = nagłówki / tekst |
+| Rozmiar przycisku wysyłki | `cyber_contact_section_button_size` | Select `large` / `medium` / `small` | `large` | Kolory i wielkość z Global Options → Przyciski |
+| Przycisk na całą szerokość | `cyber_contact_section_button_full` | True/False | `true` | |
+| Tło pól formularza | `cyber_contact_section_field_bg` | Color (alpha) | `''` | Puste = `#f5f5f5` |
+
+> **Formularz: dwa pola w jednym rzędzie** (jak „Imię i nazwisko” / „Email” na
+> makiecie) ustawia się w szablonie formularza Contact Form 7, owijając je
+> w `<div class="cyber-form-row">`. Przykład szablonu:
+>
+> ```
+> <div class="cyber-form-row">
+> <p><label>Imię i nazwisko [text* your-name placeholder "Jan"]</label></p>
+> <p><label>Email [email* your-email placeholder "jan.nowak@wp.pl"]</label></p>
+> </div>
+> <p><label>Treść wiadomości [textarea* your-message placeholder "Treść wiadomości"]</label></p>
+> <p>[acceptance zgoda] Przeczytałem/am i akceptuję <strong>regulamin</strong> oraz <strong>politykę prywatności</strong>.[/acceptance]</p>
+> <p>[submit "Umów się na spotkanie →"]</p>
+> ```
+
+> **Komunikaty walidacji po polsku** wymagają pakietu językowego Contact Form 7
+> (Kokpit → Aktualizacje → tłumaczenia). Formularz zapisuje komunikaty przy
+> tworzeniu — utworzony bez pakietu zostaje po angielsku, do poprawy w zakładce
+> „Komunikaty” edycji formularza.
+
+> **Bez Contact Form 7** sekcja działa: dane, social media i treść się
+> wyświetlają, miejsce formularza zostaje puste. Zalogowany administrator widzi
+> tam podpowiedź, gość nic, a w panelu pojawia się ostrzeżenie — tylko gdy
+> jakaś opublikowana sekcja ma wybrany formularz (`inc/contact-form-7.php`).
+
 
 ## Inne grupy pól
 
@@ -1974,6 +2048,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-19 — Sekcja **„Kontakt”** — layout `contact` i grupa źródłowa `group_section_contact`: dwie kolumny (treść + dane kontaktowe i social media z Global Options z włącznikami per sekcja; treść + formularz Contact Form 7), proporcje kolumn, kolory, przycisk wysyłki z Global Options → Przyciski, tło pól, włączniki treści nad i pod (domyślnie wyłączone). **Contact Form 7** jako nowa zależność miękka (`inc/contact-form-7.php`). Komponent ikon social media dostał opcjonalne nazwy platform (`show_labels`).
 
 - 2026-09-19 — **„Licznik”**: tytuł przy każdym liczniku (`cyber_counter_title`) i wspólny rozmiar tytułu dla sekcji (`cyber_counter_title_size`, `h1`–`h6`, default `h5`).
 

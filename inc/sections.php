@@ -98,6 +98,11 @@ function cyber_section_types() {
 			'template' => 'counter',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'contact'  => array(
+			'label'    => 'Kontakt (dane + formularz)',
+			'template' => 'contact',
+			'contexts' => array( 'page', 'post' ),
+		),
 		/*
 		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
 		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje
@@ -654,6 +659,8 @@ function cyber_section_wysiwyg_toggles() {
 		'field_cyber_section_faq_bottom'      => 'field_cyber_faq_show_bottom',
 		'field_cyber_section_counter_top'     => 'field_cyber_counter_show_top',
 		'field_cyber_section_counter_bottom'  => 'field_cyber_counter_show_bottom',
+		'field_cyber_section_contact_top'     => 'field_cyber_contact_section_show_top',
+		'field_cyber_section_contact_bottom'  => 'field_cyber_contact_section_show_bottom',
 	);
 }
 

@@ -1175,6 +1175,201 @@
                     "min": "",
                     "max": ""
                 },
+                "layout_cyber_section_contact": {
+                    "key": "layout_cyber_section_contact",
+                    "name": "contact",
+                    "label": "Kontakt (dane + formularz)",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cyber_section_contact_settings",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "group_section_settings"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_body",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_contact_section_acc",
+                                "field_cyber_msg_contact_section_layout",
+                                "field_cyber_contact_section_ratio",
+                                "field_cyber_contact_section_gap_x",
+                                "field_cyber_msg_contact_section_data",
+                                "field_cyber_contact_section_label_color",
+                                "field_cyber_contact_section_value_color",
+                                "field_cyber_msg_contact_section_form",
+                                "field_cyber_contact_section_button_size",
+                                "field_cyber_contact_section_button_full",
+                                "field_cyber_contact_section_field_bg",
+                                "field_cyber_contact_section_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_show_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_contact_section_show_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_columns",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_msg_contact_section_left",
+                                "field_cyber_contact_section_left",
+                                "field_cyber_contact_section_show_email",
+                                "field_cyber_contact_section_show_phone",
+                                "field_cyber_contact_section_show_address",
+                                "field_cyber_contact_section_show_nip",
+                                "field_cyber_contact_section_show_regon",
+                                "field_cyber_contact_section_show_icons",
+                                "field_cyber_contact_section_show_social",
+                                "field_cyber_contact_section_social_title",
+                                "field_cyber_contact_section_social_labels",
+                                "field_cyber_msg_contact_section_right",
+                                "field_cyber_contact_section_right",
+                                "field_cyber_contact_section_form"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_show_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_contact_section_show_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_contact_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
                 "layout_cyber_section_global": {
                     "key": "layout_cyber_section_global",
                     "name": "global",
@@ -1275,5 +1470,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789831260
+    "modified": 1789832490
 }

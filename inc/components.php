@@ -156,6 +156,7 @@ function cyber_social_links( $respect_toggles = false ) {
  * @param array $args {
  *     @type bool   $respect_toggles Czy uwzgledniac wylaczniki Top Header. Domyslnie false.
  *     @type string $class           Dodatkowa klasa kontenera, np. 'cyber-footer__social'.
+ *     @type bool   $show_labels     Czy wypisac nazwe platformy obok ikony. Domyslnie false.
  * }
  * @return void
  */
@@ -163,6 +164,7 @@ function cyber_social_icons( $args = array() ) {
 	$defaults = array(
 		'respect_toggles' => false,
 		'class'           => '',
+		'show_labels'     => false,
 	);
 
 	$args  = wp_parse_args( $args, $defaults );
@@ -176,8 +178,9 @@ function cyber_social_icons( $args = array() ) {
 		'template-parts/components/social-icons',
 		null,
 		array(
-			'items' => $items,
-			'class' => (string) $args['class'],
+			'items'       => $items,
+			'class'       => (string) $args['class'],
+			'show_labels' => (bool) $args['show_labels'],
 		)
 	);
 }

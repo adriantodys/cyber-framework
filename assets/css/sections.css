@@ -1059,3 +1059,298 @@
 		grid-template-columns: repeat(var(--cyber-counter-cols-m, 1), minmax(0, 1fr));
 	}
 }
+
+/* --- Kontakt (dane + formularz) -------------------------------------------- */
+
+.cyber-contact {
+	display: grid;
+	grid-template-columns: var(--cyber-contact-cols, 1fr 1fr);
+	column-gap: var(--cyber-contact-gap-x, 64px);
+	row-gap: var(--cyber-space-5);
+	align-items: start;
+}
+
+.cyber-contact__col {
+	min-width: 0;
+}
+
+.cyber-contact__content:not(:last-child) {
+	margin-bottom: var(--cyber-space-3);
+}
+
+.cyber-contact__content > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-contact__content > *:last-child {
+	margin-bottom: 0;
+}
+
+/* Dane kontaktowe: etykieta nad wartoscia, pozycje obok siebie z zawijaniem. */
+.cyber-contact__data {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cyber-space-3) var(--cyber-space-5);
+	margin: 0;
+}
+
+.cyber-contact__data:not(:last-child) {
+	margin-bottom: var(--cyber-space-4);
+}
+
+.cyber-contact__label {
+	display: flex;
+	align-items: center;
+	gap: var(--cyber-space-1);
+	margin-bottom: var(--cyber-space-2);
+	color: var(--cyber-contact-label-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-font-size-h6);
+	font-weight: 600;
+}
+
+.cyber-contact__label .cyber-icon {
+	width: 18px;
+	height: 18px;
+}
+
+.cyber-contact__value {
+	margin: 0;
+	color: var(--cyber-contact-value-color, var(--cyber-color-text));
+}
+
+.cyber-contact__value a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.cyber-contact__value a:hover,
+.cyber-contact__value a:focus-visible {
+	color: var(--cyber-color-hover);
+}
+
+.cyber-contact__social-title {
+	margin: 0 0 var(--cyber-space-3);
+	color: var(--cyber-contact-label-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-font-size-h5);
+	font-weight: 500;
+}
+
+/* Wariant komponentu ikon z nazwami platform (Facebook, Instagram...). */
+.cyber-social-icons.cyber-social-icons--labels {
+	flex-wrap: wrap;
+	gap: var(--cyber-space-2) var(--cyber-space-4);
+}
+
+.cyber-social-icons--labels .cyber-social-icons__link {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--cyber-space-1);
+	color: var(--cyber-contact-value-color, var(--cyber-color-text));
+	text-decoration: none;
+}
+
+.cyber-social-icons--labels .cyber-social-icons__link:hover,
+.cyber-social-icons--labels .cyber-social-icons__link:focus-visible {
+	color: var(--cyber-color-hover);
+}
+
+.cyber-social-icons--labels .cyber-social-icons__label {
+	color: inherit;
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-social-icons--labels svg {
+	width: 20px;
+	height: 20px;
+}
+
+/*
+ * Formularz Contact Form 7 — klasyczny markup wtyczki stylowany arkuszem,
+ * bez nadpisywania jej szablonow. Dwa pola w rzedzie: w szablonie formularza
+ * owin je w <div class="cyber-form-row">.
+ */
+.cyber-contact__form .wpcf7-form > p,
+.cyber-contact__form .cyber-form-row > p {
+	margin: 0 0 var(--cyber-space-3);
+}
+
+.cyber-contact__form .cyber-form-row {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: var(--cyber-space-5);
+}
+
+.cyber-contact__form label {
+	display: block;
+	color: var(--cyber-contact-label-color, var(--cyber-color-headings));
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-contact__form .wpcf7-form-control-wrap {
+	display: block;
+	margin-top: var(--cyber-space-2);
+}
+
+.cyber-contact__form :is(input[type="text"], input[type="email"], input[type="tel"], input[type="url"], input[type="number"], input[type="date"], select, textarea) {
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	padding: var(--cyber-space-3) var(--cyber-space-2);
+	border: 1px solid var(--cyber-color-border-1);
+	border-radius: 0;
+	background-color: var(--cyber-contact-field-bg, #f5f5f5);
+	color: var(--cyber-color-text);
+	font: inherit;
+}
+
+/*
+ * Contact Form 7 daje polu wiadomosci rows="10" (ok. 300px). Wysokosc z makiety
+ * ustawiamy wprost; redaktor wiadomosci moze ja powiekszyc uchwytem.
+ */
+.cyber-contact__form textarea {
+	height: 144px;
+	resize: vertical;
+}
+
+.cyber-contact__form ::placeholder {
+	color: var(--cyber-color-text);
+	opacity: 0.6;
+}
+
+.cyber-contact__form :is(input, select, textarea):focus-visible {
+	outline: 2px solid var(--cyber-color-links);
+	outline-offset: 1px;
+}
+
+.cyber-contact__form .wpcf7-list-item {
+	margin: 0;
+}
+
+.cyber-contact__form .wpcf7-acceptance label,
+.cyber-contact__form .wpcf7-checkbox label {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--cyber-space-2);
+	color: var(--cyber-color-text);
+}
+
+.cyber-contact__form input[type="checkbox"] {
+	flex: none;
+	width: 18px;
+	height: 18px;
+	margin: 2px 0 0;
+}
+
+.cyber-contact__form .wpcf7-submit {
+	border: none;
+	border-radius: 0;
+	font-family: var(--cyber-font-family-text);
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/*
+ * Contact Form 7 blokuje przycisk, dopoki zgoda (acceptance) nie jest
+ * zaznaczona. Bez tej reguly zablokowany przycisk wygladal jak aktywny
+ * i klikniecie "nic nie robilo".
+ */
+.cyber-contact__form .wpcf7-submit:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/*
+ * Spinner wysylki Contact Form 7 stoi za przyciskiem jako element inline.
+ * Przy przycisku na cala szerokosc spadlby do nowej linii i podczas wysylki
+ * przesuwal wszystko pod formularzem — dlatego lezy nad przyciskiem, z prawej.
+ */
+.cyber-contact__form .wpcf7-form > p:has(.wpcf7-submit) {
+	position: relative;
+}
+
+.cyber-contact__form .wpcf7-spinner {
+	position: absolute;
+	top: 50%;
+	right: var(--cyber-space-3);
+	margin: 0;
+	transform: translateY(-50%);
+}
+
+.cyber-contact--btn-full .wpcf7-submit {
+	width: 100%;
+}
+
+.cyber-contact--btn-large .wpcf7-submit {
+	padding: var(--cyber-btn-large-padding-y) var(--cyber-btn-large-padding-x);
+	color: var(--cyber-btn-large-color);
+	background-color: var(--cyber-btn-large-bg-color);
+	font-size: var(--cyber-btn-large-font-size);
+	font-weight: var(--cyber-btn-large-font-weight);
+}
+
+.cyber-contact--btn-large .wpcf7-submit:hover,
+.cyber-contact--btn-large .wpcf7-submit:focus-visible {
+	color: var(--cyber-btn-large-color-hover);
+	background-color: var(--cyber-btn-large-bg-color-hover);
+}
+
+.cyber-contact--btn-medium .wpcf7-submit {
+	padding: var(--cyber-btn-medium-padding-y) var(--cyber-btn-medium-padding-x);
+	color: var(--cyber-btn-medium-color);
+	background-color: var(--cyber-btn-medium-bg-color);
+	font-size: var(--cyber-btn-medium-font-size);
+	font-weight: var(--cyber-btn-medium-font-weight);
+}
+
+.cyber-contact--btn-medium .wpcf7-submit:hover,
+.cyber-contact--btn-medium .wpcf7-submit:focus-visible {
+	color: var(--cyber-btn-medium-color-hover);
+	background-color: var(--cyber-btn-medium-bg-color-hover);
+}
+
+.cyber-contact--btn-small .wpcf7-submit {
+	padding: var(--cyber-btn-small-padding-y) var(--cyber-btn-small-padding-x);
+	color: var(--cyber-btn-small-color);
+	background-color: var(--cyber-btn-small-bg-color);
+	font-size: var(--cyber-btn-small-font-size);
+	font-weight: var(--cyber-btn-small-font-weight);
+}
+
+.cyber-contact--btn-small .wpcf7-submit:hover,
+.cyber-contact--btn-small .wpcf7-submit:focus-visible {
+	color: var(--cyber-btn-small-color-hover);
+	background-color: var(--cyber-btn-small-bg-color-hover);
+}
+
+/*
+ * Komunikaty wtyczki: blad pola i wynik wysylki. Selektor wynikowy ma
+ * specyficznosc wieksza niz regula wtyczki (.wpcf7 form .wpcf7-response-output),
+ * ktora laduje sie pozniej i przesuwala ramke marginesem 0.5em z bokow.
+ */
+.cyber-contact__form .wpcf7-not-valid-tip {
+	margin-top: var(--cyber-space-1);
+	font-size: 0.875em;
+}
+
+.cyber-contact__form .wpcf7-not-valid {
+	border-color: #dc3232;
+}
+
+.cyber-contact__form .wpcf7 form .wpcf7-response-output {
+	margin: var(--cyber-space-3) 0 0;
+	padding: var(--cyber-space-2) var(--cyber-space-3);
+}
+
+@media (max-width: 980px) {
+	.cyber-contact {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-contact__form .cyber-form-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

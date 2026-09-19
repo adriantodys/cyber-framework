@@ -13,7 +13,8 @@
  *
  * @param array $args {
  *     @type array  $items Lista tablic 'platform', 'label', 'url'.
- *     @type string $class Dodatkowa klasa kontenera albo pusty string.
+ *     @type string $class       Dodatkowa klasa kontenera albo pusty string.
+ *     @type bool   $show_labels Nazwa platformy obok ikony (sekcja Kontakt).
  * }
  */
 
@@ -21,6 +22,11 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_items = isset( $args['items'] ) ? $args['items'] : array();
 $cyber_class = isset( $args['class'] ) ? trim( 'cyber-social-icons ' . $args['class'] ) : 'cyber-social-icons';
+$cyber_names = ! empty( $args['show_labels'] );
+
+if ( $cyber_names ) {
+	$cyber_class .= ' cyber-social-icons--labels';
+}
 ?>
 
 <div class="<?php echo esc_attr( $cyber_class ); ?>">
@@ -30,7 +36,9 @@ $cyber_class = isset( $args['class'] ) ? trim( 'cyber-social-icons ' . $args['cl
 			href="<?php echo esc_url( $cyber_item['url'] ); ?>"
 			target="_blank"
 			rel="noopener noreferrer"
-			aria-label="<?php echo esc_attr( $cyber_item['label'] ); ?>"
+			<?php if ( ! $cyber_names ) : ?>
+				aria-label="<?php echo esc_attr( $cyber_item['label'] ); ?>"
+			<?php endif; ?>
 		>
 			<?php
 			/*
@@ -39,6 +47,10 @@ $cyber_class = isset( $args['class'] ) ? trim( 'cyber-social-icons ' . $args['cl
 			 */
 			echo cyber_get_social_icon( $cyber_item['platform'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			?>
+			<?php if ( $cyber_names ) : ?>
+				<?php // Widoczna nazwa jest dostepna nazwa linku — aria-label bylby zbedny. ?>
+				<span class="cyber-social-icons__label"><?php echo esc_html( $cyber_item['label'] ); ?></span>
+			<?php endif; ?>
 		</a>
 	<?php endforeach; ?>
 </div>

@@ -38,19 +38,21 @@ w ustalonej kolejności:
 | 9 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
 | 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 | 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
-| 12 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
-| 13 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
-| 14 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
-| 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
-| 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
-| 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
-| 18 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
-| 19 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
-| 20 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
-| 21 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
-| 22 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
-| 23 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
-| 24 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
+| 12 | `inc/contact-form-7.php` | Warstwa ochronna miękkiej zależności od Contact Form 7: wykrywanie, HTML formularza, podpowiedź na froncie i ostrzeżenie w panelu (tylko gdy formularz jest użyty). Wzorzec jak `inc/woocommerce.php`. |
+| 13 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
+| 14 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
+| 15 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
+| 16 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
+| 17 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
+| 18 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
+| 19 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
+| 20 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
+| 21 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
+| 22 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 23 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
+| 24 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
+| 25 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
+| 26 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
 
 ## Stałe
 
@@ -1428,6 +1430,50 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Kontakt: dane z Global Options, formularz jako zależność miękka
+
+Sekcja kontaktowa **nie ma pól na dane** — telefon, e-mail, adres, NIP, REGON
+i profile social media czyta z Global Options (CLAUDE.md sekcja 22: pola
+zarezerwowane mają być konsumowane, nie dublowane). W sekcji są tylko
+włączniki, co pokazać. Zmiana numeru w jednym miejscu zmienia go w top
+headerze, stopce i we wszystkich sekcjach kontaktowych.
+
+**Contact Form 7 to druga zależność miękka** (po WooCommerce) i dostaje ten sam
+wzorzec: jeden plik decyzyjny (`inc/contact-form-7.php`), trzy poziomy
+komunikatu, zero błędu krytycznego przy braku wtyczki. Ostrzeżenie w panelu
+pojawia się tylko wtedy, gdy opublikowana sekcja ma wybrany formularz — sam
+brak wtyczki nie jest błędem. Sekcja bez wybranego formularza to poprawny stan
+(prawa kolumna z samą treścią) i nie daje podpowiedzi.
+
+Wygląd formularza powstaje **wyłącznie z CSS** na klasycznym markupie wtyczki
+(`.wpcf7-form-control`, `.wpcf7-submit`…), bez nadpisywania jej szablonów —
+tak jak strony WooCommerce. Przycisk wysyłki używa zmiennych z Global Options →
+Przyciski. Układ pól w rzędy to klasa `.cyber-form-row` w szablonie formularza.
+
+**Sprawdzone (dane testowe i wartości Global Options przywrócone po teście):**
+włączniki danych, linki `mailto:`/`tel:`, adres z łamaniem linii, ikony,
+nazwy social media (bez `aria-label`, gdy nazwa jest widoczna), układ 50/50
+i stos poniżej 980px, podpowiedź dla admina przy braku wtyczki, ostrzeżenie
+w panelu.
+
+**Formularz sprawdzony na Contact Form 7 6.1.7** (szablon z `docs/acf-schema.md`):
+dwa pola w rzędzie przez `.cyber-form-row`, pole wiadomości 144px zamiast
+~300px z `rows="10"` wtyczki, przycisk z Global Options → Przyciski na całą
+szerokość. Trzy rzeczy wyszły dopiero w przeglądarce:
+
+- **Wtyczka blokuje przycisk, dopóki zgoda nie jest zaznaczona** — zablokowany
+  przycisk wyglądał jak aktywny i kliknięcie „nic nie robiło”. Stąd
+  `:disabled` z przezroczystością.
+- **Spinner wysyłki** stoi za przyciskiem jako element inline; przy przycisku
+  na całą szerokość spadał do nowej linii. Leży teraz nad przyciskiem, z prawej.
+- **Ramka komunikatu zbiorczego** przegrywała z regułą wtyczki
+  `.wpcf7 form .wpcf7-response-output` (ładowaną później) — selektor motywu
+  ma wyższą specyficzność.
+
+Walidacja po polsku wymaga pakietu językowego wtyczki; komunikaty formularza
+zapisują się w nim przy tworzeniu, więc formularz utworzony bez pakietu
+zostaje po angielsku (zakładka „Komunikaty” w edycji formularza).
 
 ### Licznik: własny skrypt, linia bez znajomości liczby kolumn
 

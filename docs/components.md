@@ -277,6 +277,10 @@ rozjazdu.
 | `template-parts/sections/counter.php` | layout `counter` — widok |
 | `assets/js/counter.js` | layout `counter` — odliczanie (IntersectionObserver + requestAnimationFrame) |
 | `acf-json/group_section_counter.json` | źródło klonowania: pola sekcji Licznik |
+| `inc/sections-contact.php` | layout `contact` — dane z Global Options, konfiguracja, klasy i zmienne |
+| `inc/contact-form-7.php` | zależność miękka Contact Form 7 — wykrycie, formularz, komunikaty |
+| `template-parts/sections/contact.php` | layout `contact` — widok |
+| `acf-json/group_section_contact.json` | źródło klonowania: pola sekcji Kontakt |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -297,6 +301,7 @@ rozjazdu.
 | `carousel` | Karuzela kart | `carousel` | `page`, `post` |
 | `faq` | FAQ (pytania i odpowiedzi) | `faq` | `page`, `post` |
 | `counter` | Licznik (counter) | `counter` | `page`, `post` |
+| `contact` | Kontakt (dane + formularz) | `contact` | `page`, `post` |
 | `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
@@ -442,12 +447,32 @@ i bez JavaScriptu.
 
 ### Włączniki treści nad i pod sekcją — wspólne
 
-Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`) nie mają własnych
+Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`) nie mają własnych
 filtrów. Mapa „klucz klonu edytora → klucz włącznika” jest jedna:
 `cyber_section_wysiwyg_toggles()` w `inc/sections.php`, a warunek nakłada
 `cyber_section_wysiwyg_condition()`. Na froncie sprawdza je
 `cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )`.
 **Nowa sekcja z włącznikami dopisuje dwa wiersze do mapy** zamiast kopiować filtr.
+
+### Sekcja `contact` — Kontakt
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-contact.php` | `cyber_contact_section_data()` — dane z Global Options według włączników; konfiguracja, klasy, zmienne |
+| `inc/contact-form-7.php` | `cyber_cf7_form_html()`, `cyber_cf7_missing_hint()`, ostrzeżenie w panelu |
+| `template-parts/sections/contact.php` | widok |
+| `template-parts/components/social-icons.php` | wspólny komponent ikon, tu z nazwami platform (`show_labels`) |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-contact` | siatka dwóch kolumn; `--cyber-contact-cols` z proporcji |
+| `.cyber-contact--btn-large` / `-medium` / `-small`, `--btn-full` | wygląd przycisku wysyłki formularza |
+| `.cyber-contact__col--info` / `--form` | lewa / prawa kolumna |
+| `.cyber-contact__data` | `<dl>` danych; `.cyber-contact__item--email` … `--regon` |
+| `.cyber-contact__social` | nagłówek i lista social media |
+| `.cyber-social-icons--labels` | wariant komponentu ikon z nazwami |
+| `.cyber-contact__form` | opakowanie markupu Contact Form 7 |
+| `.cyber-form-row` | dwa pola formularza w jednym rzędzie — klasa do użycia w szablonie CF7 |
 
 ### Sekcja `counter` — Licznik
 

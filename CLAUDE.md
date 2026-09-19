@@ -40,6 +40,7 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 |---|---|---|
 | **ACF PRO** | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). |
 | **WooCommerce** | miękka | Funkcje sklepowe wyłączają się same, reszta witryny działa bez zmian (`inc/woocommerce.php`). |
+| **Contact Form 7** | miękka | Sekcja Kontakt działa bez formularza; admin widzi podpowiedź, gość nic (`inc/contact-form-7.php`). |
 
 #### Biblioteki zewnętrzne — rejestr
 
@@ -608,7 +609,8 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
    Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`,
    `faq` (natywne `<details>`, bez biblioteki), `counter` (własny skrypt
-   odliczania) oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
+   odliczania), `contact` (dane z Global Options + Contact Form 7) oraz
+   **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
    z tym samym polem `cyber_sections` i layout `global`, który wstawia jego
    sekcje na stronę (`inc/sections-global.php`). Sekcja globalna nie może
    zawierać innej sekcji globalnej.

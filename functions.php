@@ -53,6 +53,7 @@ function cyber_load_modules() {
 		'inc/components.php',
 		'inc/contact.php',
 		'inc/woocommerce.php',
+		'inc/contact-form-7.php',
 		'inc/breadcrumb.php',
 		'inc/woocommerce-cart.php',
 		'inc/woocommerce-checkout.php',
@@ -66,6 +67,7 @@ function cyber_load_modules() {
 		'inc/sections-carousel.php',
 		'inc/sections-faq.php',
 		'inc/sections-counter.php',
+		'inc/sections-contact.php',
 	);
 
 	foreach ( $modules as $module ) {
