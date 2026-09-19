@@ -1403,7 +1403,7 @@ dwie pierwsze istnieją wyłącznie po to, żeby wspólne pola miały jedną def
 
 | Grupa | Plik | Lokalizacja | Rola |
 |---|---|---|---|
-| `group_sections` | `acf-json/group_sections.json` | strony, wpisy | pole Flexible Content `cyber_sections` |
+| `group_sections` | `acf-json/group_sections.json` | strony, wpisy, **sekcje globalne** (`cyber_global_section`) | pole Flexible Content `cyber_sections` |
 | `group_section_content` | `acf-json/group_section_content.json` | **żadna** | źródło klonowania: WYSIWYG góra/dół |
 | `group_section_settings` | `acf-json/group_section_settings.json` | **żadna** | źródło klonowania: ustawienia wyglądu |
 
@@ -1422,8 +1422,33 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 |---|---|---|---|---|
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
-Layouty: **`basic`** („Sekcja podstawowa"). Każdy layout ma odpowiednik
-w rejestrze `cyber_section_types()` i jeden plik w `template-parts/sections/`.
+Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**
+i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+i jeden plik w `template-parts/sections/`.
+
+#### Layout „Sekcja globalna” (`global`)
+
+Wstawia na stronę sekcje zapisane we wpisie typu **Sekcje globalne**
+(`cyber_global_section`). Treść i wygląd zmienia się we wpisie — raz dla
+wszystkich stron, które go wybrały.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Sekcja globalna | `cyber_global_section_ref` | Post Object (ID), tylko `cyber_global_section`, tylko opublikowane, wymagane | — | Wybór wpisu z sekcjami |
+| Sekcja włączona | `cyber_section_enabled` | True/False (klon `field_cyber_section_enabled`) | `true` | Wyłączenie chowa sekcję na tej stronie, bez usuwania wyboru |
+
+> **Wpis „Sekcje globalne” edytuje się jak stronę.** Grupa `group_sections` ma
+> lokalizację także na tym typie treści, więc ten sam przycisk „Dodaj sekcję”
+> i te same layouty. Wyjątek: **w edycji sekcji globalnej nie ma layoutu
+> `global`** — sekcja globalna nie wstawi innej (filtr
+> `acf/prepare_field/key=field_cyber_sections`, a przy odczycie takie wiersze
+> są pomijane). Jeden wpis może mieć kilka sekcji — na stronę trafia cały zestaw.
+
+> **Wyświetla się tylko wpis opublikowany.** Szkic, kosz albo usunięty wpis
+> nie pokazują nic; zalogowany redaktor widzi w tym miejscu krótką podpowiedź
+> (`.cyber-section-missing`), gość — nic. Ta sama sekcja wstawiona na stronę
+> dwa razy dostaje przy drugim wystąpieniu kotwicę z przyrostkiem
+> (`realizacje`, `realizacje-2`).
 
 #### Treść sekcji (`group_section_content`)
 
@@ -1840,6 +1865,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-19 — **Sekcje globalne**: typ treści `cyber_global_section` (tylko panel, bez adresu na froncie) z tym samym polem `cyber_sections` co strony, oraz layout `global` z polem `cyber_global_section_ref` i klonem włącznika sekcji. Na liście sekcji globalnych kolumna „Używana na”. Arkusz sekcji i Swiper ładują się także wtedy, gdy slider lub karuzela przychodzą wyłącznie z sekcji globalnej.
 
 - 2026-09-19 — **Karty**: nadtytuł `cyber_card_overtitle` (w repeaterze) i rozmiar tytułu `cyber_cards_title_size` (`h1`–`h6`, default `h5`); oba działają też w „Karuzeli kart”. **Slider**: wideo w tle slajdu — `cyber_slide_video_on` + `cyber_slide_video` (warunek ACF). **Karuzela**: taśma trybu ciągłego i autoplay krokowy nie zatrzymują się po najechaniu myszą. **WYSIWYG sekcji**: dozwolony `<iframe>` (`cyber_kses_content()`). **Kolory**: nowe pole semantyczne `cyber_color_icons` — Global Options ma teraz 167 pól.
 

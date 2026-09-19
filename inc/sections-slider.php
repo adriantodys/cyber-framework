@@ -410,13 +410,8 @@ function cyber_slider_on_page( $post_id ) {
 		return false;
 	}
 
-	$rows = get_field( CYBER_SECTIONS_FIELD, $post_id );
-
-	if ( empty( $rows ) || ! is_array( $rows ) ) {
-		return false;
-	}
-
-	foreach ( $rows as $row ) {
+	// Z rozwinietymi sekcjami globalnymi: karuzela moze przyjsc z wpisu CPT.
+	foreach ( cyber_section_rows_expanded( $post_id ) as $row ) {
 		if ( isset( $row['acf_fc_layout'] ) && in_array( $row['acf_fc_layout'], array( 'slider', 'carousel' ), true ) ) {
 			return true;
 		}

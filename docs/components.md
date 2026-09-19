@@ -270,6 +270,8 @@ rozjazdu.
 | `template-parts/sections/carousel.php` | layout `carousel` — widok |
 | `template-parts/components/card.php` | wspólny markup karty dla `cards` i `carousel` |
 | `acf-json/group_section_carousel.json` | źródło klonowania: ustawienia karuzeli |
+| `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
+| `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
 | `acf-json/group_sections.json` | pole Flexible Content |
 | `acf-json/group_section_content.json` | źródło klonowania: WYSIWYG góra/dół |
@@ -286,6 +288,7 @@ rozjazdu.
 | `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
 | `slider` | Slider | `slider` | `page`, `post` |
 | `carousel` | Karuzela kart | `carousel` | `page`, `post` |
+| `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
 dostępności layoutów per typ treści to osobny krok.
@@ -403,6 +406,30 @@ zdjęcie ma tekst alternatywny i `srcset`. Pierwszy slajd ładuje się z
 
 Przycisk renderuje wspólny `cyber_button()` — wygląd z zakładki Przyciski.
 
+
+### Sekcja `global` — Sekcja globalna
+
+Wstawia sekcje z wpisu typu **Sekcje globalne**. Nie ma własnego markupu:
+`cyber_render_sections()` podmienia wiersz na sekcje wybranego wpisu
+i renderuje je ich własnymi szablonami, przez `cyber_render_section_row()`.
+
+```
+Strona: [basic] [global → wpis #12] [cards]
+                       ↓
+Na froncie: [basic] [carousel z #12] [basic z #12] [cards]
+```
+
+| Funkcja | Rola |
+|---|---|
+| `cyber_global_section_rows( $id )` | sekcje opublikowanego wpisu, bez wierszy `global` (brak zagnieżdżania), z pamięcią na czas żądania |
+| `cyber_section_rows_expanded( $post_id )` | płaska lista sekcji strony z rozwiniętymi sekcjami globalnymi — do decyzji o assetach |
+| `cyber_global_section_problem( $id )` | powód, dla którego nic się nie wyświetla (szkic, kosz, brak sekcji) |
+| `cyber_global_section_usage( $id )` | wpisy, które wstawiają sekcję — kolumna „Używana na” |
+| `cyber_section_unique_id( $id )` | unikalna kotwica przy wielokrotnym wstawieniu |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-section-missing` | podpowiedź dla redaktora; wygląd wspólny z `.cyber-wc-missing` |
 
 ### Sekcja `carousel` — Karuzela kart
 

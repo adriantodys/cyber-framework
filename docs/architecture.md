@@ -44,10 +44,11 @@ w ustalonej kolejności:
 | 15 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
 | 16 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
 | 17 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
-| 18 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
-| 19 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
-| 20 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
-| 21 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
+| 18 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
+| 19 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
+| 20 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
+| 21 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 22 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
 
 ## Stałe
 
@@ -1426,6 +1427,47 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
 
+### Sekcje globalne: CPT + layout wyboru
+
+Sekcja używana na wielu stronach (ta sama karuzela na pięciu) żyje w **jednym
+wpisie** typu `cyber_global_section`, a strony wskazują go layoutem `global`.
+
+```
+Sekcje globalne (CPT, tylko panel)          Strona
+└── „Karuzela – realizacje”                 cyber_sections:
+      cyber_sections:                         [basic]
+        [carousel] [basic]   ◄───────────────  [global: #id]
+                                              [cards]
+```
+
+Decyzje, które mają znaczenie:
+
+- **To samo pole, nie kopia.** Grupa `group_sections` ma lokalizację również na
+  CPT, więc sekcję globalną buduje się tymi samymi layoutami co stronę.
+  Alternatywy odrzucone: Options Page z repeaterem (jeden wielki formularz, bez
+  rewizji, bez reużycia layoutów), pole Clone (kopiuje definicję pól, nie
+  wartości), bloki wielokrotnego użytku (Gutenberg wyłączony).
+- **Brak zagnieżdżania, dwie bariery.** Layout `global` jest ukryty w edycji CPT
+  (`acf/prepare_field` — filtr formularza, nie danych), a wiersze `global`
+  w CPT są pomijane przy odczycie. Druga bariera zostaje, bo wiersz mógł trafić
+  do bazy importem; A → B → A zawiesiłoby renderowanie strony.
+- **Brak adresu na froncie** (`public`, `publicly_queryable` = `false`). Sekcja
+  pokazuje się tylko jako część strony; osobny adres byłby oderwaną od
+  kontekstu treścią do zaindeksowania.
+- **Assety liczone po rozwinięciu.** Arkusz sekcji i Swiper decydują na
+  podstawie `cyber_section_rows_expanded()`. Bez tego karuzela wstawiona jako
+  sekcja globalna wyświetliłaby się bez skryptu.
+- **Unikalne kotwice.** Druga kopia tej samej sekcji na stronie dostaje
+  przyrostek (`-2`) — dwa identyczne `id` to niepoprawny HTML.
+- **Tylko opublikowane.** Szkic i kosz nie pokazują nic; redaktor widzi
+  podpowiedź, gość nie widzi niczego (CLAUDE.md sekcja 2, trzy poziomy).
+
+**Sprawdzone na danych testowych (usunięte po teście):** dwie kopie karuzeli
+z kotwicami `realizacje` / `realizacje-2`; szkic niewidoczny dla gościa,
+podpowiedź tylko dla zalogowanego; wyłączony wiersz pominięty; zagnieżdżony
+wiersz `global` pominięty; Swiper załadowany na stronie, której jedyną karuzelą
+jest sekcja globalna; wpis CPT pod adresem publicznym zwraca 404.
+
 ### Karuzela: tryb ciągły bez Swipera
 
 Pierwsza implementacja ciągłego przewijania była na Swiperze: autoplay
@@ -1541,11 +1583,12 @@ Zrealizowane i opisane w sekcjach powyżej:
 Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaimplementowane:
 
 - **Etap 4** — Flexible Content i system sekcji: **w toku, nie zamknięty**.
-  Istnieje pole `cyber_sections`, rejestr `cyber_section_types()` i pięć layoutów
-  (`basic`, `cards`, `columns`, `slider`, `carousel`) z plikami
-  w `template-parts/sections/`; karta jest wspólnym komponentem
-  `template-parts/components/card.php`. Brakuje filtrowania layoutów per typ
-  treści (pole `contexts` w rejestrze jest jeszcze nieużywane) i sekcji globalnych.
+  Istnieje pole `cyber_sections`, rejestr `cyber_section_types()`, pięć layoutów
+  treści (`basic`, `cards`, `columns`, `slider`, `carousel`) z plikami
+  w `template-parts/sections/` oraz sekcje globalne (CPT + layout `global`);
+  karta jest wspólnym komponentem `template-parts/components/card.php`. Brakuje
+  filtrowania layoutów per typ treści (pole `contexts` w rejestrze jest jeszcze
+  nieużywane).
 - **Etap 5** — szablony widoków w `templates/`. Katalog jest pusty; jedynym widokiem
   jest `index.php` w rootcie, wymagany przez WordPress fallback. `header.php`
   i `footer.php` w rootcie **nie** są już szkieletem — zbierają dane przez

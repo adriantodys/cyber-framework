@@ -606,8 +606,12 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    **Stan: w toku.** Istnieje szkielet — pole `cyber_sections`, rejestr
    `cyber_section_types()` (`inc/sections.php`), wspólne opakowanie `.cyber-section`
    i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
-   Do zrobienia: kolejne layouty, filtrowanie dostępności per typ treści oraz
-   sekcje globalne.
+   Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`
+   oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
+   z tym samym polem `cyber_sections` i layout `global`, który wstawia jego
+   sekcje na stronę (`inc/sections-global.php`). Sekcja globalna nie może
+   zawierać innej sekcji globalnej.
+   Do zrobienia: kolejne layouty i filtrowanie dostępności per typ treści.
 5. Szablony kluczowych widoków: front page, page, single, archive, 404, search.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).

@@ -784,8 +784,11 @@ h6 :is(a, span),
 /*
  * Podpowiedz widoczna WYLACZNIE dla zalogowanego administratora, gdy wariant
  * WooCommerce jest wybrany, a wtyczki nie ma. Gosc witryny nie dostaje niczego.
+ * Ten sam wyglad ma podpowiedz o sekcji globalnej, ktora sie nie wyswietla
+ * (template-parts/sections/global.php).
  */
-.cyber-wc-missing {
+.cyber-wc-missing,
+.cyber-section-missing {
 	padding: var(--cyber-space-1);
 	border: 1px dashed var(--cyber-color-border-1);
 	color: var(--cyber-color-text);

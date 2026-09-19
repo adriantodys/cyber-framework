@@ -789,6 +789,68 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_cyber_section_global": {
+                    "key": "layout_cyber_section_global",
+                    "name": "global",
+                    "label": "Sekcja globalna",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cyber_section_global_ref",
+                            "label": "Sekcja globalna",
+                            "name": "cyber_global_section_ref",
+                            "aria-label": "",
+                            "type": "post_object",
+                            "instructions": "Wybierz sekcje z menu Sekcje globalne. Tresc i wyglad zmienia sie tam - w jednym miejscu dla wszystkich stron, ktore jej uzywaja.",
+                            "required": 1,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "post_type": [
+                                "cyber_global_section"
+                            ],
+                            "post_status": [
+                                "publish"
+                            ],
+                            "taxonomy": "",
+                            "return_format": "id",
+                            "multiple": 0,
+                            "allow_null": 0,
+                            "allow_in_bindings": 0,
+                            "bidirectional": 0,
+                            "ui": 1,
+                            "bidirectional_target": []
+                        },
+                        {
+                            "key": "field_cyber_section_global_enabled",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "50",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_enabled"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "min": "",
@@ -810,6 +872,13 @@
                 "operator": "==",
                 "value": "post"
             }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "cyber_global_section"
+            }
         ]
     ],
     "menu_order": 0,
@@ -821,5 +890,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789806248
+    "modified": 1789808627
 }

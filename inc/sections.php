@@ -88,6 +88,17 @@ function cyber_section_types() {
 			'template' => 'carousel',
 			'contexts' => array( 'page', 'post' ),
 		),
+		/*
+		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
+		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje
+		 * wylacznie podpowiedz dla redaktora, gdy nie ma czego pokazac.
+		 * Swiadomie BEZ kontekstu cyber_global_section — brak zagniezdzania.
+		 */
+		'global'   => array(
+			'label'    => 'Sekcja globalna',
+			'template' => 'global',
+			'contexts' => array( 'page', 'post' ),
+		),
 	);
 }
 
@@ -433,17 +444,8 @@ function cyber_render_sections( $post_id = null ) {
 		return;
 	}
 
-	$types = cyber_section_types();
-
 	foreach ( $rows as $row ) {
 		if ( ! is_array( $row ) || empty( $row['acf_fc_layout'] ) ) {
-			continue;
-		}
-
-		$type = (string) $row['acf_fc_layout'];
-
-		// Layout bez wpisu w rejestrze nie ma czym sie wyrenderowac.
-		if ( ! isset( $types[ $type ] ) ) {
 			continue;
 		}
 
@@ -452,15 +454,91 @@ function cyber_render_sections( $post_id = null ) {
 			continue;
 		}
 
-		get_template_part(
-			'template-parts/sections/' . $types[ $type ]['template'],
-			null,
-			array(
-				'attributes' => cyber_section_attributes( $type, $row ),
-				'row'        => $row,
-			)
-		);
+		if ( CYBER_GLOBAL_SECTION_LAYOUT !== $row['acf_fc_layout'] ) {
+			cyber_render_section_row( $row );
+			continue;
+		}
+
+		/*
+		 * Sekcja globalna: wiersz zamienia sie na sekcje wybranego wpisu CPT.
+		 * Te przechodza przez ten sam kod co sekcje strony. Wiersze "global"
+		 * wewnatrz nie istnieja — odfiltrowuje je cyber_global_section_rows().
+		 */
+		$global_id   = cyber_global_section_id( $row );
+		$global_rows = cyber_global_section_rows( $global_id );
+
+		if ( ! $global_rows ) {
+			get_template_part(
+				'template-parts/sections/global',
+				null,
+				array( 'notice' => cyber_global_section_problem( $global_id ) )
+			);
+			continue;
+		}
+
+		foreach ( $global_rows as $global_row ) {
+			if ( isset( $global_row['cyber_section_enabled'] ) && ! $global_row['cyber_section_enabled'] ) {
+				continue;
+			}
+
+			cyber_render_section_row( $global_row );
+		}
 	}
+}
+
+/**
+ * Wypisuje jedna sekcje.
+ *
+ * @param array $row Wiersz Flexible Content (dowolny layout poza "global").
+ * @return void
+ */
+function cyber_render_section_row( array $row ) {
+	$types = cyber_section_types();
+	$type  = (string) $row['acf_fc_layout'];
+
+	// Layout bez wpisu w rejestrze nie ma czym sie wyrenderowac.
+	if ( ! isset( $types[ $type ] ) || CYBER_GLOBAL_SECTION_LAYOUT === $type ) {
+		return;
+	}
+
+	$attributes       = cyber_section_attributes( $type, $row );
+	$attributes['id'] = cyber_section_unique_id( $attributes['id'] );
+
+	get_template_part(
+		'template-parts/sections/' . $types[ $type ]['template'],
+		null,
+		array(
+			'attributes' => $attributes,
+			'row'        => $row,
+		)
+	);
+}
+
+/**
+ * Pilnuje, zeby kotwica sekcji byla unikalna na stronie.
+ *
+ * Ta sama sekcja globalna wstawiona na strone dwa razy dalaby dwa elementy
+ * o tym samym id — niepoprawny HTML, a link #kotwica prowadzilby zawsze do
+ * pierwszego. Kolejne wystapienia dostaja przyrostek: oferta, oferta-2...
+ *
+ * @param string $id Kotwica z cyber_section_attributes().
+ * @return string
+ */
+function cyber_section_unique_id( $id ) {
+	static $used = array();
+
+	if ( '' === $id ) {
+		return '';
+	}
+
+	if ( ! isset( $used[ $id ] ) ) {
+		$used[ $id ] = 1;
+		return $id;
+	}
+
+	++$used[ $id ];
+
+	return $id . '-' . $used[ $id ];
 }
 
 /**
@@ -592,9 +670,8 @@ function cyber_section_assets() {
 		return;
 	}
 
-	$rows = get_field( CYBER_SECTIONS_FIELD, get_queried_object_id() );
-
-	if ( empty( $rows ) ) {
+	// Z rozwinietymi sekcjami globalnymi — to one moga byc jedyna trescia strony.
+	if ( ! cyber_section_rows_expanded( get_queried_object_id() ) ) {
 		return;
 	}
 
