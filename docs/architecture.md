@@ -49,6 +49,7 @@ w ustalonej kolejności:
 | 20 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
 | 21 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
 | 22 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
+| 23 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
 
 ## Stałe
 
@@ -1426,6 +1427,34 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### FAQ: natywne `<details>` zamiast biblioteki
+
+Przed napisaniem sekcji sprawdzone zostały biblioteki akordeonów. Żadna nie
+daje niczego, czego nie ma dziś sama przeglądarka:
+
+- `<details>`/`<summary>` — klawiatura, stan otwarty/zamknięty i czytniki
+  ekranu działają natywnie, bez `aria-expanded` pilnowanego skryptem;
+- atrybut `name` (Chrome 120, Safari 17.2, Firefox 130) — elementy o tej samej
+  nazwie zamykają się nawzajem, czyli tryb „jedna odpowiedź otwarta” bez JS.
+  Starsza przeglądarka pozwoli otworzyć kilka naraz — łagodna degradacja;
+- `::details-content` + `interpolate-size` — płynne rozwijanie do wysokości
+  `auto` w samym CSS. Bez wsparcia odpowiedź pokazuje się od razu;
+- odpowiedź jest w HTML od początku: indeksuje ją wyszukiwarka, a Ctrl+F
+  sam rozwija pytanie z trafieniem.
+
+Biblioteka dołożyłaby plik JS na każdą stronę z FAQ i wpis w rejestrze
+(CLAUDE.md sekcja 2) w zamian za zachowanie, które już jest. Rejestr bibliotek
+się nie zmienia.
+
+**Dwie kolumny to dwie osobne listy, nie siatka.** W siatce otwarcie pytania
+rozciąga cały wiersz i przesuwa pytanie obok. Pierwsza połowa pytań idzie
+z lewej, reszta z prawej — kolejność czytania i tabulacji zostaje ta z panelu.
+
+**Sprawdzone w Chrome (dane testowe usunięte):** klik drugiego pytania zamyka
+pierwsze (`1000` → `0100`); z wyłączonym trybem dwa pytania otwarte naraz;
+kolumny 571 px + 571 px, na 390 px jedna; kolory, rozmiar H6 i tło otwartego
+pytania zgodne z ustawieniami.
 
 ### Sekcje globalne: CPT + layout wyboru
 

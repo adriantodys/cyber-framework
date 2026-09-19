@@ -270,6 +270,9 @@ rozjazdu.
 | `template-parts/sections/carousel.php` | layout `carousel` — widok |
 | `template-parts/components/card.php` | wspólny markup karty dla `cards` i `carousel` |
 | `acf-json/group_section_carousel.json` | źródło klonowania: ustawienia karuzeli |
+| `inc/sections-faq.php` | layout `faq` — normalizacja pytań, kolumny, klasy i zmienne |
+| `template-parts/sections/faq.php` | layout `faq` — widok (`<details>`/`<summary>`) |
+| `acf-json/group_section_faq.json` | źródło klonowania: pola sekcji FAQ |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -288,6 +291,7 @@ rozjazdu.
 | `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
 | `slider` | Slider | `slider` | `page`, `post` |
 | `carousel` | Karuzela kart | `carousel` | `page`, `post` |
+| `faq` | FAQ (pytania i odpowiedzi) | `faq` | `page`, `post` |
 | `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
@@ -406,6 +410,30 @@ zdjęcie ma tekst alternatywny i `srcset`. Pierwszy slajd ładuje się z
 
 Przycisk renderuje wspólny `cyber_button()` — wygląd z zakładki Przyciski.
 
+
+### Sekcja `faq` — FAQ
+
+Pytania rozwijane po kliknięciu, na natywnym `<details>` — bez biblioteki
+i bez JavaScriptu.
+
+| Plik | Rola |
+|---|---|
+| `inc/sections-faq.php` | normalizacja pytań, podział na kolumny, konfiguracja, klasy i zmienne, ikona z lewej, włączniki treści nad/pod (`cyber_faq_shows_wysiwyg()`, `cyber_faq_wysiwyg_condition()`) |
+| `template-parts/sections/faq.php` | widok |
+| `acf-json/group_section_faq.json` | pola: repeater pytań i ustawienia |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-faq` | kontener pytań; zmienne `--cyber-faq-*` w atrybucie `style` |
+| `.cyber-faq--cols-1` / `--cols-2` | liczba kolumn; dwie to dwie niezależne listy `.cyber-faq__col` |
+| `.cyber-faq--divider` | linia między pytaniami |
+| `.cyber-faq--has-icon` / `--has-toggle` | włączona ikona z lewej / plus-minus z prawej |
+| `.cyber-faq--open-bg` / `--hover` | ustawione tło otwartego pytania / kolor po najechaniu |
+| `.cyber-faq__item` | `<details>`; z `name` w trybie jednej otwartej odpowiedzi |
+| `.cyber-faq__summary` | `<summary>` — ikona, pytanie, plus/minus |
+| `.cyber-faq__icon` | ikona z lewej: `<img>` z panelu albo `.cyber-icon--question` |
+| `.cyber-faq__toggle` | plus/minus rysowany w CSS; kolor `--cyber-color-icons`, do nadpisania tą klasą |
+| `.cyber-faq__answer` | odpowiedź; niesie też `.cyber-wysiwyg` |
 
 ### Sekcja `global` — Sekcja globalna
 

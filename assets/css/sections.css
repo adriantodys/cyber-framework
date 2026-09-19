@@ -232,6 +232,16 @@
 	line-height: 1.6;
 }
 
+/*
+ * Kolor i grubosc z ustawien karty musza dojsc do akapitow i list — arkusz
+ * bazowy (main.css) daje <p>, <li> i <span> wlasny kolor i grubosc tekstu,
+ * wiec bez tej reguly pola "Kolor tekstu" i "Grubosc tekstu" nic nie zmienialy.
+ */
+.cyber-card__text :is(p, ul, ol, li, span) {
+	color: inherit;
+	font-weight: inherit;
+}
+
 .cyber-card__text > *:first-child {
 	margin-top: 0;
 }
@@ -743,5 +753,196 @@
 	.cyber-section--carousel > .cyber-section__inner + .cyber-section__inner,
 	.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner {
 		margin-top: var(--cyber-space-3);
+	}
+}
+
+/* --- FAQ ------------------------------------------------------------------- */
+
+/*
+ * Natywne <details>/<summary> — bez JavaScriptu. Dwie kolumny to dwie
+ * niezalezne listy: otwarcie pytania w jednej nie przesuwa pytan w drugiej.
+ * interpolate-size pozwala animowac wysokosc do "auto" (patrz ::details-content).
+ */
+.cyber-faq {
+	interpolate-size: allow-keywords;
+}
+
+.cyber-faq--cols-2 {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: var(--cyber-faq-gap-x, 48px);
+	align-items: start;
+}
+
+.cyber-faq--divider .cyber-faq__item {
+	border-bottom: 1px solid var(--cyber-color-border-1);
+}
+
+.cyber-faq__item {
+	transition: background-color 0.2s ease;
+}
+
+.cyber-faq--open-bg .cyber-faq__item[open] {
+	background-color: var(--cyber-faq-open-bg);
+}
+
+/*
+ * Tlo otwartego pytania nie moze dotykac tekstu — dostaje wtedy odstep
+ * poziomy. Bez tla pytanie zostaje wyrownane do krawedzi, jak na makiecie.
+ */
+.cyber-faq--open-bg .cyber-faq__summary,
+.cyber-faq--open-bg .cyber-faq__answer {
+	padding-inline: var(--cyber-space-3);
+}
+
+.cyber-faq__summary {
+	display: flex;
+	align-items: center;
+	gap: var(--cyber-space-2);
+	padding-block: var(--cyber-faq-pad-y, 24px);
+	list-style: none;
+	cursor: pointer;
+}
+
+/* Znacznik trojkata przegladarki — zastepuje go ikona plus / minus. */
+.cyber-faq__summary::-webkit-details-marker {
+	display: none;
+}
+
+.cyber-faq__summary::marker {
+	content: "";
+}
+
+.cyber-faq__summary:focus-visible {
+	outline: 2px solid var(--cyber-color-links);
+	outline-offset: 2px;
+}
+
+.cyber-faq__question {
+	flex: 1 1 auto;
+	color: var(--cyber-faq-q-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-faq-q-size, var(--cyber-font-size-h5));
+	font-weight: var(--cyber-faq-q-weight, var(--cyber-font-weight-headings));
+	line-height: 1.35;
+	transition: color 0.2s ease;
+}
+
+.cyber-faq--hover .cyber-faq__summary:hover .cyber-faq__question,
+.cyber-faq--hover .cyber-faq__summary:focus-visible .cyber-faq__question {
+	color: var(--cyber-faq-q-hover);
+}
+
+/* Ikona z lewej: SVG motywu (kolor ikon) albo obrazek z panelu. */
+.cyber-faq__icon {
+	display: inline-flex;
+	flex: none;
+	width: 28px;
+	height: 28px;
+}
+
+.cyber-faq__icon .cyber-icon,
+.cyber-faq__icon-image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+/*
+ * Plus / minus rysowany dwiema kreskami. Pionowa kreska znika przy otwarciu,
+ * wiec plus zamienia sie w minus obrotem, bez drugiej ikony. Kolor z pola
+ * Kolory -> Ikony; klasa .cyber-faq__toggle pozwala go nadpisac w arkuszu.
+ */
+.cyber-faq__toggle {
+	position: relative;
+	flex: none;
+	width: 20px;
+	height: 20px;
+	color: var(--cyber-color-icons);
+}
+
+.cyber-faq__toggle::before,
+.cyber-faq__toggle::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: 100%;
+	height: 2px;
+	background-color: currentColor;
+	transform: translateY(-50%);
+	transition: transform 0.3s ease;
+}
+
+.cyber-faq__toggle::after {
+	transform: translateY(-50%) rotate(90deg);
+}
+
+.cyber-faq__item[open] .cyber-faq__toggle::after {
+	transform: translateY(-50%) rotate(0deg);
+}
+
+/*
+ * Odpowiedz. Kolor ustawiony na kontenerze nie doszedlby do akapitow — arkusz
+ * bazowy daje <p>, <li> i <span> wlasny kolor tekstu — stad jawne dziedziczenie.
+ */
+.cyber-faq__answer {
+	padding-bottom: var(--cyber-faq-pad-y, 24px);
+	line-height: 1.6;
+}
+
+.cyber-faq__answer,
+.cyber-faq__answer :is(p, ul, ol, li, span) {
+	color: var(--cyber-faq-a-color, var(--cyber-color-text));
+}
+
+.cyber-faq__answer > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-faq__answer > *:last-child {
+	margin-bottom: 0;
+}
+
+/*
+ * Ikona z lewej: odpowiedz zaczyna sie pod tekstem pytania, nie pod ikona.
+ * 28px ikony + odstep z flexa.
+ */
+.cyber-faq--has-icon .cyber-faq__answer {
+	padding-left: calc(28px + var(--cyber-space-2));
+}
+
+.cyber-faq--open-bg.cyber-faq--has-icon .cyber-faq__answer {
+	padding-left: calc(28px + var(--cyber-space-2) + var(--cyber-space-3));
+}
+
+/*
+ * Plynne rozwijanie tam, gdzie przegladarka zna ::details-content (Chrome 131+).
+ * Pozostale ignoruja ta regule i pokazuja odpowiedz od razu.
+ */
+.cyber-faq__item::details-content {
+	block-size: 0;
+	overflow: hidden;
+	transition: block-size 0.3s ease, content-visibility 0.3s allow-discrete;
+}
+
+.cyber-faq__item[open]::details-content {
+	block-size: auto;
+}
+
+@media (max-width: 767px) {
+	.cyber-faq--cols-2 {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cyber-faq__item,
+	.cyber-faq__item::details-content,
+	.cyber-faq__question,
+	.cyber-faq__toggle::before,
+	.cyber-faq__toggle::after {
+		transition: none;
 	}
 }

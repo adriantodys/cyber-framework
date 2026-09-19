@@ -1422,8 +1422,8 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 |---|---|---|---|---|
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
-Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**
-i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
+**`faq`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
 
 #### Layout „Sekcja globalna” (`global`)
@@ -1802,6 +1802,61 @@ Ustawienia karuzeli → Ustawienia kart → [wł.] treść nad → Elementy →
 > W odróżnieniu od slidera karty wypełniają całą szerokość, więc strzałki na
 > kartach zasłaniałyby ich treść.
 
+#### Sekcja „FAQ” (`group_section_faq`)
+
+Layout `faq`. Pytania i odpowiedzi rozwijane po kliknięciu. Grupa jest
+**źródłem klonowania**. Z `group_section_settings` bierze komplet ustawień
+wyglądu sekcji, z `group_section_content` — treść nad i pod pytaniami.
+
+**Treść nad i pod pytaniami** — poza akordeonem, każda z własnym włącznikiem:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Pokaż treść nad pytaniami | `cyber_faq_show_top` | True/False | `false` | Pokazuje edytor `cyber_section_wysiwyg_top` w panelu i blok na stronie |
+| Pokaż treść pod pytaniami | `cyber_faq_show_bottom` | True/False | `false` | To samo dla `cyber_section_wysiwyg_bottom` |
+
+Wyłączenie chowa edytor i blok, ale wpisana treść zostaje w bazie. Warunek
+nakłada `cyber_faq_wysiwyg_condition()` w locie, tylko na edytory przyniesione
+przez klon FAQ — ten sam mechanizm co w Kartach.
+
+**Pytania** — Repeater `cyber_faq_items`:
+
+| Field Label | Field Name | Typ | Przeznaczenie |
+|---|---|---|---|
+| Pytanie | `cyber_faq_question` | Text, wymagane | Treść `<summary>`; wiersz bez pytania jest pomijany |
+| Odpowiedź | `cyber_faq_answer` | WYSIWYG (pasek `basic`, bez mediów) | Lista, link, pogrubienie, ramka `<iframe>` |
+| Własna ikona pytania | `cyber_faq_item_icon` | Image (ID) | Zastępuje ikonę sekcji tylko przy tym pytaniu; działa przy włączonej ikonie |
+
+**Ustawienia** — akordeon „Ustawienia FAQ”, domyślnie zwinięty:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Liczba kolumn | `cyber_faq_columns` | Select `1` / `2` | `1` | Dwie kolumny: pierwsza połowa pytań z lewej, reszta z prawej; na telefonie (≤767px) jedna |
+| Odstęp między kolumnami | `cyber_faq_gap_x` | Select (skala) | `48` | Widoczne przy dwóch kolumnach |
+| Tylko jedna odpowiedź otwarta | `cyber_faq_single` | True/False | `true` | Otwarcie pytania zamyka poprzednie |
+| Pierwsze pytanie otwarte | `cyber_faq_first_open` | True/False | `true` | Rozwinięte po wejściu na stronę |
+| Ikona przy pytaniu (z lewej) | `cyber_faq_show_icon` | True/False | `false` | |
+| Ikona plus / minus (z prawej) | `cyber_faq_show_toggle` | True/False | `true` | Kolor z Kolory → Ikony |
+| Ikona pytań | `cyber_faq_icon` | Image (ID) | — | Widoczne przy włączonej ikonie; puste = ikona motywu `question` |
+| Odstęp pionowy pytania | `cyber_faq_pad_y` | Select (skala) | `24` | Nad i pod pytaniem oraz pod odpowiedzią |
+| Linia między pytaniami | `cyber_faq_divider` | True/False | `true` | Kolor z Kolory → Obramowanie 1 |
+| Tło otwartego pytania | `cyber_faq_open_bg` | Color (alpha) | `''` | Ustawione dodaje odstęp poziomy, żeby tekst nie dotykał krawędzi tła |
+| Kolor pytania po najechaniu | `cyber_faq_hover_color` | Color (alpha) | `''` | |
+| Rozmiar pytania | `cyber_faq_question_size` | Select `h1`–`h6` | `h5` | Wielkość z Ustawień czcionki; znacznik się nie zmienia |
+| Grubość pytania | `cyber_faq_question_weight` | Select | `700` | |
+| Kolor pytania / odpowiedzi | `cyber_faq_question_color` `_answer_color` | Color (alpha) | `''` | Puste = nagłówki / tekst z Global Options |
+
+> **Bez biblioteki i bez JavaScriptu.** Każde pytanie to natywne
+> `<details>`/`<summary>`. Tryb „jedna otwarta” daje atrybut `name` (unikalny
+> na sekcję, więc dwie sekcje FAQ nie zamykają sobie pytań). Odpowiedzi są
+> w HTML od początku — widzi je wyszukiwarka i Ctrl+F. Płynne rozwijanie robi
+> CSS (`::details-content`); przeglądarka bez tej funkcji pokazuje odpowiedź
+> od razu.
+
+> **Ikona z lewej** ma trzy źródła, w tej kolejności: ikona pytania z repeatera,
+> ikona sekcji, ikona motywu (znak zapytania, `.cyber-icon--question`, kolor
+> z Kolory → Ikony). Obrazek jest dekoracyjny (`alt=""`).
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -1865,6 +1920,9 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-19 — **„FAQ”**: włączniki treści nad i pod pytaniami (`cyber_faq_show_top`, `cyber_faq_show_bottom`), domyślnie wyłączone — jak w Kartach.
+- 2026-09-19 — Sekcja **„FAQ”** — layout `faq` i grupa źródłowa `group_section_faq`: repeater pytań (pytanie, odpowiedź WYSIWYG, własna ikona) i 16 ustawień — jedna lub dwie kolumny, tryb jednej otwartej odpowiedzi, pierwsze pytanie otwarte, włączniki ikony z lewej i plusa z prawej, odstępy, linia, kolory, rozmiar pytania. Natywne `<details>`, bez biblioteki i bez JS. Nowa ikona motywu `question`. Poprawka w **Kartach**: kolor i grubość tekstu z panelu nie dochodziły do akapitów (arkusz bazowy nadaje `<p>` własny kolor).
 
 - 2026-09-19 — **Sekcje globalne**: typ treści `cyber_global_section` (tylko panel, bez adresu na froncie) z tym samym polem `cyber_sections` co strony, oraz layout `global` z polem `cyber_global_section_ref` i klonem włącznika sekcji. Na liście sekcji globalnych kolumna „Używana na”. Arkusz sekcji i Swiper ładują się także wtedy, gdy slider lub karuzela przychodzą wyłącznie z sekcji globalnej.
 

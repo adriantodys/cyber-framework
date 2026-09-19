@@ -88,6 +88,11 @@ function cyber_section_types() {
 			'template' => 'carousel',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'faq'      => array(
+			'label'    => 'FAQ (pytania i odpowiedzi)',
+			'template' => 'faq',
+			'contexts' => array( 'page', 'post' ),
+		),
 		/*
 		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
 		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje

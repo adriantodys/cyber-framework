@@ -1,0 +1,685 @@
+{
+    "key": "group_section_faq",
+    "title": "Cyber Framework — Sekcje: FAQ",
+    "fields": [
+        {
+            "key": "field_cyber_faq_items",
+            "label": "Pytania",
+            "name": "cyber_faq_items",
+            "aria-label": "",
+            "type": "repeater",
+            "instructions": "Kazdy element to jedno pytanie z odpowiedzia. Kolejnosc zmienia sie przeciagnieciem. Element bez pytania jest pomijany.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "layout": "block",
+            "pagination": 0,
+            "min": 0,
+            "max": 0,
+            "collapsed": "field_cyber_faq_question",
+            "button_label": "Dodaj pytanie",
+            "rows_per_page": 20,
+            "sub_fields": [
+                {
+                    "key": "field_cyber_faq_question",
+                    "label": "Pytanie",
+                    "name": "cyber_faq_question",
+                    "aria-label": "",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "maxlength": "",
+                    "allow_in_bindings": 0,
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": ""
+                },
+                {
+                    "key": "field_cyber_faq_answer",
+                    "label": "Odpowiedz",
+                    "name": "cyber_faq_answer",
+                    "aria-label": "",
+                    "type": "wysiwyg",
+                    "instructions": "Mozna wstawic liste, link, pogrubienie, a takze ramke (np. mape).",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "allow_in_bindings": 0,
+                    "tabs": "all",
+                    "toolbar": "basic",
+                    "media_upload": 0,
+                    "delay": 1
+                },
+                {
+                    "key": "field_cyber_faq_item_icon",
+                    "label": "Wlasna ikona pytania",
+                    "name": "cyber_faq_item_icon",
+                    "aria-label": "",
+                    "type": "image",
+                    "instructions": "Opcjonalna. Zastepuje ikone sekcji tylko przy tym pytaniu. Dziala, gdy w ustawieniach wlaczona jest \"Ikona przy pytaniu\".",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "id",
+                    "library": "all",
+                    "min_width": "",
+                    "min_height": "",
+                    "min_size": "",
+                    "max_width": "",
+                    "max_height": "",
+                    "max_size": "",
+                    "mime_types": "svg, png, webp, jpg, jpeg",
+                    "preview_size": "thumbnail",
+                    "allow_in_bindings": 0,
+                    "preview": 1,
+                    "upload_folder": ""
+                }
+            ]
+        },
+        {
+            "key": "field_cyber_faq_acc",
+            "label": "Ustawienia FAQ",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_faq_layout",
+            "label": "Uklad",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_faq_columns",
+            "label": "Liczba kolumn",
+            "name": "cyber_faq_columns",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Przy dwoch kolumnach pytania dziela sie na pol: pierwsza polowa z lewej, druga z prawej. Na telefonie zawsze jedna kolumna.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "Jedna kolumna",
+                "2": "Dwie kolumny"
+            },
+            "default_value": "1",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_faq_gap_x",
+            "label": "Odstep miedzy kolumnami",
+            "name": "cyber_faq_gap_x",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_faq_columns",
+                        "operator": "==",
+                        "value": "2"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "48",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_faq_behavior",
+            "label": "Zachowanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_faq_single",
+            "label": "Tylko jedna odpowiedz otwarta",
+            "name": "cyber_faq_single",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Otwarcie pytania zamyka poprzednie. Wylaczone: kazde pytanie otwiera sie niezaleznie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_faq_first_open",
+            "label": "Pierwsze pytanie otwarte",
+            "name": "cyber_faq_first_open",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pierwsze pytanie jest rozwiniete po wejsciu na strone.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_faq_icons",
+            "label": "Ikony",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_faq_show_icon",
+            "label": "Ikona przy pytaniu (z lewej)",
+            "name": "cyber_faq_show_icon",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_faq_show_toggle",
+            "label": "Ikona plus \/ minus (z prawej)",
+            "name": "cyber_faq_show_toggle",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Kolor z Global Options -> Kolory -> Ikony.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_faq_icon",
+            "label": "Ikona pytan",
+            "name": "cyber_faq_icon",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Jedna ikona dla wszystkich pytan sekcji. Puste pole = ikona motywu (znak zapytania w kolorze ikon).",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_faq_show_icon",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "svg, png, webp, jpg, jpeg",
+            "preview_size": "thumbnail",
+            "allow_in_bindings": 0,
+            "preview": 1,
+            "upload_folder": ""
+        },
+        {
+            "key": "field_cyber_msg_faq_look",
+            "label": "Wyglad",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_faq_pad_y",
+            "label": "Odstep pionowy pytania",
+            "name": "cyber_faq_pad_y",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "24",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_faq_divider",
+            "label": "Linia miedzy pytaniami",
+            "name": "cyber_faq_divider",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Kolor z Global Options -> Kolory -> Obramowanie 1.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_faq_open_bg",
+            "label": "Tlo otwartego pytania",
+            "name": "cyber_faq_open_bg",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = bez tla.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_faq_hover_color",
+            "label": "Kolor pytania po najechaniu",
+            "name": "cyber_faq_hover_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = bez zmiany koloru.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_msg_faq_type",
+            "label": "Typografia",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_faq_question_size",
+            "label": "Rozmiar pytania",
+            "name": "cyber_faq_question_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wielkosc z Global Options -> Ustawienia czcionki. Zmienia tylko rozmiar.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "h1": "H1",
+                "h2": "H2",
+                "h3": "H3",
+                "h4": "H4",
+                "h5": "H5",
+                "h6": "H6"
+            },
+            "default_value": "h5",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_faq_question_weight",
+            "label": "Grubosc pytania",
+            "name": "cyber_faq_question_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "700",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_faq_question_color",
+            "label": "Kolor pytania",
+            "name": "cyber_faq_question_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = kolor naglowkow z Global Options.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_faq_answer_color",
+            "label": "Kolor odpowiedzi",
+            "name": "cyber_faq_answer_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = kolor tekstu z Global Options.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_faq_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        },
+        {
+            "key": "field_cyber_faq_show_top",
+            "label": "Pokaz tresc nad pytaniami",
+            "name": "cyber_faq_show_top",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_faq_show_bottom",
+            "label": "Pokaz tresc pod pytaniami",
+            "name": "cyber_faq_show_bottom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji FAQ: repeater pytan plus ustawienia ukladu, ikon i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789826923
+}
