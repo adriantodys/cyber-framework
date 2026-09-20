@@ -103,6 +103,16 @@ function cyber_section_types() {
 			'template' => 'contact',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'posts'    => array(
+			'label'    => 'Wpisy / CPT (karty lub slider)',
+			'template' => 'posts',
+			'contexts' => array( 'page', 'post' ),
+		),
+		'table'    => array(
+			'label'    => 'Tabela',
+			'template' => 'table',
+			'contexts' => array( 'page', 'post' ),
+		),
 		/*
 		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
 		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje
@@ -661,6 +671,10 @@ function cyber_section_wysiwyg_toggles() {
 		'field_cyber_section_counter_bottom'  => 'field_cyber_counter_show_bottom',
 		'field_cyber_section_contact_top'     => 'field_cyber_contact_section_show_top',
 		'field_cyber_section_contact_bottom'  => 'field_cyber_contact_section_show_bottom',
+		'field_cyber_section_posts_top'       => 'field_cyber_posts_show_top',
+		'field_cyber_section_posts_bottom'    => 'field_cyber_posts_show_bottom',
+		'field_cyber_section_table_top'       => 'field_cyber_table_show_top',
+		'field_cyber_section_table_bottom'    => 'field_cyber_table_show_bottom',
 	);
 }
 
@@ -700,6 +714,92 @@ function cyber_section_wysiwyg_condition( $field ) {
 	return $field;
 }
 add_filter( 'acf/prepare_field', 'cyber_section_wysiwyg_condition', 20 );
+
+/**
+ * Warunki nakladane na pola przyniesione przez klon — per klucz klonu.
+ *
+ * ACF nie przenosi warunku z pola Clone na pola klonowane
+ * (pro/fields/class-acf-field-clone.php nie obsluguje conditional_logic),
+ * a te same pola zrodlowe w innej sekcji maja byc widoczne zawsze. Warunek
+ * dokladamy wiec w locie, jak przy wlacznikach WYSIWYG.
+ *
+ * Wpis: klucz klonu => array(
+ *     'field'    => klucz pola, od ktorego zalezy widocznosc,
+ *     'operator' => '==' albo '!=' (True/False porownuje sie z '1'),
+ *     'value'    => wartosc,
+ *     'only'     => lista oryginalnych kluczy pol, ktorych warunek dotyczy
+ *                 (pusta = wszystkie pola klonu),
+ * ).
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function cyber_section_clone_conditions() {
+	return array(
+		// Wpisy: siatka tylko bez slidera, ustawienia karuzeli tylko ze sliderem.
+		'field_cyber_section_posts_cards'    => array(
+			'field'    => 'field_cyber_posts_slider',
+			'operator' => '!=',
+			'value'    => '1',
+			'only'     => array(
+				'field_cyber_msg_cards_grid',
+				'field_cyber_cards_columns',
+				'field_cyber_cards_columns_tablet',
+				'field_cyber_cards_columns_mobile',
+				'field_cyber_cards_gap_x',
+				'field_cyber_cards_gap_y',
+			),
+		),
+		'field_cyber_section_posts_carousel' => array(
+			'field'    => 'field_cyber_posts_slider',
+			'operator' => '==',
+			'value'    => '1',
+			'only'     => array(),
+		),
+	);
+}
+
+/**
+ * Doklada warunek z cyber_section_clone_conditions() do pola klonu.
+ *
+ * Istniejacy warunek pola (np. "czas animacji tylko przy autoplay") zostaje:
+ * nowa regula jest dopisywana do KAZDEJ grupy OR jako dodatkowe AND.
+ *
+ * @param array $field Pole ACF przygotowywane do wyswietlenia w formularzu.
+ * @return array
+ */
+function cyber_section_clone_condition( $field ) {
+	$map = cyber_section_clone_conditions();
+
+	if ( empty( $field['_clone'] ) || ! isset( $map[ $field['_clone'] ] ) ) {
+		return $field;
+	}
+
+	$rule = $map[ $field['_clone'] ];
+
+	if ( $rule['only'] && ! in_array( $field['key'], $rule['only'], true ) ) {
+		return $field;
+	}
+
+	$and    = array(
+		'field'    => $rule['field'],
+		'operator' => $rule['operator'],
+		'value'    => $rule['value'],
+	);
+	$groups = is_array( $field['conditional_logic'] ) ? $field['conditional_logic'] : array();
+
+	if ( ! $groups ) {
+		$groups = array( array() );
+	}
+
+	foreach ( $groups as $i => $group ) {
+		$groups[ $i ][] = $and;
+	}
+
+	$field['conditional_logic'] = $groups;
+
+	return $field;
+}
+add_filter( 'acf/prepare_field', 'cyber_section_clone_condition', 21 );
 
 /**
  * Lista znacznikow dozwolonych w tresci WYSIWYG sekcji.

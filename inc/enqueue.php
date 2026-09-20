@@ -712,7 +712,8 @@ function cyber_print_inline_css() {
 		. cyber_footer_css()
 		. cyber_copyright_css()
 		. cyber_breadcrumb_css()
-		. cyber_woocommerce_css();
+		. cyber_woocommerce_css()
+		. cyber_blog_css();
 
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",

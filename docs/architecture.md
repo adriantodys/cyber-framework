@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-15 (Global Options ma czternaście zakładek i 167 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-15 (Global Options ma piętnaście zakładek i 192 pola; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -53,6 +53,11 @@ w ustalonej kolejności:
 | 24 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
 | 25 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
 | 26 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
+| 27 | `inc/posts.php` | Wpis jako element karty (`cyber_post_card_item()`), data w formacie z Global Options, zajawka, dozwolone typy treści. Wspólne dla sekcji Wpisy, bloga i widgetu. |
+| 28 | `inc/sections-posts.php` | Sekcja „Wpisy”: zapytanie według źródła, elementy kart, lista typów treści w panelu, Swiper w trybie slidera. |
+| 29 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
+| 30 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
+| 31 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
 
 ## Stałe
 
@@ -1430,6 +1435,67 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Tabela: kolumny definiowane osobno
+
+Kolumny opisuje repeater „Kolumny” (nagłówek, szerokość, wyrównanie), wiersze
+mają już tylko komórki. Liczba kolumn wynika z tej listy, więc nie da się jej
+rozjechać z treścią; wiersze są przycinane i dopełniane pustymi komórkami.
+
+**W panelu liczba pól komórek idzie za liczbą kolumn.** ACF tego nie potrafi:
+conditional logic porównuje *wartość* pola, a tu trzeba policzyć *wiersze*
+repeatera. Robi to `assets/js/admin-sections.js`, ładowany wyłącznie na
+`acf/input/admin_enqueue_scripts`.
+
+Dwie rzeczy wyszły dopiero przy sprawdzaniu w prawdziwym panelu:
+
+- **Usunięcie wiersza jest animowane**, więc w chwili akcji `remove` wiersz
+  nadal jest w DOM — przeliczenie wypadało o jedną kolumnę za dużo. Obserwator
+  DOM też nie pomógł: przy tym usunięciu nie dostał ani jednej mutacji
+  (zmierzone). Dlatego skrypt **znakuje znikający wiersz**
+  (`data-cyber-removing`) i od razu liczy kolumny bez niego.
+- **Zakresem jest layout Flexible Content**, nie cały formularz: dwie sekcje
+  Tabela na jednej stronie mają różną liczbę kolumn.
+
+Bez JavaScriptu panel pokazuje komplet sześciu pól — PHP i tak przycina wiersze
+do liczby kolumn, więc to tylko wygoda, nie warunek poprawności.
+
+### Blog: szablony w `templates/`, karty wspólne z sekcjami
+
+**Hierarchia szablonów.** WordPress szuka `home.php`, `single.php` i archiwów
+w katalogu głównym motywu. Filtry `{$type}_template_hierarchy` (`inc/blog.php`)
+dokładają na początek listy pliki z `templates/` — zgodnie ze strukturą z
+CLAUDE.md sekcja 3, bez plików-pośredników w katalogu głównym:
+
+```
+home, category, tag, date, author   →  templates/blog.php
+single (tylko typ "post")           →  templates/single-post.php
+wszystko inne                       →  jak dotąd (index.php, szablony WooCommerce)
+```
+
+**Jeden wygląd karty w czterech miejscach.** Lista bloga, sekcja Wpisy,
+sekcja Karty i widget „Ostatnie wpisy” renderują ten sam komponent
+`template-parts/components/card.php`. Wpis zamienia się na element karty
+w `cyber_post_card_item()` (`inc/posts.php`), a ustawienia bloga z Global Options
+na wiersz w formacie sekcji Karty (`cyber_blog_cards_row()`), który przechodzi
+przez `cyber_cards_attributes()`. Dzięki temu np. „Proporcje zdjęcia” mają jedną
+implementację.
+
+**Jeden komponent karuzeli.** Środek sekcji Karuzela kart przeniesiony do
+`template-parts/components/carousel.php`; sekcja Wpisy w trybie slidera używa
+go bez zmian. Sprawdzone: HTML istniejących sekcji (strona #176, sekcja globalna
+#496) identyczny przed i po przeniesieniu.
+
+**Pasek boczny.** Obszar widgetów `cyber-blog`; pusty obszar nie zostawia
+pustej kolumny (treść na całą szerokość), a zalogowany administrator widzi
+podpowiedź. Makieta ma w pasku karty wpisów — wbudowany widget „Najnowsze
+wpisy” wypisuje same tytuły, stąd własny widget klasyczny
+`Cyber_Recent_Posts_Widget` (widgety blokowe są wyłączone).
+
+**Sprawdzone w Chrome i w panelu (dane testowe usunięte):** lista 2 kolumny +
+pasek 30%, wpis z obrazem, tytułem i datą, widget pomija bieżący wpis, jeden
+`<h1>` na widokach bloga, poniżej 980px jedna kolumna; w panelu wszystkie
+layouty, warunki siatka/slider, zakładka Blog z 25 polami, widget na liście.
 
 ### Kontakt: dane z Global Options, formularz jako zależność miękka
 

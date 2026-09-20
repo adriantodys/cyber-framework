@@ -217,6 +217,47 @@
 	height: auto;
 }
 
+/*
+ * Linia meta (data, kategoria) i linki karty wpisu. Tytul prowadzi do wpisu;
+ * zdjecie tez, ale poza tabulacja (tabindex=-1 w komponencie).
+ */
+.cyber-card__meta {
+	margin: 0 0 var(--cyber-space-2);
+	color: var(--cyber-cards-text-color, var(--cyber-color-text));
+	font-size: calc(var(--cyber-font-size-text) * 0.875);
+	opacity: 0.75;
+}
+
+.cyber-card__media-link {
+	display: block;
+}
+
+.cyber-card__title-link {
+	color: inherit;
+	font: inherit;
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+.cyber-card__title-link:hover,
+.cyber-card__title-link:focus-visible {
+	color: var(--cyber-color-hover);
+}
+
+/*
+ * Proporcje zdjecia (pole "Proporcje zdjecia"): wszystkie zdjecia w siatce
+ * maja ten sam ksztalt, kadrowane przez object-fit.
+ */
+.cyber-cards[class*="cyber-cards--ratio-"] .cyber-card__image {
+	width: 100%;
+	object-fit: cover;
+}
+
+.cyber-cards--ratio-16-9 .cyber-card__image { aspect-ratio: 16 / 9; }
+.cyber-cards--ratio-3-2 .cyber-card__image { aspect-ratio: 3 / 2; }
+.cyber-cards--ratio-4-3 .cyber-card__image { aspect-ratio: 4 / 3; }
+.cyber-cards--ratio-1-1 .cyber-card__image { aspect-ratio: 1 / 1; }
+
 .cyber-card__title {
 	margin: 0 0 var(--cyber-cards-gap-title, 12px);
 	color: var(--cyber-cards-title-color, var(--cyber-color-headings));
@@ -738,20 +779,26 @@
 }
 
 /*
- * Odstepy miedzy czesciami sekcji. Karuzela otwiera opakowanie bez wspolnego
- * kontenera, wiec tresc nad, karuzela i tresc pod to osobne dzieci sekcji —
+ * Odstepy miedzy czesciami sekcji. Karuzela i Wpisy otwieraja opakowanie bez
+ * wspolnego kontenera, wiec tresc nad, karuzela i tresc pod to osobne dzieci sekcji —
  * reguly szkieletu (.cyber-section__top:not(:last-child)) ich nie obejmuja.
  */
 .cyber-section--carousel > .cyber-section__inner + .cyber-carousel-wrap,
 .cyber-section--carousel > .cyber-section__inner + .cyber-section__inner,
-.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner {
+.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner,
+.cyber-section--posts > .cyber-section__inner + .cyber-carousel-wrap,
+.cyber-section--posts > .cyber-section__inner + .cyber-section__inner,
+.cyber-section--posts > .cyber-carousel-wrap + .cyber-section__inner {
 	margin-top: var(--cyber-space-4);
 }
 
 @media (max-width: 767px) {
 	.cyber-section--carousel > .cyber-section__inner + .cyber-carousel-wrap,
 	.cyber-section--carousel > .cyber-section__inner + .cyber-section__inner,
-	.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner {
+	.cyber-section--carousel > .cyber-carousel-wrap + .cyber-section__inner,
+	.cyber-section--posts > .cyber-section__inner + .cyber-carousel-wrap,
+	.cyber-section--posts > .cyber-section__inner + .cyber-section__inner,
+	.cyber-section--posts > .cyber-carousel-wrap + .cyber-section__inner {
 		margin-top: var(--cyber-space-3);
 	}
 }
@@ -1352,5 +1399,98 @@
 @media (max-width: 767px) {
 	.cyber-contact__form .cyber-form-row {
 		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* --- Tabela ---------------------------------------------------------------- */
+
+/*
+ * Kontener tabeli niesie tlo, zaokraglenie i przewijanie poziome. Tabela
+ * ma stala szerokosc kolumn (table-layout: fixed) — kolumny porownania maja
+ * byc rowne, niezaleznie od dlugosci tekstu.
+ */
+.cyber-table {
+	overflow-x: auto;
+	border-radius: var(--cyber-table-radius, 8px);
+	background-color: var(--cyber-table-bg, #ffffff);
+}
+
+.cyber-table:focus-visible {
+	outline: 2px solid var(--cyber-color-links);
+	outline-offset: 2px;
+}
+
+.cyber-table__table {
+	width: 100%;
+	min-width: var(--cyber-table-min-width, 0);
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.cyber-table__table :is(th, td) {
+	padding: var(--cyber-table-pad-y, 36px) var(--cyber-table-pad-x, 24px);
+	border: 1px solid var(--cyber-table-border, var(--cyber-color-border-1));
+	color: var(--cyber-table-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-table-cell-size, var(--cyber-font-size-h5));
+	font-weight: var(--cyber-table-cell-weight, 600);
+	line-height: 1.4;
+	vertical-align: middle;
+}
+
+/* Linie tylko wewnatrz — obrys daje zaokraglony kontener. */
+.cyber-table__table tr:first-child > * {
+	border-top: 0;
+}
+
+.cyber-table__table tr:last-child > * {
+	border-bottom: 0;
+}
+
+.cyber-table__table tr > :first-child {
+	border-left: 0;
+}
+
+.cyber-table__table tr > :last-child {
+	border-right: 0;
+}
+
+.cyber-table__table thead th {
+	background-color: var(--cyber-table-head-bg, transparent);
+	font-size: var(--cyber-table-head-size, var(--cyber-font-size-text));
+	font-weight: var(--cyber-table-head-weight, 600);
+}
+
+.cyber-table__table thead + tbody tr:first-child > * {
+	border-top: 1px solid var(--cyber-table-border, var(--cyber-color-border-1));
+}
+
+.cyber-table__table .cyber-table__label {
+	font-family: var(--cyber-font-family-text);
+	font-size: var(--cyber-table-label-size, var(--cyber-font-size-text));
+	font-weight: var(--cyber-table-label-weight, 400);
+}
+
+.cyber-table--stripes tbody tr:nth-child(even) {
+	background-color: var(--cyber-table-stripe-bg, #f7f7f7);
+}
+
+.cyber-table--left :is(th, td) { text-align: left; }
+.cyber-table--center :is(th, td) { text-align: center; }
+.cyber-table--right :is(th, td) { text-align: right; }
+
+/*
+ * Wyrownanie pojedynczej kolumny z repeatera "Kolumny". Klasa siedzi na
+ * KAZDEJ komorce, bo <col> w CSS przyjmuje tylko obramowanie, tlo, szerokosc
+ * i widocznosc — text-align ustawiony na kolumnie nie dziala. Dwie klasy,
+ * zeby wygrac z wyrownaniem calej tabeli.
+ */
+.cyber-table .cyber-table__cell--left { text-align: left; }
+.cyber-table .cyber-table__cell--center { text-align: center; }
+.cyber-table .cyber-table__cell--right { text-align: right; }
+
+@media (max-width: 767px) {
+	.cyber-table__table :is(th, td) {
+		padding: var(--cyber-space-3) var(--cyber-space-2);
 	}
 }

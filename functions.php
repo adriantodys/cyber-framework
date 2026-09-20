@@ -68,6 +68,11 @@ function cyber_load_modules() {
 		'inc/sections-faq.php',
 		'inc/sections-counter.php',
 		'inc/sections-contact.php',
+		'inc/posts.php',
+		'inc/sections-posts.php',
+		'inc/sections-table.php',
+		'inc/class-cyber-recent-posts-widget.php',
+		'inc/blog.php',
 	);
 
 	foreach ( $modules as $module ) {

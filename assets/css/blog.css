@@ -1,0 +1,156 @@
+/*
+ * Blog — lista wpisow, pojedynczy wpis, pasek boczny z widgetami.
+ *
+ * Kolejkowany tylko na widokach bloga (inc/blog.php). Karty listy i widgetu
+ * "Ostatnie wpisy" to klasy .cyber-cards z sections.css — tutaj wylacznie
+ * uklad strony, wpis, pasek boczny i paginacja.
+ *
+ * Zmienne --cyber-blog-* pochodza z Global Options -> Blog (wp_head).
+ */
+
+/* --- Uklad: tresc + pasek boczny ------------------------------------------ */
+
+.cyber-blog {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	column-gap: var(--cyber-blog-gap, 64px);
+	row-gap: var(--cyber-space-6);
+	align-items: start;
+	padding-top: var(--cyber-space-3);
+	padding-bottom: var(--cyber-space-6);
+}
+
+.cyber-blog--sidebar {
+	grid-template-columns: minmax(0, 1fr) var(--cyber-blog-sidebar-width, 30%);
+}
+
+.cyber-blog__main {
+	min-width: 0;
+}
+
+.cyber-blog__header {
+	margin-bottom: var(--cyber-space-4);
+}
+
+.cyber-blog__title {
+	margin: 0;
+}
+
+.cyber-blog__description {
+	margin-top: var(--cyber-space-2);
+}
+
+.cyber-blog__empty {
+	margin: 0;
+}
+
+/* --- Pojedynczy wpis ------------------------------------------------------- */
+
+.cyber-post__image {
+	margin-bottom: var(--cyber-space-3);
+}
+
+.cyber-post__image img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.cyber-post__title {
+	margin: 0 0 var(--cyber-space-3);
+	font-size: var(--cyber-blog-post-title-size, var(--cyber-font-size-h3));
+	font-weight: var(--cyber-blog-post-title-weight, 400);
+	line-height: 1.3;
+}
+
+.cyber-post__meta {
+	margin: 0 0 var(--cyber-space-3);
+	font-size: calc(var(--cyber-font-size-text) * 0.875);
+	opacity: 0.75;
+}
+
+.cyber-post__content > *:first-child {
+	margin-top: 0;
+}
+
+.cyber-post__content img {
+	max-width: 100%;
+	height: auto;
+}
+
+.cyber-post__pages {
+	margin-top: var(--cyber-space-4);
+}
+
+/* --- Pasek boczny ---------------------------------------------------------- */
+
+.cyber-blog-widget + .cyber-blog-widget {
+	margin-top: var(--cyber-space-5);
+}
+
+.cyber-blog-widget__title {
+	margin: 0 0 var(--cyber-space-2);
+	font-size: var(--cyber-font-size-h5);
+}
+
+/* Widgety WordPressa z lista (kategorie, archiwa, najnowsze wpisy). */
+.cyber-blog-widget ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-blog-widget li {
+	padding: var(--cyber-space-1) 0;
+	border-bottom: 1px solid var(--cyber-color-border-1);
+}
+
+.cyber-blog-widget li a {
+	text-decoration: none;
+}
+
+/* --- Paginacja ------------------------------------------------------------- */
+
+.cyber-pagination {
+	margin-top: var(--cyber-space-5);
+}
+
+.cyber-pagination .nav-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cyber-space-1);
+}
+
+.cyber-pagination .page-numbers {
+	display: inline-block;
+	min-width: 40px;
+	padding: var(--cyber-space-1) var(--cyber-space-2);
+	border: 1px solid var(--cyber-color-border-1);
+	color: var(--cyber-color-text);
+	text-align: center;
+	text-decoration: none;
+}
+
+.cyber-pagination a.page-numbers:hover,
+.cyber-pagination a.page-numbers:focus-visible {
+	border-color: var(--cyber-color-links);
+	color: var(--cyber-color-links);
+}
+
+.cyber-pagination .page-numbers.current {
+	border-color: var(--cyber-color-links);
+	background-color: var(--cyber-color-links);
+	color: #ffffff;
+}
+
+.cyber-pagination .page-numbers.dots {
+	border-color: transparent;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+	.cyber-blog--sidebar {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

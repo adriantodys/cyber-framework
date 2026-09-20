@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce” i „WooCommerce”.
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce” i „Blog”.
 Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
 
 ---
@@ -1122,6 +1122,55 @@ elemencie.
 > w `cyber_product_element_callbacks()`** i dwa pola w tym pliku JSON — reszta
 > wynika sama.
 
+### Zakładka: „Blog”
+
+Ustawienia listy wpisów (strona bloga, kategorie, tagi, archiwa dat i autorów)
+i pojedynczego wpisu. Widoki: `templates/blog.php` i `templates/single-post.php`
+(`inc/blog.php`). **25 pól.**
+
+**Układ (lista i wpis)**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Pasek boczny z widgetami | `cyber_blog_sidebar` | True/False | `true` | Prawa kolumna z obszarem widgetów „Blog — pasek boczny”. Pusty obszar = treść na całą szerokość |
+| Szerokość paska bocznego | `cyber_blog_sidebar_width` | Select `25` / `30` / `33` % | `30` | `--cyber-blog-sidebar-width` |
+| Odstęp treść — pasek boczny | `cyber_blog_gap` | Select (skala) | `64` | `--cyber-blog-gap`; poniżej 980px pasek schodzi pod treść |
+
+**Lista wpisów**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Widoczny tytuł strony bloga | `cyber_blog_show_title` | True/False | `false` | Wyłączony: `<h1>` tylko dla czytników ekranu (makieta go nie ma). Archiwa pokazują tytuł zawsze |
+| Kolumny (desktop / tablet) | `cyber_blog_columns` `_columns_tablet` | Select 1–3 / 1–2 | `2` / `2` | Telefon zawsze 1 |
+| Odstęp między kolumnami / wierszami | `cyber_blog_gap_x` `_gap_y` | Select (skala) | `24` / `48` | |
+| Proporcje zdjęcia | `cyber_blog_image_ratio` | Select `auto` `16-9` `3-2` `4-3` `1-1` | `16-9` | |
+| Data / Kategoria / Zajawka / Przycisk | `cyber_blog_show_date` `_show_category` `_show_excerpt` `_show_button` | True/False | `true` / `false` / `false` / `false` | Elementy karty wpisu |
+| Długość zajawki (słowa) | `cyber_blog_excerpt_length` | Number 5–60 | `20` | |
+| Tekst przycisku | `cyber_blog_button_label` | Text | `Czytaj więcej` | |
+| Rozmiar przycisku | `cyber_blog_button_size` | Select `large` `medium` `small` | `small` | Wygląd z zakładki Przyciski |
+| Rozmiar / grubość tytułu na liście | `cyber_blog_title_size` `_title_weight` | Select `h1`–`h6` / 300–800 | `h5` / `400` | Tytuł karty to `<h2>` |
+
+**Pojedynczy wpis**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Zdjęcie wyróżniające / Data / Kategorie / Autor | `cyber_blog_single_image` `_single_date` `_single_category` `_single_author` | True/False | `true` / `true` / `false` / `false` | Kolejność: zdjęcie, tytuł, data i meta, treść |
+| Rozmiar / grubość tytułu wpisu | `cyber_blog_single_title_size` `_single_title_weight` | Select `h1`–`h6` / 300–800 | `h3` / `400` | Znacznik zawsze `<h1>`; `--cyber-blog-post-title-size` |
+
+**Wspólne**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Format daty | `cyber_blog_date_format` | Select `short` / `numeric` / `wp` | `short` | `16 wrz 2026` / `16.09.2026` / format z Ustawienia → Ogólne. Dotyczy bloga, wpisu, sekcji Wpisy i widgetu |
+
+> **Karty listy bloga to karty sekcji.** `cyber_blog_cards_row()` zamienia
+> ustawienia tej zakładki na wiersz w formacie sekcji Karty i przepuszcza go
+> przez `cyber_cards_attributes()` — lista bloga, sekcja Wpisy, sekcja Karty
+> i widget „Ostatnie wpisy” mają jeden wygląd i jedną walidację.
+
+> **Liczba wpisów na stronę** zostaje w Ustawienia → Czytanie (WordPress) —
+> druga, konkurencyjna wartość w Global Options tylko by się z nią rozjeżdżała.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1423,7 +1472,7 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
 Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
-**`faq`**, **`counter`**, **`contact`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+**`faq`**, **`counter`**, **`contact`**, **`posts`**, **`table`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
 
 #### Layout „Sekcja globalna” (`global`)
@@ -1546,6 +1595,7 @@ zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 | Obramowanie | `cyber_cards_border` | True/False | `false` |
 | Zdjęcie jako tło elementu | `cyber_cards_image_as_bg` | True/False | `false` |
 | Minimalna wysokość elementu | `cyber_cards_min_height` | Number 0–2000 | `320` |
+| Proporcje zdjęcia | `cyber_cards_image_ratio` | Select `auto` `16-9` `3-2` `4-3` `1-1` | `auto` |
 | Wyrównanie: zdjęcie / tytuł / tekst | `cyber_cards_align_media` `_title` `_text` | Select | `left` |
 | Odstęp pod zdjęciem / tytułem / tekstem | `cyber_cards_gap_media` `_title` `_text` | Select (skala) | `12` / `12` / `24` |
 | Rozmiar tytułu | `cyber_cards_title_size` | Select `h1`–`h6` | `h5` |
@@ -1985,6 +2035,94 @@ z `group_section_content` — treść nad i pod kolumnami.
 > jakaś opublikowana sekcja ma wybrany formularz (`inc/contact-form-7.php`).
 
 
+#### Sekcja „Wpisy” (`group_section_posts`)
+
+Layout `posts`. Karty wpisów albo dowolnego publicznego typu treści — w siatce
+jak sekcja Karty albo w sliderze jak Karuzela kart. **Wygląd elementu nie ma
+własnych pól:** sekcja klonuje ustawienia kart (`group_section_cards`, razem
+z siatką i „Proporcjami zdjęcia”) i karuzeli (`group_section_carousel`).
+Własne są źródło i ustawienia elementu.
+
+**Treść nad i pod elementami** — włączniki `cyber_posts_show_top` / `_show_bottom`, default `false`.
+
+**Źródło** — poza akordeonem:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Typ treści | `cyber_posts_type` | Select (lista uzupełnia się sama: `acf/load_field`) | `post` | Publiczne typy treści bez załączników |
+| Źródło | `cyber_posts_source` | Select `latest` / `manual` | `latest` | Najnowsze według kolejności albo wybrane ręcznie |
+| Liczba elementów | `cyber_posts_count` | Number 1–24 | `3` | Przy `latest` |
+| Kolejność | `cyber_posts_orderby` | Select `date` `title` `menu_order` `rand` | `date` | Przy `latest` |
+| Kategorie | `cyber_posts_category` | Taxonomy (category, wiele) | — | Tylko typ `post` i `latest`; puste = wszystkie |
+| Wybrane elementy | `cyber_posts_manual` | Relationship (wszystkie dozwolone typy), maks. 24 | — | Przy `manual`; kolejność z listy |
+| Wyświetl jako slider | `cyber_posts_slider` | True/False | `false` | Siatka ↔ slider |
+
+**Ustawienia elementu** — akordeon:
+
+| Field Label | Field Name | Typ | Default |
+|---|---|---|---|
+| Zdjęcie wyróżniające / Data / Kategoria | `cyber_posts_show_image` `_show_date` `_show_category` | True/False | `true` / `true` / `false` |
+| Zajawka + długość (słowa) | `cyber_posts_show_excerpt` + `cyber_posts_excerpt_length` | True/False + Number 5–60 | `true`, `20` |
+| Przycisk / link + tekst | `cyber_posts_show_button` + `cyber_posts_button_label` | True/False + Text | `true`, `Czytaj więcej` |
+| Znacznik tytułu | `cyber_posts_title_tag` | Select `h2` `h3` `h4` | `h3` |
+
+> **Siatka albo slider — ustawienia same się chowają.** Pola siatki (kolumny,
+> odstępy) są widoczne tylko bez slidera, ustawienia karuzeli tylko ze
+> sliderem. ACF nie przenosi warunku z pola Clone na pola klonowane, więc warunki
+> dokłada `cyber_section_clone_condition()` (mapa `cyber_section_clone_conditions()`
+> w `inc/sections.php`), **dopisując** regułę do istniejących warunków pola.
+
+> Wpis bieżącej strony nie pokazuje się w sekcji na sobie samym. Pusta lista
+> wyników: gość nie widzi nic, redaktor — podpowiedź.
+
+#### Sekcja „Tabela” (`group_section_table`)
+
+Layout `table`. Tabela porównania do 6 kolumn.
+
+**Kolumny** — Repeater `cyber_table_columns` (maks. 6 pozycji, układ tabeli):
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Nagłówek kolumny | `cyber_table_col_label` | Text | `''` | Puste we wszystkich kolumnach = tabela bez `<thead>` |
+| Szerokość | `cyber_table_col_width` | Number 0–100 % | `''` | 0 albo puste = szerokość dobiera przeglądarka; wypisywana w `<colgroup>` |
+| Wyrównanie | `cyber_table_col_align` | Select `inherit` `left` `center` `right` | `inherit` | `inherit` = wyrównanie całej tabeli |
+
+**Wiersze i ustawienia:**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Wiersze tabeli | `cyber_table_rows` | Repeater (układ tabeli) z polami `cyber_table_cell_1` … `_6` (Textarea, nowe linie → `<br>`) | — | Same wiersze treści — nagłówki są w „Kolumny” |
+| Pokaż treść nad / pod tabelą | `cyber_table_show_top` `_show_bottom` | True/False | `false` | Np. „Dane orientacyjne” pod tabelą |
+| Pierwsza kolumna jako etykiety | `cyber_table_head_col` | True/False | `true` | `<th scope="row">`, zwykła czcionka |
+| Wyrównanie treści | `cyber_table_align` | Select (CLAUDE.md sekcja 20) | `center` | |
+| Minimalna szerokość tabeli | `cyber_table_min_width` | Number 0–2000 px | `640` | Poniżej — przewijanie poziome; 0 = wyłączone |
+| Tło tabeli / wiersza nagłówkowego | `cyber_table_bg` `_head_bg` | Color (alpha) | `''` | Puste = białe / jak tabela |
+| Kolor linii | `cyber_table_border` | Color (alpha) | `''` | Puste = Obramowanie 1 |
+| Zaokrąglenie rogów | `cyber_table_radius` | Number 0–40 px | `8` | |
+| Pasy + tło pasów | `cyber_table_stripes` + `cyber_table_stripe_bg` | True/False + Color | `false` | |
+| Odstęp w komórce Y / X | `cyber_table_pad_y` `_pad_x` | Select (skala) | `36` / `24` | Telefon: 24 / 12 |
+| Rozmiar / grubość: nagłówki, etykiety, treść | `cyber_table_head_size` `_label_size` `_cell_size` + `_weight` | Select `text` `h6`–`h3` / 300–800 | `text`/600, `text`/400, `h5`/600 | |
+| Kolor tekstu | `cyber_table_color` | Color (alpha) | `''` | Puste = nagłówki |
+
+> **W wierszu widać tyle pól komórek, ile jest kolumn.** Skrypt panelu
+> (`assets/js/admin-sections.js`) chowa nadmiarowe pola od razu po dodaniu albo
+> usunięciu kolumny. Warunek ACF tego nie zrobi — conditional logic porównuje
+> *wartość* pola, a tu chodzi o *liczbę* wierszy repeatera. Bez JavaScriptu
+> widać komplet sześciu pól, a PHP i tak przycina wiersze do liczby kolumn.
+
+> **Liczba kolumn wynika z listy „Kolumny”.** Wiersze są przycinane do tej
+> liczby i dopełniane pustymi komórkami, więc nie da się ich rozjechać
+> z nagłówkiem. Pusta lista kolumn jest poprawna: liczba kolumn pochodzi wtedy
+> z najdalszej wypełnionej komórki, a tabela nie ma wiersza nagłówkowego.
+
+> **Wyrównanie kolumny siedzi na każdej komórce** (`.cyber-table__cell--center`),
+> nie na `<col>` — CSS przyjmuje z kolumny tylko obramowanie, tło, szerokość
+> i widoczność, `text-align` z `<col>` nie działa.
+
+> Komórka przyjmuje wyłącznie tekst i łamanie linii (`wp_kses` z samym `<br>`).
+> Przewijany kontener ma `role="region"`, nazwę i `tabindex="0"` — da się go
+> przewinąć klawiaturą.
+
 ## Inne grupy pól
 
 ### `group_product_category` — Kategoria produktu
@@ -2048,6 +2186,9 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-20 — **„Tabela”**: kolumny definiuje się osobno (repeater `cyber_table_columns`: nagłówek, szerokość `%`, wyrównanie). Liczba kolumn wynika z tej listy, wiersze mają już tylko komórki. Pole `cyber_table_head_row` usunięte — nagłówek powstaje, gdy któraś kolumna ma nazwę.
+- 2026-09-19 — **Blog**: nowa zakładka Global Options „Blog” (25 pól: pasek boczny, lista wpisów, pojedynczy wpis, format daty) — Global Options ma teraz **15 zakładek i 192 pola**; wpisy w `cyber_option_schema()` i `default-acf.php`. Sekcja **„Wpisy”** (`group_section_posts`, layout `posts`) i sekcja **„Tabela”** (`group_section_table`, layout `table`). **Karty**: pole `cyber_cards_image_ratio` (proporcje zdjęcia) — działa w Kartach, Karuzeli, Wpisach i na blogu.
 
 - 2026-09-19 — Sekcja **„Kontakt”** — layout `contact` i grupa źródłowa `group_section_contact`: dwie kolumny (treść + dane kontaktowe i social media z Global Options z włącznikami per sekcja; treść + formularz Contact Form 7), proporcje kolumn, kolory, przycisk wysyłki z Global Options → Przyciski, tło pól, włączniki treści nad i pod (domyślnie wyłączone). **Contact Form 7** jako nowa zależność miękka (`inc/contact-form-7.php`). Komponent ikon social media dostał opcjonalne nazwy platform (`show_labels`).
 

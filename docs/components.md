@@ -281,6 +281,15 @@ rozjazdu.
 | `inc/contact-form-7.php` | zależność miękka Contact Form 7 — wykrycie, formularz, komunikaty |
 | `template-parts/sections/contact.php` | layout `contact` — widok |
 | `acf-json/group_section_contact.json` | źródło klonowania: pola sekcji Kontakt |
+| `inc/posts.php` | wpis → element karty (`cyber_post_card_item()`), data, zajawka, dozwolone typy treści — wspólne dla sekcji Wpisy, bloga i widgetu |
+| `inc/sections-posts.php` | layout `posts` — zapytanie, elementy, lista typów w panelu |
+| `template-parts/sections/posts.php` | layout `posts` — widok (siatka albo komponent karuzeli) |
+| `acf-json/group_section_posts.json` | źródło klonowania: źródło i ustawienia elementu |
+| `inc/sections-table.php` | layout `table` — dane, klasy, zmienne |
+| `template-parts/sections/table.php` | layout `table` — widok |
+| `acf-json/group_section_table.json` | źródło klonowania: pola tabeli |
+| `assets/js/admin-sections.js` | panel: liczba pól komórek w wierszu idzie za liczbą kolumn (ładowany tylko tam, gdzie ACF rysuje formularz) |
+| `template-parts/components/carousel.php` | **wspólny** rząd kart ze Swiperem albo taśmą — sekcje `carousel` i `posts` |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -302,6 +311,8 @@ rozjazdu.
 | `faq` | FAQ (pytania i odpowiedzi) | `faq` | `page`, `post` |
 | `counter` | Licznik (counter) | `counter` | `page`, `post` |
 | `contact` | Kontakt (dane + formularz) | `contact` | `page`, `post` |
+| `posts` | Wpisy / CPT (karty lub slider) | `posts` | `page`, `post` |
+| `table` | Tabela | `table` | `page`, `post` |
 | `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
 Kolumna **Konteksty** jest już wypełniona, ale jeszcze nieużywana — filtrowanie
@@ -447,12 +458,67 @@ i bez JavaScriptu.
 
 ### Włączniki treści nad i pod sekcją — wspólne
 
-Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`) nie mają własnych
+Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`, `posts`, `table`) nie mają własnych
 filtrów. Mapa „klucz klonu edytora → klucz włącznika” jest jedna:
 `cyber_section_wysiwyg_toggles()` w `inc/sections.php`, a warunek nakłada
 `cyber_section_wysiwyg_condition()`. Na froncie sprawdza je
 `cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )`.
 **Nowa sekcja z włącznikami dopisuje dwa wiersze do mapy** zamiast kopiować filtr.
+
+### Sekcja `posts` — Wpisy
+
+Karty wpisów albo innego publicznego typu treści. **Bez własnego wyglądu**:
+siatka to klasy `.cyber-cards`, slider to `template-parts/components/carousel.php`,
+element to `template-parts/components/card.php`.
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-section--posts` | opakowanie; otwierane bez kontenera, jak karuzela (tryb „full”) |
+| `.cyber-cards` / `.cyber-carousel` | siatka albo slider — te same klasy co w sekcjach Karty i Karuzela |
+
+### Komponent karty — klucze opcjonalne
+
+`template-parts/components/card.php` przyjmuje dodatkowo (karty wpisów):
+
+| Klucz | Efekt |
+|---|---|
+| `meta` | `<p class="cyber-card__meta">` nad tytułem (data · kategoria) |
+| `title_url` | tytuł `.cyber-card__title-link` i zdjęcie `.cyber-card__media-link` prowadzą do wpisu (zdjęcie poza tabulacją) |
+| `title_tag` | `h2` / `h3` / `h4`; domyślnie `h3` |
+
+Proporcje zdjęcia: klasy `.cyber-cards--ratio-16-9` / `-3-2` / `-4-3` / `-1-1`
+na kontenerze (pole `cyber_cards_image_ratio`).
+
+### Sekcja `table` — Tabela
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-table` | kontener: tło, zaokrąglenie, przewijanie poziome; `role="region"` |
+| `.cyber-table--left` / `--center` / `--right` | wyrównanie |
+| `.cyber-table--stripes` | pasy co drugi wiersz |
+| `.cyber-table__table` | `<table>`, `table-layout: fixed` |
+| `.cyber-table__label` | `<th scope="row">` — etykieta wiersza |
+| `.cyber-table__cell` + `--left` / `--center` / `--right` | komórka; modyfikator z wyrównania kolumny (repeater „Kolumny”) |
+
+### Blog — widoki i pasek boczny
+
+| Plik | Rola |
+|---|---|
+| `inc/blog.php` | obszar widgetów, hierarchia szablonów, ustawienia z Global Options → Blog, CSS, assety |
+| `inc/class-cyber-recent-posts-widget.php` | widget „Cyber: Ostatnie wpisy” — karty ze zdjęciem, datą i przyciskiem |
+| `templates/blog.php` | lista: strona wpisów, kategorie, tagi, archiwa dat i autorów |
+| `templates/single-post.php` | pojedynczy wpis (tylko typ `post`) |
+| `template-parts/blog/sidebar.php` | pasek boczny — `dynamic_sidebar( 'cyber-blog' )` |
+| `assets/css/blog.css` | układ, wpis, pasek boczny, paginacja — tylko na widokach bloga |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-blog` + `--sidebar` / `--full` | układ treść + pasek boczny (albo pełna szerokość, gdy pasek pusty lub wyłączony) |
+| `.cyber-blog__main` / `__sidebar` | kolumny |
+| `.cyber-blog__list` | siatka kart listy (klasy `.cyber-cards`) |
+| `.cyber-post__image` / `__title` / `__meta` / `__content` | pojedynczy wpis |
+| `.cyber-blog-widget` / `__title` | opakowanie widgetu w pasku bocznym |
+| `.cyber-pagination` | paginacja listy (`the_posts_pagination()`) |
 
 ### Sekcja `contact` — Kontakt
 

@@ -348,4 +348,41 @@ return array(
 	'wc_product_show_related'                 => false,         // tekst          | Podobne produkty
 	'wc_product_pos_related'                  => 30,            // liczba 1-200   | Pozycja: Podobne produkty
 
+	/* ======================================================================
+	 * BLOG
+	 * ====================================================================== */
+
+	/* --- Uklad (blog, archiwa, pojedynczy wpis) ---------------------------- */
+	'blog_sidebar'                            => true,          // tak/nie        | Pasek boczny z widgetami
+	'blog_sidebar_width'                      => '30',          // 25|30|33 %     | Szerokosc paska bocznego
+	'blog_gap'                                => '64',          // skala 0-94 px  | Odstep tresc - pasek boczny
+
+	/* --- Lista wpisow (strona bloga, kategorie, tagi) ---------------------- */
+	'blog_show_title'                         => false,         // tak/nie        | Widoczny tytul strony bloga
+	'blog_columns'                            => '2',           // 1|2|3          | Kolumny (desktop)
+	'blog_columns_tablet'                     => '2',           // 1|2            | Kolumny (tablet)
+	'blog_gap_x'                              => '24',          // skala 0-94 px  | Odstep miedzy kolumnami
+	'blog_gap_y'                              => '48',          // skala 0-94 px  | Odstep miedzy wierszami
+	'blog_image_ratio'                        => '16-9',        // auto|16-9|3-2|4-3|1-1 | Proporcje zdjecia
+	'blog_show_date'                          => true,          // tak/nie        | Data
+	'blog_show_category'                      => false,         // tak/nie        | Kategoria
+	'blog_show_excerpt'                       => false,         // tak/nie        | Zajawka
+	'blog_show_button'                        => false,         // tak/nie        | Przycisk "Czytaj wiecej"
+	'blog_excerpt_length'                     => 20,            // liczba 5-60    | Dlugosc zajawki (slowa)
+	'blog_button_label'                       => 'Czytaj więcej', // tekst          | Tekst przycisku
+	'blog_button_size'                        => 'small',       // large|medium|small | Rozmiar przycisku
+	'blog_title_size'                         => 'h5',          // h1-h6          | Rozmiar tytulu na liscie
+	'blog_title_weight'                       => '400',         // 300-800        | Grubosc tytulu na liscie
+
+	/* --- Pojedynczy wpis --------------------------------------------------- */
+	'blog_single_image'                       => true,          // tak/nie        | Zdjecie wyrozniajace
+	'blog_single_date'                        => true,          // tak/nie        | Data
+	'blog_single_category'                    => false,         // tak/nie        | Kategorie
+	'blog_single_author'                      => false,         // tak/nie        | Autor
+	'blog_single_title_size'                  => 'h3',          // h1-h6          | Rozmiar tytulu wpisu
+	'blog_single_title_weight'                => '400',         // 300-800        | Grubosc tytulu wpisu
+
+	/* --- Wspolne ----------------------------------------------------------- */
+	'blog_date_format'                        => 'short',       // short|numeric|wp | Format daty
+
 );

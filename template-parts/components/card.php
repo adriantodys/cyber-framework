@@ -28,6 +28,20 @@ if ( ! $cyber_item ) {
 	return;
 }
 
+/*
+ * Klucze opcjonalne — uzywaja ich karty wpisow (sekcja Wpisy, blog, widget):
+ * meta   : linia nad tytulem (data, kategoria),
+ * link   : adres tytulu i zdjecia (karta wpisu prowadzi do wpisu),
+ * tag    : znacznik tytulu; na liscie bloga h2, bo h1 to tytul strony.
+ * Karty z sekcji Karty tych kluczy nie maja i wygladaja jak wczesniej.
+ */
+$cyber_meta  = isset( $cyber_item['meta'] ) ? (string) $cyber_item['meta'] : '';
+$cyber_link  = isset( $cyber_item['title_url'] ) ? (string) $cyber_item['title_url'] : '';
+$cyber_tag   = isset( $cyber_item['title_tag'] ) && in_array( $cyber_item['title_tag'], array( 'h2', 'h3', 'h4' ), true ) ? $cyber_item['title_tag'] : 'h3';
+$cyber_image = '' === $cyber_item['image_url'] && $cyber_item['image_id']
+	? wp_get_attachment_image( $cyber_item['image_id'], 'large', false, array( 'class' => 'cyber-card__image' ) )
+	: '';
+
 // Zdjecie jako tlo karty — adres idzie zmienna, nie atrybutem src.
 printf(
 	'<article class="cyber-card"%s>',
@@ -36,17 +50,21 @@ printf(
 		: ''
 );
 ?>
-	<?php if ( '' === $cyber_item['image_url'] && $cyber_item['image_id'] ) : ?>
+	<?php if ( '' !== $cyber_image ) : ?>
 		<div class="cyber-card__media">
-			<?php
-			echo wp_get_attachment_image(
-				$cyber_item['image_id'],
-				'large',
-				false,
-				array( 'class' => 'cyber-card__image' )
-			);
-			?>
+			<?php if ( '' !== $cyber_link ) : ?>
+				<?php // Zdjecie prowadzi tam co tytul; poza tabulacja i czytnikiem, zeby nie dublowac linku. ?>
+				<a class="cyber-card__media-link" href="<?php echo esc_url( $cyber_link ); ?>" tabindex="-1" aria-hidden="true">
+					<?php echo $cyber_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() escapuje atrybuty. ?>
+				</a>
+			<?php else : ?>
+				<?php echo $cyber_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() escapuje atrybuty. ?>
+			<?php endif; ?>
 		</div>
+	<?php endif; ?>
+
+	<?php if ( '' !== $cyber_meta ) : ?>
+		<p class="cyber-card__meta"><?php echo esc_html( $cyber_meta ); ?></p>
 	<?php endif; ?>
 
 	<?php if ( '' !== $cyber_item['overtitle'] ) : ?>
@@ -54,7 +72,13 @@ printf(
 	<?php endif; ?>
 
 	<?php if ( '' !== $cyber_item['title'] ) : ?>
-		<h3 class="cyber-card__title"><?php echo esc_html( $cyber_item['title'] ); ?></h3>
+		<<?php echo esc_attr( $cyber_tag ); ?> class="cyber-card__title">
+			<?php if ( '' !== $cyber_link ) : ?>
+				<a class="cyber-card__title-link" href="<?php echo esc_url( $cyber_link ); ?>"><?php echo esc_html( $cyber_item['title'] ); ?></a>
+			<?php else : ?>
+				<?php echo esc_html( $cyber_item['title'] ); ?>
+			<?php endif; ?>
+		</<?php echo esc_attr( $cyber_tag ); ?>>
 	<?php endif; ?>
 
 	<?php if ( '' !== trim( $cyber_item['text'] ) ) : ?>

@@ -53,6 +53,17 @@ function cyber_cards_columns_mobile() {
 }
 
 /**
+ * Dozwolone proporcje zdjecia karty ('auto' = bez przycinania).
+ *
+ * Myslnik zamiast dwukropka, bo wartosc trafia do nazwy klasy.
+ *
+ * @return string[]
+ */
+function cyber_cards_image_ratios() {
+	return array( 'auto', '16-9', '3-2', '4-3', '1-1' );
+}
+
+/**
  * Dozwolone rozmiary tytulu karty — nazwy globalnych wielkosci naglowkow.
  *
  * @return string[]
@@ -163,6 +174,21 @@ function cyber_cards_attributes( array $row ) {
 
 	if ( ! empty( $row['cyber_cards_border'] ) ) {
 		$classes[] = 'cyber-cards--border';
+	}
+
+	/*
+	 * Proporcje zdjecia: klasa, bo zmienia dwie wlasciwosci naraz (aspect-ratio
+	 * i object-fit). Dotyczy zdjecia jako <img>; w trybie tla karta ma wlasna
+	 * minimalna wysokosc.
+	 */
+	$ratio = cyber_section_choice(
+		isset( $row['cyber_cards_image_ratio'] ) ? $row['cyber_cards_image_ratio'] : 'auto',
+		cyber_cards_image_ratios(),
+		'auto'
+	);
+
+	if ( 'auto' !== $ratio ) {
+		$classes[] = 'cyber-cards--ratio-' . $ratio;
 	}
 
 	if ( ! empty( $row['cyber_cards_image_as_bg'] ) ) {

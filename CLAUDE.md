@@ -585,10 +585,10 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 urósł do **czternastu zakładek**:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **piętnastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
-   Breadcrumb, Breadcrumb WooCommerce, WooCommerce — razem **167 pól**.
+   Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog — razem **192 pola**.
 
    Trzy ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
@@ -609,13 +609,18 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
    Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`,
    `faq` (natywne `<details>`, bez biblioteki), `counter` (własny skrypt
-   odliczania), `contact` (dane z Global Options + Contact Form 7) oraz
-   **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
+   odliczania), `contact` (dane z Global Options + Contact Form 7), `posts`
+   (wpisy/CPT jako karty lub slider), `table` oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
    z tym samym polem `cyber_sections` i layout `global`, który wstawia jego
    sekcje na stronę (`inc/sections-global.php`). Sekcja globalna nie może
    zawierać innej sekcji globalnej.
    Do zrobienia: kolejne layouty i filtrowanie dostępności per typ treści.
 5. Szablony kluczowych widoków: front page, page, single, archive, 404, search.
+
+   **Stan: częściowo.** Istnieją `templates/blog.php` (strona wpisów, kategorie,
+   tagi, archiwa dat i autorów) i `templates/single-post.php` z paskiem bocznym
+   widgetów, wpięte filtrami hierarchii (`inc/blog.php`). Ustawienia: Global
+   Options → Blog. Do zrobienia: page, front page, 404, search, archiwa CPT.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).
 8. Audyt wydajności, dostępności i bezpieczeństwa + weryfikacja WPCS przed wdrożeniem.

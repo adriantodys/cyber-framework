@@ -157,6 +157,7 @@
                                 "field_cyber_cards_border",
                                 "field_cyber_cards_image_as_bg",
                                 "field_cyber_cards_min_height",
+                                "field_cyber_cards_image_ratio",
                                 "field_cyber_msg_cards_align",
                                 "field_cyber_cards_align_media",
                                 "field_cyber_cards_align_title",
@@ -646,6 +647,7 @@
                                 "field_cyber_cards_border",
                                 "field_cyber_cards_image_as_bg",
                                 "field_cyber_cards_min_height",
+                                "field_cyber_cards_image_ratio",
                                 "field_cyber_msg_cards_align",
                                 "field_cyber_cards_align_media",
                                 "field_cyber_cards_align_title",
@@ -1370,6 +1372,505 @@
                     "min": "",
                     "max": ""
                 },
+                "layout_cyber_section_posts": {
+                    "key": "layout_cyber_section_posts",
+                    "name": "posts",
+                    "label": "Wpisy \/ CPT (karty lub slider)",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cyber_section_posts_settings",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "group_section_settings"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_cards",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_cards_acc",
+                                "field_cyber_msg_cards_grid",
+                                "field_cyber_cards_columns",
+                                "field_cyber_cards_columns_tablet",
+                                "field_cyber_cards_columns_mobile",
+                                "field_cyber_cards_gap_x",
+                                "field_cyber_cards_gap_y",
+                                "field_cyber_msg_cards_box",
+                                "field_cyber_cards_pad_x",
+                                "field_cyber_cards_pad_y",
+                                "field_cyber_cards_bg",
+                                "field_cyber_cards_bg_hover",
+                                "field_cyber_cards_radius",
+                                "field_cyber_cards_shadow",
+                                "field_cyber_cards_border",
+                                "field_cyber_cards_image_as_bg",
+                                "field_cyber_cards_min_height",
+                                "field_cyber_cards_image_ratio",
+                                "field_cyber_msg_cards_align",
+                                "field_cyber_cards_align_media",
+                                "field_cyber_cards_align_title",
+                                "field_cyber_cards_align_text",
+                                "field_cyber_msg_cards_inner",
+                                "field_cyber_cards_gap_media",
+                                "field_cyber_cards_gap_title",
+                                "field_cyber_cards_gap_text",
+                                "field_cyber_msg_cards_type",
+                                "field_cyber_cards_title_size",
+                                "field_cyber_cards_title_color",
+                                "field_cyber_cards_title_weight",
+                                "field_cyber_cards_text_color",
+                                "field_cyber_cards_text_weight",
+                                "field_cyber_msg_cards_link",
+                                "field_cyber_cards_link_style",
+                                "field_cyber_cards_button_size",
+                                "field_cyber_cards_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_carousel",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_carousel_acc",
+                                "field_cyber_msg_carousel_layout",
+                                "field_cyber_carousel_width",
+                                "field_cyber_carousel_per_view",
+                                "field_cyber_carousel_per_view_tablet",
+                                "field_cyber_carousel_per_view_mobile",
+                                "field_cyber_carousel_gap",
+                                "field_cyber_msg_carousel_motion",
+                                "field_cyber_carousel_continuous",
+                                "field_cyber_carousel_speed",
+                                "field_cyber_carousel_navigation",
+                                "field_cyber_carousel_pagination",
+                                "field_cyber_carousel_autoplay",
+                                "field_cyber_carousel_delay",
+                                "field_cyber_carousel_loop",
+                                "field_cyber_carousel_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_item",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_posts_acc",
+                                "field_cyber_posts_show_image",
+                                "field_cyber_posts_show_date",
+                                "field_cyber_posts_show_category",
+                                "field_cyber_posts_show_excerpt",
+                                "field_cyber_posts_excerpt_length",
+                                "field_cyber_posts_show_button",
+                                "field_cyber_posts_button_label",
+                                "field_cyber_posts_title_tag",
+                                "field_cyber_posts_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_show_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_posts_show_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_source",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_msg_posts_source",
+                                "field_cyber_posts_type",
+                                "field_cyber_posts_source",
+                                "field_cyber_posts_count",
+                                "field_cyber_posts_orderby",
+                                "field_cyber_posts_category",
+                                "field_cyber_posts_manual",
+                                "field_cyber_posts_slider"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_show_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_posts_show_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_posts_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
+                "layout_cyber_section_table": {
+                    "key": "layout_cyber_section_table",
+                    "name": "table",
+                    "label": "Tabela",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_cyber_section_table_settings",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "group_section_settings"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_body",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_table_acc",
+                                "field_cyber_msg_table_struct",
+                                "field_cyber_table_head_col",
+                                "field_cyber_table_align",
+                                "field_cyber_table_min_width",
+                                "field_cyber_msg_table_look",
+                                "field_cyber_table_bg",
+                                "field_cyber_table_head_bg",
+                                "field_cyber_table_border",
+                                "field_cyber_table_radius",
+                                "field_cyber_table_stripes",
+                                "field_cyber_table_stripe_bg",
+                                "field_cyber_table_pad_y",
+                                "field_cyber_table_pad_x",
+                                "field_cyber_msg_table_type",
+                                "field_cyber_table_head_size",
+                                "field_cyber_table_head_weight",
+                                "field_cyber_table_label_size",
+                                "field_cyber_table_label_weight",
+                                "field_cyber_table_cell_size",
+                                "field_cyber_table_cell_weight",
+                                "field_cyber_table_color",
+                                "field_cyber_table_acc_end"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_show_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_table_show_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_top",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_top"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_columns",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_table_columns"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_rows",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_table_rows"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_show_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_table_show_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        },
+                        {
+                            "key": "field_cyber_section_table_bottom",
+                            "label": "",
+                            "name": "",
+                            "aria-label": "",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_cyber_section_wysiwyg_bottom"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0,
+                            "allow_in_bindings": 0
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
+                },
                 "layout_cyber_section_global": {
                     "key": "layout_cyber_section_global",
                     "name": "global",
@@ -1470,5 +1971,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789832490
+    "modified": 1789940659
 }

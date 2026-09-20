@@ -415,6 +415,11 @@ function cyber_slider_on_page( $post_id ) {
 		if ( isset( $row['acf_fc_layout'] ) && in_array( $row['acf_fc_layout'], array( 'slider', 'carousel' ), true ) ) {
 			return true;
 		}
+
+		// Sekcja Wpisy w trybie slidera uzywa tej samej karuzeli.
+		if ( cyber_posts_needs_swiper( $row ) ) {
+			return true;
+		}
 	}
 
 	return false;

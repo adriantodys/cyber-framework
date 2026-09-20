@@ -579,6 +579,38 @@
             "append": "px"
         },
         {
+            "key": "field_cyber_cards_image_ratio",
+            "label": "Proporcje zdjecia",
+            "name": "cyber_cards_image_ratio",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Przycina zdjecia wszystkich elementow do jednego ksztaltu (object-fit: cover). Nie dotyczy trybu \"zdjecie jako tlo\".",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "auto": "Naturalne (bez przycinania)",
+                "16-9": "16:9",
+                "3-2": "3:2",
+                "4-3": "4:3",
+                "1-1": "1:1 (kwadrat)"
+            },
+            "default_value": "auto",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
             "key": "field_cyber_msg_cards_align",
             "label": "Wyrownanie",
             "name": "",
@@ -1132,5 +1164,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Karty (icon boxes): repeater elementow plus ustawienia siatki i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789806248
+    "modified": 1789834243
 }

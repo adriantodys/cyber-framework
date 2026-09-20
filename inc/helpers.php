@@ -944,6 +944,121 @@ function cyber_option_schema() {
 			'min'     => 60,
 			'max'     => 400,
 		),
+		'blog_sidebar'                 => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'blog_sidebar_width'           => array(
+			'type'    => 'choice',
+			'default' => '30',
+			'choices' => array( '25', '30', '33' ),
+		),
+		'blog_gap'                     => array(
+			'type'    => 'choice',
+			'default' => '64',
+			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+		),
+		'blog_show_title'              => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_columns'                 => array(
+			'type'    => 'choice',
+			'default' => '2',
+			'choices' => array( '1', '2', '3' ),
+		),
+		'blog_columns_tablet'          => array(
+			'type'    => 'choice',
+			'default' => '2',
+			'choices' => array( '1', '2' ),
+		),
+		'blog_gap_x'                   => array(
+			'type'    => 'choice',
+			'default' => '24',
+			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+		),
+		'blog_gap_y'                   => array(
+			'type'    => 'choice',
+			'default' => '48',
+			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+		),
+		'blog_image_ratio'             => array(
+			'type'    => 'choice',
+			'default' => '16-9',
+			'choices' => array( 'auto', '16-9', '3-2', '4-3', '1-1' ),
+		),
+		'blog_show_date'               => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'blog_show_category'           => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_show_excerpt'            => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_show_button'             => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_excerpt_length'          => array(
+			'type'    => 'int',
+			'default' => 20,
+			'min'     => 5,
+			'max'     => 60,
+		),
+		'blog_button_label'            => array(
+			'type'    => 'text',
+			'default' => __( 'Czytaj więcej', 'cyber-framework' ),
+		),
+		'blog_button_size'             => array(
+			'type'    => 'choice',
+			'default' => 'small',
+			'choices' => array( 'large', 'medium', 'small' ),
+		),
+		'blog_title_size'              => array(
+			'type'    => 'choice',
+			'default' => 'h5',
+			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+		),
+		'blog_title_weight'            => array(
+			'type'    => 'choice',
+			'default' => '400',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'blog_single_image'            => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'blog_single_date'             => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'blog_single_category'         => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_single_author'           => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'blog_single_title_size'       => array(
+			'type'    => 'choice',
+			'default' => 'h3',
+			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+		),
+		'blog_single_title_weight'     => array(
+			'type'    => 'choice',
+			'default' => '400',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'blog_date_format'             => array(
+			'type'    => 'choice',
+			'default' => 'short',
+			'choices' => array( 'short', 'numeric', 'wp' ),
+		),
 	);
 
 	/*
