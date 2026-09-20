@@ -5443,6 +5443,621 @@
             "placeholder": "",
             "create_options": 0,
             "save_options": 0
+        },
+        {
+            "key": "field_cyber_tab_pageheader",
+            "label": "Page header",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_pageheader_1",
+            "label": "Włączenie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_pageheader_enable",
+            "label": "Page header włączony",
+            "name": "cyber_pageheader_enable",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyślnie wyłączony. Po włączeniu pojawia się na wybranych niżej typach treści — pojedynczy wpis lub strona może to nadpisać we własnych ustawieniach.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_pageheader_types",
+            "label": "Typy treści",
+            "name": "cyber_pageheader_types",
+            "aria-label": "",
+            "type": "checkbox",
+            "instructions": "Zaznacz, gdzie page header ma się pojawiać.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "page": "Strony"
+            },
+            "default_value": [
+                "page"
+            ],
+            "return_format": "value",
+            "allow_custom": 0,
+            "allow_in_bindings": 0,
+            "layout": "vertical",
+            "toggle": 0,
+            "save_custom": 0,
+            "custom_choice_button_text": ""
+        },
+        {
+            "key": "field_cyber_msg_pageheader_2",
+            "label": "Układ",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_pageheader_width",
+            "label": "Szerokość",
+            "name": "cyber_pageheader_width",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "full": "100% szerokości ekranu",
+                "container": "Szerokość strony (jak treść)"
+            },
+            "default_value": "full",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_pageheader_height",
+            "label": "Wysokość (desktop)",
+            "name": "cyber_pageheader_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 360,
+            "min": 120,
+            "max": 900,
+            "step": 1,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_pageheader_height_mobile",
+            "label": "Wysokość (telefon)",
+            "name": "cyber_pageheader_height_mobile",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Poniżej 767px.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 240,
+            "min": 100,
+            "max": 700,
+            "step": 1,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_pageheader_align",
+            "label": "Wyrównanie treści",
+            "name": "cyber_pageheader_align",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Do lewej",
+                "center": "Do środka",
+                "right": "Do prawej"
+            },
+            "default_value": "center",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_pageheader_3",
+            "label": "Tło",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_pageheader_bg_image",
+            "label": "Domyślne zdjęcie",
+            "name": "cyber_pageheader_bg_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Używane, gdy strona nie ma własnego. Przy wideo służy też jako kadr startowy.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium",
+            "allow_in_bindings": 0,
+            "preview": 1,
+            "upload_folder": ""
+        },
+        {
+            "key": "field_cyber_pageheader_bg_video",
+            "label": "Domyślne wideo",
+            "name": "cyber_pageheader_bg_video",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "MP4 albo WebM, bez dźwięku, w pętli. Leży nad zdjęciem.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "mp4, webm",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_pageheader_overlay",
+            "label": "Nakładka na tło",
+            "name": "cyber_pageheader_overlay",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Przyciemnia tło, żeby tytuł był czytelny. Puste = bez nakładki.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "rgba(0,0,0,0.35)",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_pageheader_bg_color",
+            "label": "Kolor tła",
+            "name": "cyber_pageheader_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Widoczny, gdy nie ma zdjęcia ani wideo.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#111111",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_msg_pageheader_4",
+            "label": "Tytuł i zajawka",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_pageheader_title_size",
+            "label": "Rozmiar tytułu",
+            "name": "cyber_pageheader_title_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wielkość z Ustawień czcionki; znacznik zawsze <h1>.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "h1": "H1",
+                "h2": "H2",
+                "h3": "H3",
+                "h4": "H4",
+                "h5": "H5",
+                "h6": "H6"
+            },
+            "default_value": "h1",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_pageheader_title_weight",
+            "label": "Grubość tytułu",
+            "name": "cyber_pageheader_title_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "700",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_pageheader_title_color",
+            "label": "Kolor tytułu",
+            "name": "cyber_pageheader_title_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_pageheader_show_excerpt",
+            "label": "Zajawka pod tytułem",
+            "name": "cyber_pageheader_show_excerpt",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyślnie dla wszystkich; pojedyncza strona może włączyć albo wyłączyć u siebie.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_pageheader_excerpt_size",
+            "label": "Rozmiar zajawki",
+            "name": "cyber_pageheader_excerpt_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "text": "Tekst",
+                "h6": "H6",
+                "h5": "H5",
+                "h4": "H4"
+            },
+            "default_value": "text",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_pageheader_excerpt_color",
+            "label": "Kolor zajawki",
+            "name": "cyber_pageheader_excerpt_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
         }
     ],
     "location": [
@@ -5466,5 +6081,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789834288
+    "modified": 1789942920
 }

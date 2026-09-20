@@ -66,6 +66,13 @@ get_template_part(
  * Ktory z dwoch paskow (zwykly czy sklepowy) i czy w ogole ma sie pojawic,
  * rozstrzyga cyber_breadcrumb_data(). Tutaj zostaje samo wyswietlenie.
  */
+/*
+ * Page header (tytul strony na tle) stoi NAD okruszkami: najpierw "gdzie
+ * jestem" w duzym formacie, potem sciezka. Decyzje, czy sie pokazac,
+ * podejmuje inc/page-header.php.
+ */
+cyber_page_header();
+
 $cyber_breadcrumb = cyber_breadcrumb_data();
 
 if ( null !== $cyber_breadcrumb ) {

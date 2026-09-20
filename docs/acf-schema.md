@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce” i „Blog”.
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog” i „Page header”.
 Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
 
 ---
@@ -1171,6 +1171,39 @@ i pojedynczego wpisu. Widoki: `templates/blog.php` i `templates/single-post.php`
 > **Liczba wpisów na stronę** zostaje w Ustawienia → Czytanie (WordPress) —
 > druga, konkurencyjna wartość w Global Options tylko by się z nią rozjeżdżała.
 
+### Zakładka: „Page header”
+
+Pasek z tytułem strony nad treścią. **Domyślnie wyłączony.** Po włączeniu
+pojawia się na zaznaczonych typach treści; pojedyncza strona, wpis albo element
+CPT może to nadpisać w skrzynce „Cyber Framework — Page header”
+(grupa `group_page_header`, opisana niżej). **16 pól.**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Page header włączony | `cyber_pageheader_enable` | True/False | `false` | Wyłącznik całego modułu |
+| Typy treści | `cyber_pageheader_types` | Checkbox (lista uzupełnia się sama: `acf/load_field`) | `page` | Gdzie ma się pojawiać; typ spoza listy nadal może wymusić page header u siebie |
+| Szerokość | `cyber_pageheader_width` | Select `full` / `container` | `full` | 100% szerokości ekranu albo szerokość strony |
+| Wysokość (desktop / telefon) | `cyber_pageheader_height` `_height_mobile` | Number 120–900 / 100–700 px | `360` / `240` | Telefon poniżej 767px; `0` w nadpisaniu strony = wysokość z treści |
+| Wyrównanie treści | `cyber_pageheader_align` | Select (CLAUDE.md sekcja 20) | `center` | |
+| Domyślne zdjęcie | `cyber_pageheader_bg_image` | Image (URL) | `''` | Tło, gdy strona nie ma własnego; przy wideo także kadr startowy |
+| Domyślne wideo | `cyber_pageheader_bg_video` | File (URL), `mp4, webm` | `''` | Leży nad zdjęciem; bez dźwięku, w pętli |
+| Nakładka na tło | `cyber_pageheader_overlay` | Color (alpha) | `rgba(0,0,0,0.35)` | Puste = bez nakładki |
+| Kolor tła | `cyber_pageheader_bg_color` | Color (alpha) | `#111111` | Widoczny bez zdjęcia i wideo |
+| Rozmiar / grubość / kolor tytułu | `cyber_pageheader_title_size` `_title_weight` `_title_color` | Select `h1`–`h6` / 300–800 / Color | `h1` / `700` / `#ffffff` | Znacznik zawsze `<h1>` |
+| Zajawka pod tytułem | `cyber_pageheader_show_excerpt` | True/False | `false` | Domyślnie dla wszystkich; strona może włączyć albo wyłączyć u siebie |
+| Rozmiar / kolor zajawki | `cyber_pageheader_excerpt_size` `_excerpt_color` | Select `text` `h6` `h5` `h4` / Color | `text` / `#ffffff` | |
+
+> **Tytuł page headera jest `<h1>` strony.** Gdy page header się pokazuje,
+> szablony nie wypisują drugiego tytułu (`index.php`, `templates/single-post.php`
+> pytają o `cyber_page_header_shows()`), więc strona ma dokładnie jeden `<h1>`
+> (CLAUDE.md sekcja 11). Przy wyłączonym page headerze strony (`page`) nadal
+> nie mają tytułu w treści — to stan z 2026-09-19.
+
+> **Nowy typ w schemacie: `choices`** (wielokrotny wybór). Lista dozwolonych
+> wartości nie jest wpisana w schemacie, bo typy treści rejestrują wtyczki —
+> każdy element przechodzi przez `sanitize_key()`, a pusty wybór znaczy
+> „nigdzie” (`nullable`).
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -2125,6 +2158,26 @@ Layout `table`. Tabela porównania do 6 kolumn.
 
 ## Inne grupy pól
 
+### `group_page_header` — Page header pojedynczej strony
+
+Skrzynka **„Cyber Framework — Page header”** w bocznej kolumnie edycji.
+Lokalizacja: `post_type != attachment` **i** `post_type != cyber_global_section`,
+czyli każdy typ treści ze stroną — także CPT dodane później przez wtyczkę.
+Wszystkie pola są wyjątkami od ustawień globalnych; puste pole znaczy „jak
+w ustawieniach globalnych”.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Page header | `cyber_ph_show` | Select `default` / `on` / `off` | `default` | `on` wymusza page header także tam, gdzie typ treści nie jest zaznaczony globalnie |
+| Szerokość | `cyber_ph_width` | Select `default` / `full` / `container` | `default` | |
+| Zdjęcie tła | `cyber_ph_image` | Image (URL) | `''` | Zastępuje domyślne zdjęcie |
+| Wideo tła | `cyber_ph_video` | File (URL), `mp4, webm` | `''` | Zastępuje domyślne wideo |
+| Nakładka na tło | `cyber_ph_overlay` | Color (alpha) | `''` | |
+| Wysokość | `cyber_ph_height` | Number 0–900 px | `''` | `0` = wysokość z treści |
+| Inny tytuł | `cyber_ph_title` | Text | `''` | Puste = tytuł strony |
+| Zajawka | `cyber_ph_show_excerpt` | Select `default` / `on` / `off` | `default` | |
+| Treść zajawki | `cyber_ph_excerpt` | Textarea | `''` | Puste = zajawka wpisu albo początek treści |
+
 ### `group_product_category` — Kategoria produktu
 
 Plik: `acf-json/group_product_category.json`. Lokalizacja: **Taxonomy is equal to
@@ -2186,6 +2239,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-21 — **Page header**: nowa zakładka Global Options „Page header” (16 pól) i grupa `group_page_header` z wyjątkami dla pojedynczej strony, wpisu albo CPT. Domyślnie wyłączony. Global Options mają teraz **16 zakładek i 208 pól**. Nowy typ walidacji `choices` (wielokrotny wybór).
 
 - 2026-09-20 — **„Tabela”**: kolumny definiuje się osobno (repeater `cyber_table_columns`: nagłówek, szerokość `%`, wyrównanie). Liczba kolumn wynika z tej listy, wiersze mają już tylko komórki. Pole `cyber_table_head_row` usunięte — nagłówek powstaje, gdy któraś kolumna ma nazwę.
 - 2026-09-19 — **Blog**: nowa zakładka Global Options „Blog” (25 pól: pasek boczny, lista wpisów, pojedynczy wpis, format daty) — Global Options ma teraz **15 zakładek i 192 pola**; wpisy w `cyber_option_schema()` i `default-acf.php`. Sekcja **„Wpisy”** (`group_section_posts`, layout `posts`) i sekcja **„Tabela”** (`group_section_table`, layout `table`). **Karty**: pole `cyber_cards_image_ratio` (proporcje zdjęcia) — działa w Kartach, Karuzeli, Wpisach i na blogu.

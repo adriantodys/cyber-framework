@@ -1059,6 +1059,82 @@ function cyber_option_schema() {
 			'default' => 'short',
 			'choices' => array( 'short', 'numeric', 'wp' ),
 		),
+		'pageheader_enable'            => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'pageheader_types'             => array(
+			'type'     => 'choices',
+			'default'  => array( 'page' ),
+			'nullable' => true,
+		),
+		'pageheader_width'             => array(
+			'type'    => 'choice',
+			'default' => 'full',
+			'choices' => array( 'full', 'container' ),
+		),
+		'pageheader_height'            => array(
+			'type'    => 'px',
+			'default' => 360,
+			'min'     => 120,
+			'max'     => 900,
+		),
+		'pageheader_height_mobile'     => array(
+			'type'    => 'px',
+			'default' => 240,
+			'min'     => 100,
+			'max'     => 700,
+		),
+		'pageheader_align'             => array(
+			'type'    => 'choice',
+			'default' => 'center',
+			'choices' => array( 'left', 'center', 'right' ),
+		),
+		'pageheader_bg_image'          => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'pageheader_bg_video'          => array(
+			'type'     => 'url',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'pageheader_overlay'           => array(
+			'type'    => 'color_alpha',
+			'default' => 'rgba(0,0,0,0.35)',
+		),
+		'pageheader_bg_color'          => array(
+			'type'    => 'color_alpha',
+			'default' => '#111111',
+		),
+		'pageheader_title_size'        => array(
+			'type'    => 'choice',
+			'default' => 'h1',
+			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+		),
+		'pageheader_title_weight'      => array(
+			'type'    => 'choice',
+			'default' => '700',
+			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+		),
+		'pageheader_title_color'       => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
+		),
+		'pageheader_show_excerpt'      => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'pageheader_excerpt_size'      => array(
+			'type'    => 'choice',
+			'default' => 'text',
+			'choices' => array( 'text', 'h6', 'h5', 'h4' ),
+		),
+		'pageheader_excerpt_color'     => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
+		),
 	);
 
 	/*
@@ -1362,6 +1438,22 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		$value = sanitize_text_field( (string) $value );
 
 		return in_array( $value, $config['choices'], true ) ? $value : $fallback;
+	}
+
+	if ( 'choices' === $config['type'] ) {
+		/*
+		 * Wielokrotny wybor (pole Checkbox): lista wartosci, nie jedna wartosc.
+		 * Dozwolone wartosci nie sa wpisane w schemacie, bo zalezą od tego, jakie
+		 * typy tresci rejestruja wtyczki — sanityzujemy kazdy element jak klucz
+		 * i odrzucamy puste.
+		 */
+		if ( ! is_array( $value ) ) {
+			$value = array( $value );
+		}
+
+		$value = array_values( array_filter( array_map( 'sanitize_key', $value ) ) );
+
+		return $value ? $value : ( ! empty( $config['nullable'] ) ? array() : $fallback );
 	}
 
 	if ( 'bool' === $config['type'] ) {

@@ -39,14 +39,15 @@ get_header();
 		 * Strony (page) nie wypisuja tytulu — naglowek strony (page-header)
 		 * powstanie jako osobny modul. Do tego czasu strona NIE MA <h1>
 		 * i pierwszy naglowek musi dac redaktor w tresci albo w sekcji.
-		 * Wpisy i pozostale typy tresci zachowuja tytul.
+		 * Wpisy i pozostale typy tresci zachowuja tytul — chyba ze tytul niesie
+		 * page header (wtedy byly by dwa <h1> na stronie).
 		 *
 		 * Pusta tresc edytora nie zostawia po sobie pustego kontenera — strona
 		 * zlozona wylacznie z sekcji zaczyna sie od pierwszej sekcji.
 		 * Tresc zostaje, bo na niej stoja m.in. strony sklepu (shortcode koszyka
 		 * i zamowienia).
 		 */
-		$cyber_show_title = ! is_page();
+		$cyber_show_title = ! is_page() && ! cyber_page_header_shows();
 		$cyber_has_body   = '' !== trim( (string) get_the_content() );
 		?>
 

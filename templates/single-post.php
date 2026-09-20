@@ -39,7 +39,10 @@ while ( have_posts() ) :
 				</div>
 			<?php endif; ?>
 
-			<h1 class="cyber-post__title"><?php the_title(); ?></h1>
+			<?php if ( ! cyber_page_header_shows() ) : ?>
+				<?php // Z wlaczonym page headerem tytul stoi tam — jeden <h1> na strone. ?>
+				<h1 class="cyber-post__title"><?php the_title(); ?></h1>
+			<?php endif; ?>
 
 			<?php if ( $cyber_meta ) : ?>
 				<p class="cyber-post__meta"><?php echo esc_html( implode( ' · ', $cyber_meta ) ); ?></p>

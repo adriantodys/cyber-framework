@@ -500,6 +500,27 @@ na kontenerze (pole `cyber_cards_image_ratio`).
 | `.cyber-table__label` | `<th scope="row">` — etykieta wiersza |
 | `.cyber-table__cell` + `--left` / `--center` / `--right` | komórka; modyfikator z wyrównania kolumny (repeater „Kolumny”) |
 
+### Page header
+
+Pasek z tytułem strony nad treścią, wypisywany z `header.php` nad okruszkami.
+
+| Plik | Rola |
+|---|---|
+| `inc/page-header.php` | widoczność (globalna + wyjątek strony), dane, zmienne CSS, assety |
+| `template-parts/page-header/page-header.php` | widok |
+| `assets/css/page-header.css` | wygląd — ładowany tylko tam, gdzie page header się pokazuje |
+| `acf-json/group_page_header.json` | wyjątki pojedynczej strony |
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-page-header` | opakowanie; zmienne `--cyber-ph-*` w `style` (wysokość, tło, nakładka) |
+| `--full` / `--container` | szerokość: cały ekran albo szerokość strony |
+| `--left` / `--center` / `--right` | wyrównanie treści |
+| `--auto` | wysokość `0` — pasek tak wysoki jak treść |
+| `.cyber-page-header__video` | wideo tła (bez dźwięku, w pętli; ukrywane przy ograniczeniu animacji) |
+| `.cyber-page-header__overlay` | nakładka nad tłem |
+| `.cyber-page-header__title` / `__excerpt` | `<h1>` strony i zajawka |
+
 ### Blog — widoki i pasek boczny
 
 | Plik | Rola |

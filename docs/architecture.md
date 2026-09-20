@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-15 (Global Options ma piętnaście zakładek i 192 pola; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-15 (Global Options ma szesnaście zakładek i 208 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -58,6 +58,7 @@ w ustalonej kolejności:
 | 29 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
 | 30 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
 | 31 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
+| 32 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
 
 ## Stałe
 
@@ -1435,6 +1436,40 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Page header: jedno miejsce decyzji, wyjątki przy stronie
+
+Wygląd ustawia się raz w Global Options → Page header; pojedyncza strona, wpis
+albo element CPT ma obok edytora skrzynkę z **wyjątkami** (`group_page_header`).
+Puste pole znaczy „jak globalnie”, więc redaktor nie musi wypełniać niczego,
+żeby page header wyglądał spójnie.
+
+O tym, czy pasek się pokaże, decyduje **jedna funkcja** —
+`cyber_page_header_data()`. Kolejność: ustawienie strony `on`/`off` rozstrzyga
+samo, dopiero potem globalny włącznik i lista typów treści. Widok dostaje
+gotową tablicę albo `null` i nie pyta o żadne ustawienie. Wynik jest liczony
+raz na żądanie (statyczny cache), bo pytają o niego trzy miejsca: kolejkowanie
+arkusza, `header.php` i szablony.
+
+**Jeden `<h1>` na stronę.** Tytuł niesie page header, więc `index.php`
+i `templates/single-post.php` pytają `cyber_page_header_shows()` i wtedy nie
+wypisują własnego tytułu (CLAUDE.md sekcja 11).
+
+**Lokalizacja grupy przez regułę przeczącą.** Zamiast wyliczać typy treści
+(co pomijałoby CPT dodane później), grupa ma warunek `post_type != attachment`
+**i** `!= cyber_global_section` — pokazuje się wszędzie tam, gdzie treść ma
+własną stronę.
+
+**Tło warstwami, bez JavaScriptu:** kolor, na nim zdjęcie, na nim wideo
+(`autoplay muted loop playsinline`), na wszystkim nakładka. Przy ograniczeniu
+animacji w systemie arkusz chowa wideo i zostaje zdjęcie — ten sam wzorzec co
+w sliderze.
+
+**Sprawdzone (dane testowe i ustawienia przywrócone):** włączony globalnie dla
+stron i wpisów pokazuje się na obu oraz na stronie koszyka; wyjątek `off`
+ukrywa go na jednej stronie; wyjątki strony (szerokość, wysokość 500px, własny
+tytuł, zajawka, nakładka, wideo) trafiają do markupu; skrzynka widoczna przy
+stronie, wpisie i produkcie; zakładka w Global Options z 16 polami.
 
 ### Tabela: kolumny definiowane osobno
 

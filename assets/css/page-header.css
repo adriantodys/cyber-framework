@@ -1,0 +1,123 @@
+/*
+ * Page header — pasek z tytulem strony nad trescia.
+ *
+ * Kolejkowany tylko tam, gdzie page header faktycznie sie pokazuje
+ * (inc/page-header.php). Zmienne --cyber-ph-* pochodza z Global Options
+ * (wp_head) oraz z atrybutu style opakowania, bo wysokosc, zdjecie i nakladke
+ * moze nadpisac pojedyncza strona.
+ *
+ * Warstwy tla, od spodu: kolor, zdjecie, wideo, nakladka.
+ */
+
+.cyber-page-header {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: var(--cyber-ph-height, 360px);
+	overflow: hidden;
+	background-color: var(--cyber-ph-bg, #111111);
+	background-image: var(--cyber-ph-image, none);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+/* Wysokosc 0 w ustawieniach: pasek jest tak wysoki jak jego tresc. */
+.cyber-page-header--auto {
+	min-height: 0;
+	padding-block: var(--cyber-space-6);
+}
+
+/* Szerokosc strony zamiast pelnej szerokosci okna. */
+.cyber-page-header--container {
+	width: 100%;
+	max-width: var(--cyber-container-width);
+	margin-inline: auto;
+}
+
+.cyber-page-header__video {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cyber-page-header__overlay {
+	position: absolute;
+	inset: 0;
+	background-color: var(--cyber-ph-overlay, transparent);
+	pointer-events: none;
+}
+
+/*
+ * Tresc trzyma szerokosc strony niezaleznie od tego, czy tlo idzie na cala
+ * szerokosc okna — tytul ma stac w tej samej osi co tresc pod spodem.
+ */
+.cyber-page-header__inner {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: var(--cyber-container-width);
+	margin-inline: auto;
+	padding-block: var(--cyber-space-5);
+	padding-inline: var(--cyber-container-margin);
+}
+
+.cyber-page-header__title {
+	margin: 0;
+	color: var(--cyber-ph-title-color, #ffffff);
+	font-size: var(--cyber-ph-title-size, var(--cyber-font-size-h1));
+	font-weight: var(--cyber-ph-title-weight, 700);
+	line-height: 1.2;
+}
+
+.cyber-page-header__excerpt {
+	max-width: 70ch;
+	margin: var(--cyber-space-2) 0 0;
+	color: var(--cyber-ph-excerpt-color, #ffffff);
+	font-size: var(--cyber-ph-excerpt-size, var(--cyber-font-size-text));
+	line-height: 1.6;
+}
+
+/* --- Wyrownanie: klasa, nie zmienna (CLAUDE.md sekcja 20) ------------------ */
+
+.cyber-page-header--left .cyber-page-header__inner { text-align: left; }
+
+.cyber-page-header--center .cyber-page-header__inner { text-align: center; }
+
+.cyber-page-header--center .cyber-page-header__excerpt {
+	margin-inline: auto;
+}
+
+.cyber-page-header--right .cyber-page-header__inner { text-align: right; }
+
+.cyber-page-header--right .cyber-page-header__excerpt {
+	margin-inline-start: auto;
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 767px) {
+	.cyber-page-header {
+		min-height: var(--cyber-ph-height-m, 240px);
+	}
+
+	.cyber-page-header--auto {
+		min-height: 0;
+	}
+
+	.cyber-page-header__inner {
+		padding-block: var(--cyber-space-4);
+	}
+}
+
+/*
+ * Ograniczenie animacji w systemie: wideo znika, zostaje zdjecie spod spodu.
+ */
+@media (prefers-reduced-motion: reduce) {
+	.cyber-page-header__video {
+		display: none;
+	}
+}

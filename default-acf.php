@@ -385,4 +385,32 @@ return array(
 	/* --- Wspolne ----------------------------------------------------------- */
 	'blog_date_format'                        => 'short',       // short|numeric|wp | Format daty
 
+	/* ======================================================================
+	 * PAGE HEADER
+	 * ====================================================================== */
+
+	/* --- Wlaczenie --------------------------------------------------------- */
+	'pageheader_enable'                       => false,         // tak/nie        | Page header wlaczony
+	'pageheader_types'                        => array( 'page' ), // lista typow    | Typy tresci
+
+	/* --- Uklad ------------------------------------------------------------- */
+	'pageheader_width'                        => 'full',        // full|container | Szerokosc
+	'pageheader_height'                       => 360,           // px 120-900     | Wysokosc (desktop)
+	'pageheader_height_mobile'                => 240,           // px 100-700     | Wysokosc (telefon)
+	'pageheader_align'                        => 'center',      // left|center|ri | Wyrownanie tresci
+
+	/* --- Tlo --------------------------------------------------------------- */
+	// 'pageheader_bg_image' => '',           // TYLKO PANEL   | Domyslne zdjecie
+	// 'pageheader_bg_video' => '',           // TYLKO PANEL   | Domyslne wideo
+	'pageheader_overlay'                      => 'rgba(0,0,0,0.35)', // kolor          | Nakladka na tlo
+	'pageheader_bg_color'                     => '#111111',     // kolor          | Kolor tla
+
+	/* --- Tytul i zajawka --------------------------------------------------- */
+	'pageheader_title_size'                   => 'h1',          // h1|h2|h3|h4|h5 | Rozmiar tytulu
+	'pageheader_title_weight'                 => '700',         // 300|400|500|60 | Grubosc tytulu
+	'pageheader_title_color'                  => '#ffffff',     // kolor          | Kolor tytulu
+	'pageheader_show_excerpt'                 => false,         // tak/nie        | Zajawka pod tytulem
+	'pageheader_excerpt_size'                 => 'text',        // text|h6|h5|h4  | Rozmiar zajawki
+	'pageheader_excerpt_color'                => '#ffffff',     // kolor          | Kolor zajawki
+
 );

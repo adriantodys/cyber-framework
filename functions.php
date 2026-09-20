@@ -73,6 +73,7 @@ function cyber_load_modules() {
 		'inc/sections-table.php',
 		'inc/class-cyber-recent-posts-widget.php',
 		'inc/blog.php',
+		'inc/page-header.php',
 	);
 
 	foreach ( $modules as $module ) {

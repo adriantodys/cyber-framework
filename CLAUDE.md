@@ -585,17 +585,20 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 urósł do **piętnastu zakładek**:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **szesnastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
-   Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog — razem **192 pola**.
+   Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header — razem
+   **208 pól**.
 
    Trzy ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
    każdy moduł z ustawieniami globalnymi dokłada tu zakładkę. Zakładka
    „WooCommerce” jest jedną zakładką na **cały** sklep i kolejne ustawienia
    sklepowe idą do niej, a nie do nowych.
-3. Header / Footer (ACF + template-parts).
+3. Header / Footer (ACF + template-parts). Od 2026-09-21 doszedł **page
+   header** — pasek z tytułem strony nad treścią, domyślnie wyłączony
+   (`inc/page-header.php`, Global Options → Page header).
 
    **Stan: zrealizowane przy okazji etapu 2.** Istnieją `template-parts/header/`
    (`header.php`, `top-header.php`) i `template-parts/footer/` (`footer.php`,

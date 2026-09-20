@@ -1,0 +1,273 @@
+{
+    "key": "group_page_header",
+    "title": "Cyber Framework — Page header",
+    "fields": [
+        {
+            "key": "field_cyber_msg_ph_intro",
+            "label": "Page header tej strony",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Wygląd ustawia się raz w <strong>Cyber Framework → Page header<\/strong>. Tutaj tylko wyjątki dla tej jednej strony — puste pole znaczy „jak w ustawieniach globalnych”.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_ph_show",
+            "label": "Page header",
+            "name": "cyber_ph_show",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "„Pokaż” wymusza page header także tam, gdzie typ treści nie jest zaznaczony globalnie.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "default": "Jak w ustawieniach globalnych",
+                "on": "Pokaż",
+                "off": "Ukryj"
+            },
+            "default_value": "default",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_ph_width",
+            "label": "Szerokość",
+            "name": "cyber_ph_width",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "default": "Jak w ustawieniach globalnych",
+                "full": "100% szerokości ekranu",
+                "container": "Szerokość strony"
+            },
+            "default_value": "default",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_ph_image",
+            "label": "Zdjęcie tła",
+            "name": "cyber_ph_image",
+            "aria-label": "",
+            "type": "image",
+            "instructions": "Zastępuje domyślne zdjęcie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "preview_size": "medium",
+            "allow_in_bindings": 0,
+            "preview": 1,
+            "upload_folder": ""
+        },
+        {
+            "key": "field_cyber_ph_video",
+            "label": "Wideo tła",
+            "name": "cyber_ph_video",
+            "aria-label": "",
+            "type": "file",
+            "instructions": "MP4 albo WebM. Zastępuje domyślne wideo.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "url",
+            "library": "all",
+            "min_size": "",
+            "max_size": "",
+            "mime_types": "mp4, webm",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_ph_overlay",
+            "label": "Nakładka na tło",
+            "name": "cyber_ph_overlay",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = jak w ustawieniach globalnych.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_ph_height",
+            "label": "Wysokość",
+            "name": "cyber_ph_height",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Puste = jak w ustawieniach globalnych. 0 = wysokość z treści.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "min": 0,
+            "max": 900,
+            "step": 1,
+            "allow_in_bindings": 0,
+            "placeholder": "auto",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_ph_title",
+            "label": "Inny tytuł",
+            "name": "cyber_ph_title",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Puste = tytuł strony.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_ph_show_excerpt",
+            "label": "Zajawka",
+            "name": "cyber_ph_show_excerpt",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "default": "Jak w ustawieniach globalnych",
+                "on": "Pokaż",
+                "off": "Ukryj"
+            },
+            "default_value": "default",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_ph_excerpt",
+            "label": "Treść zajawki",
+            "name": "cyber_ph_excerpt",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Puste = zajawka wpisu (pole „Zajawka” albo początek treści).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 3,
+            "placeholder": "",
+            "new_lines": "",
+            "allow_in_bindings": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "!=",
+                "value": "attachment"
+            },
+            {
+                "param": "post_type",
+                "operator": "!=",
+                "value": "cyber_global_section"
+            }
+        ]
+    ],
+    "menu_order": 5,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Wyjatki page headera dla pojedynczej strony, wpisu albo elementu CPT. Wyglad globalny: Global Options -> Page header. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789942920
+}

@@ -24,7 +24,7 @@ i obowiązkowa lektura przed każdą zmianą.
    Wypełnij `default-acf.php` wartościami z projektu (kolory, czcionki, dane
    kontaktowe) i przenieś je do `acf-json/group_global_options.json`, **zanim**
    zsynchronizujesz pola. Dzięki temu krok 5 wciągnie od razu docelowe wartości,
-   zamiast domyślnych motywu, i nie trzeba przeklikiwać piętnastu zakładek.
+   zamiast domyślnych motywu, i nie trzeba przeklikiwać szesnastu zakładek.
    Pełny przebieg opisuje nagłówek tego pliku; zasady — CLAUDE.md sekcja 16.
 5. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj **obie**
    grupy: *Cyber Framework — Global Options* oraz *Cyber Framework — Kategoria produktu*.
@@ -83,7 +83,7 @@ gdy pole jest puste lub ACF niedostępne. Pełna lista kluczy: `docs/acf-schema.
 Kolejność budowy: CLAUDE.md sekcja 17.
 
 - [x] **Etap 1** — szkielet motywu (`style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`)
-- [x] **Etap 2** — Global Options: Options Page + piętnaście zakładek, 192 pola
+- [x] **Etap 2** — Global Options: Options Page + szesnaście zakładek, 208 pól
 - [x] **Etap 3** — Header / Footer (ACF + template-parts): Top Header, Header Desktop, Header Mobile, Footer, Copyright
 - [ ] **Etap 4** — system komponentów / Flexible Content
 - [ ] **Etap 5** — szablony widoków (front-page, page, single, archive, 404, search)
