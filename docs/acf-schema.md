@@ -1516,7 +1516,8 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
 Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
-**`faq`**, **`counter`**, **`contact`**, **`posts`**, **`table`** i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
+**`faq`**, **`counter`**, **`contact`**, **`posts`**, **`table`**, **`gallery`**
+i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
 
 #### Layout „Sekcja globalna” (`global`)
@@ -1951,6 +1952,48 @@ edytory przyniesione przez klon FAQ — ten sam mechanizm co w Kartach.
 > ikona sekcji, ikona motywu (znak zapytania, `.cyber-icon--question`, kolor
 > z Kolory → Ikony). Obrazek jest dekoracyjny (`alt=""`).
 
+#### Sekcja „Galeria” (`group_section_gallery`)
+
+Layout `gallery`. **Jedna sekcja, dwa źródła zdjęć** — wygląd siatki, podpisy
+i lightbox są w obu trybach te same, więc druga sekcja byłaby kopią kodu.
+
+**Źródło** — poza akordeonem:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Źródło zdjęć | `cyber_gal_source` | Select `images` / `galleries` | `images` | Zdjęcia wgrane w sekcji albo zdjęcia z galerii (CPT) |
+| Zdjęcia | `cyber_gal_images` | Gallery (ID) | — | Przy `images` |
+| Galerie | `cyber_gal_galleries` | Relationship (`cyber_gallery`), maks. 20 | — | Przy `galleries`; puste = wszystkie opublikowane |
+| Kategorie galerii | `cyber_gal_terms` | Taxonomy (`cyber_gallery_cat`, wiele) | — | Puste = wszystkie kategorie |
+| Filtry kategorii | `cyber_gal_filters` | True/False | `true` | Pasek z nazwami kategorii nad siatką |
+| Etykieta „wszystkie” | `cyber_gal_filter_all` | Text | `Wszystkie` | Widoczne przy włączonych filtrach |
+| Maksymalnie zdjęć | `cyber_gal_limit` | Number 0–200 | `0` | `0` = bez limitu |
+
+**Ustawienia** — akordeon „Ustawienia galerii”:
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Kolumny (desktop / tablet / telefon) | `cyber_gal_columns` `_columns_tablet` `_columns_mobile` | Select 1–6 / 1–4 / 1–3 | `4` / `3` / `2` | |
+| Odstęp między zdjęciami | `cyber_gal_gap` | Select (skala) | `12` | |
+| Proporcje zdjęć | `cyber_gal_ratio` | Select `auto` `1-1` `4-3` `3-2` `16-9` | `4-3` | `auto` = bez przycinania |
+| Zaokrąglenie rogów | `cyber_gal_radius` | Number 0–40 px | `0` | |
+| Lightbox po kliknięciu | `cyber_gal_lightbox` | True/False | `true` | |
+| Powiększenie po najechaniu | `cyber_gal_zoom` | True/False | `true` | |
+| Podpis pod zdjęciem | `cyber_gal_caption` | Select `none` / `title` / `caption` | `none` | Tytuł albo podpis załącznika z biblioteki mediów |
+| Kolory paska filtrów | `cyber_gal_filter_bg` `_filter_color` `_filter_active_bg` `_filter_active_color` | Color (alpha) | `''` | Puste = białe tło, kolor nagłówków, aktywna na kolorze nagłówków |
+
+**Treść nad i pod galerią** — włączniki `cyber_gal_show_top` / `_show_bottom`, default `false`.
+
+> **Filtry pokazują się tylko wtedy, gdy mają sens:** w trybie galerii i przy
+> co najmniej dwóch kategoriach ze zdjęciami. Filtrowanie dzieje się
+> w przeglądarce (bez przeładowania), a lightbox zna wyłącznie zdjęcia
+> **widoczne** w chwili otwarcia — strzałki nie przeskakują do ukrytych.
+
+> **Każde zdjęcie jest linkiem do pliku w pełnym rozmiarze.** Bez JavaScriptu
+> kliknięcie otwiera zdjęcie w nowej karcie; skrypt przechwytuje kliknięcie
+> i pokazuje lightbox na natywnym `<dialog>` (Escape, pułapka fokusu i powrót
+> fokusu na klikniętą miniaturę są z przeglądarki, nie z kodu motywu).
+
 #### Sekcja „Licznik” (`group_section_counter`)
 
 Layout `counter`. Liczby z opisem, odliczane od zera, gdy sekcja pojawi się na
@@ -2189,6 +2232,17 @@ w ustawieniach globalnych”.
 | Zajawka | `cyber_ph_show_excerpt` | Select `default` / `on` / `off` | `default` | |
 | Treść zajawki | `cyber_ph_excerpt` | Textarea | `''` | Puste = zajawka wpisu albo początek treści |
 
+### `group_gallery` — Galeria (CPT `cyber_gallery`)
+
+Zdjęcia pojedynczej galerii. Typ treści **Galerie** jest publiczny: ma własny
+adres (`/galeria/[slug]/`), szablon `templates/single-gallery.php`, kategorie
+(`cyber_gallery_cat`) i **pełny zestaw sekcji** — grupa `cyber_sections` jest
+do niego przypięta, więc stronę galerii buduje się tak samo jak zwykłą stronę.
+
+| Field Label | Field Name | Typ | Przeznaczenie |
+|---|---|---|---|
+| Zdjęcia galerii | `cyber_gallery_images` | Gallery (ID) | Kolejność przeciągnięciem; podpisy z biblioteki mediów |
+
 ### `group_product_category` — Kategoria produktu
 
 Plik: `acf-json/group_product_category.json`. Lokalizacja: **Taxonomy is equal to
@@ -2250,6 +2304,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-21 — Sekcja **„Galeria”** — layout `gallery` i grupa źródłowa `group_section_gallery`: zdjęcia wgrane w sekcji **albo** zdjęcia z galerii (nowy CPT `cyber_gallery` z kategoriami `cyber_gallery_cat` i grupą `group_gallery`), pasek filtrów, siatka per breakpoint, proporcje, podpisy, lightbox na natywnym `<dialog>`. Sekcje dostępne także na wpisach typu Galerie.
 
 - 2026-09-21 — **Czcionki z motywu**: Space Grotesk, Manrope i Geist hostowane lokalnie (`assets/fonts/`, `assets/css/fonts.css`), do wyboru w polach `cyber_font_family_headings` i `cyber_font_family_text`. Lista rodzin ma jedno źródło — `cyber_font_families()` w `inc/fonts.php` — z którego powstają zarówno opcje w panelu, jak i lista dozwolonych wartości w `cyber_option_schema()`.
 

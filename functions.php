@@ -75,6 +75,7 @@ function cyber_load_modules() {
 		'inc/class-cyber-recent-posts-widget.php',
 		'inc/blog.php',
 		'inc/page-header.php',
+		'inc/gallery.php',
 	);
 
 	foreach ( $modules as $module ) {

@@ -1,0 +1,255 @@
+/*
+ * Galeria: pasek filtrow, siatka zdjec i lightbox.
+ *
+ * Kolejkowany tylko tam, gdzie galeria faktycznie jest (inc/gallery.php).
+ * Zmienne --cyber-gallery-* przychodza w atrybucie style kontenera, bo sekcja
+ * moze byc na stronie kilka razy, kazda z inna siatka (CLAUDE.md sekcja 6).
+ */
+
+/* --- Pasek filtrow --------------------------------------------------------- */
+
+.cyber-gallery__filters {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--cyber-space-1);
+	margin-bottom: var(--cyber-space-4);
+	padding: var(--cyber-space-1);
+	border-radius: 999px;
+	background-color: var(--cyber-gallery-filter-bg, #ffffff);
+}
+
+.cyber-gallery__filter {
+	padding: var(--cyber-space-2) var(--cyber-space-3);
+	border: none;
+	border-radius: 999px;
+	background: none;
+	color: var(--cyber-gallery-filter-color, var(--cyber-color-headings));
+	font-family: var(--cyber-font-family-headings);
+	font-size: var(--cyber-font-size-text);
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cyber-gallery__filter:hover,
+.cyber-gallery__filter:focus-visible {
+	background-color: var(--cyber-color-border-1);
+}
+
+.cyber-gallery__filter.is-active {
+	background-color: var(--cyber-gallery-filter-active-bg, var(--cyber-color-headings));
+	color: var(--cyber-gallery-filter-active-color, #ffffff);
+}
+
+/* --- Siatka zdjec ---------------------------------------------------------- */
+
+.cyber-gallery__grid {
+	display: grid;
+	grid-template-columns: repeat(var(--cyber-gallery-cols, 4), minmax(0, 1fr));
+	gap: var(--cyber-gallery-gap, 12px);
+}
+
+.cyber-gallery__item {
+	margin: 0;
+	min-width: 0;
+}
+
+/*
+ * Kadr zdjecia: link jest pudelkiem o stalych proporcjach, a obrazek wypelnia
+ * go przez object-fit. Bez proporcji (wariant "naturalne") link jest zwyklym
+ * blokiem i zdjecia maja rozna wysokosc.
+ */
+.cyber-gallery__link {
+	display: block;
+	overflow: hidden;
+	border-radius: var(--cyber-gallery-radius, 0);
+}
+
+.cyber-gallery__link:focus-visible {
+	outline: 2px solid var(--cyber-color-links);
+	outline-offset: 2px;
+}
+
+.cyber-gallery__image {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease;
+}
+
+.cyber-gallery[class*="cyber-gallery--ratio-"] .cyber-gallery__link {
+	position: relative;
+}
+
+.cyber-gallery--ratio-1-1 .cyber-gallery__link { aspect-ratio: 1 / 1; }
+.cyber-gallery--ratio-4-3 .cyber-gallery__link { aspect-ratio: 4 / 3; }
+.cyber-gallery--ratio-3-2 .cyber-gallery__link { aspect-ratio: 3 / 2; }
+.cyber-gallery--ratio-16-9 .cyber-gallery__link { aspect-ratio: 16 / 9; }
+
+.cyber-gallery--zoom .cyber-gallery__link:hover .cyber-gallery__image,
+.cyber-gallery--zoom .cyber-gallery__link:focus-visible .cyber-gallery__image {
+	transform: scale(1.06);
+}
+
+.cyber-gallery__caption {
+	margin: var(--cyber-space-1) 0 0;
+	color: var(--cyber-color-text);
+	font-size: calc(var(--cyber-font-size-text) * 0.875);
+}
+
+/* --- Lightbox -------------------------------------------------------------- */
+
+/*
+ * Okno stoi na natywnym <dialog>: Escape, pulapka fokusu i powrot fokusu na
+ * klikniete zdjecie sa z przegladarki. Tutaj sam wyglad.
+ */
+.cyber-lightbox {
+	width: 100vw;
+	max-width: 100vw;
+	height: 100vh;
+	max-height: 100vh;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background-color: rgba(0, 0, 0, 0.92);
+	color: #ffffff;
+}
+
+.cyber-lightbox::backdrop {
+	background-color: rgba(0, 0, 0, 0.92);
+}
+
+.cyber-lightbox__inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: var(--cyber-space-5);
+	gap: var(--cyber-space-2);
+}
+
+.cyber-lightbox__image {
+	max-width: 100%;
+	max-height: 80vh;
+	object-fit: contain;
+}
+
+.cyber-lightbox__caption,
+.cyber-lightbox__counter {
+	margin: 0;
+	color: #ffffff;
+	font-size: calc(var(--cyber-font-size-text) * 0.875);
+	text-align: center;
+}
+
+.cyber-lightbox__counter {
+	opacity: 0.7;
+}
+
+.cyber-lightbox__close,
+.cyber-lightbox__prev,
+.cyber-lightbox__next {
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	border: none;
+	background: none;
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.cyber-lightbox__close { top: var(--cyber-space-3); right: var(--cyber-space-3); }
+.cyber-lightbox__prev { top: 50%; left: var(--cyber-space-2); transform: translateY(-50%); }
+.cyber-lightbox__next { top: 50%; right: var(--cyber-space-2); transform: translateY(-50%); }
+
+/*
+ * Strzalki i krzyzyk rysowane w CSS — ten sam powod co przy plusie w FAQ:
+ * dwie kreski zamiast pliku i zamiast wpisu w rejestrze ikon.
+ */
+.cyber-lightbox__close::before,
+.cyber-lightbox__close::after,
+.cyber-lightbox__prev::before,
+.cyber-lightbox__next::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: currentColor;
+}
+
+.cyber-lightbox__close::before,
+.cyber-lightbox__close::after {
+	width: 24px;
+	height: 2px;
+	margin: -1px 0 0 -12px;
+}
+
+.cyber-lightbox__close::before { transform: rotate(45deg); }
+.cyber-lightbox__close::after { transform: rotate(-45deg); }
+
+.cyber-lightbox__prev::before,
+.cyber-lightbox__next::before {
+	width: 16px;
+	height: 16px;
+	margin: -8px 0 0 -8px;
+	background: none;
+	border-left: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+}
+
+.cyber-lightbox__prev::before { transform: rotate(45deg); }
+.cyber-lightbox__next::before { transform: rotate(-135deg); }
+
+.cyber-lightbox__close:focus-visible,
+.cyber-lightbox__prev:focus-visible,
+.cyber-lightbox__next:focus-visible {
+	outline: 2px solid #ffffff;
+	outline-offset: 2px;
+}
+
+/* --- Strona pojedynczej galerii -------------------------------------------- */
+
+.cyber-gallery-page {
+	padding-block: var(--cyber-space-4) var(--cyber-space-6);
+}
+
+.cyber-gallery-page__title {
+	margin: 0 0 var(--cyber-space-3);
+}
+
+.cyber-gallery-page__content {
+	margin-bottom: var(--cyber-space-4);
+}
+
+/* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
+
+@media (max-width: 980px) {
+	.cyber-gallery__grid {
+		grid-template-columns: repeat(var(--cyber-gallery-cols-t, 3), minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 767px) {
+	.cyber-gallery__grid {
+		grid-template-columns: repeat(var(--cyber-gallery-cols-m, 2), minmax(0, 1fr));
+	}
+
+	.cyber-lightbox__inner {
+		padding: var(--cyber-space-3);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cyber-gallery__image {
+		transition: none;
+	}
+
+	.cyber-gallery--zoom .cyber-gallery__link:hover .cyber-gallery__image {
+		transform: none;
+	}
+}

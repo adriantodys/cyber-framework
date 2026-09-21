@@ -1,0 +1,54 @@
+{
+    "key": "group_gallery",
+    "title": "Cyber Framework — Galeria",
+    "fields": [
+        {
+            "key": "field_cyber_gallery_images",
+            "label": "Zdjecia galerii",
+            "name": "cyber_gallery_images",
+            "aria-label": "",
+            "type": "gallery",
+            "instructions": "Kolejnosc zmienia sie przeciagnieciem. Podpisy pobieraja sie z biblioteki mediow (tytul i podpis zalacznika).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "medium",
+            "insert": "append",
+            "library": "all",
+            "min": "",
+            "max": "",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "cyber_gallery"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Zdjecia pojedynczej galerii (CPT cyber_gallery). Sekcja \"Galeria\" moze je wyswietlic na dowolnej stronie. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789996613
+}

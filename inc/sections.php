@@ -108,6 +108,11 @@ function cyber_section_types() {
 			'template' => 'posts',
 			'contexts' => array( 'page', 'post' ),
 		),
+		'gallery'  => array(
+			'label'    => 'Galeria (zdjecia albo galerie z CPT)',
+			'template' => 'gallery',
+			'contexts' => array( 'page', 'post' ),
+		),
 		'table'    => array(
 			'label'    => 'Tabela',
 			'template' => 'table',
@@ -675,6 +680,8 @@ function cyber_section_wysiwyg_toggles() {
 		'field_cyber_section_posts_bottom'    => 'field_cyber_posts_show_bottom',
 		'field_cyber_section_table_top'       => 'field_cyber_table_show_top',
 		'field_cyber_section_table_bottom'    => 'field_cyber_table_show_bottom',
+		'field_cyber_section_gallery_top'     => 'field_cyber_gal_show_top',
+		'field_cyber_section_gallery_bottom'  => 'field_cyber_gal_show_bottom',
 	);
 }
 

@@ -290,6 +290,14 @@ rozjazdu.
 | `acf-json/group_section_table.json` | źródło klonowania: pola tabeli |
 | `assets/js/admin-sections.js` | panel: liczba pól komórek w wierszu idzie za liczbą kolumn (ładowany tylko tam, gdzie ACF rysuje formularz) |
 | `template-parts/components/carousel.php` | **wspólny** rząd kart ze Swiperem albo taśmą — sekcje `carousel` i `posts` |
+| `inc/gallery.php` | CPT `cyber_gallery`, kategorie, dane i klasy sekcji, warunkowe assety |
+| `template-parts/sections/gallery.php` | layout `gallery` — widok sekcji |
+| `template-parts/components/gallery.php` | **wspólna** siatka zdjęć z filtrami — sekcja i strona galerii |
+| `templates/single-gallery.php` | strona pojedynczej galerii |
+| `assets/js/gallery.js` | filtry i lightbox (natywny `<dialog>`, bez biblioteki) |
+| `assets/css/gallery.css` | siatka, pasek filtrów, lightbox, strona galerii |
+| `acf-json/group_section_gallery.json` | źródło klonowania: pola sekcji Galeria |
+| `acf-json/group_gallery.json` | zdjęcia pojedynczej galerii (CPT) |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -312,6 +320,7 @@ rozjazdu.
 | `counter` | Licznik (counter) | `counter` | `page`, `post` |
 | `contact` | Kontakt (dane + formularz) | `contact` | `page`, `post` |
 | `posts` | Wpisy / CPT (karty lub slider) | `posts` | `page`, `post` |
+| `gallery` | Galeria (zdjęcia albo galerie z CPT) | `gallery` | `page`, `post` |
 | `table` | Tabela | `table` | `page`, `post` |
 | `global` | Sekcja globalna | `global` | `page`, `post` — **nigdy** `cyber_global_section` |
 
@@ -458,12 +467,24 @@ i bez JavaScriptu.
 
 ### Włączniki treści nad i pod sekcją — wspólne
 
-Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`, `posts`, `table`) nie mają własnych
+Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`, `posts`, `table`, `gallery`) nie mają własnych
 filtrów. Mapa „klucz klonu edytora → klucz włącznika” jest jedna:
 `cyber_section_wysiwyg_toggles()` w `inc/sections.php`, a warunek nakłada
 `cyber_section_wysiwyg_condition()`. Na froncie sprawdza je
 `cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )`.
 **Nowa sekcja z włącznikami dopisuje dwa wiersze do mapy** zamiast kopiować filtr.
+
+### Sekcja `gallery` — Galeria
+
+| Klasa | Skąd |
+|---|---|
+| `.cyber-gallery` | kontener; zmienne `--cyber-gallery-*` w `style` |
+| `--ratio-1-1` / `-4-3` / `-3-2` / `-16-9` | proporcje kadru; brak klasy = zdjęcia naturalne |
+| `--zoom` / `--lightbox` | powiększenie po najechaniu / kliknięcie otwiera lightbox |
+| `.cyber-gallery__filters` / `__filter` | pasek kategorii; aktywna ma `.is-active` i `aria-pressed` |
+| `.cyber-gallery__grid` / `__item` / `__link` / `__image` / `__caption` | siatka i zdjęcie (link do pliku w pełnym rozmiarze) |
+| `.cyber-lightbox` | `<dialog>` budowany przez skrypt przy pierwszym otwarciu |
+| `.cyber-gallery-page` | strona pojedynczej galerii (CPT) |
 
 ### Sekcja `posts` — Wpisy
 

@@ -60,6 +60,7 @@ w ustalonej kolejności:
 | 31 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
 | 32 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
 | 33 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
+| 34 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
 
 ## Stałe
 
@@ -1437,6 +1438,40 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Galeria: jedna sekcja, dwa źródła, lightbox bez biblioteki
+
+**Dwa tryby, jeden layout.** Sekcja „Galeria” pokazuje albo zdjęcia wgrane
+w samej sekcji, albo zdjęcia z galerii (CPT `cyber_gallery`) z paskiem filtrów
+po kategoriach. Siatka, proporcje, podpisy i lightbox są w obu trybach
+identyczne, więc rozdzielenie ich na dwie sekcje oznaczałoby dwie kopie tego
+samego kodu — dokładnie to, czego zakazuje „jedna definicja, nie kopie”
+(CLAUDE.md sekcja 7). Markup siatki to wspólny komponent
+`template-parts/components/gallery.php`, używany też przez stronę galerii.
+
+**Galeria ma własną stronę.** CPT jest publiczny, ma szablon
+`templates/single-gallery.php` i — jak strony — **pełny zestaw sekcji**
+(lokalizacja `cyber_sections` obejmuje ten typ treści). Archiwum jest
+wyłączone: listę galerii robi się sekcją na dowolnej stronie.
+
+**Lightbox na natywnym `<dialog>`.** Z przeglądarki dostajemy zamknięcie
+klawiszem Escape, pułapkę fokusu, powrót fokusu na kliknięte zdjęcie i tło
+blokujące kliknięcia. Do napisania zostaje zmiana zdjęcia i podpis —
+kilkadziesiąt linii zamiast kolejnego wpisu w rejestrze bibliotek. Zdjęcie jest
+linkiem do pliku w pełnym rozmiarze, więc bez JavaScriptu galeria nadal działa.
+
+**Lightbox widzi tylko zdjęcia widoczne** w chwili otwarcia, więc po
+przefiltrowaniu kategorii strzałki nie przeskakują do ukrytych.
+
+**Jednorazowe odświeżenie reguł adresów** po dodaniu typu treści
+(`cyber_gallery_flush_rewrites()`): bez niego pierwsza galeria zwracałaby 404,
+dopóki ktoś nie zapisałby ustawień bezpośrednich odnośników. Operacja jest
+kosztowna, więc wykonuje się raz — wersję reguł trzyma opcja.
+
+**Sprawdzone w Chrome (dane testowe usunięte):** filtr zawęża 8 zdjęć do 4
+i wraca do 8; kliknięcie trzeciego zdjęcia otwiera lightbox („3 z 8”),
+strzałka w prawo daje „4 z 8”, Escape zamyka okno i **fokus wraca na kliknięte
+zdjęcie**; strona pojedynczej galerii renderuje tytuł, treść i siatkę.
 
 ### Czcionki: lokalne pliki, jeden rejestr rodzin
 

@@ -643,7 +643,9 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`,
    `faq` (natywne `<details>`, bez biblioteki), `counter` (własny skrypt
    odliczania), `contact` (dane z Global Options + Contact Form 7), `posts`
-   (wpisy/CPT jako karty lub slider), `table` oraz **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
+   (wpisy/CPT jako karty lub slider), `table`, `gallery` (zdjęcia albo galerie
+   z CPT `cyber_gallery`, lightbox na natywnym `<dialog>`) oraz
+   **sekcje globalne**: typ treści `cyber_global_section` (tylko panel)
    z tym samym polem `cyber_sections` i layout `global`, który wstawia jego
    sekcje na stronę (`inc/sections-global.php`). Sekcja globalna nie może
    zawierać innej sekcji globalnej.

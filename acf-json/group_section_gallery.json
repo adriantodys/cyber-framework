@@ -1,0 +1,738 @@
+{
+    "key": "group_section_gallery",
+    "title": "Cyber Framework — Sekcje: galeria",
+    "fields": [
+        {
+            "key": "field_cyber_gal_acc",
+            "label": "Ustawienia galerii",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_msg_gal_grid",
+            "label": "Siatka",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_gal_columns",
+            "label": "Kolumny (desktop)",
+            "name": "cyber_gal_columns",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6"
+            },
+            "default_value": "4",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_columns_tablet",
+            "label": "Kolumny (tablet)",
+            "name": "cyber_gal_columns_tablet",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4"
+            },
+            "default_value": "3",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_columns_mobile",
+            "label": "Kolumny (telefon)",
+            "name": "cyber_gal_columns_mobile",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "34",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "1": "1",
+                "2": "2",
+                "3": "3"
+            },
+            "default_value": "2",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_gap",
+            "label": "Odstep miedzy zdjeciami",
+            "name": "cyber_gal_gap",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "0": "0 px",
+                "6": "6 px",
+                "12": "12 px",
+                "24": "24 px",
+                "36": "36 px",
+                "48": "48 px",
+                "64": "64 px",
+                "94": "94 px"
+            },
+            "default_value": "12",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_ratio",
+            "label": "Proporcje zdjec",
+            "name": "cyber_gal_ratio",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "auto": "Naturalne (bez przycinania)",
+                "1-1": "1:1 (kwadrat)",
+                "4-3": "4:3",
+                "3-2": "3:2",
+                "16-9": "16:9"
+            },
+            "default_value": "4-3",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_radius",
+            "label": "Zaokraglenie rogow",
+            "name": "cyber_gal_radius",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 40,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "step": 1,
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_msg_gal_look",
+            "label": "Zachowanie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_gal_lightbox",
+            "label": "Lightbox po kliknieciu",
+            "name": "cyber_gal_lightbox",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Powiekszenie zdjecia na pelnym ekranie, ze strzalkami i obsluga klawiatury.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_gal_zoom",
+            "label": "Powiekszenie po najechaniu",
+            "name": "cyber_gal_zoom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_gal_caption",
+            "label": "Podpis pod zdjeciem",
+            "name": "cyber_gal_caption",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "Bez podpisu",
+                "title": "Tytul zalacznika",
+                "caption": "Podpis zalacznika"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_gal_filters",
+            "label": "Pasek filtrow",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_gal_filter_bg",
+            "label": "Tlo paska",
+            "name": "cyber_gal_filter_bg",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = biale.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_gal_filter_color",
+            "label": "Kolor nazw kategorii",
+            "name": "cyber_gal_filter_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = kolor naglowkow.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_gal_filter_active_bg",
+            "label": "Tlo aktywnej kategorii",
+            "name": "cyber_gal_filter_active_bg",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = kolor naglowkow.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_gal_filter_active_color",
+            "label": "Kolor aktywnej kategorii",
+            "name": "cyber_gal_filter_active_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste = biale.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_gal_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        },
+        {
+            "key": "field_cyber_gal_show_top",
+            "label": "Pokaz tresc nad galeria",
+            "name": "cyber_gal_show_top",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_gal_show_bottom",
+            "label": "Pokaz tresc pod galeria",
+            "name": "cyber_gal_show_bottom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wlaczenie pokazuje edytor ponizej i blok na stronie; ponowne wylaczenie chowa oba, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_gal_source",
+            "label": "Zrodlo",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_gal_source",
+            "label": "Zrodlo zdjec",
+            "name": "cyber_gal_source",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Zdjecia wgrane w tej sekcji albo zdjecia z galerii (menu Galerie). W obu wypadkach ten sam wyglad i ten sam lightbox.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "images": "Zdjecia dodane tutaj",
+                "galleries": "Galerie z CPT"
+            },
+            "default_value": "images",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_gal_images",
+            "label": "Zdjecia",
+            "name": "cyber_gal_images",
+            "aria-label": "",
+            "type": "gallery",
+            "instructions": "Kolejnosc zmienia sie przeciagnieciem.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_gal_source",
+                        "operator": "==",
+                        "value": "images"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "id",
+            "preview_size": "medium",
+            "insert": "append",
+            "library": "all",
+            "min": "",
+            "max": "",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "",
+            "allow_in_bindings": 0
+        },
+        {
+            "key": "field_cyber_gal_galleries",
+            "label": "Galerie",
+            "name": "cyber_gal_galleries",
+            "aria-label": "",
+            "type": "relationship",
+            "instructions": "Puste = wszystkie opublikowane galerie. Kolejnosc na stronie = kolejnosc na liscie.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_gal_source",
+                        "operator": "==",
+                        "value": "galleries"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "post_type": [
+                "cyber_gallery"
+            ],
+            "post_status": [
+                "publish"
+            ],
+            "taxonomy": "",
+            "filters": [
+                "search"
+            ],
+            "return_format": "id",
+            "min": "",
+            "max": 20,
+            "allow_in_bindings": 0,
+            "elements": [
+                "featured_image"
+            ],
+            "bidirectional": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_cyber_gal_terms",
+            "label": "Kategorie galerii",
+            "name": "cyber_gal_terms",
+            "aria-label": "",
+            "type": "taxonomy",
+            "instructions": "Puste = wszystkie kategorie.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_gal_source",
+                        "operator": "==",
+                        "value": "galleries"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "taxonomy": "cyber_gallery_cat",
+            "add_term": 0,
+            "save_terms": 0,
+            "load_terms": 0,
+            "return_format": "id",
+            "field_type": "multi_select",
+            "allow_null": 1,
+            "allow_in_bindings": 0,
+            "bidirectional": 0,
+            "multiple": 0,
+            "bidirectional_target": []
+        },
+        {
+            "key": "field_cyber_gal_filters",
+            "label": "Filtry kategorii",
+            "name": "cyber_gal_filters",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pasek z nazwami kategorii nad siatka; klikniecie pokazuje zdjecia tylko z tej kategorii.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_gal_source",
+                        "operator": "==",
+                        "value": "galleries"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_gal_filter_all",
+            "label": "Etykieta \"wszystkie\"",
+            "name": "cyber_gal_filter_all",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_gal_filters",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "Wszystkie",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_gal_limit",
+            "label": "Maksymalnie zdjec",
+            "name": "cyber_gal_limit",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "0 = bez limitu.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 200,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "step": 1,
+            "prepend": "",
+            "append": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "options_page",
+                "operator": "==",
+                "value": "cyber-clone-source"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Galeria: zrodlo (wlasne zdjecia albo galerie z CPT), siatka, lightbox, pasek filtrow. Zrodlo prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1789996613
+}
