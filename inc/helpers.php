@@ -351,20 +351,13 @@ function cyber_option_schema() {
 		'font_family_headings'        => array(
 			'type'    => 'choice',
 			'default' => 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
-			'choices' => array(
-				'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
-				'Georgia, "Times New Roman", Times, serif',
-				'"Helvetica Neue", Helvetica, Arial, sans-serif',
-			),
+			// Lista rodzin ma jedno zrodlo: cyber_font_families() w inc/fonts.php.
+			'choices' => cyber_font_family_choices(),
 		),
 		'font_family_text'            => array(
 			'type'    => 'choice',
 			'default' => 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
-			'choices' => array(
-				'system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif',
-				'Georgia, "Times New Roman", Times, serif',
-				'"Helvetica Neue", Helvetica, Arial, sans-serif',
-			),
+			'choices' => cyber_font_family_choices(),
 		),
 		'font_weight_headings'        => array(
 			'type'    => 'choice',

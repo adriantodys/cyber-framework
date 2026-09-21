@@ -43,6 +43,7 @@ define( 'CYBER_OPTIONS_SLUG', 'cyber-settings' );
 function cyber_load_modules() {
 	$modules = array(
 		'inc/helpers.php',
+		'inc/fonts.php',
 		'inc/acf.php',
 		'inc/options.php',
 		'inc/setup.php',

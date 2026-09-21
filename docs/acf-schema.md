@@ -221,6 +221,17 @@ liczba wstawiana wprost jako `font-weight`.
 > stack systemowy. Pole nie blokuje takiego wyboru, bo to kwestia decyzji
 > projektowej, a nie poprawności danych.
 
+> **Rodziny czcionek pochodzą z rejestru `cyber_font_families()`**
+> (`inc/fonts.php`), nie z listy wpisanej w pliku JSON — ten sam rejestr daje
+> listę dozwolonych wartości w `cyber_option_schema()`, więc panel i walidacja
+> nie mają jak się rozjechać.
+>
+> Do wyboru są trzy rodziny systemowe (bez pobierania czegokolwiek) oraz trzy
+> **z motywu**, hostowane lokalnie: **Space Grotesk**, **Manrope** i **Geist**.
+> Wybór czcionki z motywu włącza arkusz `assets/css/fonts.css`; pliki `woff2`
+> leżą w `assets/fonts/` (licencje: `assets/fonts/README.md`, rejestr:
+> CLAUDE.md sekcja 2). Żadne żądanie nie wychodzi do Google Fonts.
+
 ### Zakładka: „Header Desktop”
 
 Cel: pełna kontrola nad wyglądem nagłówka na desktopie — logo, odstępy kontenera,
@@ -2239,6 +2250,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-21 — **Czcionki z motywu**: Space Grotesk, Manrope i Geist hostowane lokalnie (`assets/fonts/`, `assets/css/fonts.css`), do wyboru w polach `cyber_font_family_headings` i `cyber_font_family_text`. Lista rodzin ma jedno źródło — `cyber_font_families()` w `inc/fonts.php` — z którego powstają zarówno opcje w panelu, jak i lista dozwolonych wartości w `cyber_option_schema()`.
 
 - 2026-09-21 — **Page header**: nowa zakładka Global Options „Page header” (16 pól) i grupa `group_page_header` z wyjątkami dla pojedynczej strony, wpisu albo CPT. Domyślnie wyłączony. Global Options mają teraz **16 zakładek i 208 pól**. Nowy typ walidacji `choices` (wielokrotny wybór).
 

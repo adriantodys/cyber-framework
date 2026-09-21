@@ -51,6 +51,36 @@ biblioteka wymaga jawnej zgody (zasada wyżej) i wpisu tutaj w tym samym commici
 |---|---|---|---|---|---|
 | **Swiper** | 14.2.0 | MIT | `assets/vendor/swiper-14.2.0/` | 2026-09-17 | sekcje Slider i Karuzela kart |
 
+#### Czcionki — rejestr
+
+Czcionki są **hostowane lokalnie**, nie ładowane z Google Fonts. Strona działa
+bez zewnętrznego serwera, a przeglądarka odwiedzającego nie wysyła żądania do
+`fonts.gstatic.com` — czyli nie przekazuje tam swojego adresu IP.
+
+| Rodzina | Katalog | Grubości | Licencja | Dodana |
+|---|---|---|---|---|
+| **Space Grotesk** | `assets/fonts/space-grotesk/` | 300–700 | SIL OFL 1.1 | 2026-09-21 |
+| **Manrope** | `assets/fonts/manrope/` | 200–800 | SIL OFL 1.1 | 2026-09-21 |
+| **Geist** | `assets/fonts/geist/` | 100–900 | SIL OFL 1.1 | 2026-09-21 |
+
+Zasady dla czcionek:
+
+1. **Jedno źródło listy rodzin** — `cyber_font_families()` w `inc/fonts.php`.
+   Z rejestru biorą się jednocześnie: opcje w polach ACF (`acf/load_field`),
+   lista dozwolonych wartości w `cyber_option_schema()` i decyzja o załadowaniu
+   arkusza. Wcześniej lista stała równolegle w JSON-ie i w schemacie — rozjazd
+   oznaczał, że redaktor wybiera wartość, której walidacja nie przyjmuje.
+2. **Plik zmienny (variable) na podzbiór znaków** — jeden `woff2` obejmuje cały
+   zakres grubości rodziny, więc zmiana wagi w panelu nie pobiera kolejnych
+   plików. Podzbiory: `latin` i `latin-ext` (polskie znaki).
+3. **`@font-face` w `assets/css/fonts.css`**, nie w PHP — PHP nie generuje
+   reguł CSS (sekcja 6).
+4. **Enqueue warunkowy** — arkusz ładuje się tylko wtedy, gdy wybrana jest
+   czcionka z motywu.
+5. **Licencja w tabeli.** Nowa rodzina wymaga licencji pozwalającej na
+   hosting własny (OFL, Apache 2.0) i wpisu tutaj w tym samym commicie.
+   Szczegóły i instrukcja dodania: `assets/fonts/README.md`.
+
 Zasady dla bibliotek:
 
 1. **Pliki lokalnie, nie z CDN** — motyw działa bez zewnętrznego serwera,

@@ -633,7 +633,10 @@
             "choices": {
                 "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif": "Systemowa — bezszeryfowa (domyślna)",
                 "Georgia, \"Times New Roman\", Times, serif": "Georgia — szeryfowa",
-                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica \/ Arial — bezszeryfowa"
+                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica \/ Arial — bezszeryfowa",
+                "\"Space Grotesk\", system-ui, sans-serif": "Space Grotesk — z motywu",
+                "\"Manrope\", system-ui, sans-serif": "Manrope — z motywu",
+                "\"Geist\", system-ui, sans-serif": "Geist — z motywu"
             },
             "default_value": "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif",
             "return_format": "value",
@@ -663,7 +666,10 @@
             "choices": {
                 "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif": "Systemowa — bezszeryfowa (domyślna)",
                 "Georgia, \"Times New Roman\", Times, serif": "Georgia — szeryfowa",
-                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica \/ Arial — bezszeryfowa"
+                "\"Helvetica Neue\", Helvetica, Arial, sans-serif": "Helvetica \/ Arial — bezszeryfowa",
+                "\"Space Grotesk\", system-ui, sans-serif": "Space Grotesk — z motywu",
+                "\"Manrope\", system-ui, sans-serif": "Manrope — z motywu",
+                "\"Geist\", system-ui, sans-serif": "Geist — z motywu"
             },
             "default_value": "system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif",
             "return_format": "value",
@@ -6081,5 +6087,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789942920
+    "modified": 1789983446
 }

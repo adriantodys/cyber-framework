@@ -500,6 +500,14 @@ na kontenerze (pole `cyber_cards_image_ratio`).
 | `.cyber-table__label` | `<th scope="row">` — etykieta wiersza |
 | `.cyber-table__cell` + `--left` / `--center` / `--right` | komórka; modyfikator z wyrównania kolumny (repeater „Kolumny”) |
 
+### Czcionki
+
+| Plik | Rola |
+|---|---|
+| `inc/fonts.php` | rejestr rodzin (`cyber_font_families()`), opcje w panelu, warunkowy arkusz |
+| `assets/css/fonts.css` | deklaracje `@font-face` — ładowany tylko przy czcionce z motywu |
+| `assets/fonts/` | pliki `woff2` (po jednym zmiennym na podzbiór) i `README.md` z licencjami |
+
 ### Page header
 
 Pasek z tytułem strony nad treścią, wypisywany z `header.php` nad okruszkami.

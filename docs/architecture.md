@@ -28,37 +28,38 @@ w ustalonej kolejności:
 | # | Plik | Odpowiedzialność |
 |---|---|---|
 | 1 | `inc/helpers.php` | Schemat opcji, walidacja, `cyber_get_option()`, kanoniczne breakpointy `cyber_breakpoints()`. Musi być pierwszy — reszta może z niego korzystać. |
-| 2 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
-| 3 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
-| 4 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
-| 5 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
-| 6 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
-| 7 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile, dane paska Top Header. Stała `CYBER_HEADER_MENU_LOCATION`. |
-| 8 | `inc/footer.php` | Dane paska Copyright (`cyber_copyright_data()`). Odpowiednik `inc/header.php` po stronie stopki. |
-| 9 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
-| 10 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
-| 11 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
-| 12 | `inc/contact-form-7.php` | Warstwa ochronna miękkiej zależności od Contact Form 7: wykrywanie, HTML formularza, podpowiedź na froncie i ostrzeżenie w panelu (tylko gdy formularz jest użyty). Wzorzec jak `inc/woocommerce.php`. |
-| 13 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
-| 14 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
-| 15 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
-| 16 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
-| 17 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
-| 18 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
-| 19 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
-| 20 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
-| 21 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
-| 22 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
-| 23 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
-| 24 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
-| 25 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
-| 26 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
-| 27 | `inc/posts.php` | Wpis jako element karty (`cyber_post_card_item()`), data w formacie z Global Options, zajawka, dozwolone typy treści. Wspólne dla sekcji Wpisy, bloga i widgetu. |
-| 28 | `inc/sections-posts.php` | Sekcja „Wpisy”: zapytanie według źródła, elementy kart, lista typów treści w panelu, Swiper w trybie slidera. |
-| 29 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
-| 30 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
-| 31 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
-| 32 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
+| 2 | `inc/fonts.php` | Rejestr rodzin czcionek: opcje w panelu, lista dozwolonych wartości dla schematu, warunkowe ładowanie `assets/css/fonts.css`. Ładowany **po** `inc/helpers.php`, bo z jego schematu korzysta. |
+| 3 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
+| 4 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
+| 5 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
+| 6 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
+| 7 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
+| 8 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile, dane paska Top Header. Stała `CYBER_HEADER_MENU_LOCATION`. |
+| 9 | `inc/footer.php` | Dane paska Copyright (`cyber_copyright_data()`). Odpowiednik `inc/header.php` po stronie stopki. |
+| 10 | `inc/components.php` | Funkcje komponentów reużywalnych (`cyber_button()`): normalizacja i walidacja argumentów. |
+| 11 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
+| 12 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
+| 13 | `inc/contact-form-7.php` | Warstwa ochronna miękkiej zależności od Contact Form 7: wykrywanie, HTML formularza, podpowiedź na froncie i ostrzeżenie w panelu (tylko gdy formularz jest użyty). Wzorzec jak `inc/woocommerce.php`. |
+| 14 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
+| 15 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
+| 16 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
+| 17 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
+| 18 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
+| 19 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
+| 20 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
+| 21 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
+| 22 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
+| 23 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 24 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
+| 25 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
+| 26 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
+| 27 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
+| 28 | `inc/posts.php` | Wpis jako element karty (`cyber_post_card_item()`), data w formacie z Global Options, zajawka, dozwolone typy treści. Wspólne dla sekcji Wpisy, bloga i widgetu. |
+| 29 | `inc/sections-posts.php` | Sekcja „Wpisy”: zapytanie według źródła, elementy kart, lista typów treści w panelu, Swiper w trybie slidera. |
+| 30 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
+| 31 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
+| 32 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
+| 33 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
 
 ## Stałe
 
@@ -1436,6 +1437,34 @@ slajd 308 px, odstęp 24 px, pętla, autoplay przesunął rząd), karuzela `full
 (3 karty, slajd 337 px przy oknie 1400 px, pętla wyłączona sama, strzałki
 zablokowane, bo nie ma czego przewijać) oraz slider na tej samej stronie —
 wszystkie trzy zainicjowane. Strona testowa usunięta.
+
+### Czcionki: lokalne pliki, jeden rejestr rodzin
+
+**Pliki w motywie, nie z Google Fonts.** Trzy rodziny (Space Grotesk, Manrope,
+Geist) leżą w `assets/fonts/` jako `woff2`. Powody są dwa: strona działa bez
+zewnętrznego serwera, a przeglądarka odwiedzającego nie wysyła żądania do
+`fonts.gstatic.com` — czyli nie przekazuje tam swojego adresu IP. Wszystkie
+trzy są na licencji SIL OFL 1.1, która hosting własny dopuszcza wprost.
+
+**Plik zmienny na podzbiór.** Jeden `woff2` obejmuje cały zakres grubości
+rodziny (np. Geist 100–900), więc zmiana wagi w panelu nie pobiera kolejnych
+plików. Podzbiory: `latin` i `latin-ext` — przeglądarka bierze tylko te,
+których faktycznie używa treść. Razem 6 plików, około 124 kB, z czego jedna
+strona pobiera zwykle dwa.
+
+**Jeden rejestr zamiast dwóch list.** Rodziny były wpisane równolegle w polu
+ACF (`choices` w JSON-ie) i w `cyber_option_schema()`. Rozjazd tych list to
+cicha awaria z sekcji 5 CLAUDE.md: redaktor wybiera wartość, walidacja jej nie
+przyjmuje i podstawia domyślną — panel pokazuje jedno, front drugie. Teraz obie
+pochodzą z `cyber_font_families()`.
+
+**Klucz rejestru to gotowy stos CSS**, nie slug: wartość opcji trafia wprost do
+`--cyber-font-family-*`, a wybory zapisane wcześniej zostają poprawne.
+
+**Sprawdzone (ustawienia przywrócone po teście):** przy czcionce z motywu
+arkusz `fonts.css` się ładuje, nagłówki dostają Geist, tekst Manrope, pobierane
+są wyłącznie używane podzbiory, a liczba żądań do `googleapis`/`gstatic` wynosi
+zero. Wartość spoza listy wraca do czcionki domyślnej.
 
 ### Page header: jedno miejsce decyzji, wyjątki przy stronie
 
