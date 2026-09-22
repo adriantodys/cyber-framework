@@ -40,7 +40,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Tresc wyswietlana na stronie kategorii produktow. Zrodlo prawdy: docs/acf-schema.md.",
+    "description": "Tresc wyswietlana na stronie kategorii produktow. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
     "modified": 1789389247
 }
