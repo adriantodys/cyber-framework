@@ -94,6 +94,15 @@ function cyber_wc_cart_setup_hooks() {
 	// Domyslny przycisk -> wlasny, w klasach motywu.
 	remove_action( 'woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20 );
 	add_action( 'woocommerce_proceed_to_checkout', 'cyber_wc_cart_checkout_button', 20 );
+
+	/*
+	 * Filtr etykiet rejestrujemy dopiero tutaj, a nie przy ladowaniu pliku.
+	 * 'gettext' fires dla KAZDEGO ciagu WordPressa, WooCommerce i wszystkich
+	 * wtyczek — takze w panelu. Callback i tak nic nie robi poza koszykiem,
+	 * a koszyk rozpoznajemy najwczesniej na 'wp', wiec wczesniejsza
+	 * rejestracja tylko dokladala wywolan na kazdej innej podstronie.
+	 */
+	add_filter( 'gettext', 'cyber_wc_cart_labels', 10, 3 );
 }
 add_action( 'wp', 'cyber_wc_cart_setup_hooks' );
 
@@ -117,15 +126,20 @@ function cyber_wc_cart_labels( $translated, $text, $domain ) {
 		return $translated;
 	}
 
-	$labels = array(
-		'Cart totals' => __( 'Podsumowanie koszyka', 'cyber-framework' ),
-		'Subtotal'    => __( 'Razem', 'cyber-framework' ),
-		'Total'       => __( 'Wartość zamówienia', 'cyber-framework' ),
-	);
+	// Mapa jest stala w obrebie zadania, a kazdy __() w srodku ponownie
+	// przechodzi przez caly lancuch filtrow 'gettext' — budujemy ja raz.
+	static $labels = null;
+
+	if ( null === $labels ) {
+		$labels = array(
+			'Cart totals' => __( 'Podsumowanie koszyka', 'cyber-framework' ),
+			'Subtotal'    => __( 'Razem', 'cyber-framework' ),
+			'Total'       => __( 'Wartość zamówienia', 'cyber-framework' ),
+		);
+	}
 
 	return isset( $labels[ $text ] ) ? $labels[ $text ] : $translated;
 }
-add_filter( 'gettext', 'cyber_wc_cart_labels', 10, 3 );
 
 /**
  * Assety strony koszyka — kolejkowane WYLACZNIE tam, gdzie sa potrzebne.

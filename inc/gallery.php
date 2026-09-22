@@ -101,7 +101,14 @@ function cyber_gallery_flush_rewrites() {
 	}
 
 	flush_rewrite_rules( false );
-	update_option( 'cyber_gallery_rewrites', CYBER_VERSION, false );
+
+	/*
+	 * autoload = true (a nie false): ta flaga jest czytana na KAZDYM zadaniu,
+	 * w warunku powyzej. Opcja bez autoloadu nie siedzi w cache alloptions,
+	 * wiec kazde zadanie placilo za nia osobnym SELECT-em — do konca zycia
+	 * witryny, zeby sprawdzic wartosc, ktora juz sie nie zmieni.
+	 */
+	update_option( 'cyber_gallery_rewrites', CYBER_VERSION, true );
 }
 add_action( 'init', 'cyber_gallery_flush_rewrites', 20 );
 
@@ -127,7 +134,7 @@ add_filter( 'single_template_hierarchy', 'cyber_gallery_template_hierarchy' );
  * @return int[] Identyfikatory zalacznikow.
  */
 function cyber_gallery_images( $gallery_id ) {
-	if ( ! function_exists( 'get_field' ) ) {
+	if ( ! cyber_is_acf_active() ) {
 		return array();
 	}
 
@@ -331,19 +338,9 @@ function cyber_gallery_attributes( array $row ) {
 		'--cyber-gallery-filter-active-color' => 'cyber_gal_filter_active_color',
 	);
 
-	foreach ( $colors as $var => $key ) {
-		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
+	$vars = array_merge( $vars, cyber_row_colors( $row, $colors ) );
 
-		if ( '' !== $value ) {
-			$vars[ $var ] = $value;
-		}
-	}
-
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class'    => implode( ' ', $classes ),

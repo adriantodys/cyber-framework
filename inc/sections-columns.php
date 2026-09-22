@@ -216,11 +216,7 @@ function cyber_columns_attributes( array $row ) {
 		$vars['--cyber-columns-radius'] = sprintf( '%dpx', min( $radius, 200 ) );
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),

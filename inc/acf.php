@@ -12,6 +12,20 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Czy ACF jest dostepny do odczytu pol.
+ *
+ * ACF jest zaleznoscia TWARDA (CLAUDE.md sekcja 2), ale zasada "jedna
+ * zaleznosc, jeden plik, ktory o niej decyduje" obowiazuje tak samo jak przy
+ * WooCommerce i CF7. Moduly pytaja tutaj, zamiast rozsypywac po dziewieciu
+ * plikach wlasne function_exists( 'get_field' ).
+ *
+ * @return bool
+ */
+function cyber_is_acf_active() {
+	return function_exists( 'get_field' );
+}
+
+/**
  * Sciezka zapisu Local JSON.
  *
  * @param string $path Domyslna sciezka ustawiona przez ACF.

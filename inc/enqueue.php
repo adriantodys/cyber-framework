@@ -274,7 +274,7 @@ function cyber_font_css() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_css_vars_from_map( array $map ) {
-	$css = ':root{';
+	$vars = array();
 
 	foreach ( $map as $option_key => $definition ) {
 		list( $css_var, $unit ) = $definition;
@@ -289,10 +289,10 @@ function cyber_css_vars_from_map( array $map ) {
 			$value = sprintf( '%d%%', (int) $value );
 		}
 
-		$css .= sprintf( '%1$s:%2$s;', $css_var, $value );
+		$vars[ $css_var ] = $value;
 	}
 
-	return $css . '}';
+	return cyber_css_root( $vars );
 }
 
 /**
@@ -477,22 +477,34 @@ function cyber_woocommerce_css() {
 }
 
 /**
- * Buduje CSS ze zmiennymi paska Top Header.
+ * Mapa pol paska Top Header na zmienne CSS.
  *
  * Modul ma tylko trzy pola stylu — reszta wygladu (padding paska, odstep
  * i rozmiar ikon, przezroczystosc na hover) to stale wartosci w main.css.
  * Kolor ikon nie ma osobnego pola: SVG dziedzicza go przez currentColor
  * z --cyber-topheader-color.
  *
+ * Klucz    = klucz opcji (bez prefiksu cyber_).
+ * [0]      = pelna nazwa zmiennej CSS.
+ * [1]      = jednostka doklejana do wartosci ('px' albo pusty string).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_top_header_css_map() {
+	return array(
+		'topheader_bg_color'   => array( '--cyber-topheader-bg', '' ),
+		'topheader_font_color' => array( '--cyber-topheader-color', '' ),
+		'topheader_font_size'  => array( '--cyber-topheader-font-size', 'px' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi paska Top Header.
+ *
  * @return string CSS bez znacznika <style>.
  */
 function cyber_top_header_css() {
-	return sprintf(
-		':root{--cyber-topheader-bg:%1$s;--cyber-topheader-color:%2$s;--cyber-topheader-font-size:%3$dpx;}',
-		cyber_get_option( 'topheader_bg_color' ),
-		cyber_get_option( 'topheader_font_color' ),
-		(int) cyber_get_option( 'topheader_font_size' )
-	);
+	return cyber_css_vars_from_map( cyber_top_header_css_map() );
 }
 
 /**
@@ -538,30 +550,14 @@ function cyber_color_keys() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_colors_css() {
-	$css = ':root{';
+	$vars = array();
 
 	foreach ( cyber_color_keys() as $option_key ) {
-		$css .= sprintf(
-			'--cyber-%1$s:%2$s;',
-			str_replace( '_', '-', $option_key ),
-			cyber_get_option( $option_key )
-		);
+		$name          = sprintf( '--cyber-%s', str_replace( '_', '-', $option_key ) );
+		$vars[ $name ] = cyber_get_option( $option_key );
 	}
 
-	return $css . '}';
-}
-
-/**
- * Rozmiary przyciskow — jedno zrodlo dla CSS i dla komponentu.
- *
- * Kolejnosc odpowiada malejacej wadze wizualnej. Nazwa rozmiaru jest
- * jednoczesnie modyfikatorem klasy (.btn-large) i czlonem nazwy pola
- * (cyber_btn_large_*) oraz zmiennej (--cyber-btn-large-*).
- *
- * @return string[] Nazwy rozmiarow.
- */
-function cyber_button_sizes() {
-	return array( 'large', 'medium', 'small' );
+	return cyber_css_root( $vars );
 }
 
 /**
@@ -586,7 +582,7 @@ function cyber_button_css() {
 		'bg_color_hover' => array( 'bg-color-hover', '' ),
 	);
 
-	$css = ':root{';
+	$vars = array();
 
 	foreach ( cyber_button_sizes() as $size ) {
 		foreach ( $properties as $option_suffix => $definition ) {
@@ -598,11 +594,11 @@ function cyber_button_css() {
 				$value = sprintf( '%dpx', (int) $value );
 			}
 
-			$css .= sprintf( '--cyber-btn-%1$s-%2$s:%3$s;', $size, $css_suffix, $value );
+			$vars[ sprintf( '--cyber-btn-%1$s-%2$s', $size, $css_suffix ) ] = $value;
 		}
 	}
 
-	return $css . '}';
+	return cyber_css_root( $vars );
 }
 
 /**

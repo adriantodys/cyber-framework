@@ -221,6 +221,17 @@ function cyber_header_variants() {
  * @return array<string, array<string, mixed>> Schemat opcji.
  */
 function cyber_option_schema() {
+	/*
+	 * Schemat jest stala tablica 208 wpisow, a cyber_get_option() siega po niego
+	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
+	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
+	 */
+	static $cached = null;
+
+	if ( null !== $cached ) {
+		return $cached;
+	}
+
 	$schema = array(
 		'page_width_type'             => array(
 			'type'    => 'choice',
@@ -949,7 +960,7 @@ function cyber_option_schema() {
 		'blog_gap'                     => array(
 			'type'    => 'choice',
 			'default' => '64',
-			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+			'choices' => cyber_spacing_scale_choices(),
 		),
 		'blog_show_title'              => array(
 			'type'    => 'bool',
@@ -968,12 +979,12 @@ function cyber_option_schema() {
 		'blog_gap_x'                   => array(
 			'type'    => 'choice',
 			'default' => '24',
-			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+			'choices' => cyber_spacing_scale_choices(),
 		),
 		'blog_gap_y'                   => array(
 			'type'    => 'choice',
 			'default' => '48',
-			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
+			'choices' => cyber_spacing_scale_choices(),
 		),
 		'blog_image_ratio'             => array(
 			'type'    => 'choice',
@@ -1009,17 +1020,17 @@ function cyber_option_schema() {
 		'blog_button_size'             => array(
 			'type'    => 'choice',
 			'default' => 'small',
-			'choices' => array( 'large', 'medium', 'small' ),
+			'choices' => cyber_button_sizes(),
 		),
 		'blog_title_size'              => array(
 			'type'    => 'choice',
 			'default' => 'h5',
-			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+			'choices' => cyber_heading_levels(),
 		),
 		'blog_title_weight'            => array(
 			'type'    => 'choice',
 			'default' => '400',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'blog_single_image'            => array(
 			'type'    => 'bool',
@@ -1040,12 +1051,12 @@ function cyber_option_schema() {
 		'blog_single_title_size'       => array(
 			'type'    => 'choice',
 			'default' => 'h3',
-			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+			'choices' => cyber_heading_levels(),
 		),
 		'blog_single_title_weight'     => array(
 			'type'    => 'choice',
 			'default' => '400',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'blog_date_format'             => array(
 			'type'    => 'choice',
@@ -1081,7 +1092,7 @@ function cyber_option_schema() {
 		'pageheader_align'             => array(
 			'type'    => 'choice',
 			'default' => 'center',
-			'choices' => array( 'left', 'center', 'right' ),
+			'choices' => cyber_alignments(),
 		),
 		'pageheader_bg_image'          => array(
 			'type'     => 'url',
@@ -1104,12 +1115,12 @@ function cyber_option_schema() {
 		'pageheader_title_size'        => array(
 			'type'    => 'choice',
 			'default' => 'h1',
-			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
+			'choices' => cyber_heading_levels(),
 		),
 		'pageheader_title_weight'      => array(
 			'type'    => 'choice',
 			'default' => '700',
-			'choices' => array( '300', '400', '500', '600', '700', '800' ),
+			'choices' => cyber_font_weight_choices(),
 		),
 		'pageheader_title_color'       => array(
 			'type'    => 'color_alpha',
@@ -1136,7 +1147,9 @@ function cyber_option_schema() {
 	 * prawdy: dodanie elementu to jedna linia w cyber_product_elements(),
 	 * a nie trzy zmiany w trzech miejscach, ktore moga sie rozjechac.
 	 */
-	return $schema + cyber_product_option_schema();
+	$cached = $schema + cyber_product_option_schema();
+
+	return $cached;
 }
 
 /**
@@ -1278,6 +1291,82 @@ function cyber_product_option_schema() {
 }
 
 /**
+ * Buduje adres tel: z numeru zapisanego przez redaktora.
+ *
+ * W tresci zostaje zapis redaktora (spacje, myslniki, nawiasy), w href tylko
+ * cyfry i wiodacy plus. Regula istniala w dwoch kopiach — w top headerze
+ * i w sekcji Kontakt, gdzie komentarz odsylal do tej pierwszej slowami
+ * zamiast wywolaniem.
+ *
+ * @param string $phone Numer w zapisie redaktora.
+ * @return string Wartosc atrybutu href.
+ */
+function cyber_tel_href( $phone ) {
+	return 'tel:' . preg_replace( '/[^0-9+]/', '', (string) $phone );
+}
+
+/**
+ * Wybiera z wiersza sekcji te kolory, ktore redaktor faktycznie ustawil.
+ *
+ * Pole koloru puste = "zostaw wartosc z arkusza", wiec pusta wartosc NIE
+ * moze trafic do atrybutu style jako pusta deklaracja. Ten warunek istnial
+ * w pieciu identycznych kopiach (galeria, kontakt, licznik, FAQ, tabela).
+ *
+ * @param array                 $row    Wiersz Flexible Content.
+ * @param array<string, string> $colors Nazwa zmiennej CSS => nazwa pola.
+ * @return array<string, string> Tylko ustawione kolory.
+ */
+function cyber_row_colors( array $row, array $colors ) {
+	$out = array();
+
+	foreach ( $colors as $var => $key ) {
+		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
+
+		if ( '' !== $value ) {
+			$out[ $var ] = $value;
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Skleja pary "nazwa => wartosc" w liste deklaracji CSS.
+ *
+ * Trzy linijki, ale zanim tu trafily, istnialy w trzynastu kopiach — w kazdym
+ * module sekcji, w blogu, w page headerze i w cyber_css_vars_from_map().
+ * CLAUDE.md sekcja 6 ostrzegala przed tym przy trzech kopiach; problem odrosl,
+ * bo kazdy kolejny modul mial dobry powod, zeby nie uzywac MAPY — i przy
+ * okazji przepisywal takze sam emiter, ktorego ten powod nie dotyczyl.
+ *
+ * Rozdzielenie na dwie funkcje jest celowe: modul per instancja potrzebuje
+ * samych deklaracji (ida do atrybutu style), modul globalny — calego bloku
+ * :root{...} (idzie do <style> w wp_head).
+ *
+ * @param array<string, string|int> $vars Nazwa zmiennej CSS => wartosc.
+ * @return string Deklaracje CSS, np. "--a:1px;--b:red;".
+ */
+function cyber_css_declarations( array $vars ) {
+	$out = '';
+
+	foreach ( $vars as $name => $value ) {
+		$out .= sprintf( '%1$s:%2$s;', $name, $value );
+	}
+
+	return $out;
+}
+
+/**
+ * Pakuje zmienne CSS w blok :root{...}.
+ *
+ * @param array<string, string|int> $vars Nazwa zmiennej CSS => wartosc.
+ * @return string Blok CSS bez znacznika <style>.
+ */
+function cyber_css_root( array $vars ) {
+	return ':root{' . cyber_css_declarations( $vars ) . '}';
+}
+
+/**
  * Sanityzuje wartosc koloru z pola Color Picker z wlaczona przezroczystoscia.
  *
  * ACF z enable_opacity zwraca przy pelnym kryciu HEX, a ponizej rgb()/rgba().
@@ -1325,6 +1414,61 @@ function cyber_sanitize_color( $value ) {
  */
 function cyber_alignments() {
 	return array( 'left', 'center', 'right' );
+}
+
+/**
+ * Rozmiary przyciskow — jedno zrodlo dla CSS i dla komponentu.
+ *
+ * Kolejnosc odpowiada malejacej wadze wizualnej. Nazwa rozmiaru jest
+ * jednoczesnie modyfikatorem klasy (.btn-large) i czlonem nazwy pola
+ * (cyber_btn_large_*) oraz zmiennej (--cyber-btn-large-*).
+ *
+ * Rejestr stoi tutaj, a nie w inc/enqueue.php, bo siega po niego
+ * cyber_option_schema() — a ta nie moze zalezec od pliku ladowanego
+ * pozniej (ta sama zasada co przy cyber_font_weight_choices()).
+ *
+ * @return string[] Nazwy rozmiarow.
+ */
+function cyber_button_sizes() {
+	return array( 'large', 'medium', 'small' );
+}
+
+/**
+ * Poziomy naglowkow — jedno zrodlo dla schematu opcji i dla sekcji.
+ *
+ * Lista byla wpisana wprost w trzech wpisach cyber_option_schema()
+ * (blog_title_size, blog_single_title_size, pageheader_title_size)
+ * i w cyber_cards_title_sizes().
+ *
+ * @return string[] Poziomy od najwiekszego.
+ */
+function cyber_heading_levels() {
+	return array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+}
+
+/**
+ * Zamknieta skala odstepow projektu w px (CLAUDE.md sekcja 6).
+ *
+ * Zero nie jest czescia skali wizualnej, ale jest poprawna wartoscia pola
+ * ("bez odstepu"), wiec stoi na jej poczatku.
+ *
+ * Skala mieszkala dotad w cyber_section_spacings() (inc/sections.php) oraz
+ * w trzech kopiach jako stringi w cyber_option_schema(). Zrodlo jest tutaj,
+ * bo skala jest globalna, a nie wlasnoscia modulu sekcji.
+ *
+ * @return int[] Dozwolone wartosci w px.
+ */
+function cyber_spacing_scale() {
+	return array( 0, 6, 12, 24, 36, 48, 64, 94 );
+}
+
+/**
+ * Skala odstepow jako lista stringow — postac wymagana przez pola Select ACF.
+ *
+ * @return string[] Wartosci skali jako stringi.
+ */
+function cyber_spacing_scale_choices() {
+	return array_map( 'strval', cyber_spacing_scale() );
 }
 
 /**
@@ -1399,7 +1543,7 @@ function cyber_get_option( $key, $default = null ) {
 	$fallback = ( null !== $default ) ? $default : $config['default'];
 	$raw      = null;
 
-	if ( function_exists( 'get_field' ) ) {
+	if ( cyber_is_acf_active() ) {
 		$raw = get_field( cyber_option_field_name( $key ), 'option' );
 	}
 

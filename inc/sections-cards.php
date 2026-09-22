@@ -69,7 +69,7 @@ function cyber_cards_image_ratios() {
  * @return string[]
  */
 function cyber_cards_title_sizes() {
-	return array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' );
+	return cyber_heading_levels();
 }
 
 /**
@@ -265,11 +265,7 @@ function cyber_cards_attributes( array $row ) {
 		);
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),

@@ -146,7 +146,7 @@ function cyber_table_cell( $value ) {
  */
 function cyber_table_attributes( array $row ) {
 	$sizes   = array( 'text', 'h6', 'h5', 'h4', 'h3' );
-	$weights = array( '300', '400', '500', '600', '700', '800' );
+	$weights = cyber_font_weight_choices();
 	$align   = cyber_section_choice( isset( $row['cyber_table_align'] ) ? $row['cyber_table_align'] : 'center', cyber_alignments(), 'center' );
 	$classes = array( 'cyber-table', 'cyber-table--' . $align );
 	$vars    = array();
@@ -187,23 +187,13 @@ function cyber_table_attributes( array $row ) {
 		'--cyber-table-color'     => 'cyber_table_color',
 	);
 
-	foreach ( $colors as $var => $key ) {
-		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
-
-		if ( '' !== $value ) {
-			$vars[ $var ] = $value;
-		}
-	}
+	$vars = array_merge( $vars, cyber_row_colors( $row, $colors ) );
 
 	if ( ! empty( $row['cyber_table_stripes'] ) ) {
 		$classes[] = 'cyber-table--stripes';
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class'    => implode( ' ', $classes ),

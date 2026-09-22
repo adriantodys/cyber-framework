@@ -170,13 +170,7 @@ function cyber_faq_attributes( array $row ) {
 		'--cyber-faq-a-color' => 'cyber_faq_answer_color',
 	);
 
-	foreach ( $colors as $var => $key ) {
-		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
-
-		if ( '' !== $value ) {
-			$vars[ $var ] = $value;
-		}
-	}
+	$vars = array_merge( $vars, cyber_row_colors( $row, $colors ) );
 
 	if ( isset( $vars['--cyber-faq-q-hover'] ) ) {
 		$classes[] = 'cyber-faq--hover';
@@ -186,11 +180,7 @@ function cyber_faq_attributes( array $row ) {
 		$classes[] = 'cyber-faq--open-bg';
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),
