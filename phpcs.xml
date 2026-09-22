@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ruleset name="Cyber Framework">
+
+	<description>
+		WPCS dla motywu cyber-framework.
+
+		Ruleset istnieje po to, zeby wynik PHPCS byl listą rzeczy do zrobienia,
+		a nie scianą szumu. Wylaczone jest wylacznie to, co kloci sie z decyzją
+		udokumentowaną w CLAUDE.md — kazde wylaczenie ma tutaj powod.
+
+		Uruchomienie:  phpcs            (sprawdzenie)
+		               phpcbf           (automatyczna poprawka tego, co sie da)
+	</description>
+
+	<file>.</file>
+
+	<!-- Biblioteki dostawcy trzymamy bajt w bajt (CLAUDE.md sekcja 2),
+	     wiec nie ma sensu ich sprawdzac ani tym bardziej poprawiac. -->
+	<exclude-pattern>*/assets/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/.git/*</exclude-pattern>
+
+	<!-- Plik wdrozeniowy: plaska lista wartosci, nigdy nie ladowana w czasie
+	     dzialania motywu (CLAUDE.md sekcja 16). Wyrownanie kolumn jest tam
+	     celowe i czyta sie je jak formularz. -->
+	<exclude-pattern>default-acf.php</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<rule ref="WordPress">
+
+		<!--
+			PHPCS oczekuje LF, a .gitattributes wymusza na *.php CRLF ("kod motywu
+			trzymamy na CRLF — tak jak powstal"). Zostawienie tego sniffa wlaczonego
+			daje trafienie w KAZDYM pliku, a phpcbf "naprawilby" je wbrew wlasnej
+			konwencji repozytorium i wygenerowal diff na calym motywie.
+		-->
+		<exclude name="Generic.Files.LineEndings"/>
+
+		<!--
+			Projekt dzieli dluzsze pliki bannerami sekcyjnymi: komentarz
+			blokowy, ktorego pierwsza i ostatnia linia to ciag kresek.
+
+			Squiz widzi w nich zwykly komentarz blokowy i zada, zeby znacznik
+			otwarcia i zamkniecia staly w osobnych liniach. phpcbf "poprawia"
+			to przenoszac kreski do nowej linii, czyli rozbija banner
+			(sprawdzone: 13 sztuk w czterech plikach). Sniff nie umie wyrazic
+			tego idiomu, wiec wylaczamy dwie jego reguly zamiast rezygnowac
+			z bannerow.
+		-->
+		<exclude name="Squiz.Commenting.BlockComment.NoNewLine"/>
+		<exclude name="Squiz.Commenting.BlockComment.CloserSameLine"/>
+
+		<!--
+			Dlugi opis w DocBlocku zaczyna sie tu czesto od identyfikatora, nie
+			od slowa: "null oznacza...", "is_checkout() obejmuje...",
+			"public = false i publicly_queryable = false...". Sniff widzi mala
+			litere i zada wielkiej, ale "Null" i "Is_checkout()" byly by po
+			prostu bledna nazwa. Nazwa z kodu wazniejsza niz zdanie.
+		-->
+		<exclude name="Generic.Commenting.DocComment.LongNotCapital"/>
+
+		<!--
+			Notacja hash z podrecznika WordPressa:
+
+				@param array $args {
+				    @type bool $image Zdjecie wyrozniajace.
+				}
+
+			Sniff czyta otwierajacy nawias jako opis parametru i zada kropki
+			na koncu. Opis stoi w wierszach @type ponizej i kropki ma.
+		-->
+		<exclude name="Squiz.Commenting.FunctionComment.ParamCommentFullStop"/>
+
+		<!--
+			$default jako nazwa parametru w cyber_get_option() i pokrewnych.
+			Tak samo nazywa go rdzen WordPressa (get_option, get_theme_mod,
+			get_post_meta), wiec zmiana na $fallback oddalilaby API motywu od
+			tego, co dev zna skadinad — za cene zera korzysci. "default" nie
+			jest zreszta slowem zastrzezonym w kontekscie nazwy zmiennej.
+		-->
+		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+	</rule>
+
+	<config name="text_domain" value="cyber-framework"/>
+	<config name="prefixes" value="cyber,Cyber,CYBER"/>
+	<config name="minimum_wp_version" value="6.0"/>
+
+	<!--
+		Nadpisane szablony WooCommerce (CLAUDE.md, "Stan nadpisan: dwa").
+		To kopie plikow wtyczki z minimalna edycja, wiec obowiazuja je konwencje
+		WooCommerce, nie motywu: zmienne i hooki maja prefiks woocommerce_,
+		ciagi naleza do domeny 'woocommerce', a escapowanie robi wtyczka u siebie.
+		Przepisanie ich "pod WPCS" zerwaloby zgodnosc z oryginalem, czyli jedyna
+		rzecz, ktora pozwala porownac je z nowa wersja wtyczki po aktualizacji.
+	-->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<exclude-pattern>*/woocommerce/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<exclude-pattern>*/woocommerce/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.EscapeOutput">
+		<exclude-pattern>*/woocommerce/*</exclude-pattern>
+	</rule>
+
+</ruleset>

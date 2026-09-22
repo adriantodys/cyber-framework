@@ -192,8 +192,20 @@ function cyber_page_header_data() {
 		$width = (string) cyber_get_option( 'pageheader_width' );
 	}
 
-	$image   = esc_url_raw( (string) ( cyber_page_header_field( 'image', $post_id ) ?: cyber_get_option( 'pageheader_bg_image' ) ) );
-	$video   = cyber_page_header_video( cyber_page_header_field( 'video', $post_id ) ?: cyber_get_option( 'pageheader_bg_video' ) );
+	// Pole wpisu ma pierwszenstwo; puste oddaje glos ustawieniu globalnemu.
+	$image_src = cyber_page_header_field( 'image', $post_id );
+	$video_src = cyber_page_header_field( 'video', $post_id );
+
+	if ( ! $image_src ) {
+		$image_src = cyber_get_option( 'pageheader_bg_image' );
+	}
+
+	if ( ! $video_src ) {
+		$video_src = cyber_get_option( 'pageheader_bg_video' );
+	}
+
+	$image   = esc_url_raw( (string) $image_src );
+	$video   = cyber_page_header_video( $video_src );
 	$overlay = cyber_sanitize_color( cyber_page_header_field( 'overlay', $post_id ) );
 
 	if ( '' === $overlay ) {
@@ -229,17 +241,17 @@ function cyber_page_header_data() {
 	}
 
 	$cache = array(
-		'title'    => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
-		'excerpt'  => $excerpt,
-		'video'    => $video,
-		'has_bg'   => '' !== $image || $video,
-		'class'    => sprintf(
+		'title'   => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
+		'excerpt' => $excerpt,
+		'video'   => $video,
+		'has_bg'  => '' !== $image || $video,
+		'class'   => sprintf(
 			'cyber-page-header cyber-page-header--%1$s cyber-page-header--%2$s%3$s',
 			'container' === $width ? 'container' : 'full',
 			cyber_section_choice( cyber_get_option( 'pageheader_align' ), cyber_alignments(), 'center' ),
 			0 === $height ? ' cyber-page-header--auto' : ''
 		),
-		'style'    => $style,
+		'style'   => $style,
 	);
 
 	return $cache;

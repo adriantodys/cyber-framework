@@ -21,8 +21,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$cyber_phone  = isset( $args['phone'] ) ? $args['phone'] : null;
-$cyber_email  = isset( $args['email'] ) ? $args['email'] : null;
+$cyber_phone = isset( $args['phone'] ) ? $args['phone'] : null;
+$cyber_email = isset( $args['email'] ) ? $args['email'] : null;
 
 $cyber_class = cyber_variant_class( 'cyber-topheader', isset( $args['variant'] ) ? $args['variant'] : 'default' );
 ?>

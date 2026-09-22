@@ -151,10 +151,10 @@ function cyber_slider_attributes( array $row ) {
 
 	$vars = array();
 
-	$height = isset( $row['cyber_slider_height'] ) ? absint( $row['cyber_slider_height'] ) : 600;
+	$height                   = isset( $row['cyber_slider_height'] ) ? absint( $row['cyber_slider_height'] ) : 600;
 	$vars['--cyber-slider-h'] = sprintf( '%dpx', max( 100, min( 2000, $height ? $height : 600 ) ) );
 
-	$height_m = isset( $row['cyber_slider_height_mobile'] ) ? absint( $row['cyber_slider_height_mobile'] ) : 400;
+	$height_m                   = isset( $row['cyber_slider_height_mobile'] ) ? absint( $row['cyber_slider_height_mobile'] ) : 400;
 	$vars['--cyber-slider-h-m'] = sprintf( '%dpx', max( 100, min( 2000, $height_m ? $height_m : 400 ) ) );
 
 	$fits = cyber_slider_image_fits();
@@ -440,11 +440,19 @@ function cyber_slider_assets() {
 
 	$vendor = CYBER_URI . '/' . CYBER_SWIPER_DIR;
 
-	// Arkusze dostawcy bez wersji z filemtime — wersja siedzi w nazwie katalogu.
+	/*
+	 * Arkusze dostawcy bez wersji z filemtime — wersja siedzi w nazwie
+	 * katalogu (CLAUDE.md sekcja 2, pkt 3), wiec aktualizacja Swipera sama
+	 * zmienia adres pliku i uniewaznia cache przegladarki. null, a nie brak
+	 * argumentu: brak dokleja ?ver= z wersja WordPressa, czyli query string,
+	 * ktory nie ma tu nic do rzeczy.
+	 */
+	// phpcs:disable WordPress.WP.EnqueuedResourceParameters.MissingVersion -- patrz wyzej.
 	wp_enqueue_style( 'swiper', $vendor . '/swiper.min.css', array(), null );
 	wp_enqueue_style( 'swiper-navigation', $vendor . '/modules/navigation.min.css', array( 'swiper' ), null );
 	wp_enqueue_style( 'swiper-pagination', $vendor . '/modules/pagination.min.css', array( 'swiper' ), null );
 	wp_enqueue_style( 'swiper-a11y', $vendor . '/modules/a11y.min.css', array( 'swiper' ), null );
+	// phpcs:enable WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
 	wp_enqueue_script(
 		'cyber-slider',

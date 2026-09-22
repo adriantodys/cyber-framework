@@ -66,6 +66,7 @@ get_template_part(
  * Ktory z dwoch paskow (zwykly czy sklepowy) i czy w ogole ma sie pojawic,
  * rozstrzyga cyber_breadcrumb_data(). Tutaj zostaje samo wyswietlenie.
  */
+
 /*
  * Page header (tytul strony na tle) stoi NAD okruszkami: najpierw "gdzie
  * jestem" w duzym formacie, potem sciezka. Decyzje, czy sie pokazac,

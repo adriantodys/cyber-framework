@@ -1287,6 +1287,8 @@
 	flex: none;
 	width: 18px;
 	height: 18px;
+	/* Korekta optyczna: kwadrat 18px zrownany z linia bazowa pierwszej linii
+	   etykiety. Wymiar elementu, nie rytm strony — poza skala z sekcji 6. */
 	margin: 2px 0 0;
 }
 

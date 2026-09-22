@@ -28,7 +28,10 @@ if ( ! $cyber_items ) {
 	return;
 }
 
-$cyber_attributes = isset( $args['attributes'] ) ? $args['attributes'] : array( 'class' => 'cyber-gallery', 'style' => '' );
+$cyber_attributes = isset( $args['attributes'] ) ? $args['attributes'] : array(
+	'class' => 'cyber-gallery',
+	'style' => '',
+);
 $cyber_filters    = isset( $args['filters'] ) ? $args['filters'] : array();
 $cyber_all        = isset( $args['all_label'] ) && '' !== $args['all_label'] ? $args['all_label'] : __( 'Wszystkie', 'cyber-framework' );
 ?>

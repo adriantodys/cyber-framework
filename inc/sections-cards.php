@@ -125,10 +125,10 @@ function cyber_cards_attributes( array $row ) {
 	);
 
 	$spacings = array(
-		'--cyber-cards-gap-x'    => 'cyber_cards_gap_x',
-		'--cyber-cards-gap-y'    => 'cyber_cards_gap_y',
-		'--cyber-cards-pad-x'    => 'cyber_cards_pad_x',
-		'--cyber-cards-pad-y'    => 'cyber_cards_pad_y',
+		'--cyber-cards-gap-x'     => 'cyber_cards_gap_x',
+		'--cyber-cards-gap-y'     => 'cyber_cards_gap_y',
+		'--cyber-cards-pad-x'     => 'cyber_cards_pad_x',
+		'--cyber-cards-pad-y'     => 'cyber_cards_pad_y',
 		'--cyber-cards-gap-media' => 'cyber_cards_gap_media',
 		'--cyber-cards-gap-title' => 'cyber_cards_gap_title',
 		'--cyber-cards-gap-text'  => 'cyber_cards_gap_text',

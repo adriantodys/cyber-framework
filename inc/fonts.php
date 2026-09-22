@@ -44,23 +44,23 @@ function cyber_font_families() {
 			'label' => 'Systemowa — bezszeryfowa (domyślna)',
 			'local' => '',
 		),
-		'Georgia, "Times New Roman", Times, serif'                        => array(
+		'Georgia, "Times New Roman", Times, serif'       => array(
 			'label' => 'Georgia — szeryfowa',
 			'local' => '',
 		),
-		'"Helvetica Neue", Helvetica, Arial, sans-serif'                  => array(
+		'"Helvetica Neue", Helvetica, Arial, sans-serif' => array(
 			'label' => 'Helvetica / Arial — bezszeryfowa',
 			'local' => '',
 		),
-		'"Space Grotesk", system-ui, sans-serif'                          => array(
+		'"Space Grotesk", system-ui, sans-serif'         => array(
 			'label' => 'Space Grotesk — z motywu',
 			'local' => 'space-grotesk',
 		),
-		'"Manrope", system-ui, sans-serif'                                => array(
+		'"Manrope", system-ui, sans-serif'               => array(
 			'label' => 'Manrope — z motywu',
 			'local' => 'manrope',
 		),
-		'"Geist", system-ui, sans-serif'                                  => array(
+		'"Geist", system-ui, sans-serif'                 => array(
 			'label' => 'Geist — z motywu',
 			'local' => 'geist',
 		),

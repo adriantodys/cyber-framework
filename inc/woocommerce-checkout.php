@@ -188,6 +188,13 @@ add_action( 'woocommerce_checkout_order_review', 'cyber_wc_checkout_coupon_box',
 function cyber_wc_checkout_order_button( $html ) {
 	unset( $html );
 
+	/*
+	 * Celowo CUDZY hook, bez prefiksu cyber_. To filtr WooCommerce i wtyczki
+	 * sklepowe podpinaja sie wlasnie pod niego, zeby zmienic napis na
+	 * przycisku. Nadanie mu wlasnej nazwy odcieloby je od tego miejsca —
+	 * motyw przejmuje markup przycisku, a nie kontrole nad jego trescia.
+	 */
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- patrz wyzej.
 	$text = apply_filters( 'woocommerce_order_button_text', __( 'Kupuję i płacę', 'cyber-framework' ) );
 
 	return sprintf(

@@ -355,11 +355,11 @@ function cyber_header_css() {
  */
 function cyber_copyright_css_map() {
 	return array(
-		'copyright_bg_color'        => array( '--cyber-copyright-bg', '' ),
-		'copyright_text_color'      => array( '--cyber-copyright-text-color', '' ),
-		'copyright_link_color'      => array( '--cyber-copyright-link-color', '' ),
-		'copyright_text_font_size'  => array( '--cyber-copyright-text-font-size', 'px' ),
-		'copyright_link_font_size'  => array( '--cyber-copyright-link-font-size', 'px' ),
+		'copyright_bg_color'       => array( '--cyber-copyright-bg', '' ),
+		'copyright_text_color'     => array( '--cyber-copyright-text-color', '' ),
+		'copyright_link_color'     => array( '--cyber-copyright-link-color', '' ),
+		'copyright_text_font_size' => array( '--cyber-copyright-text-font-size', 'px' ),
+		'copyright_link_font_size' => array( '--cyber-copyright-link-font-size', 'px' ),
 	);
 }
 
@@ -716,8 +716,19 @@ function cyber_print_inline_css() {
 		. cyber_blog_css()
 		. cyber_page_header_css();
 
+	/*
+	 * wp_strip_all_tags(), nie esc_html(). Kontekstem jest wnetrze <style>,
+	 * a nie tresc HTML: escapowanie encjami zamieniloby > w &gt; i rozbiloby
+	 * kazdy selektor potomka. Jedyne realne zagrozenie tutaj to zamkniecie
+	 * bloku znacznikiem </style> — a to wlasnie usuwa strip.
+	 *
+	 * Sama tresc $css nie jest dowolnym wejsciem: kazda wartosc przeszla
+	 * przez cyber_option_schema() (typ, zakres, biala lista), wiec do tego
+	 * miejsca nie trafia nic spoza listy dozwolonych wartosci.
+	 */
 	printf(
 		'<style id="cyber-global-vars">%s</style>' . "\n",
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kontekst <style>, patrz komentarz wyzej.
 		wp_strip_all_tags( $css )
 	);
 }

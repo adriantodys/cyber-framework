@@ -196,6 +196,9 @@
 .cyber-lightbox__next::before {
 	width: 16px;
 	height: 16px;
+	/* Polowa wlasnego rozmiaru — wysrodkowanie strzalki wzgledem punktu
+	   zaczepienia, nie odstep. Skala z CLAUDE.md sekcja 6 tego nie dotyczy:
+	   wartosc wynika z 16px powyzej i zmienia sie razem z nia. */
 	margin: -8px 0 0 -8px;
 	background: none;
 	border-left: 2px solid currentColor;

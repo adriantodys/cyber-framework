@@ -118,6 +118,7 @@ function cyber_section_types() {
 			'template' => 'table',
 			'contexts' => array( 'page', 'post' ),
 		),
+
 		/*
 		 * Wstawia sekcje z wpisu CPT (inc/sections-global.php). Renderer
 		 * podmienia wiersz na sekcje wybranego wpisu; plik szablonu wypisuje

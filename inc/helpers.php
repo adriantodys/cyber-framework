@@ -937,194 +937,194 @@ function cyber_option_schema() {
 			'min'     => 60,
 			'max'     => 400,
 		),
-		'blog_sidebar'                 => array(
+		'blog_sidebar'                => array(
 			'type'    => 'bool',
 			'default' => true,
 		),
-		'blog_sidebar_width'           => array(
+		'blog_sidebar_width'          => array(
 			'type'    => 'choice',
 			'default' => '30',
 			'choices' => array( '25', '30', '33' ),
 		),
-		'blog_gap'                     => array(
+		'blog_gap'                    => array(
 			'type'    => 'choice',
 			'default' => '64',
 			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
 		),
-		'blog_show_title'              => array(
+		'blog_show_title'             => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_columns'                 => array(
+		'blog_columns'                => array(
 			'type'    => 'choice',
 			'default' => '2',
 			'choices' => array( '1', '2', '3' ),
 		),
-		'blog_columns_tablet'          => array(
+		'blog_columns_tablet'         => array(
 			'type'    => 'choice',
 			'default' => '2',
 			'choices' => array( '1', '2' ),
 		),
-		'blog_gap_x'                   => array(
+		'blog_gap_x'                  => array(
 			'type'    => 'choice',
 			'default' => '24',
 			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
 		),
-		'blog_gap_y'                   => array(
+		'blog_gap_y'                  => array(
 			'type'    => 'choice',
 			'default' => '48',
 			'choices' => array( '0', '6', '12', '24', '36', '48', '64', '94' ),
 		),
-		'blog_image_ratio'             => array(
+		'blog_image_ratio'            => array(
 			'type'    => 'choice',
 			'default' => '16-9',
 			'choices' => array( 'auto', '16-9', '3-2', '4-3', '1-1' ),
 		),
-		'blog_show_date'               => array(
+		'blog_show_date'              => array(
 			'type'    => 'bool',
 			'default' => true,
 		),
-		'blog_show_category'           => array(
+		'blog_show_category'          => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_show_excerpt'            => array(
+		'blog_show_excerpt'           => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_show_button'             => array(
+		'blog_show_button'            => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_excerpt_length'          => array(
+		'blog_excerpt_length'         => array(
 			'type'    => 'int',
 			'default' => 20,
 			'min'     => 5,
 			'max'     => 60,
 		),
-		'blog_button_label'            => array(
+		'blog_button_label'           => array(
 			'type'    => 'text',
 			'default' => __( 'Czytaj więcej', 'cyber-framework' ),
 		),
-		'blog_button_size'             => array(
+		'blog_button_size'            => array(
 			'type'    => 'choice',
 			'default' => 'small',
 			'choices' => array( 'large', 'medium', 'small' ),
 		),
-		'blog_title_size'              => array(
+		'blog_title_size'             => array(
 			'type'    => 'choice',
 			'default' => 'h5',
 			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
 		),
-		'blog_title_weight'            => array(
+		'blog_title_weight'           => array(
 			'type'    => 'choice',
 			'default' => '400',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'blog_single_image'            => array(
+		'blog_single_image'           => array(
 			'type'    => 'bool',
 			'default' => true,
 		),
-		'blog_single_date'             => array(
+		'blog_single_date'            => array(
 			'type'    => 'bool',
 			'default' => true,
 		),
-		'blog_single_category'         => array(
+		'blog_single_category'        => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_single_author'           => array(
+		'blog_single_author'          => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'blog_single_title_size'       => array(
+		'blog_single_title_size'      => array(
 			'type'    => 'choice',
 			'default' => 'h3',
 			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
 		),
-		'blog_single_title_weight'     => array(
+		'blog_single_title_weight'    => array(
 			'type'    => 'choice',
 			'default' => '400',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'blog_date_format'             => array(
+		'blog_date_format'            => array(
 			'type'    => 'choice',
 			'default' => 'short',
 			'choices' => array( 'short', 'numeric', 'wp' ),
 		),
-		'pageheader_enable'            => array(
+		'pageheader_enable'           => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'pageheader_types'             => array(
+		'pageheader_types'            => array(
 			'type'     => 'choices',
 			'default'  => array( 'page' ),
 			'nullable' => true,
 		),
-		'pageheader_width'             => array(
+		'pageheader_width'            => array(
 			'type'    => 'choice',
 			'default' => 'full',
 			'choices' => array( 'full', 'container' ),
 		),
-		'pageheader_height'            => array(
+		'pageheader_height'           => array(
 			'type'    => 'px',
 			'default' => 360,
 			'min'     => 120,
 			'max'     => 900,
 		),
-		'pageheader_height_mobile'     => array(
+		'pageheader_height_mobile'    => array(
 			'type'    => 'px',
 			'default' => 240,
 			'min'     => 100,
 			'max'     => 700,
 		),
-		'pageheader_align'             => array(
+		'pageheader_align'            => array(
 			'type'    => 'choice',
 			'default' => 'center',
 			'choices' => array( 'left', 'center', 'right' ),
 		),
-		'pageheader_bg_image'          => array(
+		'pageheader_bg_image'         => array(
 			'type'     => 'url',
 			'default'  => '',
 			'nullable' => true,
 		),
-		'pageheader_bg_video'          => array(
+		'pageheader_bg_video'         => array(
 			'type'     => 'url',
 			'default'  => '',
 			'nullable' => true,
 		),
-		'pageheader_overlay'           => array(
+		'pageheader_overlay'          => array(
 			'type'    => 'color_alpha',
 			'default' => 'rgba(0,0,0,0.35)',
 		),
-		'pageheader_bg_color'          => array(
+		'pageheader_bg_color'         => array(
 			'type'    => 'color_alpha',
 			'default' => '#111111',
 		),
-		'pageheader_title_size'        => array(
+		'pageheader_title_size'       => array(
 			'type'    => 'choice',
 			'default' => 'h1',
 			'choices' => array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ),
 		),
-		'pageheader_title_weight'      => array(
+		'pageheader_title_weight'     => array(
 			'type'    => 'choice',
 			'default' => '700',
 			'choices' => array( '300', '400', '500', '600', '700', '800' ),
 		),
-		'pageheader_title_color'       => array(
+		'pageheader_title_color'      => array(
 			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
-		'pageheader_show_excerpt'      => array(
+		'pageheader_show_excerpt'     => array(
 			'type'    => 'bool',
 			'default' => false,
 		),
-		'pageheader_excerpt_size'      => array(
+		'pageheader_excerpt_size'     => array(
 			'type'    => 'choice',
 			'default' => 'text',
 			'choices' => array( 'text', 'h6', 'h5', 'h4' ),
 		),
-		'pageheader_excerpt_color'     => array(
+		'pageheader_excerpt_color'    => array(
 			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
