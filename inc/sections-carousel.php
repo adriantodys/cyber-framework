@@ -189,10 +189,31 @@ function cyber_carousel_attributes( array $row, $count ) {
  * @return array{items: array, copies: bool[], per_set: int}
  */
 function cyber_carousel_continuous_items( array $items, $max_view ) {
-	$set = $items;
+	/*
+	 * Pusta lista konczy sie petla nieskonczona: array_merge pustej tablicy
+	 * z pusta nadal daje pusta, wiec warunek ponizej nigdy nie przestaje byc
+	 * prawdziwy. Wywolujacy komponent odsiewa dzis pusty zestaw wczesniej
+	 * (components/carousel.php), ale funkcja jest publiczna i nie ma prawa
+	 * zalezec od tego, ze kazdy kolejny wywolujacy o tym pamieta.
+	 */
+	if ( ! $items ) {
+		return array(
+			'items'   => array(),
+			'copies'  => array(),
+			'per_set' => 0,
+		);
+	}
 
-	while ( count( $set ) < max( 1, (int) $max_view ) ) {
-		$set = array_merge( $set, $items );
+	$set       = $items;
+	$one       = count( $items );
+	$have      = $one;
+	$min_count = max( 1, (int) $max_view );
+
+	// Licznik zamiast count() w warunku: liczba kart w zestawie jest znana
+	// z gory, wiec nie ma powodu przeliczac tablicy przy kazdym obrocie.
+	while ( $have < $min_count ) {
+		$set   = array_merge( $set, $items );
+		$have += $one;
 	}
 
 	$per_set = count( $set );
