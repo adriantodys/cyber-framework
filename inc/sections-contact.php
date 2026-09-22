@@ -77,8 +77,7 @@ function cyber_contact_section_data( array $row ) {
 		if ( 'email' === $key && is_email( $value ) ) {
 			$href = 'mailto:' . $value;
 		} elseif ( 'phone' === $key ) {
-			// W tresci zapis redaktora, w href tylko cyfry i wiodacy plus — jak w top headerze.
-			$href = 'tel:' . preg_replace( '/[^0-9+]/', '', $value );
+			$href = cyber_tel_href( $value );
 		}
 
 		$out[] = array(
@@ -144,19 +143,9 @@ function cyber_contact_section_attributes( array $row ) {
 		'--cyber-contact-field-bg'    => 'cyber_contact_section_field_bg',
 	);
 
-	foreach ( $colors as $var => $key ) {
-		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
+	$vars = array_merge( $vars, cyber_row_colors( $row, $colors ) );
 
-		if ( '' !== $value ) {
-			$vars[ $var ] = $value;
-		}
-	}
-
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),

@@ -37,7 +37,7 @@ const CYBER_HEADER_MENU_LOCATION = 'primary';
  * @return array Argumenty dla wp_nav_menu().
  */
 function cyber_header_menu_args( $alignment, $with_indicator = true ) {
-	$menu_class = 'cyber-menu cyber-menu--' . $alignment;
+	$menu_class = cyber_variant_class( 'cyber-menu', $alignment );
 
 	if ( $with_indicator ) {
 		$menu_class .= ' cyber-menu--with-indicator';
@@ -137,9 +137,8 @@ function cyber_top_header_data() {
 
 	if ( '' !== $phone && cyber_get_option( 'topheader_show_phone' ) ) {
 		$data['phone'] = array(
-			// W tresci zostaje zapis redaktora, w href tylko cyfry i wiodacy plus.
 			'text' => $phone,
-			'href' => 'tel:' . preg_replace( '/[^0-9+]/', '', $phone ),
+			'href' => cyber_tel_href( $phone ),
 		);
 	}
 

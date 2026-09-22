@@ -192,11 +192,7 @@ function cyber_slider_attributes( array $row ) {
 		$classes[]                      = 'cyber-slider--has-overlay';
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),
@@ -273,15 +269,15 @@ function cyber_slider_slides( array $row ) {
 }
 
 /**
- * Dozwolone formaty wideo slajdu: typ MIME => typ dla <source>.
+ * Dozwolone formaty wideo slajdu — lista dozwolonych typow MIME.
  *
- * @return array<string, string>
+ * Atrybut type w <source> jest po prostu typem MIME zalacznika, wiec lista
+ * jest lista, nie mapa 'video/mp4' => 'video/mp4'.
+ *
+ * @return string[]
  */
 function cyber_slider_video_types() {
-	return array(
-		'video/mp4'  => 'video/mp4',
-		'video/webm' => 'video/webm',
-	);
+	return array( 'video/mp4', 'video/webm' );
 }
 
 /**
@@ -295,8 +291,7 @@ function cyber_slider_video_types() {
  * @return array{url?: string, type?: string} Pusta tablica, gdy nie ma czego odtworzyc.
  */
 function cyber_slider_video_source( $id ) {
-	$id    = absint( $id );
-	$types = cyber_slider_video_types();
+	$id = absint( $id );
 
 	if ( ! $id ) {
 		return array();
@@ -305,13 +300,13 @@ function cyber_slider_video_source( $id ) {
 	$mime = (string) get_post_mime_type( $id );
 	$url  = wp_get_attachment_url( $id );
 
-	if ( ! $url || ! isset( $types[ $mime ] ) ) {
+	if ( ! $url || ! in_array( $mime, cyber_slider_video_types(), true ) ) {
 		return array();
 	}
 
 	return array(
 		'url'  => esc_url_raw( $url ),
-		'type' => $types[ $mime ],
+		'type' => $mime,
 	);
 }
 
@@ -381,8 +376,11 @@ function cyber_slider_picture( array $slide, $first ) {
 		}
 
 		if ( $srcset ) {
+			$breakpoints = cyber_breakpoints();
+
 			printf(
-				'<source media="(max-width: 767px)" srcset="%s" sizes="100vw" />',
+				'<source media="(max-width: %1$dpx)" srcset="%2$s" sizes="100vw" />',
+				(int) $breakpoints['mobile'],
 				esc_attr( $srcset )
 			);
 		}
@@ -406,7 +404,7 @@ function cyber_slider_picture( array $slide, $first ) {
  * @return bool
  */
 function cyber_slider_on_page( $post_id ) {
-	if ( ! function_exists( 'get_field' ) ) {
+	if ( ! cyber_is_acf_active() ) {
 		return false;
 	}
 

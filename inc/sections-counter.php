@@ -154,19 +154,9 @@ function cyber_counter_attributes( array $row ) {
 		'--cyber-counter-label-color' => 'cyber_counter_label_color',
 	);
 
-	foreach ( $colors as $var => $key ) {
-		$value = cyber_sanitize_color( isset( $row[ $key ] ) ? $row[ $key ] : '' );
+	$vars = array_merge( $vars, cyber_row_colors( $row, $colors ) );
 
-		if ( '' !== $value ) {
-			$vars[ $var ] = $value;
-		}
-	}
-
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	return array(
 		'class' => implode( ' ', $classes ),

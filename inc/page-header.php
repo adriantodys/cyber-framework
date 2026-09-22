@@ -65,7 +65,7 @@ add_filter( 'acf/load_field/key=field_cyber_pageheader_types', 'cyber_page_heade
  * @return mixed Pusty string, gdy ACF nie dziala albo pole jest puste.
  */
 function cyber_page_header_field( $key, $post_id ) {
-	if ( ! function_exists( 'get_field' ) ) {
+	if ( ! cyber_is_acf_active() ) {
 		return '';
 	}
 
@@ -234,11 +234,7 @@ function cyber_page_header_data() {
 		$vars['--cyber-ph-overlay'] = $overlay;
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	$cache = array(
 		'title'   => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
@@ -248,7 +244,7 @@ function cyber_page_header_data() {
 		'class'   => sprintf(
 			'cyber-page-header cyber-page-header--%1$s cyber-page-header--%2$s%3$s',
 			'container' === $width ? 'container' : 'full',
-			cyber_section_choice( cyber_get_option( 'pageheader_align' ), cyber_alignments(), 'center' ),
+			cyber_get_option( 'pageheader_align' ),
 			0 === $height ? ' cyber-page-header--auto' : ''
 		),
 		'style'   => $style,
@@ -278,25 +274,16 @@ function cyber_page_header_shows() {
  * @return string CSS bez znacznika <style>.
  */
 function cyber_page_header_css() {
-	$sizes   = array( 'text', 'h6', 'h5', 'h4' );
-	$excerpt = (string) cyber_get_option( 'pageheader_excerpt_size' );
-
 	$vars = array(
 		'--cyber-ph-height-m'      => sprintf( '%dpx', (int) cyber_get_option( 'pageheader_height_mobile' ) ),
 		'--cyber-ph-title-size'    => sprintf( 'var(--cyber-font-size-%s)', cyber_get_option( 'pageheader_title_size' ) ),
 		'--cyber-ph-title-weight'  => (int) cyber_get_option( 'pageheader_title_weight' ),
 		'--cyber-ph-title-color'   => (string) cyber_get_option( 'pageheader_title_color' ),
-		'--cyber-ph-excerpt-size'  => sprintf( 'var(--cyber-font-size-%s)', in_array( $excerpt, $sizes, true ) ? $excerpt : 'text' ),
+		'--cyber-ph-excerpt-size'  => sprintf( 'var(--cyber-font-size-%s)', cyber_get_option( 'pageheader_excerpt_size' ) ),
 		'--cyber-ph-excerpt-color' => (string) cyber_get_option( 'pageheader_excerpt_color' ),
 	);
 
-	$css = ':root{';
-
-	foreach ( $vars as $name => $value ) {
-		$css .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
-
-	return $css . '}';
+	return cyber_css_root( $vars );
 }
 
 /**

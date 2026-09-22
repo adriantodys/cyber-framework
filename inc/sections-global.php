@@ -136,7 +136,7 @@ function cyber_global_section_rows( $id ) {
 
 	$id = absint( $id );
 
-	if ( ! $id || ! function_exists( 'get_field' ) ) {
+	if ( ! $id || ! cyber_is_acf_active() ) {
 		return array();
 	}
 
@@ -211,8 +211,20 @@ function cyber_global_section_problem( $id ) {
  * @return array[] Wiersze Flexible Content.
  */
 function cyber_section_rows_expanded( $post_id ) {
-	if ( ! $post_id || ! function_exists( 'get_field' ) ) {
+	if ( ! $post_id || ! cyber_is_acf_active() ) {
 		return array();
+	}
+
+	/*
+	 * Cache jak w cyber_global_section_rows() nizej. Cztery moduly pytaja
+	 * o to samo drzewo na tym samym hooku (wp_enqueue_scripts, priorytet 20):
+	 * arkusz sekcji, slider, licznik i galeria. Bez cache kazdy z nich
+	 * przechodzil cale rozwiniecie od nowa.
+	 */
+	static $cache = array();
+
+	if ( isset( $cache[ $post_id ] ) ) {
+		return $cache[ $post_id ];
 	}
 
 	$raw = get_field( CYBER_SECTIONS_FIELD, $post_id );
@@ -234,6 +246,8 @@ function cyber_section_rows_expanded( $post_id ) {
 
 		$out = array_merge( $out, cyber_global_section_rows( cyber_global_section_id( $row ) ) );
 	}
+
+	$cache[ $post_id ] = $out;
 
 	return $out;
 }

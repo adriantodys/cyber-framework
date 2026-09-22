@@ -114,6 +114,13 @@ function cyber_wc_checkout_remove_default_coupon() {
 	}
 
 	remove_action( 'woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10 );
+
+	/*
+	 * Filtr etykiet rejestrujemy dopiero tutaj — patrz ten sam komentarz
+	 * w inc/woocommerce-cart.php. 'gettext' fires dla kazdego ciagu w calej
+	 * instalacji, a callback dziala wylacznie na stronie zamowienia.
+	 */
+	add_filter( 'gettext', 'cyber_wc_checkout_labels', 10, 3 );
 }
 add_action( 'wp', 'cyber_wc_checkout_remove_default_coupon' );
 
@@ -222,19 +229,24 @@ function cyber_wc_checkout_labels( $translated, $text, $domain ) {
 		return $translated;
 	}
 
-	$labels = array(
-		'Billing details' => __( 'Dane rozliczeniowe', 'cyber-framework' ),
-		'Your order'      => __( 'Twoje zamówienie', 'cyber-framework' ),
-		'Product'         => __( 'Produkt', 'cyber-framework' ),
-		'Quantity'        => __( 'Ilość', 'cyber-framework' ),
-		'Subtotal'        => __( 'Kwota zamówienia', 'cyber-framework' ),
-		'Shipping'        => __( 'Dostawa', 'cyber-framework' ),
-		'Total'           => __( 'Łącznie', 'cyber-framework' ),
-	);
+	// Jak w koszyku: siedem __() w srodku, wywolywanych przy kazdym ciagu
+	// WooCommerce na tej stronie — budujemy mape raz.
+	static $labels = null;
+
+	if ( null === $labels ) {
+		$labels = array(
+			'Billing details' => __( 'Dane rozliczeniowe', 'cyber-framework' ),
+			'Your order'      => __( 'Twoje zamówienie', 'cyber-framework' ),
+			'Product'         => __( 'Produkt', 'cyber-framework' ),
+			'Quantity'        => __( 'Ilość', 'cyber-framework' ),
+			'Subtotal'        => __( 'Kwota zamówienia', 'cyber-framework' ),
+			'Shipping'        => __( 'Dostawa', 'cyber-framework' ),
+			'Total'           => __( 'Łącznie', 'cyber-framework' ),
+		);
+	}
 
 	return isset( $labels[ $text ] ) ? $labels[ $text ] : $translated;
 }
-add_filter( 'gettext', 'cyber_wc_checkout_labels', 10, 3 );
 
 /**
  * Etykieta wiersza dostawy w podsumowaniu.

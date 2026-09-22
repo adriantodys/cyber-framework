@@ -301,12 +301,21 @@ function cyber_woocommerce_needs_styles() {
 	if ( ! $needed && is_singular() ) {
 		$content = (string) get_post_field( 'post_content', get_queried_object_id() );
 
-		foreach ( cyber_woocommerce_shortcodes() as $shortcode ) {
-			if ( has_shortcode( $content, $shortcode ) ) {
-				$needed = true;
-
-				break;
-			}
+		/*
+		 * Jedno przejscie regexem zamiast has_shortcode() w petli. Kazde
+		 * has_shortcode() buduje get_shortcode_regex() od nowa — z listy
+		 * WSZYSTKICH shortcode'ow zarejestrowanych w instalacji, wtyczek
+		 * wlacznie — i skanuje cala tresc. Przy 18 tagach dawalo to 18
+		 * kompilacji wzorca i 18 przebiegow po tym samym tekscie.
+		 *
+		 * Wzorzec zawezony do naszych tagow radzi sobie z zagniezdzeniem
+		 * lepiej niz rekurencja has_shortcode(): obcy shortcode dookola nie
+		 * pasuje do wzorca, wiec nie "zjada" naszego — zostaje znaleziony
+		 * wprost.
+		 */
+		if ( false !== strpos( $content, '[' ) ) {
+			$pattern = '/' . get_shortcode_regex( cyber_woocommerce_shortcodes() ) . '/';
+			$needed  = (bool) preg_match( $pattern, $content );
 		}
 	}
 

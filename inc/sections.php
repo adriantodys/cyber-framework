@@ -162,7 +162,7 @@ function cyber_section_widths() {
  * @return int[] Dozwolone wartosci w px.
  */
 function cyber_section_spacings() {
-	return array( 0, 6, 12, 24, 36, 48, 64, 94 );
+	return cyber_spacing_scale();
 }
 
 /**
@@ -428,11 +428,7 @@ function cyber_section_attributes( $type, array $row ) {
 		}
 	}
 
-	$style = '';
-
-	foreach ( $vars as $name => $value ) {
-		$style .= sprintf( '%1$s:%2$s;', $name, $value );
-	}
+	$style = cyber_css_declarations( $vars );
 
 	$anchor = isset( $row['cyber_section_anchor'] ) ? sanitize_title( (string) $row['cyber_section_anchor'] ) : '';
 
@@ -459,7 +455,7 @@ function cyber_section_attributes( $type, array $row ) {
  * @return void
  */
 function cyber_render_sections( $post_id = null ) {
-	if ( ! function_exists( 'get_field' ) ) {
+	if ( ! cyber_is_acf_active() ) {
 		return;
 	}
 
@@ -869,7 +865,7 @@ function cyber_kses_content( $html ) {
  * @return void
  */
 function cyber_section_assets() {
-	if ( ! is_singular() || ! function_exists( 'get_field' ) ) {
+	if ( ! is_singular() || ! cyber_is_acf_active() ) {
 		return;
 	}
 

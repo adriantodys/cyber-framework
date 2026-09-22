@@ -198,7 +198,7 @@ function cyber_shop_wrapper_close() {
  * @return void
  */
 function cyber_shop_category_content() {
-	if ( ! is_product_taxonomy() || ! function_exists( 'get_field' ) ) {
+	if ( ! is_product_taxonomy() || ! cyber_is_acf_active() ) {
 		return;
 	}
 
@@ -239,13 +239,14 @@ function cyber_shop_category_content() {
  * @return void
  */
 function cyber_shop_widgets_bar() {
-	$area = is_shop() ? 'cyber-shop-top' : 'cyber-category-top';
+	$scope = is_shop() ? 'shop' : 'category';
+	$area  = 'cyber-' . $scope . '-top';
 
 	if ( ! is_active_sidebar( $area ) ) {
 		return;
 	}
 
-	printf( '<div class="cyber-shop__widgets cyber-shop__widgets--%s">', esc_attr( is_shop() ? 'shop' : 'category' ) );
+	printf( '<div class="cyber-shop__widgets cyber-shop__widgets--%s">', esc_attr( $scope ) );
 	dynamic_sidebar( $area );
 	echo '</div>';
 }
@@ -334,12 +335,13 @@ function cyber_shop_toolbar_close() {
  * Pominiete swiadomie: "Domyslne sortowanie" (kolejnosc reczna) i "Ocena" —
  * projekt ich nie przewiduje.
  *
- * @param array $options Domyslne opcje WooCommerce.
+ * Filtr 'woocommerce_catalog_orderby' podaje liste domyslna, ale nic z niej
+ * nie zostaje — zwracamy wlasna w calosci, wiec funkcja nie deklaruje
+ * parametru. WordPress przekazuje argumenty tylko tylu, ilu callback chce.
+ *
  * @return array Opcje z projektu.
  */
-function cyber_shop_orderby_options( $options ) {
-	unset( $options );
-
+function cyber_shop_orderby_options() {
 	return array(
 		'title'      => __( 'Alfabetycznie', 'cyber-framework' ),
 		'popularity' => __( 'Popularne', 'cyber-framework' ),
@@ -374,7 +376,7 @@ function cyber_shop_current_orderby() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- publiczny parametr listy, nie zapis.
 	$orderby = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( $_GET['orderby'] ) ) : '';
 
-	return array_key_exists( $orderby, cyber_shop_orderby_options( array() ) )
+	return array_key_exists( $orderby, cyber_shop_orderby_options() )
 		? $orderby
 		: cyber_shop_default_orderby();
 }
@@ -555,7 +557,7 @@ function cyber_shop_load_more_products() {
 		$per_page = cyber_shop_per_page_choices()[0];
 	}
 
-	if ( ! array_key_exists( $orderby, cyber_shop_orderby_options( array() ) ) ) {
+	if ( ! array_key_exists( $orderby, cyber_shop_orderby_options() ) ) {
 		$orderby = 'title';
 	}
 

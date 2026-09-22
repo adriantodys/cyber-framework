@@ -225,8 +225,10 @@ function cyber_carousel_continuous_items( array $items, $max_view ) {
 	 * dalej to kopie: ukryte przed czytnikami ekranu i wyjete z kolejnosci
 	 * tabulacji, zeby nikt nie przechodzil przez te same karty kilka razy.
 	 */
-	foreach ( $all as $index => $item ) {
-		$copies[] = $index >= count( $items );
+	$originals = count( $items );
+
+	foreach ( array_keys( $all ) as $index ) {
+		$copies[] = $index >= $originals;
 	}
 
 	return array(
