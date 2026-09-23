@@ -100,9 +100,35 @@ Zasady dla bibliotek:
    repozytorium, a na serwerze funkcja by nie działała. Po dodaniu biblioteki
    sprawdź `git status --untracked-files=all`.
 
-Każda zależność miękka musi mieć **jeden plik**, który o niej decyduje. Moduły pytają
-tam, zamiast wołać `class_exists()` u siebie — rozsypanie tego warunku po plikach
-kończy się tym, że po wyłączeniu wtyczki część miejsc milknie cicho, a część głośno.
+Każda zależność — miękka **i twarda** — musi mieć **jeden plik**, który o niej
+decyduje, oraz **jeden predykat**, przez który pytają moduły:
+
+| Zależność | Predykat | Plik |
+|---|---|---|
+| ACF PRO | `cyber_is_acf_active()` | `inc/acf.php` |
+| WooCommerce | `cyber_is_woocommerce_active()` | `inc/woocommerce.php` |
+| Contact Form 7 | `cyber_is_cf7_active()` | `inc/contact-form-7.php` |
+
+Moduły pytają tam, zamiast wołać `class_exists()` czy `function_exists()`
+u siebie — rozsypanie tego warunku po plikach kończy się tym, że po wyłączeniu
+wtyczki część miejsc milknie cicho, a część głośno.
+
+> **ACF dopisał się do tej reguły później niż pozostałe dwie.** Przez długi czas
+> zasada była stosowana rygorystycznie do WooCommerce i CF7, a do ACF wcale:
+> dziewięć modułów niosło własne `function_exists( 'get_field' )`. Jedna surowa
+> próba testowała przy tym trzy różne rzeczy pod jednym warunkiem (`get_field`
+> do odczytu, `acf_add_options_page` do Options Page, `ACF` do notatki w panelu),
+> więc pytanie „czy ACF da się tu użyć" nie miało jednej odpowiedzi.
+>
+> `cyber_is_acf_active()` odpowiada wyłącznie za **odczyt pól**.
+> `inc/options.php` celowo dalej sprawdza `acf_add_options_page()` — to inna
+> zdolność wtyczki i nie wolno jej zlewać z poprzednią.
+>
+> Uwaga na tryb awarii: `cyber_get_option()` w `inc/helpers.php` woła teraz
+> funkcję z `inc/acf.php`. `cyber_load_modules()` pomija po cichu nieczytelny
+> plik (`is_readable()`), więc brak `inc/acf.php` kończy się teraz błędem
+> krytycznym, a nie cichą degradacją. `inc/acf.php` stoi w kolejności ładowania
+> **przed** wszystkimi konsumentami i tak musi zostać.
 
 **Komunikat o braku zależności miękkiej ma trzy poziomy i żaden nie jest opcjonalny:**
 
@@ -329,6 +355,14 @@ Marginesy i paddingi w projekcie pochodzą z **jednej, zamkniętej skali**:
 Skala jest zadeklarowana jako zmienne `--cyber-space-1` … `--cyber-space-7`
 na `:root` w **`assets/css/main.css`** — arkuszu ładowanym na każdej podstronie.
 
+Po stronie PHP tę samą skalę trzyma **`cyber_spacing_scale()`**
+(`inc/helpers.php`), a `cyber_spacing_scale_choices()` podaje ją jako stringi
+dla pól Select. Z tego jednego źródła biorą ją zarówno `cyber_section_spacings()`
+(sekcje), jak i wpisy `choices` w `cyber_option_schema()` — wcześniej skala stała
+w czterech kopiach naraz: raz jako inty w `inc/sections.php` i trzy razy jako
+stringi w schemacie. Zero nie jest częścią skali wizualnej, ale jest poprawną
+wartością pola („bez odstępu"), więc stoi na jej początku.
+
 Zmiennych współdzielonych **nie deklaruje się w arkuszu kolejkowanym
 warunkowo**: moduł, który się nie załadował, milcząco zabiera wartości każdemu,
 kto po nie sięga, a `padding: var(--cyber-space-3)` bez definicji nie jest
@@ -379,15 +413,37 @@ query**. Media query siedzi w arkuszu i konsumuje wariant mobilny tej samej
 zmiennej (`--cyber-section-pt-m`). Każda wartość wstawiana w `style` przechodzi
 przez białą listę albo sanitizer, a całość przez `esc_attr()`.
 
-- Moduł opisany **mapą pól** (klucz opcji → nazwa zmiennej + jednostka) **nie
-  pisze własnej pętli** — wypisuje zmienne przez `cyber_css_vars_from_map()`.
+Wypisywanie zmiennych ma **dwie warstwy i dwie osobne reguły**. Mylenie ich
+jest powodem, dla którego ta sekcja raz już przestała działać.
 
-Własna pętla jest dopuszczalna tylko wtedy, gdy moduł robi coś więcej niż proste
-przepisanie wartości: skaluje na breakpointach (`cyber_font_css()`), wybiera
-wartość zależnie od innego pola (`cyber_container_css()`), generuje cały blok
-`@media` (`cyber_header_mobile_css()`) albo tworzy nazwy zmiennych mechanicznie
-i mapy w ogóle nie potrzebuje (`cyber_colors_css()`). Skopiowanie pętli „bo tak
-robi sąsiedni moduł" jest błędem — wcześniej istniały trzy jej identyczne kopie.
+**Warstwa 1 — rozwiązanie wartości (mapa).** Moduł opisany **mapą pól**
+(klucz opcji → nazwa zmiennej + jednostka) **nie pisze własnej pętli** —
+wypisuje zmienne przez `cyber_css_vars_from_map()`.
+
+Własna pętla jest tu dopuszczalna tylko wtedy, gdy moduł robi coś więcej niż
+proste przepisanie wartości: skaluje na breakpointach (`cyber_font_css()`),
+wybiera wartość zależnie od innego pola (`cyber_container_css()`), generuje
+cały blok `@media` (`cyber_header_mobile_css()`) albo tworzy nazwy zmiennych
+mechanicznie i mapy w ogóle nie potrzebuje (`cyber_colors_css()`,
+`cyber_button_css()`).
+
+**Warstwa 2 — sklejenie deklaracji (emiter).** Tu wyjątków **nie ma żadnych**.
+Każdy moduł, łącznie z tymi wymienionymi wyżej, oddaje gotowe pary
+„nazwa → wartość" do `cyber_css_declarations()` (same deklaracje, do atrybutu
+`style`) albo `cyber_css_root()` (cały blok `:root{…}`, do `<style>`
+w `wp_head`). Obie funkcje siedzą w `inc/helpers.php`.
+
+> **Dlaczego to rozdzielenie jest tu zapisane osobno.** Ta sekcja ostrzegała
+> kiedyś przed kopiowaniem pętli „bo tak robi sąsiedni moduł" i mówiła o
+> **trzech** identycznych kopiach. Ostrzeżenie zostało w dokumencie, a problem
+> po cichu odrósł do **trzynastu** — bo każdy kolejny moduł miał *prawdziwy*
+> powód, żeby nie używać mapy (rozmiar tytułu to `var(--cyber-font-size-h3)`,
+> nie liczba z jednostką), i przy okazji przepisywał także emiter, którego ten
+> powód nie dotyczył. Uzasadnienie w docblocku brzmiało sensownie i było
+> poprawne — tylko dla połowy tego, co usprawiedliwiało.
+>
+> Reguła brzmi więc: **powód, żeby ominąć mapę, nigdy nie jest powodem, żeby
+> przepisać emiter.** Dziś kopia jest jedna.
 
 ## 7. Komponenty i template parts
 
@@ -856,6 +912,17 @@ Ikony social media renderowane są przez wspólny komponent
 
 Kolejne miejsca potrzebujące tej samej listy ikon mają **reużywać ten komponent**,
 nie duplikować pętli.
+
+### Formatowanie danych kontaktowych
+
+Adres `tel:` buduje **`cyber_tel_href()`** (`inc/helpers.php`): w treści zostaje
+zapis redaktora (spacje, myślniki, nawiasy), w `href` trafiają wyłącznie cyfry
+i wiodący plus. Używają go Top Header i sekcja Kontakt.
+
+Reguła stała wcześniej w dwóch kopiach, a komentarz w drugiej z nich odsyłał do
+pierwszej **słowami** („jak w top headerze") zamiast wywołaniem. Komentarz nie
+jest mechanizmem reużycia: nie pilnuje, żeby obie kopie zmieniły się razem.
+Jeśli łapiesz się na pisaniu „jak w module X", to znak, że brakuje funkcji.
 
 ### Ikony
 

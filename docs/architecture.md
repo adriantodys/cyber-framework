@@ -124,10 +124,28 @@ ją do `cyber_option_schema()` oraz do funkcji budującej CSS dla danego obszaru
 a tę funkcję dokleja się w `cyber_print_inline_css()`. Nowy moduł **nie rejestruje
 własnego hooka** — cały motyw wypisuje jeden blok `<style>`.
 
-### Wspólna pętla: `cyber_css_vars_from_map()`
+### Dwie warstwy: mapa i emiter
 
-Moduły opisane mapą (Header, Footer, Copyright) nie mają własnej pętli po polach.
-Wszystkie trzy sprowadzają się do jednej linii:
+Budowanie CSS-a ze zmiennych rozkłada się na dwa niezależne kroki. Moduł może
+mieć dobry powód, żeby pominąć pierwszy — **nigdy nie ma powodu, żeby pominąć
+drugi.**
+
+```
+klucz opcji + jednostka
+      │
+      ▼  warstwa 1 — rozwiązanie wartości
+cyber_css_vars_from_map( cyber_<modul>_css_map() )      (inc/enqueue.php)
+      │        ─ albo własne wyliczenie, jeśli moduł ma powód ─
+      ▼
+tablica  'nazwa zmiennej' => 'wartość'
+      │
+      ▼  warstwa 2 — sklejenie deklaracji (bez wyjątków)
+cyber_css_declarations( $vars )   →  "--a:1px;--b:red;"   (inc/helpers.php)
+cyber_css_root( $vars )           →  ":root{…}"           (inc/helpers.php)
+```
+
+**Warstwa 1 — mapa.** Sześć modułów opisanych mapą (Header, Footer, Copyright,
+Breadcrumb, WooCommerce, Top Header) sprowadza się do jednej linii:
 
 ```php
 function cyber_header_css() {
@@ -135,16 +153,30 @@ function cyber_header_css() {
 }
 ```
 
-Wcześniej każdy z nich niósł identyczną kopię tego samego `foreach` — łącznie
-trzy takie same bloki, które przy kolejnym module rozmnożyłyby się na cztery.
 Mapa zostaje osobna dla każdego modułu, bo nazwy zmiennych nie przekładają się
 mechanicznie z nazw pól (`footer_bg_color` → `--cyber-footer-bg`).
 
-Moduły, które **nie** korzystają z tego mechanizmu, robią to z powodu:
-`cyber_font_css()` liczy skalowanie na breakpointach, `cyber_container_css()`
-wybiera szerokość zależnie od typu, `cyber_header_mobile_css()` generuje cały
-blok `@media`, a `cyber_colors_css()` tworzy nazwy zmiennych mechanicznie i mapy
-w ogóle nie potrzebuje.
+Moduły, które **nie** korzystają z mapy, robią to z powodu: `cyber_font_css()`
+liczy skalowanie na breakpointach, `cyber_container_css()` wybiera szerokość
+zależnie od typu, `cyber_header_mobile_css()` generuje cały blok `@media`,
+a `cyber_colors_css()` i `cyber_button_css()` tworzą nazwy zmiennych
+mechanicznie i mapy w ogóle nie potrzebują.
+
+**Warstwa 2 — emiter.** Tu wyjątków nie ma. Wszystkie moduły — te z mapą i te
+bez, globalne i te per instancja sekcji — oddają gotową tablicę do
+`cyber_css_declarations()` albo `cyber_css_root()`.
+
+> **Skąd ten podział.** Pierwotnie istniała tylko warstwa 1, a ostrzeżenie
+> przed kopiowaniem pętli mówiło o **trzech** identycznych kopiach. Kopii
+> narosło **trzynaście**, mimo że ostrzeżenie stało w dokumencie przez cały
+> czas. Mechanizm rozmnażania był subtelny: każdy nowy moduł miał *prawdziwy*
+> powód, żeby nie używać mapy — `cyber_blog_css()` i `cyber_page_header_css()`
+> niosą rozmiar tytułu jako `var(--cyber-font-size-h3)`, czyli odwołanie, nie
+> liczbę z jednostką — i ich docblocki poprawnie to wyjaśniały. Tyle że przy
+> okazji przepisywały także `foreach`, którego to uzasadnienie nie dotyczyło.
+>
+> Rozdzielenie odbiera tym uzasadnieniom zasięg: wolno pominąć mapę, nie wolno
+> przepisać emitera. Dziś pętla sklejająca istnieje w jednym egzemplarzu.
 
 ### Warianty komponentów
 
@@ -197,6 +229,42 @@ Moduł czcionek realizuje wariant B (CLAUDE.md sekcja 19): pola trzymają warto�
 wyłącznie dla desktopu, a `cyber_font_css()` mnoży je w PHP przez skalę procentową
 danego breakpointu i wypisuje gotowe liczby w px. W CSS nie ma `calc()` — przeglądarka
 dostaje policzone wartości, a panel nie puchnie od pól per element × breakpoint.
+
+## Cache i koszt na żądanie
+
+Motyw nie ma warstwy cache'u w rozumieniu transientów — wszystko poniżej to
+`static` w obrębie jednego żądania. Wpisy są tu dlatego, że każdy z nich
+naprawia koszt, który **narastał niewidocznie**: nic się nie psuło, tylko
+robiło wolniej.
+
+| Co | Gdzie | Dlaczego |
+|---|---|---|
+| `cyber_option_schema()` | `inc/helpers.php` | Tablica 208 wpisów z 17 zagnieżdżonymi wywołaniami rejestrów i jednym `__()`. `cyber_get_option()` sięgała po nią przy **każdym** wywołaniu — również wtedy, gdy trafiała we własny memo-cache — czyli 150–250 razy na podstronę. Pomiar: 1,98 ms → 0,08 ms na 200 wywołań |
+| `cyber_get_option()` | `inc/helpers.php` | Memoizacja wyniku. Celowo **tylko** dla wywołań bez nadpisanego `$default` — inaczej pierwszy `$default` zamroziłby wynik dla wszystkich kolejnych |
+| `cyber_section_rows_expanded()` | `inc/sections-global.php` | Cztery moduły pytają o to samo drzewo sekcji na tym samym hooku (`wp_enqueue_scripts`, priorytet 20): arkusz sekcji, slider, licznik, galeria |
+| `cyber_global_section_rows()` | `inc/sections-global.php` | Jak wyżej, poziom niżej |
+| `cyber_page_header_data()` | `inc/page-header.php` | Dane czytane i przez `cyber_page_header_shows()`, i przez samo renderowanie |
+| Mapy etykiet `gettext` | `inc/woocommerce-cart.php`, `inc/woocommerce-checkout.php` | Zawierają `__()`, a filtr odpala się dla każdego ciągu na stronie |
+
+**Dwie decyzje poza `static`:**
+
+`cyber_gallery_rewrites` zapisujemy z `autoload = true`. Flaga jest czytana
+w warunku na **każdym** żądaniu, a opcja bez autoloadu nie siedzi w cache
+`alloptions` — kosztowała osobny `SELECT`, dożywotnio, żeby sprawdzić wartość,
+która już się nie zmieni.
+
+> **Uwaga przy wdrożeniu na istniejącą witrynę.** Strażnik nad zapisem zwraca
+> wcześniej, gdy opcja już równa się `CYBER_VERSION`, więc `update_option()`
+> się nie wykona i autoload zostanie stary. Poprawka działa od nowej instalacji
+> albo po podbiciu `CYBER_VERSION` — na działającej stronie sama z siebie nic
+> nie zmieni.
+
+`cyber_woocommerce_needs_styles()` skanuje treść **jednym** przebiegiem
+regexa zawężonego do 18 shortcode'ów motywu. `has_shortcode()` w pętli budowało
+`get_shortcode_regex()` od nowa przy każdym tagu — z listy wszystkich
+shortcode'ów zarejestrowanych w instalacji, wtyczek włącznie. Wzorzec zawężony
+radzi sobie z zagnieżdżeniem **lepiej** niż rekurencja `has_shortcode()`: obcy
+shortcode dookoła nie pasuje do wzorca, więc nie „zjada" naszego.
 
 ## Moduły bez frontu: Kontakt i Social Media
 
@@ -650,10 +718,21 @@ i nie pojawia się ostrzeżenie „template is out of date" w WooCommerce → St
 
 ### Trzy decyzje warte zapamiętania
 
-**Filtr `gettext` jest zawężony do `is_cart()`.** Ciągi „Total" i „Subtotal"
-występują w WooCommerce w dziesiątkach miejsc; globalna podmiana rozjechałaby
-zamówienia, maile i panel. Porównujemy ciąg **źródłowy**, nie przetłumaczony,
-więc filtr działa niezależnie od wgranego tłumaczenia.
+**Filtr `gettext` jest zawężony do `is_cart()` — i rejestrowany dopiero na
+`wp`.** Ciągi „Total" i „Subtotal" występują w WooCommerce w dziesiątkach
+miejsc; globalna podmiana rozjechałaby zamówienia, maile i panel. Porównujemy
+ciąg **źródłowy**, nie przetłumaczony, więc filtr działa niezależnie od
+wgranego tłumaczenia.
+
+Sam `add_filter( 'gettext', … )` siedzi wewnątrz `cyber_wc_cart_setup_hooks()`,
+a nie przy ładowaniu pliku. Powód jest kosztowy: `gettext` odpala się dla
+**każdego** ciągu WordPressa, WooCommerce i wszystkich wtyczek, łącznie z całym
+panelem — rejestracja przy ładowaniu dokładała dwa wywołania funkcji do tysięcy
+ciągów na stronach, których filtr i tak nie dotyczy. Przesunięcie nic nie
+zmienia w zachowaniu, bo `is_cart()` opiera się na głównym zapytaniu i przed
+`wp` nie ma prawa zwrócić `true`. Mapa etykiet jest budowana raz
+(`static`), bo zawiera `__()`, a każde z nich ponownie wchodzi w ten sam
+łańcuch filtrów. To samo dotyczy strony zamówienia.
 
 **`remove_action()` musi odpalić po starcie wtyczki.** Domyślne callbacki
 rejestrują się w `includes/wc-template-hooks.php` przy ładowaniu WooCommerce,

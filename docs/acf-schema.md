@@ -1356,10 +1356,13 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()` — `inc/enqueue.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()`, `cyber_breadcrumb_css()`, `cyber_woocommerce_css()` — `inc/enqueue.php`; `cyber_blog_css()` — `inc/blog.php`; `cyber_page_header_css()` — `inc/page-header.php` |
+| Wspólny emiter | `cyber_css_declarations()` (same deklaracje), `cyber_css_root()` (blok `:root{…}`) — `inc/helpers.php`. Używają ich **wszystkie** moduły, bez wyjątku (CLAUDE.md sekcja 6) |
+| Rozwiązanie wartości z mapy | `cyber_css_vars_from_map()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
 | Znacznik w HTML | jeden `<style id="cyber-global-vars">` dla całego motywu |
 | Breakpointy | `cyber_breakpoints()` — `inc/helpers.php` (CLAUDE.md sekcja 18) |
+| Rejestry list wyboru | `cyber_font_weight_choices()`, `cyber_alignments()`, `cyber_heading_levels()`, `cyber_spacing_scale()` / `cyber_spacing_scale_choices()`, `cyber_button_sizes()`, `cyber_header_variants()` — wszystkie w `inc/helpers.php`, bo sięga po nie `cyber_option_schema()`, a ta nie może zależeć od pliku ładowanego później |
 | Konsument | `assets/css/main.css` — żaden szablon PHP nie zawiera inline `style=""` |
 
 Kolejne moduły dopisują własną funkcję budującą CSS i doklejają ją

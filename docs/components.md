@@ -250,6 +250,26 @@ Opakowanie wypisują `cyber_section_open()` i `cyber_section_close()`, nie każd
 plik sekcji z osobna — zmiana struktury w dwunastu plikach naraz to gwarancja
 rozjazdu.
 
+### Wspólne cegiełki funkcji `*_attributes()`
+
+Każda sekcja ma własne `cyber_<layout>_attributes( $row )`, które buduje tablicę
+zmiennych CSS i oddaje ją jako `style`. Te fragmenty są **wspólne dla
+wszystkich** i nie wolno ich przepisywać w nowym module:
+
+| Funkcja | Plik | Rola |
+|---|---|---|
+| `cyber_css_declarations()` | `inc/helpers.php` | Skleja pary `nazwa => wartość` w `--a:1px;--b:red;`. Wynik idzie do atrybutu `style`. **Bez wyjątków** — patrz CLAUDE.md sekcja 6 |
+| `cyber_css_root()` | `inc/helpers.php` | To samo, opakowane w `:root{…}` — dla modułów globalnych wypisywanych w `wp_head` |
+| `cyber_row_colors()` | `inc/helpers.php` | Wybiera z wiersza tylko te kolory, które redaktor **faktycznie ustawił**. Puste pole koloru znaczy „zostaw wartość z arkusza", więc pusta wartość nie ma prawa trafić do `style` jako pusta deklaracja |
+| `cyber_section_choice()` | `inc/sections.php` | Wartość z białej listy albo domyślna |
+| `cyber_section_spacing()` | `inc/sections.php` | Wartość ze skali odstępów (CLAUDE.md sekcja 6) |
+| `cyber_sanitize_color()` | `inc/helpers.php` | Kolor z kanałem alfa — `sanitize_hex_color()` odrzuciłoby `rgba()` |
+
+`cyber_row_colors()` powstało z pięciu identycznych kopii tej samej pętli
+(galeria, kontakt, licznik, FAQ, tabela). Wynik dokleja się przez
+`array_merge()`, nie `+=` — operator `+` **nie** nadpisuje kluczy już
+obecnych w tablicy, a pierwotna pętla nadpisywała.
+
 ### Pliki
 
 | Plik | Rola |
