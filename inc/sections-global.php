@@ -235,16 +235,36 @@ function cyber_section_rows_expanded( $post_id ) {
 			continue;
 		}
 
+		/*
+		 * Wylacznik sprawdzamy PRZED rozgalezieniem na sekcje globalna —
+		 * dokladnie tak, jak robi to cyber_render_sections(). Wczesniej warunek
+		 * stal za rozgalezieniem i obejmowal wylacznie wiersze "global", wiec
+		 * zwykly wylaczony wiersz przechodzil tedy dalej. Skutek byl widoczny
+		 * nie w tresci, tylko w sieci: odstawiony slider nie renderowal sie,
+		 * ale nadal kolejkowal Swipera (~30 kB gzip).
+		 */
+		if ( ! cyber_section_row_enabled( $row ) ) {
+			continue;
+		}
+
 		if ( CYBER_GLOBAL_SECTION_LAYOUT !== $row['acf_fc_layout'] ) {
 			$out[] = $row;
 			continue;
 		}
 
-		if ( isset( $row['cyber_section_enabled'] ) && ! $row['cyber_section_enabled'] ) {
-			continue;
+		/*
+		 * Wiersze wewnatrz sekcji globalnej filtrujemy tutaj, a NIE w
+		 * cyber_global_section_rows(). Ta ostatnia ma trzeciego konsumenta —
+		 * cyber_global_section_problem() — ktory z pustej listy wnioskuje
+		 * "sekcja globalna nie ma jeszcze zadnej sekcji". Filtrowanie u zrodla
+		 * kazaloby mu pokazac ten komunikat sekcji, ktora sekcje ma, tylko
+		 * wylaczone.
+		 */
+		foreach ( cyber_global_section_rows( cyber_global_section_id( $row ) ) as $global_row ) {
+			if ( cyber_section_row_enabled( $global_row ) ) {
+				$out[] = $global_row;
+			}
 		}
-
-		$out = array_merge( $out, cyber_global_section_rows( cyber_global_section_id( $row ) ) );
 	}
 
 	$cache[ $post_id ] = $out;

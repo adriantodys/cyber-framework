@@ -197,6 +197,25 @@ function cyber_section_bg_positions_y() {
  * -------------------------------------------------------------------------- */
 
 /**
+ * Czy wiersz sekcji jest wlaczony wylacznikiem redaktora.
+ *
+ * Brak klucza znaczy "wlaczony" — wiersze zapisane przed dodaniem wylacznika
+ * go nie maja i nie wolno ich wyciac.
+ *
+ * Predykat stoi osobno, bo pytaja o niego DWIE niezalezne sciezki: renderowanie
+ * (cyber_render_sections()) i decyzja o assetach (cyber_section_rows_expanded()
+ * w inc/sections-global.php). Wczesniej warunek byl wpisany w czterech
+ * miejscach i sciezki sie rozjechaly — renderowanie pomijalo wylaczony wiersz,
+ * a decyzja o assetach nie, wiec odstawiony slider nadal dociagal Swipera.
+ *
+ * @param array $row Wiersz Flexible Content.
+ * @return bool
+ */
+function cyber_section_row_enabled( array $row ) {
+	return ! isset( $row['cyber_section_enabled'] ) || (bool) $row['cyber_section_enabled'];
+}
+
+/**
  * Przepuszcza wartosc przez biala liste.
  *
  * @param mixed    $value   Wartosc z pola.
@@ -477,7 +496,7 @@ function cyber_render_sections( $post_id = null ) {
 		}
 
 		// Wylacznik: sekcja zaparkowana zostaje w bazie, znika tylko z frontu.
-		if ( isset( $row['cyber_section_enabled'] ) && ! $row['cyber_section_enabled'] ) {
+		if ( ! cyber_section_row_enabled( $row ) ) {
 			continue;
 		}
 
@@ -504,7 +523,7 @@ function cyber_render_sections( $post_id = null ) {
 		}
 
 		foreach ( $global_rows as $global_row ) {
-			if ( isset( $global_row['cyber_section_enabled'] ) && ! $global_row['cyber_section_enabled'] ) {
+			if ( ! cyber_section_row_enabled( $global_row ) ) {
 				continue;
 			}
 

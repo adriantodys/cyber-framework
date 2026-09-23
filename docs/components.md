@@ -649,6 +649,27 @@ Na froncie: [basic] [carousel z #12] [basic z #12] [cards]
 | `cyber_global_section_problem( $id )` | powód, dla którego nic się nie wyświetla (szkic, kosz, brak sekcji) |
 | `cyber_global_section_usage( $id )` | wpisy, które wstawiają sekcję — kolumna „Używana na” |
 | `cyber_section_unique_id( $id )` | unikalna kotwica przy wielokrotnym wstawieniu |
+| `cyber_section_row_enabled( $row )` | czy wiersz jest włączony wyłącznikiem (`inc/sections.php`) — **jedno** źródło dla renderowania i dla decyzji o assetach |
+
+> **Wyłącznik sekcji musi działać na obu ścieżkach naraz.** Wiersz sekcji
+> przechodzi przez dwie niezależne ścieżki: renderowanie
+> (`cyber_render_sections()`) i decyzję o assetach
+> (`cyber_section_rows_expanded()`). Warunek „czy włączony" był kiedyś wpisany
+> w czterech miejscach i ścieżki się rozjechały — renderowanie pomijało
+> wyłączony wiersz, a decyzja o assetach nie. Odstawiony slider nie pokazywał
+> się na stronie, ale nadal kolejkował Swipera (~30 kB gzip). Objaw nie był
+> widoczny w treści, tylko w zakładce Sieć.
+>
+> Dlatego predykat jest **jeden**: `cyber_section_row_enabled()`. Brak klucza
+> `cyber_section_enabled` znaczy „włączony" — wiersze zapisane przed dodaniem
+> wyłącznika go nie mają i nie wolno ich wyciąć.
+>
+> Filtrowanie wierszy wewnętrznych siedzi w `cyber_section_rows_expanded()`,
+> a **nie** w `cyber_global_section_rows()`. Ta ostatnia ma trzeciego
+> konsumenta — `cyber_global_section_problem()` — który z pustej listy
+> wnioskuje „sekcja globalna nie ma jeszcze żadnej sekcji". Filtrowanie
+> u źródła kazałoby mu pokazać ten komunikat sekcji, która sekcje ma, tylko
+> wyłączone.
 
 | Klasa | Skąd |
 |---|---|
