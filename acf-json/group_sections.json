@@ -17,85 +17,6 @@
                 "id": ""
             },
             "layouts": {
-                "layout_cyber_section_basic": {
-                    "key": "layout_cyber_section_basic",
-                    "name": "basic",
-                    "label": "Sekcja podstawowa",
-                    "display": "block",
-                    "sub_fields": [
-                        {
-                            "key": "field_cyber_section_basic_settings",
-                            "label": "",
-                            "name": "",
-                            "aria-label": "",
-                            "type": "clone",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "clone": [
-                                "group_section_settings"
-                            ],
-                            "display": "seamless",
-                            "layout": "block",
-                            "prefix_label": 0,
-                            "prefix_name": 0,
-                            "allow_in_bindings": 0
-                        },
-                        {
-                            "key": "field_cyber_section_basic_top",
-                            "label": "",
-                            "name": "",
-                            "aria-label": "",
-                            "type": "clone",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "clone": [
-                                "field_cyber_section_wysiwyg_top"
-                            ],
-                            "display": "seamless",
-                            "layout": "block",
-                            "prefix_label": 0,
-                            "prefix_name": 0,
-                            "allow_in_bindings": 0
-                        },
-                        {
-                            "key": "field_cyber_section_basic_bottom",
-                            "label": "",
-                            "name": "",
-                            "aria-label": "",
-                            "type": "clone",
-                            "instructions": "",
-                            "required": 0,
-                            "conditional_logic": 0,
-                            "wrapper": {
-                                "width": "",
-                                "class": "",
-                                "id": ""
-                            },
-                            "clone": [
-                                "field_cyber_section_wysiwyg_bottom"
-                            ],
-                            "display": "seamless",
-                            "layout": "block",
-                            "prefix_label": 0,
-                            "prefix_name": 0,
-                            "allow_in_bindings": 0
-                        }
-                    ],
-                    "min": "",
-                    "max": ""
-                },
                 "layout_cyber_section_cards": {
                     "key": "layout_cyber_section_cards",
                     "name": "cards",
@@ -2173,5 +2094,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789996613
+    "modified": 1790233147
 }

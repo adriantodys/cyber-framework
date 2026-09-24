@@ -400,7 +400,7 @@ więc nie ma czego wypisać raz. Wartości jadą jako custom properties w atrybu
 `style` opakowania:
 
 ```html
-<section class="cyber-section cyber-section--basic"
+<section class="cyber-section cyber-section--cards"
          style="--cyber-section-bg:#f5f5f5;--cyber-section-pt:64px;">
 ```
 
@@ -460,7 +460,7 @@ ACF layout → template-part → HTML → CSS
 ### Sekcje: klucz layoutu jest kontraktem
 
 Layout Flexible Content ma **etykietę** (dowolna, zmienialna) i **klucz**
-(`basic`, `cards`…), który jest nazwą zapisywaną przy każdym wierszu w bazie.
+(`cards`, `faq`…), który jest nazwą zapisywaną przy każdym wierszu w bazie.
 
 **Klucza nie wolno zmienić ani usunąć po tym, jak ktokolwiek go użył.** ACF,
 nie znajdując layoutu o danej nazwie, po cichu pomija wiersz — i przy
@@ -695,7 +695,8 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 
    **Stan: w toku.** Istnieje szkielet — pole `cyber_sections`, rejestr
    `cyber_section_types()` (`inc/sections.php`), wspólne opakowanie `.cyber-section`
-   i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG).
+   i pierwszy layout `basic` (WYSIWYG → kontener na elementy → WYSIWYG) —
+   **usunięty 2026-09-24**, nieużywany; klucza `basic` nie używać ponownie.
    Od tego czasu doszły layouty `cards`, `columns`, `slider`, `carousel`,
    `faq` (natywne `<details>`, bez biblioteki), `counter` (własny skrypt
    odliczania), `contact` (dane z Global Options + Contact Form 7), `posts`

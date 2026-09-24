@@ -2,8 +2,8 @@
 /**
  * Sekcja "Karty" (icon boxes).
  *
- * Ten sam szkielet co sekcja podstawowa — WYSIWYG gora, kontener, WYSIWYG dol
- * — z tym, ze kontener jest wypelniony siatka powtarzalnych elementow.
+ * Wspolny szkielet sekcji — WYSIWYG gora, kontener, WYSIWYG dol — z kontenerem
+ * wypelnionym siatka powtarzalnych elementow.
  *
  * Markup pojedynczej karty jest w template-parts/components/card.php —
  * wspolny z sekcja "Karuzela kart".

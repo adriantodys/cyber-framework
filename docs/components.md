@@ -247,7 +247,7 @@ layout ACF z odpowiednikiem w rejestrze i jednym plikiem w
 ```
 
 Opakowanie wypisują `cyber_section_open()` i `cyber_section_close()`, nie każdy
-plik sekcji z osobna — zmiana struktury w dwunastu plikach naraz to gwarancja
+plik sekcji z osobna — zmiana struktury w jedenastu plikach naraz to gwarancja
 rozjazdu.
 
 ### Wspólne cegiełki funkcji `*_attributes()`
@@ -275,7 +275,6 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 | Plik | Rola |
 |---|---|
 | `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, assety |
-| `template-parts/sections/basic.php` | layout `basic` — WYSIWYG → kontener → WYSIWYG |
 | `inc/sections-cards.php` | layout `cards` — logika siatki i elementów |
 | `template-parts/sections/cards.php` | layout `cards` — widok |
 | `acf-json/group_section_cards.json` | źródło klonowania: pola sekcji Karty |
@@ -331,7 +330,6 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 
 | Klucz | Etykieta | Szablon | Konteksty |
 |---|---|---|---|
-| `basic` | Sekcja podstawowa | `basic` | `page`, `post` |
 | `cards` | Karty (icon boxes) | `cards` | `page`, `post` |
 | `columns` | Kolumny tekstowe (WYSIWYG) | `columns` | `page`, `post` |
 | `slider` | Slider | `slider` | `page`, `post` |
@@ -364,16 +362,17 @@ pól się **nie kopiuje** — wchodzą polem Clone.
 Dodatkowe klasy z pola ACF dokładane są do `.cyber-section`, każda przez
 `sanitize_html_class()`.
 
-### Punkt rozszerzenia
+### Usunięty layout `basic`
 
-Layout `basic` ma w środku hook `cyber_section_basic_body` — dołożenie
-zawartości nie wymaga przepisywania pliku szablonu.
+Layout `basic` („Sekcja podstawowa”, WYSIWYG → pusty kontener → WYSIWYG)
+usunięto 2026-09-24 razem z plikiem i hookiem `cyber_section_basic_body`.
+Klucza `basic` **nie wolno** użyć ponownie dla innego layoutu.
 
 
 ### Sekcja `cards` — Karty (icon boxes)
 
-Ten sam szkielet co `basic`, ze środkowym kontenerem wypełnionym siatką
-powtarzalnych elementów.
+Wspólny szkielet sekcji (WYSIWYG → kontener → WYSIWYG), ze środkowym
+kontenerem wypełnionym siatką powtarzalnych elementów.
 
 | Plik | Rola |
 |---|---|
@@ -402,17 +401,17 @@ Treść nad i pod siatką ma **osobne włączniki** (`cyber_cards_show_top`,
 `cyber_cards_show_bottom`), stojące w panelu bezpośrednio nad swoim edytorem.
 Na froncie sprawdza je `cyber_cards_shows_wysiwyg()`, w panelu edytor chowa
 wspólny filtr `cyber_section_wysiwyg_condition()` — warunek nie może siedzieć w JSON-ie,
-bo edytory są wspólne z sekcją podstawową.
+bo edytory są wspólne dla wszystkich sekcji.
 Oba są **domyślnie wyłączone**; brak wartości liczy się jako wyłączony,
 zgodnie z `default_value` pola w ACF.
 
 
 ### Sekcja `columns` — Kolumny tekstowe (WYSIWYG)
 
-Opakowanie i ustawienia sekcji jak w `basic`, ale **bez WYSIWYG nad i pod
-treścią** — kolumny same są polami WYSIWYG, więc dodatkowe pola treści byłyby
-powtórzeniem. Nagłówek sekcji wpisuje się w pierwszej kolumnie albo w osobnej
-sekcji podstawowej nad tą.
+Opakowanie i ustawienia sekcji wspólne z innymi layoutami, ale **bez WYSIWYG
+nad i pod treścią** — kolumny same są polami WYSIWYG, więc dodatkowe pola
+treści byłyby powtórzeniem. Nagłówek sekcji wpisuje się w pierwszej kolumnie
+albo w polu WYSIWYG innej sekcji nad tą.
 
 | Plik | Rola |
 |---|---|
@@ -637,9 +636,9 @@ Wstawia sekcje z wpisu typu **Sekcje globalne**. Nie ma własnego markupu:
 i renderuje je ich własnymi szablonami, przez `cyber_render_section_row()`.
 
 ```
-Strona: [basic] [global → wpis #12] [cards]
-                       ↓
-Na froncie: [basic] [carousel z #12] [basic z #12] [cards]
+Strona: [faq] [global → wpis #12] [cards]
+                     ↓
+Na froncie: [faq] [carousel z #12] [table z #12] [cards]
 ```
 
 | Funkcja | Rola |

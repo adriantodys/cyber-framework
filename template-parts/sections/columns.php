@@ -4,7 +4,7 @@
  *
  * W odroznieniu od pozostalych sekcji NIE ma pol WYSIWYG nad i pod trescia:
  * kolumny same sa polami WYSIWYG, wiec naglowek sekcji wpisuje sie w pierwszej
- * kolumnie albo w osobnej sekcji podstawowej nad ta. Opakowanie i ustawienia
+ * kolumnie albo w polu WYSIWYG innej sekcji nad ta. Opakowanie i ustawienia
  * sekcji zostaja wspolne ze wszystkimi layoutami.
  *
  * Widok nie siega po ACF ani po stan globalny: komplet danych przychodzi

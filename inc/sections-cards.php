@@ -2,8 +2,9 @@
 /**
  * Sekcja "Karty" (icon boxes).
  *
- * Klon sekcji podstawowej z wypelnionym srodkowym kontenerem: siatka
- * powtarzalnych elementow, kazdy ze zdjeciem, tytulem, tekstem i odnosnikiem.
+ * Wspolny szkielet sekcji (WYSIWYG gora, kontener, WYSIWYG dol) z wypelnionym
+ * srodkowym kontenerem: siatka powtarzalnych elementow, kazdy ze zdjeciem,
+ * tytulem, tekstem i odnosnikiem.
  *
  * PODZIAL ODPOWIEDZIALNOSCI. Opakowanie sekcji, oba pola WYSIWYG i ustawienia
  * tla obsluguje inc/sections.php — ten modul zajmuje sie WYLACZNIE siatka.

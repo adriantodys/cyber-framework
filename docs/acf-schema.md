@@ -1518,10 +1518,14 @@ płasko: `$row['cyber_section_bg_color']`, nie przez zagnieżdżoną tablicę.
 |---|---|---|---|---|
 | Sekcje | `cyber_sections` | Flexible Content | — | Treść strony złożona z sekcji; kolejność zmienia się przeciągnięciem |
 
-Layouty: **`basic`**, **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
+Layouty: **`cards`**, **`columns`**, **`slider`**, **`carousel`**,
 **`faq`**, **`counter`**, **`contact`**, **`posts`**, **`table`**, **`gallery`**
 i **`global`**. Każdy layout ma odpowiednik w rejestrze `cyber_section_types()`
 i jeden plik w `template-parts/sections/`.
+
+> Layout `basic` („Sekcja podstawowa”) usunięto 2026-09-24. Nie był użyty na
+> żadnej stronie, więc usunięcie nie kasowało treści. Klucza `basic` **nie
+> używaj ponownie** dla innego layoutu (sekcja 7 CLAUDE.md).
 
 #### Layout „Sekcja globalna” (`global`)
 
@@ -1613,7 +1617,7 @@ była pierwsza, a wygląd pod ręką.
 
 #### Sekcja „Karty" (`group_section_cards`)
 
-Layout `cards`. Klon sekcji podstawowej z wypełnionym środkowym kontenerem:
+Layout `cards`. Wspólny szkielet sekcji z wypełnionym środkowym kontenerem:
 siatka powtarzalnych elementów. Grupa jest **źródłem klonowania** — nie
 renderuje się nigdzie w panelu, wchodzi tylko do swojego layoutu.
 
@@ -1671,8 +1675,8 @@ edytor górny** → Elementy → **włącznik dolny → edytor dolny**.
 
 > **Wyłączenie chowa edytor w panelu i blok na stronie.** Wpisany tekst zostaje
 > w bazie. Warunek widoczności edytora **nie siedzi w pliku JSON**: edytory
-> pochodzą ze wspólnej grupy `group_section_content`, z której korzysta też
-> sekcja podstawowa, więc warunek wpisany tam działałby we wszystkich sekcjach.
+> pochodzą ze wspólnej grupy `group_section_content`, klonowanej przez każdą
+> sekcję z edytorami, więc warunek wpisany tam działałby we wszystkich sekcjach.
 > Dokłada go w locie wspólny filtr `cyber_section_wysiwyg_condition()`
 > (`inc/sections.php`), wyłącznie polom przyniesionym przez klon kart.
 >
@@ -2307,6 +2311,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-24 — Usunięto layout **„Sekcja podstawowa”** (`basic`) z `group_sections` razem z plikiem `template-parts/sections/basic.php`, wpisem w `cyber_section_types()` i hookiem `cyber_section_basic_body`. Layout nie był nigdzie użyty. Grupy źródłowe `group_section_content` i `group_section_settings` zostają — klonują je pozostałe layouty.
 
 - 2026-09-21 — Sekcja **„Galeria”** — layout `gallery` i grupa źródłowa `group_section_gallery`: zdjęcia wgrane w sekcji **albo** zdjęcia z galerii (nowy CPT `cyber_gallery` z kategoriami `cyber_gallery_cat` i grupą `group_gallery`), pasek filtrów, siatka per breakpoint, proporcje, podpisy, lightbox na natywnym `<dialog>`. Sekcje dostępne także na wpisach typu Galerie.
 

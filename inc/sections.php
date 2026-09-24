@@ -63,11 +63,6 @@ const CYBER_SECTIONS_FIELD = 'cyber_sections';
  */
 function cyber_section_types() {
 	return array(
-		'basic'    => array(
-			'label'    => 'Sekcja podstawowa',
-			'template' => 'basic',
-			'contexts' => array( 'page', 'post' ),
-		),
 		'cards'    => array(
 			'label'    => 'Karty (icon boxes)',
 			'template' => 'cards',
@@ -705,7 +700,7 @@ function cyber_section_wysiwyg_toggles() {
  * Chowa w panelu edytor WYSIWYG, gdy jego wlacznik jest wylaczony.
  *
  * Edytory nad i pod sekcja pochodza ze WSPOLNEJ grupy group_section_content,
- * z ktorej korzysta tez sekcja podstawowa (bez wlacznikow). Warunek wpisany
+ * klonowanej przez kazda sekcje z edytorami. Warunek wpisany
  * w tej grupie dzialalby we wszystkich sekcjach naraz — dlatego dokladamy go
  * w locie i tylko polom przyniesionym przez konkretny klon.
  *

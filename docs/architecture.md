@@ -1309,11 +1309,12 @@ ich reguła lokalizacji (`options_page == cyber-clone-source`) celowo nie pasuje
 do niczego, więc nie renderują się nigdzie w panelu.
 
 Klon działa w trybie **seamless bez prefiksu nazw**, więc PHP czyta pola płasko
-(`$row['cyber_section_bg_color']`). Sprawdzone: layout `basic` rozwija się do
+(`$row['cyber_section_bg_color']`). Sprawdzone: sam komplet ustawień i dwa
+WYSIWYG (dawny layout `basic`, usunięty 2026-09-24) rozwijają się do
 **28 podpól** o płaskich nazwach.
 
 Alternatywa — skopiowanie pól do każdego layoutu — to ta sama pułapka, co przy
-kopiowaniu pól ACF: przy dwunastu sekcjach powstaje dwanaście definicji, z czego
+kopiowaniu pól ACF: przy jedenastu sekcjach powstaje jedenaście definicji, z czego
 połowa po roku różni się od reszty.
 
 ### Dlaczego renderer nie używa `have_rows()`
@@ -1376,12 +1377,21 @@ Ten sam podział obowiązuje w ACF. Kolejność w panelu jest stała dla
 wszystkich sekcji — **najpierw ustawienia, potem treść**:
 
 ```
-basic:    Ustawienia sekcji → WYSIWYG góra → WYSIWYG dół
 cards:    Ustawienia sekcji → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
 columns:  Ustawienia sekcji → Ustawienia kolumn → Układ + kolumny
 slider:   Ustawienia sekcji (szerokość, zdjęcie, odstępy, kotwica, klasy) → Ustawienia slidera → Slajdy
 carousel: Ustawienia sekcji → Ustawienia karuzeli → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
+faq:      Ustawienia sekcji → Ustawienia FAQ → [wł.] WYSIWYG góra → Pytania → [wł.] WYSIWYG dół
+counter:  Ustawienia sekcji → Ustawienia licznika → [wł.] WYSIWYG góra → Liczniki → [wł.] WYSIWYG dół
+contact:  Ustawienia sekcji → Ustawienia sekcji kontaktowej → [wł.] WYSIWYG góra → Lewa + prawa kolumna → [wł.] WYSIWYG dół
+posts:    Ustawienia sekcji → Ustawienia kart → Ustawienia karuzeli → Ustawienia elementu → [wł.] WYSIWYG góra → Źródło elementów → [wł.] WYSIWYG dół
+table:    Ustawienia sekcji → Ustawienia tabeli → [wł.] WYSIWYG góra → Kolumny → Wiersze → [wł.] WYSIWYG dół
+gallery:  Ustawienia sekcji → Ustawienia galerii → [wł.] WYSIWYG góra → Źródło zdjęć → [wł.] WYSIWYG dół
+global:   Sekcja globalna (wybór wpisu) → Sekcja włączona
 ```
+
+`global` jest wyjątkiem: nie ma własnych ustawień wyglądu ani treści — tylko
+wybór wpisu i wyłącznik. Wygląd niosą sekcje zapisane w wybranym wpisie.
 
 **Warunki widoczności w sklonowanych polach działają, choć w PHP wyglądają na
 zepsute.** W trybie seamless ACF zmienia klucz pola na
@@ -1399,7 +1409,7 @@ o płaskich nazwach.
 
 **Klucze klonów są kontraktem, kolejność nie.** ACF zapisuje przy każdej
 wartości odwołanie do klucza klonu
-(`_cyber_sections_0_cyber_section_pt` → `field_cyber_section_basic_settings_…`),
+(`_cyber_sections_0_cyber_section_pt` → `field_cyber_section_cards_settings_…`),
 więc zmiana kolejności **nie może** zmieniać kluczy. Grupa `group_section_cards`
 trzyma repeater i akordeon ustawień w jednym pliku; żeby między nimi wszedł
 WYSIWYG górny, istniejący klon `field_cyber_section_cards_body` bierze teraz
@@ -1776,8 +1786,8 @@ wpisie** typu `cyber_global_section`, a strony wskazują go layoutem `global`.
 ```
 Sekcje globalne (CPT, tylko panel)          Strona
 └── „Karuzela – realizacje”                 cyber_sections:
-      cyber_sections:                         [basic]
-        [carousel] [basic]   ◄───────────────  [global: #id]
+      cyber_sections:                         [faq]
+        [carousel] [table]   ◄───────────────  [global: #id]
                                               [cards]
 ```
 
@@ -1924,20 +1934,25 @@ Zrealizowane i opisane w sekcjach powyżej:
 Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaimplementowane:
 
 - **Etap 4** — Flexible Content i system sekcji: **w toku, nie zamknięty**.
-  Istnieje pole `cyber_sections`, rejestr `cyber_section_types()`, pięć layoutów
-  treści (`basic`, `cards`, `columns`, `slider`, `carousel`) z plikami
-  w `template-parts/sections/` oraz sekcje globalne (CPT + layout `global`);
-  karta jest wspólnym komponentem `template-parts/components/card.php`. Brakuje
-  filtrowania layoutów per typ treści (pole `contexts` w rejestrze jest jeszcze
-  nieużywane).
-- **Etap 5** — szablony widoków w `templates/`. Katalog jest pusty; jedynym widokiem
-  jest `index.php` w rootcie, wymagany przez WordPress fallback. `header.php`
-  i `footer.php` w rootcie **nie** są już szkieletem — zbierają dane przez
-  `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
-  **Strony (`page`) nie wypisują tytułu** (od 2026-09-19) — nagłówek strony
-  (page-header) powstanie jako osobny moduł. Do tego czasu strona **nie ma
-  `<h1>`**, dopóki redaktor nie da go w treści albo w sekcji. Wpisy zachowują
-  tytuł. Pusta treść edytora nie zostawia pustego kontenera; treść zostaje,
+  Istnieje pole `cyber_sections`, rejestr `cyber_section_types()`, layouty
+  treści (`cards`, `columns`, `slider`, `carousel`, `faq`, `counter`, `contact`,
+  `posts`, `table`, `gallery`) z plikami w `template-parts/sections/` oraz
+  sekcje globalne (CPT + layout `global`); karta jest wspólnym komponentem
+  `template-parts/components/card.php`. Brakuje filtrowania layoutów per typ
+  treści (pole `contexts` w rejestrze jest jeszcze nieużywane).
+- **Etap 5** — szablony widoków w `templates/`: **częściowo**. Istnieją
+  `templates/blog.php` (strona wpisów, kategorie, tagi, archiwa dat i autorów)
+  i `templates/single-post.php` z paskiem bocznym — oba wpięte filtrami
+  hierarchii w `inc/blog.php` — oraz `templates/single-gallery.php` dla CPT
+  `cyber_gallery` (`inc/gallery.php`). Brakuje: page, front page, 404, search
+  i archiwów CPT; te widoki obsługuje fallback `index.php` w rootcie.
+  `header.php` i `footer.php` w rootcie **nie** są już szkieletem — zbierają
+  dane przez `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
+  **Strony (`page`) nie wypisują tytułu w treści** (od 2026-09-19) — `<h1>`
+  niesie page header (`inc/page-header.php`, od 2026-09-21). Page header jest
+  **domyślnie wyłączony**, więc bez jego włączenia strona nie ma `<h1>`, dopóki
+  redaktor nie da go w treści albo w sekcji. Wpisy zachowują tytuł, gdy page
+  header się nie wyświetla. Pusta treść edytora nie zostawia pustego kontenera; treść zostaje,
   bo stoją na niej strony sklepu (shortcode koszyka i zamówienia).
 - **Etap 7** — podstawy SEO.
 - **Etap 8** — audyt wydajności, dostępności i bezpieczeństwa wraz z weryfikacją

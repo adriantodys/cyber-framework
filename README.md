@@ -85,8 +85,8 @@ Kolejność budowy: CLAUDE.md sekcja 17.
 - [x] **Etap 1** — szkielet motywu (`style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`)
 - [x] **Etap 2** — Global Options: Options Page + szesnaście zakładek, 208 pól
 - [x] **Etap 3** — Header / Footer (ACF + template-parts): Top Header, Header Desktop, Header Mobile, Footer, Copyright
-- [ ] **Etap 4** — system komponentów / Flexible Content
-- [ ] **Etap 5** — szablony widoków (front-page, page, single, archive, 404, search)
+- [~] **Etap 4** — system komponentów / Flexible Content: 11 layoutów sekcji (w tym sekcje globalne); brakuje filtrowania layoutów per typ treści
+- [~] **Etap 5** — szablony widoków: są blog (lista i archiwa), pojedynczy wpis i pojedyncza galeria; brakuje page, front page, 404, search i archiwów CPT
 - [~] **Etap 6** — formularze / AJAX: dwa endpointy AJAX istnieją (ilość w zamówieniu, doładowywanie produktów), własnych formularzy motywu jeszcze nie ma
 - [ ] **Etap 7** — podstawy SEO
 - [ ] **Etap 8** — audyt wydajności, dostępności, bezpieczeństwa + WPCS
