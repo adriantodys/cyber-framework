@@ -595,6 +595,60 @@
             "save_options": 0
         },
         {
+            "key": "field_cyber_msg_section_animation",
+            "label": "Animacja",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_section_animation",
+            "label": "Animacja wejscia",
+            "name": "cyber_section_animation",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Jak cala sekcja pojawia sie przy przewijaniu strony. Czas trwania, opoznienie i plynnosc ustawia sie raz dla calej strony: Ustawienia motywu -> Animacje.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "none": "Brak",
+                "fade": "Zanikanie",
+                "from-bottom": "Wjazd z dolu",
+                "from-top": "Wjazd z gory",
+                "from-left": "Wjazd z lewej",
+                "from-right": "Wjazd z prawej",
+                "zoom-in": "Powiekszenie",
+                "zoom-out": "Pomniejszenie",
+                "blur": "Rozmycie"
+            },
+            "default_value": "none",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
             "key": "field_cyber_msg_section_advanced",
             "label": "Zaawansowane",
             "name": "",
@@ -712,5 +766,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone. Nie renderuje sie nigdzie w panelu - lokalizacja celowo nie pasuje do niczego. Klonowana w calosci do kazdego layoutu sekcji, wiec wyglad wszystkich sekcji opisuje jeden zestaw pol. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789567095
+    "modified": 1790243160
 }

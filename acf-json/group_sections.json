@@ -396,6 +396,8 @@
                                 "id": ""
                             },
                             "clone": [
+                                "field_cyber_msg_section_animation",
+                                "field_cyber_section_animation",
                                 "field_cyber_section_anchor",
                                 "field_cyber_section_class",
                                 "field_cyber_section_acc_end"
@@ -2094,5 +2096,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1790233147
+    "modified": 1790243160
 }

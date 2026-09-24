@@ -485,6 +485,23 @@ Nowy layout **nie kopiuje** tych pól. Skopiowany zestaw to ta sama pułapka, co
 przy kopiowaniu pól ACF: piąta kopia różni się od pierwszej, bo poprawkę
 zrobiono w jednej.
 
+### Animacje sekcji: dane osobno, silnik osobno
+
+Animacje wejścia sekcji (od 2026-09-24) mają **silnik wymienny**: własny kod
+w `inc/animations.php`, `assets/js/animations.js` i `assets/css/animations.css`,
+bez biblioteki. **Dane** — pole `cyber_section_animation`, zakładka Global
+Options „Animacje”, zmienne `--cyber-anim-*` — nie zależą od silnika.
+
+- Silnik wpina się w sekcje wyłącznie filtrem `cyber_section_attributes`
+  (atrybut `data-cyber-animate`). Nie dopisuj animacji wprost do
+  `inc/sections.php` ani do szablonów sekcji — wtedy wymiana silnika
+  przestaje być usunięciem trzech plików.
+- Klucze animacji (`from-bottom`, `zoom-in`…) są zapisane w bazie jak klucze
+  layoutów (wyżej): nowy silnik je **tłumaczy**, nie zmienia.
+- Wymiana na bibliotekę wymaga zgody i wpisu w rejestrze bibliotek (sekcja 2).
+
+Instrukcja usunięcia i wymiany: `docs/components.md`, „Animacje wejścia sekcji”.
+
 ## 8. WordPress Coding Standards
 
 - Docelowo weryfikacja przez PHPCS z ruleset `WordPress` / `WordPress-Extra`.
@@ -671,13 +688,13 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 urósł do **szesnastu zakładek**:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **siedemnastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
-   Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header — razem
-   **208 pól**.
+   Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
+   Animacje — razem **215 pól**.
 
-   Trzy ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
+   Cztery ostatnie dołożyły się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
    każdy moduł z ustawieniami globalnymi dokłada tu zakładkę. Zakładka
    „WooCommerce” jest jedną zakładką na **cały** sklep i kolejne ustawienia

@@ -316,9 +316,14 @@ function cyber_section_classes( $value ) {
  * Zwraca gotowe do wypisania czesci atrybutow, ale NIE wypisuje ich sama —
  * escapowanie nalezy do widoku, przy samym wyjsciu (CLAUDE.md sekcja 8).
  *
+ * Na koncu przechodzi przez filtr cyber_section_attributes — punkt wpiecia dla
+ * modulow, ktore dokladaja cos do KAZDEJ sekcji (np. animacje wejscia,
+ * inc/animations.php), bez dopisywania ich tutaj. Usuniecie takiego modulu
+ * nie wymaga wtedy zmiany w tym pliku.
+ *
  * @param string $type Klucz layoutu.
  * @param array  $row  Wiersz Flexible Content.
- * @return array{class: string, style: string, id: string} Czesci atrybutow.
+ * @return array{class: string, style: string, id: string, data: array<string, string>} Czesci atrybutow.
  */
 function cyber_section_attributes( $type, array $row ) {
 	$classes = array(
@@ -446,11 +451,21 @@ function cyber_section_attributes( $type, array $row ) {
 
 	$anchor = isset( $row['cyber_section_anchor'] ) ? sanitize_title( (string) $row['cyber_section_anchor'] ) : '';
 
-	return array(
+	$attributes = array(
 		'class' => implode( ' ', $classes ),
 		'style' => $style,
 		'id'    => $anchor,
+		'data'  => array(),
 	);
+
+	/**
+	 * Filtruje atrybuty opakowania sekcji.
+	 *
+	 * @param array  $attributes Klasy, style, kotwica i atrybuty data-* (nazwa bez prefiksu "data-" => wartosc).
+	 * @param string $type       Klucz layoutu.
+	 * @param array  $row        Wiersz Flexible Content.
+	 */
+	return apply_filters( 'cyber_section_attributes', $attributes, $type, $row );
 }
 
 /* -------------------------------------------------------------------------- *
@@ -599,11 +614,22 @@ function cyber_section_unique_id( $id ) {
  * @return void
  */
 function cyber_section_open( array $attributes, $with_inner = true ) {
+	$data = '';
+
+	foreach ( isset( $attributes['data'] ) ? (array) $attributes['data'] : array() as $name => $value ) {
+		$name = sanitize_key( $name );
+
+		if ( '' !== $name ) {
+			$data .= sprintf( ' data-%1$s="%2$s"', $name, esc_attr( $value ) );
+		}
+	}
+
 	printf(
-		'<section%1$s class="%2$s" style="%3$s">',
+		'<section%1$s class="%2$s" style="%3$s"%4$s>',
 		$attributes['id'] ? sprintf( ' id="%s"', esc_attr( $attributes['id'] ) ) : '',
 		esc_attr( $attributes['class'] ),
-		esc_attr( $attributes['style'] )
+		esc_attr( $attributes['style'] ),
+		$data // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- nazwa przez sanitize_key(), wartosc przez esc_attr() wyzej.
 	);
 
 	// Nakladka nad zdjeciem, pod trescia. Puste pudelko, bez roli dla czytnikow.

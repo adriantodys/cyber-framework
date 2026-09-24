@@ -216,9 +216,9 @@ function cyber_section_rows_expanded( $post_id ) {
 	}
 
 	/*
-	 * Cache jak w cyber_global_section_rows() nizej. Cztery moduly pytaja
+	 * Cache jak w cyber_global_section_rows() nizej. Piec modulow pyta
 	 * o to samo drzewo na tym samym hooku (wp_enqueue_scripts, priorytet 20):
-	 * arkusz sekcji, slider, licznik i galeria. Bez cache kazdy z nich
+	 * arkusz sekcji, slider, licznik, galeria i animacje. Bez cache kazdy z nich
 	 * przechodzil cale rozwiniecie od nowa.
 	 */
 	static $cache = array();

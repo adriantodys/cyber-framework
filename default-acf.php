@@ -413,4 +413,23 @@ return array(
 	'pageheader_excerpt_size'                 => 'text',        // text|h6|h5|h4  | Rozmiar zajawki
 	'pageheader_excerpt_color'                => '#ffffff',     // kolor          | Kolor zajawki
 
+	/* ======================================================================
+	 * ANIMACJE
+	 * Rodzaj animacji wybiera sie w kazdej sekcji (Ustawienia sekcji),
+	 * tutaj tylko parametry wspolne dla calej strony.
+	 * ====================================================================== */
+
+	/* --- Wlaczenie --------------------------------------------------------- */
+	'anim_enable'                             => true,          // tak/nie        | Animacje sekcji wlaczone
+
+	/* --- Czas -------------------------------------------------------------- */
+	'anim_duration'                           => 700,           // ms 100-3000    | Czas trwania animacji
+	'anim_delay'                              => 0,             // ms 0-3000      | Opoznienie wejscia
+	'anim_easing'                             => 'ease-out',    // ease-out|ease|ease-in-out|linear | Plynnosc (easing)
+
+	/* --- Wejscie sekcji ---------------------------------------------------- */
+	'anim_offset'                             => 80,            // px 0-400       | Start animacji
+	'anim_distance'                           => 40,            // px 0-200       | Dystans przesuniecia
+	'anim_once'                               => true,          // tak/nie        | Animuj tylko raz
+
 );

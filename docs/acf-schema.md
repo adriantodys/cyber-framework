@@ -6,8 +6,8 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-09-10
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog” i „Page header”.
+Ostatnia aktualizacja: 2026-09-24
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header” i „Animacje”.
 Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
 
 ---
@@ -1215,6 +1215,33 @@ CPT może to nadpisać w skrzynce „Cyber Framework — Page header”
 > każdy element przechodzi przez `sanitize_key()`, a pusty wybór znaczy
 > „nigdzie” (`nullable`).
 
+### Zakładka: „Animacje”
+
+Parametry wspólne dla animacji wejścia **wszystkich** sekcji. **Rodzaj**
+animacji nie jest tutaj — wybiera się go w każdej sekcji osobno (pole
+`cyber_section_animation` w grupie `group_section_settings`, niżej).
+**7 pól.** Logika: `inc/animations.php`, opis modułu: `docs/components.md`.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Animacje sekcji włączone | `cyber_anim_enable` | True/False | `true` | Wyłącznik globalny: wyłączone = żadna sekcja się nie animuje, a assety animacji się nie ładują. Ustawienia sekcji zostają nietknięte |
+| Czas trwania animacji | `cyber_anim_duration` | Number 100–3000 ms, krok 50 | `700` | `--cyber-anim-duration` |
+| Opóźnienie wejścia | `cyber_anim_delay` | Number 0–3000 ms, krok 50 | `0` | `--cyber-anim-delay`; czas od wejścia sekcji na ekran do startu animacji |
+| Płynność (easing) | `cyber_anim_easing` | Select `ease-out` / `ease` / `ease-in-out` / `linear` | `ease-out` | `--cyber-anim-easing`; wartość jest wprost słowem kluczowym CSS |
+| Start animacji | `cyber_anim_offset` | Number 0–400 px, krok 10 | `80` | Jak wysoko nad dolną krawędzią ekranu sekcja zaczyna się animować. Konfiguracja skryptu, nie zmienna CSS |
+| Dystans przesunięcia | `cyber_anim_distance` | Number 0–200 px, krok 5 | `40` | `--cyber-anim-distance`; dotyczy animacji „Wjazd z…” |
+| Animuj tylko raz | `cyber_anim_once` | True/False | `true` | Wyłączone: sekcja animuje się ponownie przy każdym powrocie na ekran od dołu. Konfiguracja skryptu |
+
+Pola poza wyłącznikiem pokazują się tylko przy włączonych animacjach.
+
+> **Klasyfikacja wg CLAUDE.md sekcja 19: wartości stałe, nie skalowane.** Czas,
+> opóźnienie i płynność nie zależą od szerokości ekranu. Dystans przesunięcia
+> też nie — to kilkadziesiąt pikseli ruchu, nie wymiar układu.
+
+> **Dystans i start animacji nie podlegają skali odstępów (CLAUDE.md sekcja 6).**
+> To nie są `padding` ani `margin`, tylko długość ruchu i położenie linii
+> startu — dlatego pola liczbowe, a nie Select ze skali.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1356,7 +1383,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()`, `cyber_breadcrumb_css()`, `cyber_woocommerce_css()` — `inc/enqueue.php`; `cyber_blog_css()` — `inc/blog.php`; `cyber_page_header_css()` — `inc/page-header.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()`, `cyber_breadcrumb_css()`, `cyber_woocommerce_css()`, `cyber_animation_css()` — `inc/enqueue.php`; `cyber_blog_css()` — `inc/blog.php`; `cyber_page_header_css()` — `inc/page-header.php` |
 | Wspólny emiter | `cyber_css_declarations()` (same deklaracje), `cyber_css_root()` (blok `:root{…}`) — `inc/helpers.php`. Używają ich **wszystkie** moduły, bez wyjątku (CLAUDE.md sekcja 6) |
 | Rozwiązanie wartości z mapy | `cyber_css_vars_from_map()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
@@ -1587,6 +1614,7 @@ była pierwsza, a wygląd pod ręką.
 | Pozycja tła — pion | `cyber_section_bg_position_y` | Select | `center` | `top` / `center` / `bottom` |
 | Odstęp: Góra / Prawo / Dół / Lewo | `cyber_section_pt` `_pr` `_pb` `_pl` | Select | `64` / `0` / `64` / `0` | Padding desktop, wartości ze skali |
 | Odstęp mobile: Góra / Prawo / Dół / Lewo | `cyber_section_pt_m` `_pr_m` `_pb_m` `_pl_m` | Select | `36` / `0` / `36` / `0` | Padding poniżej 767px |
+| Animacja wejścia | `cyber_section_animation` | Select (opcje z `cyber_animation_types()`) | `none` | Jak cała sekcja pojawia się przy przewijaniu: `none`, `fade`, `from-bottom`, `from-top`, `from-left`, `from-right`, `zoom-in`, `zoom-out`, `blur`. Parametry: Global Options → Animacje |
 | Kotwica (ID) | `cyber_section_anchor` | Text | `''` | Bez `#`; pozwala linkować do sekcji |
 | Dodatkowe klasy CSS | `cyber_section_class` | Text | `''` | Dowolna liczba klas rozdzielonych spacją |
 | Sekcja włączona | `cyber_section_enabled` | True/False | `true` | Wyłączenie chowa sekcję, **zostawiając treść** |
@@ -1609,6 +1637,12 @@ była pierwsza, a wygląd pod ręką.
 > 0/6/12/24/36/48/64/94 (CLAUDE.md sekcja 6). Przy polu liczbowym redaktor wpisze
 > 35 i po trzech stronach skala przestanie istnieć; Select czyni ją egzekwowalną
 > przez panel, a nie przez dyscyplinę.
+
+> **Klucz animacji jest zapisywany w bazie przy każdej sekcji.** Obowiązuje ta
+> sama zasada co przy kluczu layoutu (CLAUDE.md sekcja 7): etykietę można
+> zmienić, klucza (`from-bottom`, `zoom-in`…) nie. Przy wymianie silnika
+> animacji na bibliotekę nowy silnik tłumaczy te klucze na swoje nazwy.
+> Wartość spoza rejestru nie jest błędem — sekcja renderuje się bez animacji.
 
 > **Osobne odstępy mobilne to świadome odstępstwo od sekcji 19**, która dla wielu
 > powiązanych wartości nakazuje jedno pole procentowe na breakpoint. Uzasadnienie:
@@ -1784,7 +1818,7 @@ klonowania**.
 
 **Ustawienia sekcji są inne niż w pozostałych layoutach.** Slider nie klonuje
 całej grupy `group_section_settings` — bierze z niej tylko **szerokość sekcji,
-kotwicę i klasy CSS**. Nie ma tła, nakładki sekcji ani czterech odstępów; ma za
+animację wejścia, kotwicę i klasy CSS**. Nie ma tła, nakładki sekcji ani czterech odstępów; ma za
 to własne pola wewnątrz tego samego akordeonu:
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
@@ -2311,6 +2345,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-24 — **Animacje wejścia sekcji.** Nowe pole `cyber_section_animation` (Select, domyślnie `none`) w grupie `group_section_settings`, a więc w każdym layoucie klonującym tę grupę; slider dostał je w klonie `field_cyber_section_slider_section_c` (klucz klonu bez zmian, zmiana addytywna). Nowa zakładka Global Options **„Animacje”** (7 pól) — Global Options mają teraz **17 zakładek i 215 pól**. Silnik własny, bez biblioteki: `inc/animations.php`, `assets/js/animations.js`, `assets/css/animations.css`. Emiter `cyber_css_vars_from_map()` przyjmuje teraz dowolną jednostkę (doszło `ms`); wynik dla `px` i `%` bez zmian.
 
 - 2026-09-24 — Usunięto layout **„Sekcja podstawowa”** (`basic`) z `group_sections` razem z plikiem `template-parts/sections/basic.php`, wpisem w `cyber_section_types()` i hookiem `cyber_section_basic_body`. Layout nie był nigdzie użyty. Grupy źródłowe `group_section_content` i `group_section_settings` zostają — klonują je pozostałe layouty.
 

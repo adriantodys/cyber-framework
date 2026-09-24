@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-15 (Global Options ma szesnaście zakładek i 208 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-24 (Global Options ma siedemnaście zakładek i 215 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -61,6 +61,7 @@ w ustalonej kolejności:
 | 32 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
 | 33 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
 | 34 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
+| 35 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
 
 ## Stałe
 
@@ -101,15 +102,21 @@ cyber_button_css()            ← moduł „Przyciski”
 cyber_colors_css()            ← moduł „Kolory”
 cyber_top_header_css()        ← moduł „Top Header”
 cyber_footer_css()            ← moduł „Footer”
-cyber_copyright_css()         ← moduł „Copyright”               (inc/enqueue.php)
+cyber_copyright_css()         ← moduł „Copyright”
+cyber_breadcrumb_css()        ← moduły „Breadcrumb” i „Breadcrumb WooCommerce”
+cyber_woocommerce_css()       ← moduł „WooCommerce”
+cyber_animation_css()         ← moduł „Animacje”                (inc/enqueue.php)
+cyber_blog_css()              ← moduł „Blog”                    (inc/blog.php)
+cyber_page_header_css()       ← moduł „Page header”             (inc/page-header.php)
       │
       ▼
 cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
       │                         na wp_head, priorytet 20
       ▼
-assets/css/main.css           ← jedyny konsument zmiennych
-                                (.cyber-container, typografia, .cyber-header__inner,
-                                 .cyber-menu, .cyber-submenu)
+assets/css/main.css           ← konsumenci zmiennych: main.css (.cyber-container,
+i arkusze modułów               typografia, header, menu) oraz arkusze modułów
+                                kolejkowane warunkowo (sklep, blog, page header,
+                                animacje)
 ```
 
 Wyjątek od tego przepływu: **wyrównanie**. Nie jest zmienną CSS, tylko modyfikatorem
@@ -144,8 +151,8 @@ cyber_css_declarations( $vars )   →  "--a:1px;--b:red;"   (inc/helpers.php)
 cyber_css_root( $vars )           →  ":root{…}"           (inc/helpers.php)
 ```
 
-**Warstwa 1 — mapa.** Sześć modułów opisanych mapą (Header, Footer, Copyright,
-Breadcrumb, WooCommerce, Top Header) sprowadza się do jednej linii:
+**Warstwa 1 — mapa.** Siedem modułów opisanych mapą (Header, Footer, Copyright,
+Breadcrumb, WooCommerce, Top Header, Animacje) sprowadza się do jednej linii:
 
 ```php
 function cyber_header_css() {
@@ -241,7 +248,7 @@ robiło wolniej.
 |---|---|---|
 | `cyber_option_schema()` | `inc/helpers.php` | Tablica 208 wpisów z 17 zagnieżdżonymi wywołaniami rejestrów i jednym `__()`. `cyber_get_option()` sięgała po nią przy **każdym** wywołaniu — również wtedy, gdy trafiała we własny memo-cache — czyli 150–250 razy na podstronę. Pomiar: 1,98 ms → 0,08 ms na 200 wywołań |
 | `cyber_get_option()` | `inc/helpers.php` | Memoizacja wyniku. Celowo **tylko** dla wywołań bez nadpisanego `$default` — inaczej pierwszy `$default` zamroziłby wynik dla wszystkich kolejnych |
-| `cyber_section_rows_expanded()` | `inc/sections-global.php` | Cztery moduły pytają o to samo drzewo sekcji na tym samym hooku (`wp_enqueue_scripts`, priorytet 20): arkusz sekcji, slider, licznik, galeria |
+| `cyber_section_rows_expanded()` | `inc/sections-global.php` | Pięć modułów pyta o to samo drzewo sekcji na tym samym hooku (`wp_enqueue_scripts`, priorytet 20): arkusz sekcji, slider, licznik, galeria, animacje |
 | `cyber_global_section_rows()` | `inc/sections-global.php` | Jak wyżej, poziom niżej |
 | `cyber_page_header_data()` | `inc/page-header.php` | Dane czytane i przez `cyber_page_header_shows()`, i przez samo renderowanie |
 | Mapy etykiet `gettext` | `inc/woocommerce-cart.php`, `inc/woocommerce-checkout.php` | Zawierają `__()`, a filtr odpala się dla każdego ciągu na stronie |
@@ -1286,13 +1293,15 @@ group_sections.json           ← pole Flexible Content (strony, wpisy)
         │
         │  layout klonuje wspólne pola z dwóch grup źródłowych
         ├──→ group_section_content.json    (WYSIWYG góra/dół)
-        └──→ group_section_settings.json   (18 pól wyglądu)
+        └──→ group_section_settings.json   (21 pól wyglądu, w tym animacja wejścia)
         │
         ▼
 cyber_render_sections()       ← pętla po wierszach
         │
         ├──→ cyber_section_types()        ← rejestr: klucz → szablon
-        ├──→ cyber_section_attributes()   ← klasy + zmienne CSS
+        ├──→ cyber_section_attributes()   ← klasy + zmienne CSS + data-*
+        │         └─→ filtr cyber_section_attributes   ← moduły dokładające coś
+        │                                                do każdej sekcji (animacje)
         │
         ▼
 template-parts/sections/[szablon].php     ← dane jawnie w $args

@@ -1,0 +1,89 @@
+/**
+ * Animacje wejscia sekcji — wyglad kazdej animacji.
+ *
+ * Arkusz silnika wlasnego (inc/animations.php, assets/js/animations.js).
+ * Kolejkowany tylko na wpisie z animowana sekcja.
+ *
+ * STAN POCZATKOWY TYLKO POD FLAGA. Sekcja jest ukrywana wylacznie wtedy, gdy
+ * <html> ma klase cyber-anim-ready (skrypt startowy w <head>). Bez JS, przy
+ * ograniczeniu ruchu w systemie albo gdy silnik nie wystartowal — tresc jest
+ * zwyczajnie widoczna.
+ *
+ * Czas, opoznienie, plynnosc i dystans pochodza z Global Options -> Animacje
+ * (zmienne --cyber-anim-*, cyber_animation_css() w inc/enqueue.php). Wartosci
+ * zapasowe w var() sa rowne domyslnym z cyber_option_schema().
+ *
+ * Nowa animacja: klucz w cyber_animation_types() + jedna regula ponizej.
+ *
+ * @package Cyber_Framework
+ */
+
+.cyber-anim-ready [data-cyber-animate] {
+	transition-property: opacity, transform, filter;
+	transition-duration: var(--cyber-anim-duration, 700ms);
+	transition-timing-function: var(--cyber-anim-easing, ease-out);
+	transition-delay: var(--cyber-anim-delay, 0ms);
+}
+
+.cyber-anim-ready [data-cyber-animate]:not(.is-animated) {
+	opacity: 0;
+}
+
+/*
+ * Przesuniecie i skala liczone od stanu koncowego "brak transformacji", wiec
+ * po animacji sekcja nie niesie zadnego transform ani filter. To wazne:
+ * aktywny transform tworzy nowy blok zawierajacy i psulby position: fixed
+ * oraz sticky wewnatrz sekcji.
+ */
+.cyber-anim-ready [data-cyber-animate="from-bottom"]:not(.is-animated) {
+	transform: translate3d(0, var(--cyber-anim-distance, 40px), 0);
+}
+
+.cyber-anim-ready [data-cyber-animate="from-top"]:not(.is-animated) {
+	transform: translate3d(0, calc(var(--cyber-anim-distance, 40px) * -1), 0);
+}
+
+.cyber-anim-ready [data-cyber-animate="from-left"]:not(.is-animated) {
+	transform: translate3d(calc(var(--cyber-anim-distance, 40px) * -1), 0, 0);
+}
+
+.cyber-anim-ready [data-cyber-animate="from-right"]:not(.is-animated) {
+	transform: translate3d(var(--cyber-anim-distance, 40px), 0, 0);
+}
+
+.cyber-anim-ready [data-cyber-animate="zoom-in"]:not(.is-animated) {
+	transform: scale(0.92);
+}
+
+.cyber-anim-ready [data-cyber-animate="zoom-out"]:not(.is-animated) {
+	transform: scale(1.08);
+}
+
+.cyber-anim-ready [data-cyber-animate="blur"]:not(.is-animated) {
+	filter: blur(8px);
+}
+
+/*
+ * Sekcja wjezdzajaca z prawej albo powiekszona ponad 100% wystaje poza okno
+ * i na czas animacji dokladalaby poziomy pasek przewijania. clip zamiast
+ * hidden: hidden na przodku wylacza position: sticky (przyklejony header),
+ * clip nie.
+ */
+.cyber-anim-ready body {
+	overflow-x: clip;
+}
+
+/*
+ * Druga linia obrony: skrypt startowy i tak nie ustawia flagi przy
+ * ograniczeniu ruchu, ale ustawienie systemu moze sie zmienic, gdy strona
+ * jest juz otwarta.
+ */
+@media (prefers-reduced-motion: reduce) {
+	.cyber-anim-ready [data-cyber-animate],
+	.cyber-anim-ready [data-cyber-animate]:not(.is-animated) {
+		opacity: 1;
+		transform: none;
+		filter: none;
+		transition: none;
+	}
+}

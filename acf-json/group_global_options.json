@@ -6064,6 +6064,291 @@
             "custom_palette_source": "",
             "palette_colors": "",
             "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_tab_animations",
+            "label": "Animacje",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_anim_1",
+            "label": "Włączenie",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_anim_enable",
+            "label": "Animacje sekcji włączone",
+            "name": "cyber_anim_enable",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Rodzaj animacji wybiera się w każdej sekcji osobno: Ustawienia sekcji → Animacja wejścia. Wyłączenie zatrzymuje animacje na całej stronie bez zmiany ustawień sekcji.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_anim_2",
+            "label": "Czas",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_anim_duration",
+            "label": "Czas trwania animacji",
+            "name": "cyber_anim_duration",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 700,
+            "min": 100,
+            "max": 3000,
+            "step": 50,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "ms"
+        },
+        {
+            "key": "field_cyber_anim_delay",
+            "label": "Opóźnienie wejścia",
+            "name": "cyber_anim_delay",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Czas od pojawienia się sekcji na ekranie do startu animacji.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 3000,
+            "step": 50,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "ms"
+        },
+        {
+            "key": "field_cyber_anim_easing",
+            "label": "Płynność (easing)",
+            "name": "cyber_anim_easing",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "ease-out": "Wyhamowanie (ease-out)",
+                "ease": "Standardowa (ease)",
+                "ease-in-out": "Łagodny start i koniec (ease-in-out)",
+                "linear": "Równa (linear)"
+            },
+            "default_value": "ease-out",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_msg_anim_3",
+            "label": "Wejście sekcji",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_anim_offset",
+            "label": "Start animacji",
+            "name": "cyber_anim_offset",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Jak daleko nad dolną krawędzią ekranu musi się znaleźć sekcja, żeby zaczęła się animować.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 80,
+            "min": 0,
+            "max": 400,
+            "step": 10,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_anim_distance",
+            "label": "Dystans przesunięcia",
+            "name": "cyber_anim_distance",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Dotyczy animacji „Wjazd z…”: o ile sekcja przesuwa się w trakcie wejścia.",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 40,
+            "min": 0,
+            "max": 200,
+            "step": 5,
+            "allow_in_bindings": 0,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
+            "key": "field_cyber_anim_once",
+            "label": "Animuj tylko raz",
+            "name": "cyber_anim_once",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wyłączone: sekcja animuje się ponownie przy każdym powrocie na ekran.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_anim_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -6087,5 +6372,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1789983446
+    "modified": 1790243160
 }

@@ -275,6 +275,9 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 | Plik | Rola |
 |---|---|
 | `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, assety |
+| `inc/animations.php` | animacje wejścia — rejestr animacji, atrybut `data-cyber-animate`, warunkowe assety |
+| `assets/js/animations.js` | animacje wejścia — kiedy uruchomić (IntersectionObserver) |
+| `assets/css/animations.css` | animacje wejścia — jak wygląda każda animacja |
 | `inc/sections-cards.php` | layout `cards` — logika siatki i elementów |
 | `template-parts/sections/cards.php` | layout `cards` — widok |
 | `acf-json/group_section_cards.json` | źródło klonowania: pola sekcji Karty |
@@ -361,6 +364,123 @@ pól się **nie kopiuje** — wchodzą polem Clone.
 
 Dodatkowe klasy z pola ACF dokładane są do `.cyber-section`, każda przez
 `sanitize_html_class()`.
+
+### Punkt wpięcia: filtr `cyber_section_attributes`
+
+`cyber_section_attributes()` oddaje wynik przez filtr
+`cyber_section_attributes( $attributes, $type, $row )`. Tablica ma klucze
+`class`, `style`, `id` i `data` — ten ostatni to atrybuty `data-*`
+(nazwa bez prefiksu `data-` → wartość), wypisywane przez `cyber_section_open()`
+z `sanitize_key()` na nazwie i `esc_attr()` na wartości.
+
+Filtr jest dla modułów, które dokładają coś do **każdej** sekcji. Taki moduł
+nie dopisuje się do `inc/sections.php`, więc jego usunięcie nie wymaga zmian
+w tym pliku. Pierwszy użytkownik: animacje wejścia.
+
+### Animacje wejścia sekcji
+
+Każda sekcja ma w **Ustawieniach sekcji** pole **Animacja wejścia**
+(`cyber_section_animation`). Parametry wspólne — czas, opóźnienie, płynność,
+start, dystans, powtarzanie — są w **Global Options → Animacje**.
+
+| Klucz | Etykieta | Stan początkowy (przed wejściem na ekran) |
+|---|---|---|
+| `none` | Brak | — (domyślne; sekcja bez atrybutu) |
+| `fade` | Zanikanie | `opacity: 0` |
+| `from-bottom` | Wjazd z dołu | przesunięcie w dół o `--cyber-anim-distance` |
+| `from-top` | Wjazd z góry | przesunięcie w górę |
+| `from-left` | Wjazd z lewej | przesunięcie w lewo |
+| `from-right` | Wjazd z prawej | przesunięcie w prawo |
+| `zoom-in` | Powiększenie | `scale(0.92)` |
+| `zoom-out` | Pomniejszenie | `scale(1.08)` |
+| `blur` | Rozmycie | `filter: blur(8px)` |
+
+Każda animacja poza `none` startuje też od `opacity: 0`.
+
+**Przepływ:**
+
+```
+pole cyber_section_animation ──► filtr cyber_section_attributes (inc/animations.php)
+                                   └─► <section … data-cyber-animate="from-bottom">
+Global Options → Animacje ──► --cyber-anim-* w <style> (cyber_animation_css(), inc/enqueue.php)
+                          └─► window.cyberAnimations = {offset, once} (skrypt startowy w <head>)
+animations.js: sekcja wjeżdża na ekran ──► klasa .is-animated ──► animations.css: przejście do stanu końcowego
+```
+
+| Selektor / znacznik | Skąd | Rola |
+|---|---|---|
+| `[data-cyber-animate="…"]` | `inc/animations.php` | Jaka animacja. Atrybut, nie klasa: animacja to osobna oś obok wariantu sekcji (CLAUDE.md sekcja 20, „Stan to nie wariant”), a biblioteki animacji konfiguruje się właśnie atrybutami |
+| `html.cyber-anim-ready` | skrypt startowy w `<head>` | Bez tej klasy CSS **niczego nie ukrywa** |
+| `.is-animated` | `animations.js` | Sekcja w stanie końcowym |
+
+| Funkcja / stała | Plik | Rola |
+|---|---|---|
+| `cyber_animation_types()` | `inc/animations.php` | Rejestr animacji: klucz → etykieta. Jedyne źródło listy |
+| `CYBER_ANIMATION_NONE` | `inc/animations.php` | Klucz „bez animacji” (`none`) |
+| `cyber_animation_field()` | `inc/animations.php` | `acf/load_field` — opcje pola w panelu z rejestru |
+| `cyber_section_animation()` | `inc/animations.php` | Animacja wiersza po walidacji (biała lista rejestru) |
+| `cyber_animation_section_attributes()` | `inc/animations.php` | Filtr `cyber_section_attributes` — dokłada `data-cyber-animate` |
+| `cyber_animations_needed()` | `inc/animations.php` | Czy wpis ma choć jedną animowaną, włączoną sekcję (z sekcjami globalnymi) |
+| `cyber_animation_init_script()` | `inc/animations.php` | Skrypt startowy w `<head>`: konfiguracja i flaga `cyber-anim-ready` |
+| `cyber_animation_assets()` | `inc/animations.php` | Warunkowe kolejkowanie arkusza, skryptu startowego i silnika |
+| `cyber_animation_css_map()` / `cyber_animation_css()` | `inc/enqueue.php` | Zmienne `--cyber-anim-*` (warstwa danych — zostaje przy wymianie silnika) |
+
+**Odporność — sekcja nigdy nie zostaje niewidoczna:**
+
+- Bez JavaScriptu nie ma klasy `cyber-anim-ready`, więc sekcje są widoczne od razu.
+- Przy systemowym ograniczeniu ruchu (`prefers-reduced-motion`) albo w przeglądarce
+  bez `IntersectionObserver` skrypt startowy nie ustawia klasy — sekcje są widoczne
+  bez animacji. CSS ma dodatkowo blok `prefers-reduced-motion`.
+- Jeśli `animations.js` nie wystartuje w ciągu 3 s (błąd sieci, bloker), skrypt
+  startowy zdejmuje klasę i pokazuje treść. Spóźniony silnik widzi brak klasy
+  i nic nie robi, zamiast chować widoczną już treść.
+- Klasa jest ustawiana w `<head>`, przed pierwszym malowaniem — ustawiana
+  w stopce powodowałaby mrugnięcie sekcji na górze strony.
+- Stan końcowy nie ma `transform` ani `filter`, więc po animacji sekcja nie
+  tworzy nowego bloku zawierającego (nie psuje `position: fixed` i `sticky`
+  w środku). Na czas animacji `body` ma `overflow-x: clip`, żeby sekcja
+  wjeżdżająca z prawej nie dokładała poziomego paska; `clip`, nie `hidden`,
+  bo `hidden` wyłączyłoby przyklejony header.
+
+**Assety** ładują się tylko na wpisie, na którym choć jedna **włączona** sekcja
+— także wewnątrz sekcji globalnej — ma animację inną niż `none`, i tylko przy
+włączonym `cyber_anim_enable` (CLAUDE.md sekcja 10).
+
+**Nowa animacja:** klucz i etykieta w `cyber_animation_types()` + reguła
+w `assets/css/animations.css` + kopia opcji w `acf-json/group_section_settings.json`
+(pole ma ją dla panelu bez modułu; na co dzień listę podmienia `acf/load_field`)
++ wiersz w tabeli wyżej i w `docs/acf-schema.md`.
+
+#### Usunięcie albo wymiana silnika animacji
+
+Moduł ma **dwie warstwy**, rozdzielone celowo:
+
+| Warstwa | Co | Przy wymianie silnika |
+|---|---|---|
+| **Silnik** | `inc/animations.php`, `assets/js/animations.js`, `assets/css/animations.css`, linia `'inc/animations.php'` w `functions.php` | usuwasz |
+| **Dane** | pole `cyber_section_animation`, zakładka „Animacje”, wpisy `anim_*` w `cyber_option_schema()` i `default-acf.php`, `cyber_animation_css()` w `inc/enqueue.php`, filtr `cyber_section_attributes` | zostają |
+
+**Samo usunięcie animacji:** skasuj trzy pliki silnika i linię w
+`functions.php`. Nic więcej nie trzeba — sekcje renderują się bez atrybutu
+`data-cyber-animate`, zmienne `--cyber-anim-*` nikomu nie przeszkadzają,
+a wybory redaktorów zostają w bazie na wypadek powrotu.
+
+**Wymiana na bibliotekę** (np. AOS, Motion):
+
+1. Usuń silnik jak wyżej.
+2. Nowy moduł (np. `inc/animations-aos.php`) wpina się w filtr
+   `cyber_section_attributes` i ustawia atrybuty biblioteki, tłumacząc klucze
+   z bazy na jej nazwy — np. `from-bottom` → `data-aos="fade-up"`. **Kluczy
+   w bazie nie zmieniaj** (CLAUDE.md sekcja 7).
+3. Czas, opóźnienie i płynność czyta z `cyber_get_option( 'anim_duration' )`
+   itd. albo ze zmiennych `--cyber-anim-*`.
+4. Biblioteka wymaga zgody i wpisu w rejestrze bibliotek (CLAUDE.md sekcja 2).
+5. Zaktualizuj ten rozdział i `docs/acf-schema.md`.
+
+**Pełne usunięcie funkcji łącznie z danymi** to operacja na ACF: usunięcie pola
+z `group_section_settings.json` i klonu slidera oraz zakładki z Global Options
+wymaga też wpisów w schemacie, `default-acf.php` i dokumentacji. Pola nie
+kasują treści sekcji — znikają tylko zapisane wybory animacji.
 
 ### Usunięty layout `basic`
 

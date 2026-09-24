@@ -267,10 +267,11 @@ function cyber_font_css() {
  * kolejny modul kopiowalby ja po raz czwarty.
  *
  * Wartosci pochodza z cyber_get_option(), wiec sa juz zwalidowane co do typu
- * i zakresu (inc/helpers.php). Jednostka 'px' wymusza dodatkowo rzutowanie na
- * int, zeby do CSS nie trafil ulamek ani pusty string.
+ * i zakresu (inc/helpers.php). Kazda niepusta jednostka ('px', '%', 'ms')
+ * wymusza dodatkowo rzutowanie na int, zeby do CSS nie trafil ulamek ani pusty
+ * string. Pusta jednostka przepuszcza wartosc bez zmian (kolor, slowo kluczowe).
  *
- * @param array<string, array{0: string, 1: string}> $map Klucz opcji => nazwa zmiennej i jednostka ('px', '%' albo pusty string).
+ * @param array<string, array{0: string, 1: string}> $map Klucz opcji => nazwa zmiennej i jednostka ('px', '%', 'ms' albo pusty string).
  * @return string CSS bez znacznika <style>.
  */
 function cyber_css_vars_from_map( array $map ) {
@@ -281,12 +282,8 @@ function cyber_css_vars_from_map( array $map ) {
 
 		$value = cyber_get_option( $option_key );
 
-		if ( 'px' === $unit ) {
-			$value = sprintf( '%dpx', (int) $value );
-		}
-
-		if ( '%' === $unit ) {
-			$value = sprintf( '%d%%', (int) $value );
+		if ( '' !== $unit ) {
+			$value = (int) $value . $unit;
 		}
 
 		$vars[ $css_var ] = $value;
@@ -373,6 +370,40 @@ function cyber_copyright_css_map() {
  */
 function cyber_copyright_css() {
 	return cyber_css_vars_from_map( cyber_copyright_css_map() );
+}
+
+/**
+ * Mapa pol zakladki "Animacje" na zmienne CSS.
+ *
+ * Zmienne sa czescia warstwy DANYCH, nie silnika animacji — dlatego stoja
+ * tutaj, a nie w inc/animations.php. Podmiana silnika (np. na biblioteke)
+ * nie rusza tego miejsca: nowy silnik czyta te same zmienne albo je ignoruje.
+ *
+ * Start animacji (anim_offset) i "tylko raz" (anim_once) nie sa tu wypisywane,
+ * bo nie sa wlasnosciami CSS — silnik dostaje je w konfiguracji skryptu.
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_animation_css_map() {
+	return array(
+		'anim_duration' => array( '--cyber-anim-duration', 'ms' ),
+		'anim_delay'    => array( '--cyber-anim-delay', 'ms' ),
+		'anim_easing'   => array( '--cyber-anim-easing', '' ),
+		'anim_distance' => array( '--cyber-anim-distance', 'px' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi animacji — pusty, gdy animacje sa wylaczone.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_animation_css() {
+	if ( ! cyber_get_option( 'anim_enable' ) ) {
+		return '';
+	}
+
+	return cyber_css_vars_from_map( cyber_animation_css_map() );
 }
 
 /**
@@ -710,7 +741,8 @@ function cyber_print_inline_css() {
 		. cyber_breadcrumb_css()
 		. cyber_woocommerce_css()
 		. cyber_blog_css()
-		. cyber_page_header_css();
+		. cyber_page_header_css()
+		. cyber_animation_css();
 
 	/*
 	 * wp_strip_all_tags(), nie esc_html(). Kontekstem jest wnetrze <style>,
