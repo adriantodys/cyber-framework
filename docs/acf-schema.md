@@ -7,7 +7,7 @@
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
 Ostatnia aktualizacja: 2026-09-24
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header” i „Animacje”.
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
 Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
 
 ---
@@ -767,7 +767,7 @@ i są **inline SVG**. Bez biblioteki zewnętrznej, bez fontu ikon, bez `<img>`
 | Grupa | Nazwy |
 |---|---|
 | Platformy | `facebook`, `instagram`, `youtube`, `x`, `linkedin`, `tiktok` |
-| Interfejs | `phone`, `envelope` — używane przy telefonie i emailu na pasku Top Header |
+| Interfejs | `phone`, `envelope`, `location` — Top Header i sekcja Kontakt; `user`, `cart` — header WooCommerce; `question` — sekcja FAQ; `grid`, `list` — przełącznik widoku sklepu; `arrow-up` — przycisk do góry |
 
 | | |
 |---|---|
@@ -1242,6 +1242,38 @@ Pola poza wyłącznikiem pokazują się tylko przy włączonych animacjach.
 > To nie są `padding` ani `margin`, tylko długość ruchu i położenie linii
 > startu — dlatego pola liczbowe, a nie Select ze skali.
 
+### Zakładka: „Przycisk do góry”
+
+Kwadratowy przycisk ze strzałką przy dolnej krawędzi ekranu. Pojawia się po
+przewinięciu strony w dół i wraca nią na samą górę. **Domyślnie wyłączony**
+— po aktualizacji motywu nie pojawia się sam na istniejących witrynach.
+**12 pól.** Logika: `inc/go-to-top.php`, opis komponentu: `docs/components.md`.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Przycisk „do góry” włączony | `cyber_totop_enable` | True/False | `false` | Wyłącznik modułu; wyłączony = brak markupu, zmiennych CSS i assetów |
+| Pokaż po przewinięciu | `cyber_totop_show_after` | Number 0–5000 px, krok 50 | `400` | Próg przewinięcia; atrybut `data-cyber-totop` dla skryptu, nie zmienna CSS |
+| Pokazuj na telefonie | `cyber_totop_mobile` | True/False | `true` | Wyłączone: klasa `cyber-totop--hide-mobile`, przycisk znika poniżej 767px |
+| Położenie | `cyber_totop_position` | Select (CLAUDE.md sekcja 20) | `right` | Przy dolnej krawędzi: do lewej / do środka / do prawej. Klasa `cyber-totop--[wartość]` |
+| Odstęp od krawędzi ekranu | `cyber_totop_offset` | Select (skala) | `24` | Od dołu i od boku; `--cyber-totop-offset` |
+| Rozmiar przycisku | `cyber_totop_size` | Number 32–96 px | `48` | Bok kwadratu; `--cyber-totop-size` |
+| Rozmiar strzałki | `cyber_totop_icon_size` | Number 12–48 px | `20` | `--cyber-totop-icon-size` |
+| Zaokrąglenie rogów | `cyber_totop_radius` | Number 0–48 px | `0` | `0` = kwadrat; `--cyber-totop-radius` |
+| Kolor tła / po najechaniu | `cyber_totop_bg` `_bg_hover` | Color (alpha) | `#111111` / `#333333` | `--cyber-totop-bg`, `--cyber-totop-bg-hover` |
+| Kolor strzałki / po najechaniu | `cyber_totop_color` `_color_hover` | Color (alpha) | `#ffffff` / `#ffffff` | `--cyber-totop-color`, `--cyber-totop-color-hover`; nadpisuje wspólny kolor ikon (Kolory → Ikony) |
+
+Pola poza wyłącznikiem pokazują się tylko przy włączonym przycisku.
+
+> **Klasyfikacja kolorów (CLAUDE.md sekcja 5, „Dwa wzorce kolorów”): semantyczne** —
+> przypięte do jednego komponentu, aplikują się same.
+
+> **Klasyfikacja wg CLAUDE.md sekcja 19: wartości stałe, nie skalowane.** Rozmiar
+> przycisku i strzałki to wymiary elementu, jednakowe na każdym ekranie.
+> Jedyną różnicą na telefonie jest opcjonalne ukrycie przycisku.
+
+> **Odstęp od krawędzi pochodzi ze skali odstępów** (CLAUDE.md sekcja 6) — Select,
+> nie liczba. Rozmiar i zaokrąglenie to wymiary elementu, więc są polami liczbowymi.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1383,7 +1415,7 @@ Gwarancje `cyber_get_option()`:
 
 | | |
 |---|---|
-| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()`, `cyber_breadcrumb_css()`, `cyber_woocommerce_css()`, `cyber_animation_css()` — `inc/enqueue.php`; `cyber_blog_css()` — `inc/blog.php`; `cyber_page_header_css()` — `inc/page-header.php` |
+| Funkcje budujące CSS | `cyber_container_css()`, `cyber_font_css()`, `cyber_header_css()`, `cyber_header_mobile_css()`, `cyber_button_css()`, `cyber_colors_css()`, `cyber_top_header_css()`, `cyber_footer_css()`, `cyber_copyright_css()`, `cyber_breadcrumb_css()`, `cyber_woocommerce_css()`, `cyber_animation_css()`, `cyber_go_to_top_css()` — `inc/enqueue.php`; `cyber_blog_css()` — `inc/blog.php`; `cyber_page_header_css()` — `inc/page-header.php` |
 | Wspólny emiter | `cyber_css_declarations()` (same deklaracje), `cyber_css_root()` (blok `:root{…}`) — `inc/helpers.php`. Używają ich **wszystkie** moduły, bez wyjątku (CLAUDE.md sekcja 6) |
 | Rozwiązanie wartości z mapy | `cyber_css_vars_from_map()` — `inc/enqueue.php` |
 | Funkcja wypisująca | `cyber_print_inline_css()`, hook `wp_head` priorytet 20 |
@@ -2345,6 +2377,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-24 — **Przycisk do góry.** Nowa zakładka Global Options „Przycisk do góry” (12 pól: wyłącznik, próg pokazania, telefon, położenie, odstęp ze skali, rozmiar przycisku i strzałki, zaokrąglenie, 4 kolory). Domyślnie wyłączony. Global Options mają teraz **18 zakładek i 227 pól**. Nowa ikona `arrow-up` w `cyber_icons()`. Moduł: `inc/go-to-top.php`, `template-parts/go-to-top/go-to-top.php`, `assets/css/go-to-top.css`, `assets/js/go-to-top.js`.
 
 - 2026-09-24 — **Animacje wejścia sekcji.** Nowe pole `cyber_section_animation` (Select, domyślnie `none`) w grupie `group_section_settings`, a więc w każdym layoucie klonującym tę grupę; slider dostał je w klonie `field_cyber_section_slider_section_c` (klucz klonu bez zmian, zmiana addytywna). Nowa zakładka Global Options **„Animacje”** (7 pól) — Global Options mają teraz **17 zakładek i 215 pól**. Silnik własny, bez biblioteki: `inc/animations.php`, `assets/js/animations.js`, `assets/css/animations.css`. Emiter `cyber_css_vars_from_map()` przyjmuje teraz dowolną jednostkę (doszło `ms`); wynik dla `px` i `%` bez zmian.
 

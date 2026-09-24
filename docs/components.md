@@ -75,6 +75,7 @@ w którym powstał.
 | Header — slot akcji: CTA | `template-parts/header/actions-cta.php` | `cta` | `.cyber-header__actions` w `assets/css/main.css`; przycisk z `cyber_button()` w rozmiarze `medium` |
 | Header — slot akcji: WooCommerce | `template-parts/header/actions-woocommerce.php` | `wc` | sekcja „Header: konto i koszyk WooCommerce” w `assets/css/main.css`; ikony `user` i `cart` z `cyber_icons()` |
 | Header — licznik koszyka | `template-parts/header/cart-count.php` | `count` | `.cyber-wc-count` w `assets/css/main.css` |
+| Przycisk do góry | `template-parts/go-to-top/go-to-top.php` | `class`, `show_after`, `label`, `icon` | `assets/css/go-to-top.css` + zmienne z `cyber_go_to_top_css()`, skrypt `assets/js/go-to-top.js` — oba tylko przy włączonym przycisku; ikona `arrow-up` z `cyber_icons()` |
 | Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu`, `variant`, `sticky` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
 #### Social icons
@@ -688,6 +689,54 @@ Pasek z tytułem strony nad treścią, wypisywany z `header.php` nad okruszkami.
 | `.cyber-page-header__video` | wideo tła (bez dźwięku, w pętli; ukrywane przy ograniczeniu animacji) |
 | `.cyber-page-header__overlay` | nakładka nad tłem |
 | `.cyber-page-header__title` / `__excerpt` | `<h1>` strony i zajawka |
+
+### Przycisk do góry
+
+Kwadrat ze strzałką przy dolnej krawędzi ekranu. Pojawia się po przewinięciu
+strony o zadaną liczbę pikseli i przewija ją z powrotem na górę. Ustawienia:
+Global Options → Przycisk do góry. **Domyślnie wyłączony.**
+
+| Plik | Rola |
+|---|---|
+| `inc/go-to-top.php` | dane dla widoku, wypisanie na hooku `wp_footer` (priorytet 5), warunkowe assety |
+| `template-parts/go-to-top/go-to-top.php` | widok — `<button>` z ikoną `arrow-up` |
+| `assets/css/go-to-top.css` | wygląd, położenie, pokazywanie i ukrywanie |
+| `assets/js/go-to-top.js` | próg przewinięcia, powrót na górę, fokus po użyciu klawiatury |
+
+| Funkcja | Plik | Rola |
+|---|---|---|
+| `cyber_go_to_top_data()` | `inc/go-to-top.php` | Klasy, próg, etykieta i ikona albo `null` przy wyłączonym przycisku |
+| `cyber_go_to_top()` | `inc/go-to-top.php` | `wp_footer` — wypisuje widok |
+| `cyber_go_to_top_assets()` | `inc/go-to-top.php` | Arkusz i skrypt tylko przy włączonym przycisku |
+| `cyber_go_to_top_css_map()` / `cyber_go_to_top_css()` | `inc/enqueue.php` | Zmienne `--cyber-totop-*` w `<style>` w `wp_head` |
+
+| Klasa / atrybut | Skąd | Rola |
+|---|---|---|
+| `.cyber-totop` `.cyber-totop--default` | `cyber_variant_class()` | Wrapper z klasą wariantu (CLAUDE.md sekcja 20) |
+| `.cyber-totop--left` / `--center` / `--right` | pole Położenie | Modyfikator położenia |
+| `.cyber-totop--hide-mobile` | pole „Pokazuj na telefonie” wyłączone | **Stan**, nie wariant — ukrycie poniżej 767px |
+| `.is-visible` | `go-to-top.js` | Przycisk pokazany (przewinięto dalej niż próg) |
+| `data-cyber-totop` | `cyber_go_to_top_data()` | Próg przewinięcia w pikselach |
+
+**Decyzje:**
+
+- **`<button>`, nie `<a href="#">`** — to akcja na stronie, nie nawigacja.
+  Dostępna nazwa: `aria-label` („Przewin do gory strony”); strzałka ma
+  `aria-hidden`.
+- **Ukryty przez `visibility`, nie samo `opacity`** — niewidoczny przycisk
+  wypada z kolejki Tab i nie przechwytuje kliknięć.
+- **Bez JavaScriptu przycisk się nie pojawia.** Pokazuje go dopiero skrypt po
+  przewinięciu, więc na stronie nie zostaje martwy element.
+- **Fokus po użyciu klawiatury** przechodzi na skip-link na górze strony.
+  Inaczej zostałby na przycisku, który za chwilę znika. Przy kliknięciu myszą
+  fokus się nie przenosi, żeby skip-link nie mignął na ekranie.
+- **Przewijanie płynne**, a przy systemowym ograniczeniu ruchu — natychmiastowe.
+  Pokazywanie i ukrywanie bez przejść przy `prefers-reduced-motion`.
+- **Zdarzenie `scroll`** jest pasywne i przeliczane najwyżej raz na klatkę
+  (`requestAnimationFrame`).
+- **`z-index: 20`** — nad treścią, pod headerem (30) i jego panelem mobilnym.
+- **Wypisywany na `wp_footer`, nie w `footer.php`** — działa w każdym widoku
+  (strony, blog, sklep), a cały moduł mieszka w swoich plikach.
 
 ### Blog — widoki i pasek boczny
 

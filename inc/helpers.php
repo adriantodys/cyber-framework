@@ -74,6 +74,7 @@ function cyber_icons() {
 			. '<rect x="11.5" y="2.5" width="6" height="6" rx="1"/>'
 			. '<rect x="2.5" y="11.5" width="6" height="6" rx="1"/>'
 			. '<rect x="11.5" y="11.5" width="6" height="6" rx="1"/>',
+		'arrow-up'  => '<path d="M10 16.5v-13M4.5 9 10 3.5 15.5 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
 		'list'      => '<rect x="2.5" y="3" width="4" height="4" rx="1"/>'
 			. '<rect x="8.5" y="4.2" width="9" height="1.6" rx="0.8"/>'
 			. '<rect x="2.5" y="8" width="4" height="4" rx="1"/>'
@@ -222,7 +223,7 @@ function cyber_header_variants() {
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 215 wpisow, a cyber_get_option() siega po niego
+	 * Schemat jest stala tablica 227 wpisow, a cyber_get_option() siega po niego
 	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
 	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
 	 */
@@ -1177,6 +1178,66 @@ function cyber_option_schema() {
 		'anim_once'                   => array(
 			'type'    => 'bool',
 			'default' => true,
+		),
+
+		// Przycisk "do gory". Domyslnie wylaczony — nie pojawia sie sam na istniejacych witrynach.
+		'totop_enable'                => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'totop_show_after'            => array(
+			'type'    => 'px',
+			'default' => 400,
+			'min'     => 0,
+			'max'     => 5000,
+		),
+		'totop_mobile'                => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'totop_position'              => array(
+			'type'    => 'choice',
+			'default' => 'right',
+			'choices' => cyber_alignments(),
+		),
+		'totop_offset'                => array(
+			'type'    => 'choice',
+			'default' => '24',
+			'choices' => cyber_spacing_scale_choices(),
+		),
+		'totop_size'                  => array(
+			'type'    => 'px',
+			'default' => 48,
+			'min'     => 32,
+			'max'     => 96,
+		),
+		'totop_icon_size'             => array(
+			'type'    => 'px',
+			'default' => 20,
+			'min'     => 12,
+			'max'     => 48,
+		),
+		'totop_radius'                => array(
+			'type'    => 'px',
+			'default' => 0,
+			'min'     => 0,
+			'max'     => 48,
+		),
+		'totop_bg'                    => array(
+			'type'    => 'color_alpha',
+			'default' => '#111111',
+		),
+		'totop_color'                 => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
+		),
+		'totop_bg_hover'              => array(
+			'type'    => 'color_alpha',
+			'default' => '#333333',
+		),
+		'totop_color_hover'           => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
 		),
 	);
 

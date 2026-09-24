@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-24 (Global Options ma siedemnaście zakładek i 215 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-24 (Global Options ma osiemnaście zakładek i 227 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -62,6 +62,7 @@ w ustalonej kolejności:
 | 33 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
 | 34 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
 | 35 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
+| 36 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
 
 ## Stałe
 
@@ -105,7 +106,8 @@ cyber_footer_css()            ← moduł „Footer”
 cyber_copyright_css()         ← moduł „Copyright”
 cyber_breadcrumb_css()        ← moduły „Breadcrumb” i „Breadcrumb WooCommerce”
 cyber_woocommerce_css()       ← moduł „WooCommerce”
-cyber_animation_css()         ← moduł „Animacje”                (inc/enqueue.php)
+cyber_animation_css()         ← moduł „Animacje”
+cyber_go_to_top_css()         ← moduł „Przycisk do góry”        (inc/enqueue.php)
 cyber_blog_css()              ← moduł „Blog”                    (inc/blog.php)
 cyber_page_header_css()       ← moduł „Page header”             (inc/page-header.php)
       │
@@ -116,7 +118,7 @@ cyber_print_inline_css()      ← jeden wspólny <style id="cyber-global-vars">
 assets/css/main.css           ← konsumenci zmiennych: main.css (.cyber-container,
 i arkusze modułów               typografia, header, menu) oraz arkusze modułów
                                 kolejkowane warunkowo (sklep, blog, page header,
-                                animacje)
+                                animacje, przycisk do góry)
 ```
 
 Wyjątek od tego przepływu: **wyrównanie**. Nie jest zmienną CSS, tylko modyfikatorem
@@ -151,8 +153,9 @@ cyber_css_declarations( $vars )   →  "--a:1px;--b:red;"   (inc/helpers.php)
 cyber_css_root( $vars )           →  ":root{…}"           (inc/helpers.php)
 ```
 
-**Warstwa 1 — mapa.** Siedem modułów opisanych mapą (Header, Footer, Copyright,
-Breadcrumb, WooCommerce, Top Header, Animacje) sprowadza się do jednej linii:
+**Warstwa 1 — mapa.** Osiem modułów opisanych mapą (Header, Footer, Copyright,
+Breadcrumb, WooCommerce, Top Header, Animacje, Przycisk do góry) sprowadza się
+do jednej linii:
 
 ```php
 function cyber_header_css() {

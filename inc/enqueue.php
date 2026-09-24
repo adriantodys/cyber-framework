@@ -407,6 +407,41 @@ function cyber_animation_css() {
 }
 
 /**
+ * Mapa pol zakladki "Przycisk do gory" na zmienne CSS.
+ *
+ * Polozenie (lewo / srodek / prawo) nie jest tu zmienna, tylko klasa
+ * modyfikujaca na przycisku (CLAUDE.md sekcja 20). Prog pokazania
+ * (totop_show_after) nie jest wlasnoscia CSS — idzie atrybutem do skryptu.
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_go_to_top_css_map() {
+	return array(
+		'totop_offset'      => array( '--cyber-totop-offset', 'px' ),
+		'totop_size'        => array( '--cyber-totop-size', 'px' ),
+		'totop_icon_size'   => array( '--cyber-totop-icon-size', 'px' ),
+		'totop_radius'      => array( '--cyber-totop-radius', 'px' ),
+		'totop_bg'          => array( '--cyber-totop-bg', '' ),
+		'totop_color'       => array( '--cyber-totop-color', '' ),
+		'totop_bg_hover'    => array( '--cyber-totop-bg-hover', '' ),
+		'totop_color_hover' => array( '--cyber-totop-color-hover', '' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmiennymi przycisku "do gory" — pusty, gdy przycisk jest wylaczony.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_go_to_top_css() {
+	if ( ! cyber_get_option( 'totop_enable' ) ) {
+		return '';
+	}
+
+	return cyber_css_vars_from_map( cyber_go_to_top_css_map() );
+}
+
+/**
  * Mapa pol stylizacji stopki na zmienne CSS.
  *
  * Mapa jest jawna, bo nazwy nie przekladaja sie mechanicznie: pole
@@ -742,7 +777,8 @@ function cyber_print_inline_css() {
 		. cyber_woocommerce_css()
 		. cyber_blog_css()
 		. cyber_page_header_css()
-		. cyber_animation_css();
+		. cyber_animation_css()
+		. cyber_go_to_top_css();
 
 	/*
 	 * wp_strip_all_tags(), nie esc_html(). Kontekstem jest wnetrze <style>,

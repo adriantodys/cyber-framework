@@ -432,4 +432,26 @@ return array(
 	'anim_distance'                           => 40,            // px 0-200       | Dystans przesuniecia
 	'anim_once'                               => true,          // tak/nie        | Animuj tylko raz
 
+	/* ======================================================================
+	 * PRZYCISK DO GORY
+	 * ====================================================================== */
+
+	/* --- Wlaczenie --------------------------------------------------------- */
+	'totop_enable'                            => false,         // tak/nie        | Przycisk "do gory" wlaczony
+	'totop_show_after'                        => 400,           // px 0-5000      | Pokaz po przewinieciu
+	'totop_mobile'                            => true,          // tak/nie        | Pokazuj na telefonie
+
+	/* --- Polozenie --------------------------------------------------------- */
+	'totop_position'                          => 'right',       // left|center|right | Polozenie
+	'totop_offset'                            => '24',          // 0|6|12|24|36|48|64|94 | Odstep od krawedzi ekranu
+
+	/* --- Wyglad ------------------------------------------------------------ */
+	'totop_size'                              => 48,            // px 32-96       | Rozmiar przycisku
+	'totop_icon_size'                         => 20,            // px 12-48       | Rozmiar strzalki
+	'totop_radius'                            => 0,             // px 0-48        | Zaokraglenie rogow
+	'totop_bg'                                => '#111111',     // kolor          | Kolor tla
+	'totop_color'                             => '#ffffff',     // kolor          | Kolor strzalki
+	'totop_bg_hover'                          => '#333333',     // kolor          | Kolor tla po najechaniu
+	'totop_color_hover'                       => '#ffffff',     // kolor          | Kolor strzalki po najechaniu
+
 );

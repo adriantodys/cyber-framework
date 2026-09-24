@@ -77,6 +77,7 @@ function cyber_load_modules() {
 		'inc/page-header.php',
 		'inc/gallery.php',
 		'inc/animations.php',
+		'inc/go-to-top.php',
 	);
 
 	foreach ( $modules as $module ) {

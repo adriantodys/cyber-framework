@@ -1,0 +1,103 @@
+/**
+ * Przycisk "do gory" — kwadrat ze strzalka, przyklejony do dolnej krawedzi ekranu.
+ *
+ * Kolejkowany tylko przy wlaczonym przycisku (inc/go-to-top.php). Wartosci
+ * z Global Options -> Przycisk do gory przychodza zmiennymi --cyber-totop-*
+ * (cyber_go_to_top_css() w inc/enqueue.php); wartosci zapasowe w var() sa
+ * rowne domyslnym z cyber_option_schema().
+ *
+ * Wymiary przycisku i strzalki to wymiary elementu, nie rytm strony — nie
+ * podlegaja skali odstepow (CLAUDE.md sekcja 6). Odstep od krawedzi ekranu
+ * pochodzi ze skali (pole Select w panelu).
+ *
+ * @package Cyber_Framework
+ */
+
+.cyber-totop {
+	position: fixed;
+	bottom: var(--cyber-totop-offset, 24px);
+	z-index: 20; /* ponad trescia, pod headerem (30) i jego panelem mobilnym */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--cyber-totop-size, 48px);
+	height: var(--cyber-totop-size, 48px);
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-radius: var(--cyber-totop-radius, 0px);
+	background: var(--cyber-totop-bg, #111111);
+	cursor: pointer;
+
+	/*
+	 * Ukryty, dopoki skrypt nie doda .is-visible. visibility (a nie samo
+	 * opacity) wyjmuje go tez z kolejki Tab i z drzewa dostepnosci — ukryty
+	 * przycisk nie przechwytuje fokusu ani klikniec.
+	 */
+	visibility: hidden;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, background-color 0.2s ease;
+}
+
+.cyber-totop.is-visible {
+	visibility: visible;
+	opacity: 1;
+	transform: none;
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s, background-color 0.2s ease;
+}
+
+.cyber-totop:hover,
+.cyber-totop:focus-visible {
+	background: var(--cyber-totop-bg-hover, #333333);
+}
+
+/* Polozenie — modyfikator klasy (CLAUDE.md sekcja 20). */
+.cyber-totop--right {
+	right: var(--cyber-totop-offset, 24px);
+}
+
+.cyber-totop--left {
+	left: var(--cyber-totop-offset, 24px);
+}
+
+.cyber-totop--center {
+	left: 0;
+	right: 0;
+	margin-inline: auto;
+}
+
+/*
+ * Kolor strzalki nadpisuje wspolny kolor ikon (.cyber-icon, Kolory -> Ikony):
+ * przycisk ma wlasne tlo, wiec kolor ikony musi byc z nim zestawiony.
+ */
+.cyber-totop .cyber-icon {
+	width: var(--cyber-totop-icon-size, 20px);
+	height: var(--cyber-totop-icon-size, 20px);
+	color: var(--cyber-totop-color, #ffffff);
+	transition: color 0.2s ease;
+}
+
+.cyber-totop:hover .cyber-icon,
+.cyber-totop:focus-visible .cyber-icon {
+	color: var(--cyber-totop-color-hover, #ffffff);
+}
+
+.cyber-totop:focus-visible {
+	outline-color: var(--cyber-totop-bg, #111111);
+	outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+	.cyber-totop--hide-mobile {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.cyber-totop,
+	.cyber-totop.is-visible,
+	.cyber-totop .cyber-icon {
+		transition: none;
+	}
+}
