@@ -81,6 +81,31 @@
 	line-height: 1.6;
 }
 
+/*
+ * Okruszki wewnatrz page headera, pod tytulem i zajawka (Page header ->
+ * "Breadcrumb w page headerze"). Pasek pod page headerem ma kolory dobrane do
+ * jasnego tla strony — tutaj stoi na zdjeciu albo ciemnym tle, wiec okruszki
+ * biora kolor zajawki, a biezaca strona kolor tytulu. Rozmiar czcionki zostaje
+ * z zakladki Breadcrumb.
+ *
+ * Specyficznosc (0,2,0) i wiecej przebija reguly paska z main.css, ktory
+ * laduje sie wczesniej.
+ */
+.cyber-page-header .cyber-breadcrumb--in-page-header {
+	margin-top: var(--cyber-space-3);
+	padding-block: 0;
+	border-bottom: 0;
+	color: var(--cyber-ph-excerpt-color, #ffffff);
+}
+
+.cyber-page-header .cyber-breadcrumb--in-page-header .cyber-breadcrumb__item:last-child {
+	color: var(--cyber-ph-title-color, #ffffff);
+}
+
+.cyber-page-header .cyber-breadcrumb--in-page-header .cyber-breadcrumb__item + .cyber-breadcrumb__item::before {
+	color: inherit;
+}
+
 /* --- Wyrownanie: klasa, nie zmienna (CLAUDE.md sekcja 20) ------------------ */
 
 .cyber-page-header--left .cyber-page-header__inner { text-align: left; }
@@ -91,11 +116,16 @@
 	margin-inline: auto;
 }
 
+/* Okruszki to flex, wiec text-align ich nie wyrownuje. */
+.cyber-page-header--center .cyber-breadcrumb__nav { justify-content: center; }
+
 .cyber-page-header--right .cyber-page-header__inner { text-align: right; }
 
 .cyber-page-header--right .cyber-page-header__excerpt {
 	margin-inline-start: auto;
 }
+
+.cyber-page-header--right .cyber-breadcrumb__nav { justify-content: flex-end; }
 
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
 

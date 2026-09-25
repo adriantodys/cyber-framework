@@ -70,8 +70,8 @@ w którym powstał.
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
-| Breadcrumb | `template-parts/breadcrumb/breadcrumb.php` | `context`, `items` | sekcja „Breadcrumb” w `assets/css/main.css` + zmienne z `cyber_breadcrumb_css()` |
-| Breadcrumb WooCommerce | `template-parts/breadcrumb/breadcrumb-woocommerce.php` | `context` | ta sama sekcja CSS; ścieżkę wypisuje `woocommerce_breadcrumb()` we własnych znacznikach motywu |
+| Breadcrumb | `template-parts/breadcrumb/breadcrumb.php` | `context`, `items`, `in_page_header` | sekcja „Breadcrumb” w `assets/css/main.css` + zmienne z `cyber_breadcrumb_css()` |
+| Breadcrumb WooCommerce | `template-parts/breadcrumb/breadcrumb-woocommerce.php` | `context`, `in_page_header` | ta sama sekcja CSS; ścieżkę wypisuje `woocommerce_breadcrumb()` we własnych znacznikach motywu |
 | Header — slot akcji: CTA | `template-parts/header/actions-cta.php` | `cta` | `.cyber-header__actions` w `assets/css/main.css`; przycisk z `cyber_button()` w rozmiarze `medium` |
 | Header — slot akcji: WooCommerce | `template-parts/header/actions-woocommerce.php` | `wc` | sekcja „Header: konto i koszyk WooCommerce” w `assets/css/main.css`; ikony `user` i `cart` z `cyber_icons()` |
 | Header — licznik koszyka | `template-parts/header/cart-count.php` | `count` | `.cyber-wc-count` w `assets/css/main.css` |
@@ -702,6 +702,22 @@ Pasek z tytułem strony nad treścią, wypisywany z `header.php` nad okruszkami.
 | `.cyber-page-header__video` | wideo tła (bez dźwięku, w pętli; ukrywane przy ograniczeniu animacji) |
 | `.cyber-page-header__overlay` | nakładka nad tłem |
 | `.cyber-page-header__title` / `__excerpt` | `<h1>` strony i zajawka |
+| `.cyber-breadcrumb--in-page-header` | okruszki wewnątrz page headera (stan obok wariantu `--default` / `--wc`) |
+
+**Breadcrumb w page headerze** (pole `cyber_pageheader_breadcrumb`). Kolejność
+wewnątrz page headera: tytuł → zajawka (jeśli włączona) → okruszki. Osobny pasek
+pod page headerem wtedy się nie pojawia — `header.php` pyta
+`cyber_page_header_has_breadcrumb()`.
+
+| Funkcja | Plik | Rola |
+|---|---|---|
+| `cyber_breadcrumb_render( $data, $page_header )` | `inc/breadcrumb.php` | Jedno miejsce wypisania okruszków: wybiera widok (zwykły albo WooCommerce); `$page_header = true` — bez kontenera `.cyber-container` (szerokość trzyma page header) i z klasą `--in-page-header` |
+| `cyber_page_header_has_breadcrumb()` | `inc/page-header.php` | Czy okruszki stoją w page headerze — wtedy `header.php` pomija osobny pasek |
+
+Okruszki w page headerze: bez górnego i dolnego odstępu paska i bez dolnej
+kreski; kolor zajawki, bieżąca strona w kolorze tytułu, rozmiar czcionki
+z zakładki Breadcrumb. Wyrównanie idzie za wyrównaniem treści page headera
+(`justify-content`, bo lista okruszków jest flexem).
 
 ### Przycisk do góry
 

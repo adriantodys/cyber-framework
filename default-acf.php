@@ -413,6 +413,9 @@ return array(
 	'pageheader_excerpt_size'                 => 'text',        // text|h6|h5|h4  | Rozmiar zajawki
 	'pageheader_excerpt_color'                => '#ffffff',     // kolor          | Kolor zajawki
 
+	/* --- Breadcrumb -------------------------------------------------------- */
+	'pageheader_breadcrumb'                   => false,         // tak/nie        | Breadcrumb w page headerze
+
 	/* ======================================================================
 	 * ANIMACJE
 	 * Rodzaj animacji wybiera sie w kazdej sekcji (Ustawienia sekcji),

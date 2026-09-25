@@ -6066,6 +6066,61 @@
             "show_color_wheel": true
         },
         {
+            "key": "field_cyber_msg_pageheader_breadcrumb",
+            "label": "Breadcrumb",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_pageheader_breadcrumb",
+            "label": "Breadcrumb w page headerze",
+            "name": "cyber_pageheader_breadcrumb",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Okruszki pod tytułem (i pod zajawką, jeśli jest włączona) zamiast osobnego paska pod page headerem. Biorą kolor zajawki, bieżąca strona — kolor tytułu. Czy breadcrumb w ogóle się pokazuje, decyduje zakładka Breadcrumb.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_pageheader_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_cyber_tab_animations",
             "label": "Animacje",
             "name": "",
@@ -6815,5 +6870,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790248827
+    "modified": 1790336168
 }

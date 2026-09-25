@@ -178,3 +178,27 @@ function cyber_breadcrumb_data() {
 		'items'   => $items,
 	);
 }
+
+/**
+ * Wypisuje breadcrumb wlasciwym widokiem (zwykly albo WooCommerce).
+ *
+ * Jedno miejsce wyboru szablonu dla obu polozen: osobnego paska pod page
+ * headerem (header.php) i okruszkow wewnatrz page headera, pod tytulem
+ * (template-parts/page-header/page-header.php). Wczesniej wybor szablonu stal
+ * wprost w header.php — drugie miejsce wypisania skopiowaloby ten warunek.
+ *
+ * @param array $data        Wynik cyber_breadcrumb_data().
+ * @param bool  $page_header Czy okruszki stoja wewnatrz page headera: bez
+ *                           wlasnego kontenera i z klasa stanu
+ *                           cyber-breadcrumb--in-page-header.
+ * @return void
+ */
+function cyber_breadcrumb_render( array $data, $page_header = false ) {
+	$part = ( isset( $data['context'] ) && 'wc' === $data['context'] )
+		? 'template-parts/breadcrumb/breadcrumb-woocommerce'
+		: 'template-parts/breadcrumb/breadcrumb';
+
+	$data['in_page_header'] = (bool) $page_header;
+
+	get_template_part( $part, null, $data );
+}

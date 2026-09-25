@@ -83,7 +83,7 @@ gdy pole jest puste lub ACF niedostępne. Pełna lista kluczy: `docs/acf-schema.
 Kolejność budowy: CLAUDE.md sekcja 17.
 
 - [x] **Etap 1** — szkielet motywu (`style.css`, `functions.php`, `inc/setup.php`, `inc/enqueue.php`)
-- [x] **Etap 2** — Global Options: Options Page + osiemnaście zakładek, 227 pól
+- [x] **Etap 2** — Global Options: Options Page + osiemnaście zakładek, 228 pól
 - [x] **Etap 3** — Header / Footer (ACF + template-parts): Top Header, Header Desktop, Header Mobile, Footer, Copyright
 - [~] **Etap 4** — system komponentów / Flexible Content: 11 layoutów sekcji (w tym sekcje globalne); brakuje filtrowania layoutów per typ treści
 - [~] **Etap 5** — szablony widoków: są blog (lista i archiwa), pojedynczy wpis i pojedyncza galeria; brakuje page, front page, 404, search i archiwów CPT

@@ -12,7 +12,10 @@
  * @package Cyber_Framework
  *
  * @param array $args {
- *     @type string $context Kontekst, tutaj zawsze 'default'.
+ *     @type string $context        Kontekst, tutaj zawsze 'default'.
+ *     @type bool   $in_page_header Okruszki wewnatrz page headera, pod tytulem —
+ *                                  bez wlasnego kontenera (szerokosc trzyma
+ *                                  page header) i z klasa stanu. Opcjonalny.
  *     @type array  $items   Lista tablic 'label' i 'url'.
  * }
  */
@@ -25,11 +28,19 @@ if ( array() === $cyber_items ) {
 	return;
 }
 
-$cyber_class = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] ) ? $args['context'] : 'default' );
+$cyber_class  = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] ) ? $args['context'] : 'default' );
+$cyber_inside = ! empty( $args['in_page_header'] );
+
+// Polozenie w page headerze to stan obok wariantu, nie kolejny wariant (CLAUDE.md sekcja 20).
+if ( $cyber_inside ) {
+	$cyber_class .= ' cyber-breadcrumb--in-page-header';
+}
 ?>
 
 <div class="<?php echo esc_attr( $cyber_class ); ?>">
+	<?php if ( ! $cyber_inside ) : ?>
 	<div class="cyber-container">
+	<?php endif; ?>
 		<nav class="cyber-breadcrumb__nav" aria-label="<?php esc_attr_e( 'Okruszki', 'cyber-framework' ); ?>">
 			<?php foreach ( $cyber_items as $cyber_item ) : ?>
 				<?php if ( '' !== $cyber_item['url'] ) : ?>
@@ -41,5 +52,7 @@ $cyber_class = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] 
 				<?php endif; ?>
 			<?php endforeach; ?>
 		</nav>
+	<?php if ( ! $cyber_inside ) : ?>
 	</div>
+	<?php endif; ?>
 </div>

@@ -223,7 +223,7 @@ function cyber_header_variants() {
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 227 wpisow, a cyber_get_option() siega po niego
+	 * Schemat jest stala tablica 228 wpisow, a cyber_get_option() siega po niego
 	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
 	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
 	 */
@@ -1139,6 +1139,10 @@ function cyber_option_schema() {
 		'pageheader_excerpt_color'    => array(
 			'type'    => 'color_alpha',
 			'default' => '#ffffff',
+		),
+		'pageheader_breadcrumb'       => array(
+			'type'    => 'bool',
+			'default' => false,
 		),
 
 		// Animacje sekcji. Rodzaj animacji jest polem sekcji, tu tylko parametry wspolne.

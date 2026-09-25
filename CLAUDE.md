@@ -695,7 +695,7 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
    Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
-   Animacje, Przycisk do góry — razem **227 pól**.
+   Animacje, Przycisk do góry — razem **228 pól**.
 
    Pięć ostatnich dołożyło się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —

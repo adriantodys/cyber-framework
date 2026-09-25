@@ -236,21 +236,42 @@ function cyber_page_header_data() {
 
 	$style = cyber_css_declarations( $vars );
 
+	/*
+	 * Okruszki pod tytulem: tylko gdy opcja jest wlaczona I breadcrumb w ogole
+	 * ma sie pokazac (zakladka Breadcrumb, sciezka niepusta) — o tym drugim
+	 * decyduje wylacznie cyber_breadcrumb_data().
+	 */
+	$breadcrumb = cyber_get_option( 'pageheader_breadcrumb' ) ? cyber_breadcrumb_data() : null;
+
 	$cache = array(
-		'title'   => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
-		'excerpt' => $excerpt,
-		'video'   => $video,
-		'has_bg'  => '' !== $image || $video,
+		'title'      => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
+		'excerpt'    => $excerpt,
+		'breadcrumb' => $breadcrumb,
+		'video'      => $video,
+		'has_bg'     => '' !== $image || $video,
 		'class'   => sprintf(
 			'cyber-page-header cyber-page-header--%1$s cyber-page-header--%2$s%3$s',
 			'container' === $width ? 'container' : 'full',
 			cyber_get_option( 'pageheader_align' ),
 			0 === $height ? ' cyber-page-header--auto' : ''
 		),
-		'style'   => $style,
+		'style'      => $style,
 	);
 
 	return $cache;
+}
+
+/**
+ * Czy okruszki stoja wewnatrz page headera, pod tytulem.
+ *
+ * header.php pyta o to, zeby nie wypisac drugiego, osobnego paska.
+ *
+ * @return bool
+ */
+function cyber_page_header_has_breadcrumb() {
+	$data = cyber_page_header_data();
+
+	return null !== $data && ! empty( $data['breadcrumb'] );
 }
 
 /**

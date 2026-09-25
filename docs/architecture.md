@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-24 (Global Options ma osiemnaście zakładek i 227 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 228 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -661,10 +661,20 @@ cyber_breadcrumb_enabled()    ← osobny włącznik dla każdego kontekstu
       ▼
 cyber_breadcrumb_data()       ← null = nie ma czego pokazać
       │
+      ▼
+cyber_breadcrumb_render()     ← jedno miejsce wypisania, dwa położenia:
+      │                         osobny pasek (header.php) albo wewnątrz
+      │                         page headera, pod tytułem (page-header.php)
       ├── 'default' ─→ cyber_breadcrumb_items() ─→ breadcrumb.php
       └── 'wc'      ─────────────────────────────→ breadcrumb-woocommerce.php
                                                      └─ woocommerce_breadcrumb()
 ```
+
+**Położenie okruszków.** Domyślnie osobny pasek pod page headerem. Przy
+włączonym polu Page header → „Breadcrumb w page headerze” wypisuje je sam page
+header (dane w `cyber_page_header_data()['breadcrumb']`), a `header.php` pomija
+pasek, pytając `cyber_page_header_has_breadcrumb()`. Włącznik pokazywania
+zostaje jeden — zakładki Breadcrumb.
 
 **Dlaczego dwie zakładki.** Osobne włączniki pozwalają mieć okruszki wyłącznie
 w sklepie albo wyłącznie poza nim. Jedna para pól wymuszałaby wszystko albo nic,

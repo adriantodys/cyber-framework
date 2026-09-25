@@ -969,7 +969,9 @@ się przy pierwszej pozycji ani jako wcięcie po zawinięciu do nowej linii.
 ### Zakładka: „Breadcrumb”
 
 Cel: wąska belka ze ścieżką okruszków pod headerem, nad treścią strony.
-Obowiązuje **poza** stronami sklepu — te ma własną zakładkę.
+Obowiązuje **poza** stronami sklepu — te ma własną zakładkę. Okruszki mogą też
+stać wewnątrz page headera, pod tytułem — pole `cyber_pageheader_breadcrumb`
+w zakładce „Page header”.
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
@@ -1187,7 +1189,7 @@ i pojedynczego wpisu. Widoki: `templates/blog.php` i `templates/single-post.php`
 Pasek z tytułem strony nad treścią. **Domyślnie wyłączony.** Po włączeniu
 pojawia się na zaznaczonych typach treści; pojedyncza strona, wpis albo element
 CPT może to nadpisać w skrzynce „Cyber Framework — Page header”
-(grupa `group_page_header`, opisana niżej). **16 pól.**
+(grupa `group_page_header`, opisana niżej). **17 pól.**
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
@@ -1203,6 +1205,15 @@ CPT może to nadpisać w skrzynce „Cyber Framework — Page header”
 | Rozmiar / grubość / kolor tytułu | `cyber_pageheader_title_size` `_title_weight` `_title_color` | Select `h1`–`h6` / 300–800 / Color | `h1` / `700` / `#ffffff` | Znacznik zawsze `<h1>` |
 | Zajawka pod tytułem | `cyber_pageheader_show_excerpt` | True/False | `false` | Domyślnie dla wszystkich; strona może włączyć albo wyłączyć u siebie |
 | Rozmiar / kolor zajawki | `cyber_pageheader_excerpt_size` `_excerpt_color` | Select `text` `h6` `h5` `h4` / Color | `text` / `#ffffff` | |
+| Breadcrumb w page headerze | `cyber_pageheader_breadcrumb` | True/False | `false` | Okruszki pod tytułem (i pod zajawką, jeśli jest) zamiast osobnego paska pod page headerem. Kolor: zajawki; bieżąca strona: tytułu |
+
+> **Breadcrumb w page headerze to położenie, nie włącznik.** Czy okruszki w ogóle
+> się pokazują, decydują nadal zakładki „Breadcrumb” i „Breadcrumb WooCommerce”.
+> To pole mówi tylko **gdzie**: wewnątrz page headera, a osobny pasek pod nim
+> wtedy znika, żeby ścieżka nie pojawiła się dwa razy. Na stronie bez page
+> headera okruszki zostają w zwykłym miejscu. Rozmiar czcionki bierze się
+> z zakładki Breadcrumb; kolory z page headera, bo kolory paska są dobrane do
+> jasnego tła strony, a page header zwykle ma zdjęcie albo ciemne tło.
 
 > **Tytuł page headera jest `<h1>` strony.** Gdy page header się pokazuje,
 > szablony nie wypisują drugiego tytułu (`index.php`, `templates/single-post.php`
@@ -2377,6 +2388,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-09-25 — **Breadcrumb w page headerze.** Nowe pole `cyber_pageheader_breadcrumb` (True/False, domyślnie `false`) w zakładce „Page header”: okruszki pod tytułem i zajawką zamiast osobnego paska. Zakładka ma teraz 17 pól, Global Options **228 pól**. Wypisywanie breadcrumba ma jedną funkcję — `cyber_breadcrumb_render()` w `inc/breadcrumb.php`; HTML osobnego paska bez zmian.
 
 - 2026-09-24 — **Przycisk do góry.** Nowa zakładka Global Options „Przycisk do góry” (12 pól: wyłącznik, próg pokazania, telefon, położenie, odstęp ze skali, rozmiar przycisku i strzałki, zaokrąglenie, 4 kolory). Domyślnie wyłączony. Global Options mają teraz **18 zakładek i 227 pól**. Nowa ikona `arrow-up` w `cyber_icons()`. Moduł: `inc/go-to-top.php`, `template-parts/go-to-top/go-to-top.php`, `assets/css/go-to-top.css`, `assets/js/go-to-top.js`.
 

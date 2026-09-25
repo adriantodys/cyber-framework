@@ -71,16 +71,16 @@ get_template_part(
  * Page header (tytul strony na tle) stoi NAD okruszkami: najpierw "gdzie
  * jestem" w duzym formacie, potem sciezka. Decyzje, czy sie pokazac,
  * podejmuje inc/page-header.php.
+ *
+ * Przy wlaczonej opcji Page header -> "Breadcrumb w page headerze" okruszki
+ * wypisuje sam page header, pod tytulem — wtedy osobnego paska tu nie ma,
+ * zeby sciezka nie pojawila sie dwa razy.
  */
 cyber_page_header();
 
-$cyber_breadcrumb = cyber_breadcrumb_data();
+$cyber_breadcrumb = cyber_page_header_has_breadcrumb() ? null : cyber_breadcrumb_data();
 
 if ( null !== $cyber_breadcrumb ) {
-	$cyber_breadcrumb_part = ( 'wc' === $cyber_breadcrumb['context'] )
-		? 'template-parts/breadcrumb/breadcrumb-woocommerce'
-		: 'template-parts/breadcrumb/breadcrumb';
-
-	get_template_part( $cyber_breadcrumb_part, null, $cyber_breadcrumb );
+	cyber_breadcrumb_render( $cyber_breadcrumb );
 }
 ?>

@@ -13,6 +13,8 @@
  * @var array $args {
  *     @type string $title   Tytul do wypisania.
  *     @type string $excerpt Zajawka albo pusty string.
+ *     @type array|null $breadcrumb Dane z cyber_breadcrumb_data() albo null —
+ *                                  okruszki pod tytulem i zajawka.
  *     @type array  $video   Tablica 'url' i 'type' albo pusta.
  *     @type string $class   Klasy opakowania.
  *     @type string $style   Zmienne CSS opakowania.
@@ -51,5 +53,11 @@ $cyber_video = isset( $args['video'] ) && $args['video'] ? $args['video'] : arra
 		<?php if ( ! empty( $args['excerpt'] ) ) : ?>
 			<p class="cyber-page-header__excerpt"><?php echo esc_html( $args['excerpt'] ); ?></p>
 		<?php endif; ?>
+
+		<?php
+		if ( ! empty( $args['breadcrumb'] ) ) {
+			cyber_breadcrumb_render( $args['breadcrumb'], true );
+		}
+		?>
 	</div>
 </section>

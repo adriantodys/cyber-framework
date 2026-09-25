@@ -14,7 +14,10 @@
  * @package Cyber_Framework
  *
  * @param array $args {
- *     @type string $context Kontekst, tutaj zawsze 'wc'.
+ *     @type string $context        Kontekst, tutaj zawsze 'wc'.
+ *     @type bool   $in_page_header Okruszki wewnatrz page headera, pod tytulem —
+ *                                  bez wlasnego kontenera (szerokosc trzyma
+ *                                  page header) i z klasa stanu. Opcjonalny.
  * }
  */
 
@@ -28,11 +31,19 @@ if ( ! function_exists( 'woocommerce_breadcrumb' ) ) {
 	return;
 }
 
-$cyber_class = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] ) ? $args['context'] : 'wc' );
+$cyber_class  = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] ) ? $args['context'] : 'wc' );
+$cyber_inside = ! empty( $args['in_page_header'] );
+
+// Polozenie w page headerze to stan obok wariantu, nie kolejny wariant (CLAUDE.md sekcja 20).
+if ( $cyber_inside ) {
+	$cyber_class .= ' cyber-breadcrumb--in-page-header';
+}
 ?>
 
 <div class="<?php echo esc_attr( $cyber_class ); ?>">
+	<?php if ( ! $cyber_inside ) : ?>
 	<div class="cyber-container">
+	<?php endif; ?>
 		<?php
 		woocommerce_breadcrumb(
 			array(
@@ -45,5 +56,7 @@ $cyber_class = cyber_variant_class( 'cyber-breadcrumb', isset( $args['context'] 
 			)
 		);
 		?>
+	<?php if ( ! $cyber_inside ) : ?>
 	</div>
+	<?php endif; ?>
 </div>
