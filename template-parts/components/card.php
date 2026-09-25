@@ -33,13 +33,15 @@ if ( ! $cyber_item ) {
  * meta   : linia nad tytulem (data, kategoria),
  * link   : adres tytulu i zdjecia (karta wpisu prowadzi do wpisu),
  * tag    : znacznik tytulu; na liscie bloga h2, bo h1 to tytul strony.
+ * image_size : rozmiar obrazka z biblioteki mediow (sekcja Wpisy: 'medium').
  * Karty z sekcji Karty tych kluczy nie maja i wygladaja jak wczesniej.
  */
 $cyber_meta  = isset( $cyber_item['meta'] ) ? (string) $cyber_item['meta'] : '';
 $cyber_link  = isset( $cyber_item['title_url'] ) ? (string) $cyber_item['title_url'] : '';
 $cyber_tag   = isset( $cyber_item['title_tag'] ) && in_array( $cyber_item['title_tag'], array( 'h2', 'h3', 'h4' ), true ) ? $cyber_item['title_tag'] : 'h3';
+$cyber_size  = isset( $cyber_item['image_size'] ) && in_array( $cyber_item['image_size'], array( 'medium', 'medium_large', 'large' ), true ) ? $cyber_item['image_size'] : 'large';
 $cyber_image = '' === $cyber_item['image_url'] && $cyber_item['image_id']
-	? wp_get_attachment_image( $cyber_item['image_id'], 'large', false, array( 'class' => 'cyber-card__image' ) )
+	? wp_get_attachment_image( $cyber_item['image_id'], $cyber_size, false, array( 'class' => 'cyber-card__image' ) )
 	: '';
 
 // Zdjecie jako tlo karty — adres idzie zmienna, nie atrybutem src.

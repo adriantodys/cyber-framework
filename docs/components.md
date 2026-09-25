@@ -637,6 +637,18 @@ element to `template-parts/components/card.php`.
 | `.cyber-section--posts` | opakowanie; otwierane bez kontenera, jak karuzela (tryb „full”) |
 | `.cyber-cards` / `.cyber-carousel` | siatka albo slider — te same klasy co w sekcjach Karty i Karuzela |
 
+**Rozmiar zdjęcia: `medium`** (od 2026-09-25, stała `CYBER_POSTS_IMAGE_SIZE`
+w `inc/sections-posts.php`). Wbudowany rozmiar WordPressa: maks. 300 × 300 px,
+**proporcjonalny, bez przycinania** — to nie jest miniatura `thumbnail`
+(kwadrat 150 × 150). Dotyczy także trybu „zdjęcie jako tło”. `srcset`
+z `wp_get_attachment_image()` zostaje, więc na ekranie o wysokiej gęstości
+pikseli przeglądarka może wziąć większy wariant tego samego pliku.
+
+Zmiana jest **testem** mniejszego rozmiaru i dotyczy wyłącznie sekcji Wpisy —
+blog i widget „Ostatnie wpisy” zostają przy `large`. Powrót: wartość stałej
+na `large`. Wymiary `medium` ustawia się w **Ustawienia → Media**; zmiana
+dotyczy nowych uploadów (starsze wymagają ponownego wygenerowania miniatur).
+
 ### Komponent karty — klucze opcjonalne
 
 `template-parts/components/card.php` przyjmuje dodatkowo (karty wpisów):
@@ -646,6 +658,7 @@ element to `template-parts/components/card.php`.
 | `meta` | `<p class="cyber-card__meta">` nad tytułem (data · kategoria) |
 | `title_url` | tytuł `.cyber-card__title-link` i zdjęcie `.cyber-card__media-link` prowadzą do wpisu (zdjęcie poza tabulacją) |
 | `title_tag` | `h2` / `h3` / `h4`; domyślnie `h3` |
+| `image_size` | `medium` / `medium_large` / `large`; domyślnie `large`. Wartość spoza listy (także `thumbnail`) wraca do `large` |
 
 Proporcje zdjęcia: klasy `.cyber-cards--ratio-16-9` / `-3-2` / `-4-3` / `-1-1`
 na kontenerze (pole `cyber_cards_image_ratio`).

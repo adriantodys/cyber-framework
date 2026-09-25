@@ -16,6 +16,22 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Rozmiar zdjecia wyrozniajacego w kartach sekcji Wpisy.
+ *
+ * 'medium' to wbudowany rozmiar WordPressa: maks. 300 x 300 px, PROPORCJONALNY,
+ * bez przycinania — w odroznieniu od 'thumbnail' (kwadrat 150 x 150, przyciety).
+ * Wymiary zmienia sie w Ustawienia -> Media; po zmianie dotycza nowych uploadow.
+ *
+ * wp_get_attachment_image() doklada do takiego obrazka srcset z wiekszymi
+ * wariantami tego samego pliku, wiec na ekranie o wysokiej gestosci pikseli
+ * przegladarka moze wziac kolejny rozmiar (np. 768 px) zamiast rozmytego 300 px.
+ *
+ * Dotyczy WYLACZNIE sekcji Wpisy. Blog i widget "Ostatnie wpisy" zostaja przy
+ * 'large' (domyslna wartosc w template-parts/components/card.php).
+ */
+const CYBER_POSTS_IMAGE_SIZE = 'medium';
+
+/**
  * Wypelnia liste typow tresci w panelu — publiczne typy rejestruja wtyczki,
  * wiec lista nie moze stac na sztywno w JSON-ie.
  *
@@ -151,9 +167,11 @@ function cyber_posts_items( array $row ) {
 	foreach ( cyber_posts_query( $row ) as $post ) {
 		$item = cyber_post_card_item( $post, $opts );
 
+		$item['image_size'] = CYBER_POSTS_IMAGE_SIZE;
+
 		// Tryb "zdjecie jako tlo" z ustawien kart dziala tak samo jak w kartach.
 		if ( ! empty( $row['cyber_cards_image_as_bg'] ) && $item['image_id'] ) {
-			$item['image_url'] = (string) wp_get_attachment_image_url( $item['image_id'], 'large' );
+			$item['image_url'] = (string) wp_get_attachment_image_url( $item['image_id'], CYBER_POSTS_IMAGE_SIZE );
 		}
 
 		$items[] = $item;
