@@ -791,7 +791,7 @@ Global Options → Przycisk do góry. **Domyślnie wyłączony.**
 
 | Plik | Rola |
 |---|---|
-| `inc/sections-contact.php` | `cyber_contact_section_data()` — dane z Global Options według włączników; konfiguracja, klasy, zmienne |
+| `inc/sections-contact.php` | `cyber_contact_section_data()` — dane z Global Options według włączników; `cyber_contact_section_contents()` — cztery treści WYSIWYG w kolumnach według włączników; `cyber_contact_section_order()` — kolejność kolumn od lewej; konfiguracja, klasy, zmienne |
 | `inc/contact-form-7.php` | `cyber_cf7_form_html()`, `cyber_cf7_missing_hint()`, ostrzeżenie w panelu |
 | `template-parts/sections/contact.php` | widok |
 | `template-parts/components/social-icons.php` | wspólny komponent ikon, tu z nazwami platform (`show_labels`) |
@@ -800,7 +800,9 @@ Global Options → Przycisk do góry. **Domyślnie wyłączony.**
 |---|---|
 | `.cyber-contact` | siatka dwóch kolumn; `--cyber-contact-cols` z proporcji |
 | `.cyber-contact--btn-large` / `-medium` / `-small`, `--btn-full` | wygląd przycisku wysyłki formularza |
-| `.cyber-contact__col--info` / `--form` | lewa / prawa kolumna |
+| `.cyber-contact--swap` | stan: kolumny zamienione (dane z lewej, formularz z prawej); kolejność zmienia markup, klasa to punkt zaczepienia dla CSS |
+| `.cyber-contact__col--form` / `--info` | kolumna formularza (domyślnie lewa) / danych (domyślnie prawa) |
+| `.cyber-contact__content--top` / `--bottom` | treść WYSIWYG nad / pod zawartością kolumny |
 | `.cyber-contact__data` | `<dl>` danych; `.cyber-contact__item--email` … `--regon` |
 | `.cyber-contact__social` | nagłówek i lista social media |
 | `.cyber-social-icons--labels` | wariant komponentu ikon z nazwami |

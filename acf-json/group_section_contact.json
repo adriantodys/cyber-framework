@@ -44,7 +44,7 @@
             "name": "cyber_contact_section_ratio",
             "aria-label": "",
             "type": "select",
-            "instructions": "Lewa \/ prawa kolumna. Ponizej 980px kolumny stoja jedna pod druga.",
+            "instructions": "Lewa \/ prawa kolumna na stronie (po zamianie tez). Ponizej 980px kolumny stoja jedna pod druga.",
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
@@ -102,6 +102,27 @@
             "placeholder": "",
             "create_options": 0,
             "save_options": 0
+        },
+        {
+            "key": "field_cyber_contact_section_swap",
+            "label": "Zamien kolumny miejscami",
+            "name": "cyber_contact_section_swap",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wylaczone: formularz z lewej, dane kontaktowe z prawej. Wlaczone: odwrotnie. Ponizej 980px pierwsza jest kolumna stojaca z lewej.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
         },
         {
             "key": "field_cyber_msg_contact_section_data",
@@ -315,7 +336,7 @@
         },
         {
             "key": "field_cyber_msg_contact_section_left",
-            "label": "Lewa kolumna",
+            "label": "Kolumna danych kontaktowych (domyslnie prawa)",
             "name": "",
             "aria-label": "",
             "type": "message",
@@ -332,14 +353,43 @@
             "esc_html": 0
         },
         {
+            "key": "field_cyber_contact_section_show_data_top",
+            "label": "Pokaz tresc nad danymi kontaktowymi",
+            "name": "cyber_contact_section_show_data_top",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wylaczenie chowa blok na stronie, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_cyber_contact_section_left",
-            "label": "Tresc lewej kolumny",
+            "label": "Tresc nad danymi kontaktowymi",
             "name": "cyber_contact_section_left",
             "aria-label": "",
             "type": "wysiwyg",
-            "instructions": "Naglowek i wstep nad danymi kontaktowymi.",
+            "instructions": "Naglowek i wstep nad telefonem, emailem i adresem.",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_contact_section_show_data_top",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -558,8 +608,58 @@
             "ui_off_text": ""
         },
         {
+            "key": "field_cyber_contact_section_show_data_bottom",
+            "label": "Pokaz tresc pod danymi kontaktowymi",
+            "name": "cyber_contact_section_show_data_bottom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wylaczenie chowa blok na stronie, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_contact_section_data_bottom",
+            "label": "Tresc pod danymi kontaktowymi",
+            "name": "cyber_contact_section_data_bottom",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Np. godziny otwarcia albo mapa dojazdu.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_contact_section_show_data_bottom",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
+        },
+        {
             "key": "field_cyber_msg_contact_section_right",
-            "label": "Prawa kolumna",
+            "label": "Kolumna formularza (domyslnie lewa)",
             "name": "",
             "aria-label": "",
             "type": "message",
@@ -576,14 +676,43 @@
             "esc_html": 0
         },
         {
+            "key": "field_cyber_contact_section_show_form_top",
+            "label": "Pokaz tresc nad formularzem",
+            "name": "cyber_contact_section_show_form_top",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wylaczenie chowa blok na stronie, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_cyber_contact_section_right",
-            "label": "Tresc prawej kolumny",
+            "label": "Tresc nad formularzem",
             "name": "cyber_contact_section_right",
             "aria-label": "",
             "type": "wysiwyg",
             "instructions": "Np. naglowek \"Formularz kontaktowy\" nad formularzem.",
             "required": 0,
-            "conditional_logic": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_contact_section_show_form_top",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
             "wrapper": {
                 "width": "",
                 "class": "",
@@ -624,6 +753,56 @@
             "bidirectional": 0,
             "ui": 1,
             "bidirectional_target": []
+        },
+        {
+            "key": "field_cyber_contact_section_show_form_bottom",
+            "label": "Pokaz tresc pod formularzem",
+            "name": "cyber_contact_section_show_form_bottom",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Domyslnie wylaczone. Wylaczenie chowa blok na stronie, ale wpisana tresc zostaje w bazie.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_contact_section_form_bottom",
+            "label": "Tresc pod formularzem",
+            "name": "cyber_contact_section_form_bottom",
+            "aria-label": "",
+            "type": "wysiwyg",
+            "instructions": "Np. informacja o przetwarzaniu danych albo czasie odpowiedzi.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_contact_section_show_form_bottom",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "allow_in_bindings": 0,
+            "tabs": "all",
+            "toolbar": "full",
+            "media_upload": 1,
+            "delay": 1
         }
     ],
     "location": [
@@ -642,7 +821,7 @@
     "instruction_placement": "label",
     "hide_on_screen": "",
     "active": true,
-    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Kontakt: dwie kolumny (tresc + dane z Global Options, tresc + formularz Contact Form 7). Zrodlo prawdy: docs\/acf-schema.md.",
+    "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Kontakt: dwie kolumny (formularz Contact Form 7 z trescia nad i pod; dane z Global Options z trescia nad i pod), z opcja zamiany kolumn. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789832490
+    "modified": 1790671156
 }

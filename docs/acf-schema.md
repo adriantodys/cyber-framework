@@ -2133,10 +2133,37 @@ spacja (`10 +`, jak na makiecie).
 
 #### Sekcja „Kontakt” (`group_section_contact`)
 
-Layout `contact`. Dwie kolumny: z lewej treść, dane kontaktowe i social media,
-z prawej treść i formularz **Contact Form 7**. Grupa jest **źródłem
-klonowania**; z `group_section_settings` bierze ustawienia wyglądu sekcji,
-z `group_section_content` — treść nad i pod kolumnami.
+Layout `contact`. Dwie kolumny: domyślnie z lewej formularz **Contact Form 7**,
+z prawej dane kontaktowe i social media. Każda kolumna ma opcjonalną treść
+WYSIWYG **nad** i **pod** swoją zawartością, każdą z własnym włącznikiem
+(domyślnie wyłączonym). Włącznik „Zamień kolumny miejscami” w ustawieniach
+układu odwraca strony. Grupa jest **źródłem klonowania**; z
+`group_section_settings` bierze ustawienia wyglądu sekcji, z
+`group_section_content` — treść nad i pod kolumnami.
+
+Kolejność na stronie:
+
+```
+[wł.] treść nad kolumnami
+┌──────────────────────────────┬──────────────────────────────┐
+│ kolumna formularza (lewa)    │ kolumna danych (prawa)       │
+│ [wł.] treść nad formularzem  │ [wł.] treść nad danymi       │
+│ formularz CF7                │ email · telefon · adres …    │
+│                              │ social media                 │
+│ [wł.] treść pod formularzem  │ [wł.] treść pod danymi       │
+└──────────────────────────────┴──────────────────────────────┘
+[wł.] treść pod kolumnami
+```
+
+> **Zamiana kolumn odbywa się w markupie, nie przez CSS `order`.** Poniżej
+> 980px i dla czytnika ekranu pierwsza jest kolumna stojąca na desktopie
+> z lewej, a „Proporcje kolumn” zawsze liczą się od lewej strony ekranu.
+
+> **Nazwy `cyber_contact_section_left` / `_right` są historyczne.** Pochodzą
+> z wersji, w której dane stały zawsze z lewej, a formularz z prawej. Dziś
+> `_left` to treść **nad danymi**, a `_right` — treść **nad formularzem**,
+> niezależnie od strony. Nazw nie zmieniono, bo nazwa pola jest kluczem
+> w bazie — zmiana wyczyściłaby treść w istniejących sekcjach.
 
 > **Dane kontaktowe NIE są wpisywane w sekcji.** Pochodzą z Global Options
 > (zakładki **Kontakt** i **Social Media**, CLAUDE.md sekcja 22), a sekcja ma
@@ -2151,24 +2178,34 @@ z `group_section_content` — treść nad i pod kolumnami.
 | Pokaż treść nad kolumnami | `cyber_contact_section_show_top` | True/False | `false` |
 | Pokaż treść pod kolumnami | `cyber_contact_section_show_bottom` | True/False | `false` |
 
-**Lewa kolumna:**
+**Kolumna formularza (domyślnie lewa):**
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
-| Treść lewej kolumny | `cyber_contact_section_left` | WYSIWYG | `''` | Nagłówek i wstęp nad danymi |
+| Pokaż treść nad formularzem | `cyber_contact_section_show_form_top` | True/False | `false` | Pokazuje edytor poniżej i blok na stronie |
+| Treść nad formularzem | `cyber_contact_section_right` | WYSIWYG (warunek: włącznik wyżej) | `''` | Np. nagłówek „Formularz kontaktowy”; nazwa historyczna |
+| Formularz Contact Form 7 | `cyber_contact_section_form` | Post Object (ID), `wpcf7_contact_form`, opublikowane, może być puste | — | Pusta lista w panelu = wtyczka nieaktywna |
+| Pokaż treść pod formularzem | `cyber_contact_section_show_form_bottom` | True/False | `false` | |
+| Treść pod formularzem | `cyber_contact_section_form_bottom` | WYSIWYG (warunek: włącznik wyżej) | `''` | Np. informacja o przetwarzaniu danych |
+
+**Kolumna danych kontaktowych (domyślnie prawa):**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Pokaż treść nad danymi kontaktowymi | `cyber_contact_section_show_data_top` | True/False | `false` | |
+| Treść nad danymi kontaktowymi | `cyber_contact_section_left` | WYSIWYG (warunek: włącznik wyżej) | `''` | Nagłówek i wstęp nad danymi; nazwa historyczna |
 | Email / Telefon | `cyber_contact_section_show_email` `_show_phone` | True/False | `true` | `mailto:` / `tel:` z Global Options → Kontakt |
 | Adres / NIP / REGON | `cyber_contact_section_show_address` `_show_nip` `_show_regon` | True/False | `false` | Adres wieloliniowy (`nl2br`) |
 | Ikony przy danych | `cyber_contact_section_show_icons` | True/False | `false` | Koperta, telefon, lokalizacja; kolor z Kolory → Ikony |
 | Social media | `cyber_contact_section_show_social` | True/False | `true` | Profile z Global Options → Social Media |
 | Nagłówek social media | `cyber_contact_section_social_title` | Text | `Nasze social media` | Puste = bez nagłówka |
 | Nazwy obok ikon | `cyber_contact_section_social_labels` | True/False | `true` | „Facebook”, „Instagram”… obok ikony |
+| Pokaż treść pod danymi kontaktowymi | `cyber_contact_section_show_data_bottom` | True/False | `false` | |
+| Treść pod danymi kontaktowymi | `cyber_contact_section_data_bottom` | WYSIWYG (warunek: włącznik wyżej) | `''` | Np. godziny otwarcia, mapa dojazdu |
 
-**Prawa kolumna:**
-
-| Field Label | Field Name | Typ | Default | Przeznaczenie |
-|---|---|---|---|---|
-| Treść prawej kolumny | `cyber_contact_section_right` | WYSIWYG | `''` | Np. nagłówek „Formularz kontaktowy” |
-| Formularz Contact Form 7 | `cyber_contact_section_form` | Post Object (ID), `wpcf7_contact_form`, opublikowane, może być puste | — | Pusta lista w panelu = wtyczka nieaktywna |
+Blok treści w kolumnie pojawia się, gdy włącznik jest włączony **i** edytor
+nie jest pusty. Wyłączenie włącznika chowa edytor i blok, ale wpisana treść
+zostaje w bazie.
 
 **Ustawienia** — akordeon „Ustawienia sekcji kontaktowej”:
 
@@ -2176,6 +2213,7 @@ z `group_section_content` — treść nad i pod kolumnami.
 |---|---|---|---|---|
 | Proporcje kolumn | `cyber_contact_section_ratio` | Select `50-50` / `60-40` / `40-60` | `50-50` | Poniżej 980px kolumny jedna pod drugą |
 | Odstęp między kolumnami | `cyber_contact_section_gap_x` | Select (skala) | `64` | |
+| Zamień kolumny miejscami | `cyber_contact_section_swap` | True/False | `false` | Wył.: formularz z lewej, dane z prawej. Wł.: odwrotnie; klasa `.cyber-contact--swap` |
 | Kolor etykiet / danych | `cyber_contact_section_label_color` `_value_color` | Color (alpha) | `''` | Puste = nagłówki / tekst |
 | Rozmiar przycisku wysyłki | `cyber_contact_section_button_size` | Select `large` / `medium` / `small` | `large` | Kolory i wielkość z Global Options → Przyciski |
 | Przycisk na całą szerokość | `cyber_contact_section_button_full` | True/False | `true` | |
@@ -2392,6 +2430,8 @@ nie ustawieniem globalnym.
 - 2026-09-25 — **Breadcrumb w page headerze.** Nowe pole `cyber_pageheader_breadcrumb` (True/False, domyślnie `false`) w zakładce „Page header”: okruszki pod tytułem i zajawką zamiast osobnego paska. Zakładka ma teraz 17 pól, Global Options **228 pól**. Wypisywanie breadcrumba ma jedną funkcję — `cyber_breadcrumb_render()` w `inc/breadcrumb.php`; HTML osobnego paska bez zmian.
 
 - 2026-09-24 — **Przycisk do góry.** Nowa zakładka Global Options „Przycisk do góry” (12 pól: wyłącznik, próg pokazania, telefon, położenie, odstęp ze skali, rozmiar przycisku i strzałki, zaokrąglenie, 4 kolory). Domyślnie wyłączony. Global Options mają teraz **18 zakładek i 227 pól**. Nowa ikona `arrow-up` w `cyber_icons()`. Moduł: `inc/go-to-top.php`, `template-parts/go-to-top/go-to-top.php`, `assets/css/go-to-top.css`, `assets/js/go-to-top.js`.
+
+- 2026-09-29 — Sekcja **„Kontakt”**: nowy układ kolumn — domyślnie **formularz z lewej, dane kontaktowe z prawej** (wcześniej odwrotnie). Nowy włącznik `cyber_contact_section_swap` („Zamień kolumny miejscami”) w akordeonie ustawień, sekcja „Układ”. Każda kolumna ma treść WYSIWYG nad i pod zawartością z własnym włącznikiem (domyślnie wyłączonym): nowe pola `cyber_contact_section_show_form_top`, `_show_form_bottom`, `_form_bottom`, `_show_data_top`, `_show_data_bottom`, `_data_bottom`. Istniejące edytory `cyber_contact_section_right` (teraz „Treść nad formularzem”) i `cyber_contact_section_left` („Treść nad danymi kontaktowymi”) zachowały nazwy, więc treść w bazie zostaje — ale dostały włączniki, więc **w istniejących sekcjach trzeba je włączyć**, żeby treść znów się pokazała. Kolejność pól w klonie `field_cyber_section_contact_columns` zmieniona: najpierw kolumna formularza, potem danych.
 
 - 2026-09-24 — **Animacje wejścia sekcji.** Nowe pole `cyber_section_animation` (Select, domyślnie `none`) w grupie `group_section_settings`, a więc w każdym layoucie klonującym tę grupę; slider dostał je w klonie `field_cyber_section_slider_section_c` (klucz klonu bez zmian, zmiana addytywna). Nowa zakładka Global Options **„Animacje”** (7 pól) — Global Options mają teraz **17 zakładek i 215 pól**. Silnik własny, bez biblioteki: `inc/animations.php`, `assets/js/animations.js`, `assets/css/animations.css`. Emiter `cyber_css_vars_from_map()` przyjmuje teraz dowolną jednostkę (doszło `ms`); wynik dla `px` i `%` bez zmian.
 

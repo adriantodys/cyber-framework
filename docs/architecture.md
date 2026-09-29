@@ -1405,7 +1405,7 @@ slider:   Ustawienia sekcji (szerokość, zdjęcie, odstępy, kotwica, klasy) �
 carousel: Ustawienia sekcji → Ustawienia karuzeli → Ustawienia kart → [wł.] WYSIWYG góra → Elementy → [wł.] WYSIWYG dół
 faq:      Ustawienia sekcji → Ustawienia FAQ → [wł.] WYSIWYG góra → Pytania → [wł.] WYSIWYG dół
 counter:  Ustawienia sekcji → Ustawienia licznika → [wł.] WYSIWYG góra → Liczniki → [wł.] WYSIWYG dół
-contact:  Ustawienia sekcji → Ustawienia sekcji kontaktowej → [wł.] WYSIWYG góra → Lewa + prawa kolumna → [wł.] WYSIWYG dół
+contact:  Ustawienia sekcji → Ustawienia sekcji kontaktowej → [wł.] WYSIWYG góra → Kolumna formularza ([wł.] treść nad, formularz, [wł.] treść pod) → Kolumna danych ([wł.] treść nad, dane, social, [wł.] treść pod) → [wł.] WYSIWYG dół
 posts:    Ustawienia sekcji → Ustawienia kart → Ustawienia karuzeli → Ustawienia elementu → [wł.] WYSIWYG góra → Źródło elementów → [wł.] WYSIWYG dół
 table:    Ustawienia sekcji → Ustawienia tabeli → [wł.] WYSIWYG góra → Kolumny → Wiersze → [wł.] WYSIWYG dół
 gallery:  Ustawienia sekcji → Ustawienia galerii → [wł.] WYSIWYG góra → Źródło zdjęć → [wł.] WYSIWYG dół
@@ -1720,7 +1720,7 @@ wzorzec: jeden plik decyzyjny (`inc/contact-form-7.php`), trzy poziomy
 komunikatu, zero błędu krytycznego przy braku wtyczki. Ostrzeżenie w panelu
 pojawia się tylko wtedy, gdy opublikowana sekcja ma wybrany formularz — sam
 brak wtyczki nie jest błędem. Sekcja bez wybranego formularza to poprawny stan
-(prawa kolumna z samą treścią) i nie daje podpowiedzi.
+(kolumna formularza z samą treścią) i nie daje podpowiedzi.
 
 Wygląd formularza powstaje **wyłącznie z CSS** na klasycznym markupie wtyczki
 (`.wpcf7-form-control`, `.wpcf7-submit`…), bez nadpisywania jej szablonów —

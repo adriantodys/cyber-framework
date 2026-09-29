@@ -1,15 +1,19 @@
 <?php
 /**
- * Sekcja "Kontakt" — dwie kolumny: dane kontaktowe i formularz.
+ * Sekcja "Kontakt" — dwie kolumny: formularz i dane kontaktowe.
  *
- * Lewa kolumna: tresc WYSIWYG, dane kontaktowe i social media. Dane NIE sa
- * wpisywane w sekcji — pochodza z Global Options (zakladki Kontakt i Social
- * Media, CLAUDE.md sekcja 22), a sekcja ma tylko wlaczniki, co pokazac.
- * Zmiana telefonu w jednym miejscu zmienia go w top headerze, stopce i we
- * wszystkich sekcjach kontaktowych naraz.
+ * Kolumna formularza (domyslnie lewa): tresc WYSIWYG nad, formularz Contact
+ * Form 7 — zaleznosc miekka, o ktorej decyduje inc/contact-form-7.php — i tresc
+ * WYSIWYG pod.
  *
- * Prawa kolumna: tresc WYSIWYG i formularz Contact Form 7 — zaleznosc miekka,
- * o ktorej decyduje inc/contact-form-7.php.
+ * Kolumna danych (domyslnie prawa): tresc WYSIWYG nad, dane kontaktowe, social
+ * media i tresc WYSIWYG pod. Dane NIE sa wpisywane w sekcji — pochodza z Global
+ * Options (zakladki Kontakt i Social Media, CLAUDE.md sekcja 22), a sekcja ma
+ * tylko wlaczniki, co pokazac. Zmiana telefonu w jednym miejscu zmienia go
+ * w top headerze, stopce i we wszystkich sekcjach kontaktowych naraz.
+ *
+ * Kazdy z czterech edytorow w kolumnach ma wlasny wlacznik (domyslnie
+ * wylaczony), a wlacznik cyber_contact_section_swap zamienia kolumny miejscami.
  *
  * @package Cyber_Framework
  */
@@ -107,7 +111,57 @@ function cyber_contact_section_config( array $row ) {
 			: __( 'Nasze social media', 'cyber-framework' ),
 		'social_labels' => ! isset( $row['cyber_contact_section_social_labels'] ) || ! empty( $row['cyber_contact_section_social_labels'] ),
 		'form'          => absint( isset( $row['cyber_contact_section_form'] ) ? $row['cyber_contact_section_form'] : 0 ),
+		'swap'          => ! empty( $row['cyber_contact_section_swap'] ),
 	);
+}
+
+/**
+ * Kolejnosc kolumn od lewej: 'form' i 'data'.
+ *
+ * Kolumny zamieniaja sie w markupie, nie przez CSS order — dzieki temu
+ * ponizej 980px i dla czytnika ekranu pierwsza jest ta, ktora na desktopie
+ * stoi z lewej, a proporcje z cyber_contact_ratios() dalej licza sie od lewej.
+ *
+ * @param array $config Wynik cyber_contact_section_config().
+ * @return string[]
+ */
+function cyber_contact_section_order( array $config ) {
+	return empty( $config['swap'] ) ? array( 'form', 'data' ) : array( 'data', 'form' );
+}
+
+/**
+ * Tresci WYSIWYG nad i pod formularzem oraz nad i pod danymi kontaktowymi.
+ *
+ * Blok pojawia sie, gdy jego wlacznik jest wlaczony ORAZ edytor nie jest
+ * pusty. Brak wartosci wlacznika liczy sie jako wylaczony, zgodnie
+ * z default_value pola — panel i front pokazuja ten sam stan.
+ *
+ * Nazwy pol tresci nad kolumnami (cyber_contact_section_right / _left) sa
+ * historyczne: z czasow, gdy formularz stal zawsze z prawej, a dane z lewej.
+ * Zostaly, bo nazwa pola jest kluczem zapisanym w bazie — zmiana wyczyscilaby
+ * tresc w istniejacych sekcjach.
+ *
+ * @param array $row Wiersz Flexible Content.
+ * @return array{form_top: string, form_bottom: string, data_top: string, data_bottom: string}
+ */
+function cyber_contact_section_contents( array $row ) {
+	$map = array(
+		'form_top'    => 'cyber_contact_section_right',
+		'form_bottom' => 'cyber_contact_section_form_bottom',
+		'data_top'    => 'cyber_contact_section_left',
+		'data_bottom' => 'cyber_contact_section_data_bottom',
+	);
+
+	$out = array();
+
+	foreach ( $map as $slot => $key ) {
+		$show  = ! empty( $row[ 'cyber_contact_section_show_' . $slot ] );
+		$value = isset( $row[ $key ] ) ? (string) $row[ $key ] : '';
+
+		$out[ $slot ] = $show && '' !== trim( $value ) ? $value : '';
+	}
+
+	return $out;
 }
 
 /**
@@ -130,6 +184,11 @@ function cyber_contact_section_attributes( array $row ) {
 
 	if ( ! isset( $row['cyber_contact_section_button_full'] ) || ! empty( $row['cyber_contact_section_button_full'] ) ) {
 		$classes[] = 'cyber-contact--btn-full';
+	}
+
+	// Stan, nie wariant (CLAUDE.md sekcja 20): laczy sie z kazda proporcja.
+	if ( ! empty( $row['cyber_contact_section_swap'] ) ) {
+		$classes[] = 'cyber-contact--swap';
 	}
 
 	$vars = array(

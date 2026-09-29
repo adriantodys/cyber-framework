@@ -1148,6 +1148,7 @@
                                 "field_cyber_msg_contact_section_layout",
                                 "field_cyber_contact_section_ratio",
                                 "field_cyber_contact_section_gap_x",
+                                "field_cyber_contact_section_swap",
                                 "field_cyber_msg_contact_section_data",
                                 "field_cyber_contact_section_label_color",
                                 "field_cyber_contact_section_value_color",
@@ -1224,7 +1225,14 @@
                                 "id": ""
                             },
                             "clone": [
+                                "field_cyber_msg_contact_section_right",
+                                "field_cyber_contact_section_show_form_top",
+                                "field_cyber_contact_section_right",
+                                "field_cyber_contact_section_form",
+                                "field_cyber_contact_section_show_form_bottom",
+                                "field_cyber_contact_section_form_bottom",
                                 "field_cyber_msg_contact_section_left",
+                                "field_cyber_contact_section_show_data_top",
                                 "field_cyber_contact_section_left",
                                 "field_cyber_contact_section_show_email",
                                 "field_cyber_contact_section_show_phone",
@@ -1235,9 +1243,8 @@
                                 "field_cyber_contact_section_show_social",
                                 "field_cyber_contact_section_social_title",
                                 "field_cyber_contact_section_social_labels",
-                                "field_cyber_msg_contact_section_right",
-                                "field_cyber_contact_section_right",
-                                "field_cyber_contact_section_form"
+                                "field_cyber_contact_section_show_data_bottom",
+                                "field_cyber_contact_section_data_bottom"
                             ],
                             "display": "seamless",
                             "layout": "block",
@@ -2096,5 +2103,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1790243160
+    "modified": 1790671156
 }

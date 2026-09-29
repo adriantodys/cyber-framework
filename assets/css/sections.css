@@ -1125,6 +1125,11 @@
 	margin-bottom: var(--cyber-space-3);
 }
 
+/* Tresc pod formularzem albo pod danymi kontaktowymi. */
+.cyber-contact__content--bottom:not(:first-child) {
+	margin-top: var(--cyber-space-3);
+}
+
 .cyber-contact__content > *:first-child {
 	margin-top: 0;
 }
