@@ -145,7 +145,7 @@ Brak zależności miękkiej **nigdy** nie kończy się błędem krytycznym ani p
 Nowy moduł korzystający z WooCommerce dopisuje się do filtra
 `cyber_woocommerce_required_by` i dostaje komplet tych komunikatów bez własnego kodu.
 
-#### Strony WooCommerce: klasyczny shortcode, zero nadpisań szablonów
+#### Strony WooCommerce: klasyczny shortcode, nadpisania szablonów tylko wyjątkowo
 
 Strony sklepowe (koszyk, zamówienie i kolejne) używają **klasycznych
 shortcode'ów** (`[woocommerce_cart]`), nie bloków WooCommerce. Powód jest
@@ -202,7 +202,12 @@ cyber-framework/
 ├── functions.php
 │
 ├── acf-json/                      ← Local JSON, źródło prawdy dla pól ACF, wersjonowane w Git
-│   └── group_global_options.json
+│   ├── group_global_options.json  ← Global Options (Options Page)
+│   ├── group_sections.json        ← pole Flexible Content `cyber_sections`
+│   ├── group_section_*.json       ← grupy źródłowe klonowane do layoutów sekcji
+│   ├── group_page_header.json     ← wyjątki page headera dla pojedynczej strony
+│   ├── group_gallery.json         ← zdjęcia CPT `cyber_gallery`
+│   └── group_product_category.json ← treść kategorii produktu (WooCommerce)
 │
 ├── docs/
 │   ├── acf-schema.md              ← mapa wszystkich pól ACF (ten plik jest ŻYWYM dokumentem)
@@ -215,7 +220,10 @@ cyber-framework/
 │   ├── enqueue.php                ← rejestracja/wersjonowanie assetów
 │   ├── acf.php                    ← ustawienia ACF (json save/load path)
 │   ├── options.php                ← rejestracja Options Page(s)
-│   └── helpers.php                ← funkcje pomocnicze (np. cyber_get_option())
+│   ├── helpers.php                ← funkcje pomocnicze (np. cyber_get_option())
+│   ├── sections*.php              ← rejestr sekcji i logika każdego layoutu
+│   ├── woocommerce*.php           ← zależność miękka i widoki sklepu
+│   └── …                          ← pełna lista i kolejność ładowania: docs/architecture.md
 │
 ├── template-parts/
 │   ├── header/
@@ -227,7 +235,9 @@ cyber-framework/
 │   ├── components/                ← drobne, reużywalne elementy UI (przycisk, karta, badge)
 │   └── sections/                  ← sekcje flexible content (1 layout ACF = 1 plik)
 │
-├── templates/                     ← page templates, front-page.php, single.php, archive.php...
+├── templates/                     ← szablony widoków wpięte filtrami hierarchii (blog.php, single-post.php, single-gallery.php…)
+│
+├── woocommerce/                   ← nadpisania szablonów WooCommerce (rejestr w sekcji 2)
 │
 └── assets/
     ├── css/
@@ -585,7 +595,7 @@ Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
 - Nie dodawaj nowych bibliotek/zależności bez wyraźnej zgody.
 - Jeśli `docs/acf-schema.md` i rzeczywisty kod/ACF się rozjeżdżają — zgłoś rozbieżność
   wprost, nie "napraw" jej cicho po swojemu.
-- Trzymaj się kolejności budowy z sekcji 16. Nie przeskakuj etapów bez wyraźnego
+- Trzymaj się kolejności budowy z sekcji 17. Nie przeskakuj etapów bez wyraźnego
   potwierdzenia, nawet jeśli technicznie dałoby się to zrobić szybciej w innej kolejności.
 
 ## 16. Obowiązkowy output po każdej pracy z ACF
@@ -732,7 +742,9 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    **Stan: częściowo.** Istnieją `templates/blog.php` (strona wpisów, kategorie,
    tagi, archiwa dat i autorów) i `templates/single-post.php` z paskiem bocznym
    widgetów, wpięte filtrami hierarchii (`inc/blog.php`). Ustawienia: Global
-   Options → Blog. Do zrobienia: page, front page, 404, search, archiwa CPT.
+   Options → Blog. Do tego `templates/single-gallery.php` — strona pojedynczej
+   galerii CPT `cyber_gallery` (`inc/gallery.php`).
+   Do zrobienia: page, front page, 404, search, archiwa CPT.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).
 8. Audyt wydajności, dostępności i bezpieczeństwa + weryfikacja WPCS przed wdrożeniem.

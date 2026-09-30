@@ -1,18 +1,21 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-13 (moduły: Top Header, Header desktop/mobile, Footer,
-Copyright, Breadcrumb, Button, Social icons; warianty wrapperów, przyklejony header,
-cztery warianty układu headera ze slotem akcji oraz warstwa sklepowa WooCommerce —
-koszyk i strona zamówienia).
+Ostatnia aktualizacja: 2026-09-30 (moduły: Top Header, Header desktop/mobile, Footer,
+Copyright, Breadcrumb, Button, Social icons, Page header, Przycisk do góry, blog;
+warianty wrapperów, przyklejony header, cztery warianty układu headera ze slotem
+akcji; 11 layoutów Flexible Content i animacje wejścia sekcji; warstwa sklepowa
+WooCommerce — koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Status
 
-**Brak layoutów Flexible Content.** System komponentów to etap 4 w kolejności budowy
-(CLAUDE.md sekcja 17); obecnie zrealizowane są etapy 1, 2 i 3.
+**11 layoutów Flexible Content** — patrz tabela „Layouty Flexible Content” niżej.
+System komponentów to etap 4 w kolejności budowy (CLAUDE.md sekcja 17): etapy
+1–3 są zrealizowane, etap 4 jest w toku — brakuje filtrowania layoutów per typ
+treści.
 
-Zajęte są `template-parts/header/`, `template-parts/footer/` oraz
-`template-parts/components/` — patrz tabela „Komponenty reużywalne”. Pusty pozostaje
-wyłącznie `template-parts/sections/`, który zapełni etap 4.
+Zajęte są wszystkie katalogi `template-parts/`: `header/`, `footer/`,
+`breadcrumb/`, `page-header/`, `blog/`, `go-to-top/`, `components/`
+(patrz tabela „Komponenty reużywalne”) oraz `sections/` (jeden plik na layout).
 
 ## Warianty wrapperów
 
@@ -57,9 +60,23 @@ w którym powstał.
 
 ## Layouty Flexible Content
 
+Każdy layout ładuje dodatkowo `assets/css/sections.css` i klonuje ustawienia
+wyglądu z `group_section_settings` (slider — tylko szerokość, kotwicę i klasy).
+Szczegóły pól: `docs/acf-schema.md`, „Sekcje — trzy grupy pól”.
+
 | Nazwa layoutu (ACF) | Plik | Używane pola | Assety |
 |---|---|---|---|
-| *(brak)* | — | — | — |
+| `cards` | `template-parts/sections/cards.php` | `group_section_cards` | wspólny markup karty `components/card.php` |
+| `columns` | `template-parts/sections/columns.php` | `group_section_columns` | — |
+| `slider` | `template-parts/sections/slider.php` | `group_section_slider` | Swiper + `assets/js/slider.js` |
+| `carousel` | `template-parts/sections/carousel.php` | `group_section_carousel` + pola karty z `group_section_cards` | Swiper + `assets/js/slider.js`; `components/card.php`, `components/carousel.php` |
+| `faq` | `template-parts/sections/faq.php` | `group_section_faq` | — (natywne `<details>`) |
+| `counter` | `template-parts/sections/counter.php` | `group_section_counter` | `assets/js/counter.js` |
+| `contact` | `template-parts/sections/contact.php` | `group_section_contact` + `cyber_contact_*`, `cyber_social_*` z Global Options | formularz Contact Form 7 (zależność miękka) |
+| `posts` | `template-parts/sections/posts.php` | `group_section_posts` | Swiper + `assets/js/slider.js` tylko w trybie slidera; `components/card.php`, `components/carousel.php` |
+| `table` | `template-parts/sections/table.php` | `group_section_table` | w panelu `assets/js/admin-sections.js` |
+| `gallery` | `template-parts/sections/gallery.php` | `group_section_gallery` (+ `group_gallery` przy galeriach z CPT) | `assets/css/gallery.css`, `assets/js/gallery.js`; `components/gallery.php` |
+| `global` | `template-parts/sections/global.php` | `cyber_global_section_ref` | assety sekcji wstawionych z `cyber_global_section` |
 
 ## Komponenty reużywalne
 
@@ -933,7 +950,9 @@ pojedynczego produktu".
 
 ### Obszary widgetów
 
-Jedyne obszary widgetów w całym motywie. Rejestruje je `inc/woocommerce-shop.php`.
+Obszary widgetów sklepu. Rejestruje je `inc/woocommerce-shop.php`. Poza sklepem
+motyw ma jeszcze jeden obszar — `cyber-blog` (pasek boczny bloga, `inc/blog.php`,
+patrz „Blog — widoki i pasek boczny”).
 
 | Obszar | Gdzie widoczny |
 |---|---|
@@ -945,7 +964,10 @@ Markup widgetu: `.cyber-widget` z tytułem `.cyber-widget__title` (`<h2>`).
 
 Żaden z tych assetów nie ma prawa załadować się poza swoją stroną
 (CLAUDE.md sekcja 10) — sprawdzone: `/koszyk/` ładuje wyłącznie arkusz koszyka,
-`/zamowienie/` wyłącznie arkusz zamówienia, `/sklep/` żadnego.
+`/zamowienie/` wyłącznie arkusz zamówienia, a `/sklep/` żadnego z tych dwóch.
+Arkusz listy produktów ładuje się wyłącznie na sklepie i archiwach taksonomii
+produktów (`is_shop() || is_product_taxonomy()`), arkusz strony produktu —
+wyłącznie na `is_product()`.
 
 ### Nadpisania szablonów
 

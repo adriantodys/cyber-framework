@@ -106,6 +106,9 @@ Wszystkie cztery elementy, nigdy część:
       + komentarz, dlaczego brak sprawdzenia jest bezpieczny.
 - [ ] **Sanitizacja wejścia** — każdego pola z osobna.
 - [ ] **Escaping wyjścia** — również w odpowiedzi JSON, jeśli trafi do DOM.
+
+Do tego rejestracja:
+
 - [ ] Zarejestrowane osobno `wp_ajax_` i `wp_ajax_nopriv_` — świadomie, nie odruchowo.
 
 ## Checklista: REST API
