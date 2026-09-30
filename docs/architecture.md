@@ -974,8 +974,9 @@ WooCommerce przerenderowuje cały #order_review — z nową ilością i sumami
   ze strony. Usuwanie pozycji należy do koszyka. Granica jest pilnowana
   **w dwóch miejscach** — w skrypcie i w endpoincie — bo pierwsze można ominąć.
 
-Zabezpieczenia endpointu opisuje `docs/security.md`; to pierwszy i na razie
-jedyny endpoint AJAX w motywie.
+Zabezpieczenia endpointu opisuje `docs/security.md`; to pierwszy endpoint AJAX
+w motywie. Drugi — doładowywanie produktów (`cyber_shop_more`) — należy do listy
+produktów, opisanej niżej.
 
 ### Świadome odstępstwa od projektu graficznego
 

@@ -6,9 +6,9 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-09-24
+Ostatnia aktualizacja: 2026-09-25
 Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
-Druga grupa pól: **Kategoria produktu** (`group_product_category.json`)
+Pozostałe grupy pól (16): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`) i **Kategoria produktu** (`group_product_category.json`).
 
 ---
 
@@ -1556,8 +1556,9 @@ Wyjątek: `a` i `span` **wewnątrz** nagłówków i overtitle mają `font-size`,
 
 Klasy `.cyber-overtitle` i `.cyber-overtitle--secondary` są **nowe** — wprowadzone
 razem z tym modułem, bo ACF definiuje dwie wielkości overtitle, a motyw nie miał
-dla nich żadnego znacznika. Nie ma jeszcze template-partu, który je wypisuje;
-pojawią się w komponentach etapu 4.
+dla nich żadnego znacznika. Wypisuje je komponent karty
+`template-parts/components/card.php` (nadtytuł karty w sekcjach „Karty”,
+„Karuzela kart” i „Wpisy”).
 
 ---
 
@@ -2404,6 +2405,7 @@ nie ustawieniem globalnym.
 - 2026-09-21 — **Page header**: nowa zakładka Global Options „Page header” (16 pól) i grupa `group_page_header` z wyjątkami dla pojedynczej strony, wpisu albo CPT. Domyślnie wyłączony. Global Options mają teraz **16 zakładek i 208 pól**. Nowy typ walidacji `choices` (wielokrotny wybór).
 
 - 2026-09-20 — **„Tabela”**: kolumny definiuje się osobno (repeater `cyber_table_columns`: nagłówek, szerokość `%`, wyrównanie). Liczba kolumn wynika z tej listy, wiersze mają już tylko komórki. Pole `cyber_table_head_row` usunięte — nagłówek powstaje, gdy któraś kolumna ma nazwę.
+
 - 2026-09-19 — **Blog**: nowa zakładka Global Options „Blog” (25 pól: pasek boczny, lista wpisów, pojedynczy wpis, format daty) — Global Options ma teraz **15 zakładek i 192 pola**; wpisy w `cyber_option_schema()` i `default-acf.php`. Sekcja **„Wpisy”** (`group_section_posts`, layout `posts`) i sekcja **„Tabela”** (`group_section_table`, layout `table`). **Karty**: pole `cyber_cards_image_ratio` (proporcje zdjęcia) — działa w Kartach, Karuzeli, Wpisach i na blogu.
 
 - 2026-09-19 — Sekcja **„Kontakt”** — layout `contact` i grupa źródłowa `group_section_contact`: dwie kolumny (treść + dane kontaktowe i social media z Global Options z włącznikami per sekcja; treść + formularz Contact Form 7), proporcje kolumn, kolory, przycisk wysyłki z Global Options → Przyciski, tło pól, włączniki treści nad i pod (domyślnie wyłączone). **Contact Form 7** jako nowa zależność miękka (`inc/contact-form-7.php`). Komponent ikon social media dostał opcjonalne nazwy platform (`show_labels`).
@@ -2413,6 +2415,7 @@ nie ustawieniem globalnym.
 - 2026-09-19 — Sekcja **„Licznik”** — layout `counter` i grupa źródłowa `group_section_counter`: repeater liczb (prefiks, liczba, sufiks, ikona, opis) i 17 ustawień — kolumny per breakpoint, odstępy, wyrównanie, linia pionowa z kolorem, animacja z czasem, separator tysięcy, typografia — oraz włączniki treści nad i pod (domyślnie wyłączone). Animacja we własnym skrypcie `assets/js/counter.js`, bez biblioteki. Warunek edytorów WYSIWYG z włącznikami przeniesiony do jednej funkcji `cyber_section_wysiwyg_condition()` (wcześniej trzy kopie w kartach, karuzeli i FAQ).
 
 - 2026-09-19 — **„FAQ”**: włączniki treści nad i pod pytaniami (`cyber_faq_show_top`, `cyber_faq_show_bottom`), domyślnie wyłączone — jak w Kartach.
+
 - 2026-09-19 — Sekcja **„FAQ”** — layout `faq` i grupa źródłowa `group_section_faq`: repeater pytań (pytanie, odpowiedź WYSIWYG, własna ikona) i 16 ustawień — jedna lub dwie kolumny, tryb jednej otwartej odpowiedzi, pierwsze pytanie otwarte, włączniki ikony z lewej i plusa z prawej, odstępy, linia, kolory, rozmiar pytania. Natywne `<details>`, bez biblioteki i bez JS. Nowa ikona motywu `question`. Poprawka w **Kartach**: kolor i grubość tekstu z panelu nie dochodziły do akapitów (arkusz bazowy nadaje `<p>` własny kolor).
 
 - 2026-09-19 — **Sekcje globalne**: typ treści `cyber_global_section` (tylko panel, bez adresu na froncie) z tym samym polem `cyber_sections` co strony, oraz layout `global` z polem `cyber_global_section_ref` i klonem włącznika sekcji. Na liście sekcji globalnych kolumna „Używana na”. Arkusz sekcji i Swiper ładują się także wtedy, gdy slider lub karuzela przychodzą wyłącznie z sekcji globalnej.
@@ -2420,6 +2423,7 @@ nie ustawieniem globalnym.
 - 2026-09-19 — **Karty**: nadtytuł `cyber_card_overtitle` (w repeaterze) i rozmiar tytułu `cyber_cards_title_size` (`h1`–`h6`, default `h5`); oba działają też w „Karuzeli kart”. **Slider**: wideo w tle slajdu — `cyber_slide_video_on` + `cyber_slide_video` (warunek ACF). **Karuzela**: taśma trybu ciągłego i autoplay krokowy nie zatrzymują się po najechaniu myszą. **WYSIWYG sekcji**: dozwolony `<iframe>` (`cyber_kses_content()`). **Kolory**: nowe pole semantyczne `cyber_color_icons` — Global Options ma teraz 167 pól.
 
 - 2026-09-17 — **„Karuzela kart"**: tryb ciągłego przewijania (`cyber_carousel_continuous`) i szybkość przesuwania (`cyber_carousel_speed`). Pola strzałek, kropek, pętli i autoplay chowają się w trybie ciągłym; czas między przesunięciami ma warunek AND (autoplay i brak trybu ciągłego). Tryb ciągły działa na animacji CSS, bez Swipera.
+
 - 2026-09-17 — Sekcja **„Karuzela kart"** — layout `carousel` i grupa źródłowa `group_section_carousel` z 10 ustawieniami przewijania. Elementy, włączniki treści i wygląd karty klonowane z `group_section_cards` (bez 6 pól siatki), więc karta ma jedną definicję w dwóch sekcjach. Markup karty przeniesiony do wspólnego komponentu `template-parts/components/card.php` — render sekcji Karty sprawdzony jako identyczny przed i po. Swiper z sekcji Slider obsługuje oba rodzaje karuzel.
 
 - 2026-09-17 — Sekcja **„Slider"** — layout `slider` i grupa źródłowa `group_section_slider`: repeater slajdów (zdjęcie desktop/mobile, treść, przycisk), 15 ustawień karuzeli i 3 pola sekcji własne slidera. Z `group_section_settings` klonuje tylko szerokość, kotwicę i klasy. Pierwsza zewnętrzna biblioteka w motywie: **Swiper 14.2.0**, zatwierdzony jawnie i wpisany do rejestru w CLAUDE.md sekcja 2.
@@ -2434,26 +2438,48 @@ nie ustawieniem globalnym.
 
 - 2026-09-16 — Dodano `default-acf.php` — formularz wdrożeniowy ze wszystkimi 166 kluczami Global Options, pogrupowanymi jak zakładki w panelu, z wartością domyślną, typem/zakresem i etykietą pola. Cztery pola (logo, logo stopki, dwa odnośniki Page Link) są zakomentowane jako `TYLKO PANEL`, bo ACF trzyma tam ID załącznika albo strony. Nowa reguła: **każde nowe pole Global Options trafia także do tego pliku** (CLAUDE.md sekcja 16, punkt 3).
 
-- 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).
-- 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
-- 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
 - 2026-09-15 — Zakładka **„WooCommerce”** rozbudowana o stronę pojedynczego produktu: **32 nowe pola**. Główny kolor sklepu (`cyber_wc_color_main`), cztery pola układu (szerokości kolumn 40/60, wysokość sekcji ze zdjęciem 500px, wysokość miniatury 158px) oraz **13 wyłączników i 11 pozycji** dla elementów strony produktu. Wyłączniki i pozycje nie są wpisane ręcznie w `cyber_option_schema()` — generuje je `cyber_product_option_schema()` z rejestru `cyber_product_elements()`, żeby pola ACF, schemat i podpięcie hooków nie mogły się rozjechać. Liczba w polu „Pozycja” jest wprost priorytetem `add_action()`. Nowy `inc/woocommerce-product.php`.
+
 - 2026-09-14 — Nowa zakładka **„WooCommerce”** w Global Options z pierwszym ustawieniem `cyber_wc_pagination_type` (paginacja albo przycisk „Pokaż więcej” z AJAX). Nowa, druga w projekcie grupa pól: **`group_product_category`** z polem WYSIWYG `cyber_category_content` na taksonomii `product_cat`, zastępującym ukrywany natywny opis kategorii.
+
 - 2026-09-12 — Dwie nowe zakładki: **„Breadcrumb”** i **„Breadcrumb WooCommerce”**, po 4 pola każda (włącznik, rozmiar czcionki, kolor, kolor bieżącej strony). Rozdzielone celowo — osobne włączniki pozwalają mieć okruszki wyłącznie w sklepie albo wyłącznie poza nim. Oba domyślnie **wyłączone**, więc synchronizacja niczego nie zmienia. Wspólny markup i jedna mapa zmiennych CSS; ścieżkę poza sklepem składa `cyber_breadcrumb_items()`, w sklepie `woocommerce_breadcrumb()` we własnych znacznikach motywu. Nowy `inc/breadcrumb.php` i katalog `template-parts/breadcrumb/`.
+
 - 2026-09-12 — Header Desktop: **trzy warianty układu** (`cyber_header_variant`: `centered`, `cta`, `woocommerce` obok `default`) plus dwa pola przycisku CTA (`cyber_header_cta_text`, `cyber_header_cta_url`). Wariant jest modyfikatorem klasy, nie zmienną CSS. CTA dziedziczy cały wygląd z rozmiaru Medium — bez własnych pól stylu. Wariant WooCommerce wymaga wtyczki; jej brak nie wywraca strony (patrz `inc/woocommerce.php`). Nowe ikony `user` i `cart` w `cyber_icons()`.
+
 - 2026-09-12 — Header Desktop: dwa nowe pola — `cyber_header_bg_color` (Color Picker, `#ffffff`, zmienna `--cyber-header-bg`) i `cyber_header_sticky` (True/False, `false`). Sticky jest modyfikatorem klasy `.cyber-header--sticky`, nie zmienną CSS; wysokość paska administratora bierze z `--wp-admin--admin-bar--height`, więc nie wymagał nowego breakpointu. Pole tła powstało razem ze sticky, bo przezroczysty przyklejony header pokazywałby przewijaną treść.
+
 - 2026-09-12 — **Przezroczystość włączona na wszystkich polach Color Picker** (35 pól w zakładkach Header Desktop, Przyciski, Kolory, Top Header, Footer, Copyright; cienie miały ją już wcześniej). Typ schematu tych pól zmieniony z `color` na `color_alpha` — bez zmiany samej walidacji, bo `color_alpha` przepuszcza HEX, `rgb()` i `rgba()`. Typ `color` zostaje w kodzie bez przypisanego pola. Żadna zapisana wartość ani wartość domyślna się nie zmienia.
+
 - 2026-09-10 — Copyright: pola prawne przestawione z **Link** na **Page Link** (wybór istniejącej strony); etykiety linków stałe w `template-parts/footer/copyright.php`. Typ schematu tych pól zmieniony z `link` na `url`.
+
 - 2026-09-10 — Nowa zakładka **„Copyright”**: 3 pola treści (tekst + 2 pola typu Link) i 5 pól stylu. Nowy `inc/footer.php` i `template-parts/footer/copyright.php`, nowy typ schematu `link`, znacznik `{year}` w tekście. Zamyka listę modułów podstawowych Global Options.
+
 - 2026-09-10 — Footer: nowa sekcja **„Stylizacja Footer”** — 7 pól (tło + rozmiar/kolor dla tytułów, tekstu i linków). Wzorzec narzędziowy: stałe klasy `.cyber-footer-title` / `-text` / `-link`, ograniczone do stopki konwencją, nie techniką.
+
 - 2026-09-10 — Nowa zakładka **„Footer”**: 2 pola dla kolumny 1 (logo + WYSIWYG). Kolumny 2 i 3 zarezerwowane bez pól, kolumna 4 reużywa `cyber_social_*` bez wyłączników. Wydzielony wspólny komponent `cyber_social_icons()` — Top Header przestał mieć własną pętlę. Nowy typ schematu `html`.
+
 - 2026-09-10 — Nowa zakładka **„Top Header”**: 3 pola stylu + 8 przełączników widoczności. **Pierwszy moduł konsumujący pola z „Kontakt" i „Social Media"** przez `cyber_get_option()`. Nowy `template-parts/header/top-header.php`, `cyber_top_header_data()` w `inc/header.php`, własne inline SVG w `cyber_get_social_icon()`.
+
 - 2026-09-10 — Nowa zakładka **„Social Media”**: 6 pól URL (Facebook, Instagram, YouTube, X, LinkedIn, TikTok) — **bez logiki frontendowej**, zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Bez nowego pliku w `inc/` — walidację pokrywa istniejący typ schematu `url`.
+
 - 2026-09-10 — Nowa zakładka **„Kontakt”**: 7 pól danych kontaktowych (adres, godziny, telefon, email, NIP, KRS, REGON) — **bez logiki frontendowej**, świadomie zarezerwowane na przyszłość (CLAUDE.md sekcja 22). Nowy `inc/contact.php` z walidacją przy zapisie, nowe typy schematu `text` / `textarea` / `email`.
+
 - 2026-09-10 — Nowa zakładka **„Kolory”**: 5 pól semantycznych (auto) i 5 narzędziowych (stałe klasy `.cyber-hover-color`, `.cyber-border-1`, `.cyber-border-2`, `.cyber-shadow`, `.cyber-shadow-hover`). Nowy typ walidacji `color_alpha` dla pól cieni z `enable_opacity`.
+
 - 2026-09-10 — Nowa zakładka **„Przyciski”**: 3 rozmiary × 8 pól (geometria, grubość, 4 kolory) = 24 pola. Komponent `cyber_button()` w `inc/components.php` + `template-parts/components/button.php`, sekcja CSS w `main.css`. Lista grubości wydzielona do `cyber_font_weight_choices()` i reużyta przez wszystkie moduły.
+
 - 2026-09-10 — Nowa zakładka **„Header Mobile”**: jedno pole `cyber_header_mobile_breakpoint` (Number, default 980), świadomy wyjątek od kanonicznych breakpointów. Hamburger + panel mobilny w `template-parts/header/header.php`, blok `@media` generowany przez `cyber_header_mobile_css()`, obsługa w `assets/js/header.js` (czysty JS, enqueue warunkowy).
+
 - 2026-09-10 — Header Desktop: nowe pole `cyber_header_submenu_indicator` (True/False, default `true`) — strzałka przy pozycjach z podmenu. Nowy typ walidacji `bool` w `cyber_option_schema()`.
+
 - 2026-09-10 — Nowa zakładka **„Header Desktop”**: pole Image (logo, return format `url` — precedens dla pól obrazu), wyrównanie, paddingi kontenera, 7 pól menu głównego i 8 pól podmenu (Number / Select / Color Picker). Nowy `inc/header.php`, markup w `template-parts/header/header.php`, sekcja CSS w `main.css`. Menu korzysta z istniejącej lokalizacji `primary`.
+
 - 2026-09-10 — Rozszerzenie zakładki „Ustawienia czcionki” o sekcję **„Grubość czcionki”**: 4 pola Select (`cyber_font_weight_headings` / `_overtitle` / `_text` / `_links`). Grubość celowo bez skalowania responsywnego — jedna wartość dla wszystkich breakpointów.
+
 - 2026-09-10 — Nowa zakładka **„Ustawienia czcionki”** w `group_global_options`: 10 pól wielkości (desktop), 3 pola skalowania procentowego, 2 pola wyboru kroju. Wdrożona logika `cyber_font_css()`, wspólne `cyber_breakpoints()`, klasy `.cyber-overtitle` / `.cyber-overtitle--secondary`. Funkcja wypisująca przemianowana na `cyber_print_inline_css()`, znacznik `<style>` na `id="cyber-global-vars"`.
+
+- 2026-09-10 — Zatwierdzono i wdrożono generowanie CSS z Global Options (inline `<style>` w `wp_head`). Bez zmian w polach ACF — wyłącznie warstwa logiki i widoku.
+
+- 2026-09-09 — Wdrożenie v0.1.0: dodano `acf-json/group_global_options.json`, helper `cyber_get_option()` z walidacją oraz sekcję „Odwzorowanie w kodzie”. Plik przeniesiony z roota do `docs/` zgodnie z CLAUDE.md sekcja 3.
+
+- 2026-09-09 — Utworzono moduł Global Options, zakładka „Szerokość strony” (pierwszy moduł projektu).

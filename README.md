@@ -26,10 +26,12 @@ i obowiązkowa lektura przed każdą zmianą.
    zsynchronizujesz pola. Dzięki temu krok 5 wciągnie od razu docelowe wartości,
    zamiast domyślnych motywu, i nie trzeba przeklikiwać osiemnastu zakładek.
    Pełny przebieg opisuje nagłówek tego pliku; zasady — CLAUDE.md sekcja 16.
-5. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj **obie**
-   grupy: *Cyber Framework — Global Options* oraz *Cyber Framework — Kategoria produktu*.
-   Obie są w repozytorium (`acf-json/`) — nie trzeba klikać żadnego pola ręcznie.
-   Druga dotyczy taksonomii `product_cat` i ma sens dopiero z WooCommerce.
+5. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj
+   **wszystkie** grupy *Cyber Framework — …* (17 plików w `acf-json/`) — nie trzeba
+   klikać żadnego pola ręcznie. Są wśród nich: *Global Options*, *Sekcje* wraz
+   z grupami źródłowymi *Sekcje: …* (pola klonowane do layoutów — bez nich sekcje
+   nie mają pól), *Page header*, *Galeria* i *Kategoria produktu*. Ta ostatnia
+   dotyczy taksonomii `product_cat` i ma sens dopiero z WooCommerce.
 6. Ustawienia znajdziesz w menu **Cyber Framework** (slug `cyber-settings`).
    Zapisz je raz — wartości trafią do `wp_options` i od tej chwili to one
    decydują o wyglądzie.
@@ -48,8 +50,8 @@ cyber-framework/
 ├── assets/            ← css / js / images / vendor (biblioteki zewnętrzne)
 ├── docs/              ← dokumentacja (patrz niżej)
 ├── inc/               ← logika motywu
-├── template-parts/    ← header/, footer/, breadcrumb/, components/; sections/ czeka na etap 4
-├── templates/         ← szablony widoków (puste — etap 5)
+├── template-parts/    ← header/, footer/, breadcrumb/, page-header/, blog/, go-to-top/, components/, sections/
+├── templates/         ← szablony widoków: blog, pojedynczy wpis, pojedyncza galeria (etap 5 w toku)
 ├── woocommerce/       ← nadpisania szablonów wtyczki (dwa, rejestr w CLAUDE.md sekcja 2)
 ├── default-acf.php    ← formularz wdrożeniowy: wartości domyślne dla nowego projektu
 ├── functions.php      ← bootstrap, bez logiki
