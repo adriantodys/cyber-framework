@@ -60,8 +60,12 @@ w którym powstał.
 
 ## Layouty Flexible Content
 
-Każdy layout ładuje dodatkowo `assets/css/sections.css` i klonuje ustawienia
-wyglądu z `group_section_settings` (slider — tylko szerokość, kotwicę i klasy).
+Każdy layout ładuje dodatkowo `assets/css/sections.css`. Ustawienia wyglądu
+klonuje z `group_section_settings` z dwoma wyjątkami:
+
+- **slider** — tylko szerokość, animację, kotwicę i klasy,
+- **global** — wyłącznie przełącznik włącz/wyłącz (`cyber_section_enabled`);
+  wygląd, kotwicę i klasy mają sekcje wewnątrz wstawianej sekcji globalnej.
 Szczegóły pól: `docs/acf-schema.md`, „Sekcje — trzy grupy pól”.
 
 | Nazwa layoutu (ACF) | Plik | Używane pola | Assety |
