@@ -741,6 +741,26 @@ Wszystkie pola: **True/False (toggle)**, domyślnie **włączone**.
 > `cyber_top_header_has_content()` sprawdza to przed `get_template_part()`.
 > Pusty pasek byłby kolorową belką bez treści.
 
+**Sekcja: Przełącznik języków**
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Przełącznik języków | `cyber_topheader_show_languages` | True/False (toggle) | `false` | Pokazuje przełącznik `PL / EN` po prawej stronie paska. **Wymaga wtyczki Polylang.** |
+| Kolor bieżącego języka | `cyber_topheader_lang_active_color` | Color Picker (z alfą) | `#0057ff` | Zmienna `--cyber-topheader-lang-active`. Widoczne tylko przy włączonym przełączniku (conditional logic). Pozostałe kody i ukośnik mają kolor tekstu paska. |
+
+> **Języki nie mają pól w motywie.** Lista, kody i adresy tłumaczeń pochodzą
+> z Polylang (`cyber_language_switcher_items()` w `inc/polylang.php`). Kod to
+> slug języka wielkimi literami; pełna nazwa trafia do czytnika ekranu.
+> Przełącznik pojawia się dopiero przy **co najmniej dwóch** językach z treścią.
+>
+> Polylang to **zależność miękka** (CLAUDE.md sekcja 2): bez wtyczki gość nie
+> widzi nic, zalogowany administrator widzi podpowiedź w miejscu przełącznika,
+> a w panelu — tylko przy włączonym `cyber_topheader_show_languages` —
+> pojawia się ostrzeżenie o konieczności instalacji Polylang.
+>
+> Kolor bieżącego języka to wzorzec **semantyczny** (CLAUDE.md sekcja 5):
+> przypięty do `.cyber-topheader__lang-link--current`, aplikuje się sam.
+
 **Wartości stałe, bez pól ACF:** padding pionowy paska (`8px`), odstęp między
 ikonami (`12px`), rozmiar ikony (`16px`) i przezroczystość na hover (`0.7`).
 To proporcje paska, nie konfiguracja.
@@ -2389,6 +2409,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-10-01 — **Przełącznik języków w Top Header.** Dwa nowe pola w zakładce „Top Header”: `cyber_topheader_show_languages` (True/False, domyślnie `false`) i `cyber_topheader_lang_active_color` (Color Picker z alfą, `#0057ff`, zmienna `--cyber-topheader-lang-active`). Global Options mają teraz **230 pól**. Języki pochodzą z Polylang — nowa zależność miękka z plikiem decyzyjnym `inc/polylang.php` i predykatem `cyber_is_polylang_active()`; ostrzeżenie w panelu tylko przy włączonym przełączniku. Domyślnie wyłączony, więc synchronizacja niczego nie zmienia na froncie.
 
 - 2026-09-25 — **Breadcrumb w page headerze.** Nowe pole `cyber_pageheader_breadcrumb` (True/False, domyślnie `false`) w zakładce „Page header”: okruszki pod tytułem i zajawką zamiast osobnego paska. Zakładka ma teraz 17 pól, Global Options **228 pól**. Wypisywanie breadcrumba ma jedną funkcję — `cyber_breadcrumb_render()` w `inc/breadcrumb.php`; HTML osobnego paska bez zmian.
 

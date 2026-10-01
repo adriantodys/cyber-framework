@@ -223,7 +223,7 @@ function cyber_header_variants() {
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 228 wpisow, a cyber_get_option() siega po niego
+	 * Schemat jest stala tablica 230 wpisow, a cyber_get_option() siega po niego
 	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
 	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
 	 */
@@ -796,6 +796,14 @@ function cyber_option_schema() {
 		'topheader_show_tiktok'       => array(
 			'type'    => 'bool',
 			'default' => true,
+		),
+		'topheader_show_languages'    => array(
+			'type'    => 'bool',
+			'default' => false,
+		),
+		'topheader_lang_active_color' => array(
+			'type'    => 'color_alpha',
+			'default' => '#0057ff',
 		),
 		'footer_logo'                 => array(
 			'type'     => 'url',

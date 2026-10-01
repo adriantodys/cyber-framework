@@ -121,16 +121,20 @@ function cyber_header_cta_data() {
  * uzywa go stopka).
  *
  * @return array {
- *     @type array|null $phone  Tablica 'text' i 'href' albo null.
- *     @type array|null $email  Tablica 'text' i 'href' albo null.
- *     @type array      $social Lista tablic 'platform', 'label', 'url'.
+ *     @type array|null $phone          Tablica 'text' i 'href' albo null.
+ *     @type array|null $email          Tablica 'text' i 'href' albo null.
+ *     @type array      $social         Lista tablic 'platform', 'label', 'url'.
+ *     @type array      $languages      Lista z cyber_language_switcher_items().
+ *     @type string     $languages_hint Podpowiedz dla administratora albo pusty string.
  * }
  */
 function cyber_top_header_data() {
 	$data = array(
-		'phone'  => null,
-		'email'  => null,
-		'social' => array(),
+		'phone'          => null,
+		'email'          => null,
+		'social'         => array(),
+		'languages'      => array(),
+		'languages_hint' => '',
 	);
 
 	$phone = cyber_get_option( 'contact_phone' );
@@ -154,6 +158,18 @@ function cyber_top_header_data() {
 	// Ta sama lista, ktora wypisze potem wspolny komponent cyber_social_icons().
 	$data['social'] = cyber_social_links( true );
 
+	/*
+	 * Przelacznik jezykow: lista z Polylang albo — gdy jej nie ma — podpowiedz
+	 * dla administratora. Gosc dostaje w obu kluczach pustke (inc/polylang.php).
+	 */
+	if ( cyber_get_option( 'topheader_show_languages' ) ) {
+		$data['languages'] = cyber_language_switcher_items();
+
+		if ( array() === $data['languages'] ) {
+			$data['languages_hint'] = cyber_language_switcher_hint();
+		}
+	}
+
 	return $data;
 }
 
@@ -167,5 +183,9 @@ function cyber_top_header_data() {
  * @return bool Czy renderowac pasek.
  */
 function cyber_top_header_has_content( array $data ) {
-	return null !== $data['phone'] || null !== $data['email'] || array() !== $data['social'];
+	return null !== $data['phone']
+		|| null !== $data['email']
+		|| array() !== $data['social']
+		|| array() !== $data['languages']
+		|| '' !== $data['languages_hint'];
 }

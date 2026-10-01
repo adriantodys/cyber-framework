@@ -41,6 +41,7 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 | **ACF PRO** | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). |
 | **WooCommerce** | miękka | Funkcje sklepowe wyłączają się same, reszta witryny działa bez zmian (`inc/woocommerce.php`). |
 | **Contact Form 7** | miękka | Sekcja Kontakt działa bez formularza; admin widzi podpowiedź, gość nic (`inc/contact-form-7.php`). |
+| **Polylang** | miękka | Top Header renderuje się bez przełącznika języków; admin widzi podpowiedź, gość nic, panel ostrzega tylko przy włączonym przełączniku (`inc/polylang.php`). |
 
 #### Biblioteki zewnętrzne — rejestr
 
@@ -108,6 +109,7 @@ decyduje, oraz **jeden predykat**, przez który pytają moduły:
 | ACF PRO | `cyber_is_acf_active()` | `inc/acf.php` |
 | WooCommerce | `cyber_is_woocommerce_active()` | `inc/woocommerce.php` |
 | Contact Form 7 | `cyber_is_cf7_active()` | `inc/contact-form-7.php` |
+| Polylang | `cyber_is_polylang_active()` | `inc/polylang.php` |
 
 Moduły pytają tam, zamiast wołać `class_exists()` czy `function_exists()`
 u siebie — rozsypanie tego warunku po plikach kończy się tym, że po wyłączeniu
@@ -705,7 +707,7 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
    Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
-   Animacje, Przycisk do góry — razem **228 pól**.
+   Animacje, Przycisk do góry — razem **230 pól**.
 
    Pięć ostatnich dołożyło się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —

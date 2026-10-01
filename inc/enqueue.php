@@ -545,8 +545,9 @@ function cyber_woocommerce_css() {
 /**
  * Mapa pol paska Top Header na zmienne CSS.
  *
- * Modul ma tylko trzy pola stylu — reszta wygladu (padding paska, odstep
- * i rozmiar ikon, przezroczystosc na hover) to stale wartosci w main.css.
+ * Modul ma trzy pola stylu paska i kolor biezacego jezyka w przelaczniku —
+ * reszta wygladu (padding paska, odstep i rozmiar ikon, przezroczystosc na
+ * hover) to stale wartosci w main.css.
  * Kolor ikon nie ma osobnego pola: SVG dziedzicza go przez currentColor
  * z --cyber-topheader-color.
  *
@@ -558,9 +559,10 @@ function cyber_woocommerce_css() {
  */
 function cyber_top_header_css_map() {
 	return array(
-		'topheader_bg_color'   => array( '--cyber-topheader-bg', '' ),
-		'topheader_font_color' => array( '--cyber-topheader-color', '' ),
-		'topheader_font_size'  => array( '--cyber-topheader-font-size', 'px' ),
+		'topheader_bg_color'          => array( '--cyber-topheader-bg', '' ),
+		'topheader_font_color'        => array( '--cyber-topheader-color', '' ),
+		'topheader_font_size'         => array( '--cyber-topheader-font-size', 'px' ),
+		'topheader_lang_active_color' => array( '--cyber-topheader-lang-active', '' ),
 	);
 }
 

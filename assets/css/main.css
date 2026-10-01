@@ -120,6 +120,7 @@
 	--cyber-topheader-bg: #111111;
 	--cyber-topheader-color: #ffffff;
 	--cyber-topheader-font-size: 14px;
+	--cyber-topheader-lang-active: #0057ff;
 
 	--cyber-footer-bg: #ffffff;
 	--cyber-footer-title-font-size: 20px;
@@ -336,11 +337,49 @@ h6 :is(a, span),
 	gap: 12px;
 }
 
-.cyber-topheader__contact {
+.cyber-topheader__contact,
+.cyber-topheader__end {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 16px;
+}
+
+/*
+ * Przelacznik jezykow (Polylang): kody jezykow rozdzielone ukosnikiem, biezacy
+ * jezyk w kolorze z pola cyber_topheader_lang_active_color. Ukosnik jest
+ * pseudo-elementem z pustym tekstem alternatywnym — czytnik go nie odczytuje,
+ * a lista zachowuje poprawna liczbe pozycji.
+ */
+.cyber-topheader__lang {
+	font-weight: 700;
+}
+
+.cyber-topheader__lang-list {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-topheader__lang-item {
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+
+.cyber-topheader__lang-item + .cyber-topheader__lang-item::before {
+	content: "/";
+	content: "/" / "";
+	padding-inline: var(--cyber-space-1);
+	font-weight: 400;
+	opacity: 0.5;
+}
+
+/* (0,2,0) — przebija ".cyber-topheader :is(span, a, ul, li)" (0,1,1) nizej. */
+.cyber-topheader .cyber-topheader__lang-link--current {
+	color: var(--cyber-topheader-lang-active);
 }
 
 /*
@@ -408,9 +447,10 @@ h6 :is(a, span),
  * i kolor tekstu tresci zamiast ustawien paska.
  *
  * Ta sama sytuacja co z linkami w naglowkach, patrz sekcja "Typografia".
- * Specyficznosc (0,1,1) przebija globalne (0,0,1).
+ * Specyficznosc (0,1,1) przebija globalne (0,0,1). ul i li doszly razem
+ * z przelacznikiem jezykow — ta sama regula Typografii trafia w liste.
  */
-.cyber-topheader :is(span, a) {
+.cyber-topheader :is(span, a, ul, li) {
 	font-family: inherit;
 	font-size: inherit;
 	font-weight: inherit;
@@ -785,10 +825,12 @@ h6 :is(a, span),
  * Podpowiedz widoczna WYLACZNIE dla zalogowanego administratora, gdy wariant
  * WooCommerce jest wybrany, a wtyczki nie ma. Gosc witryny nie dostaje niczego.
  * Ten sam wyglad ma podpowiedz o sekcji globalnej, ktora sie nie wyswietla
- * (template-parts/sections/global.php).
+ * (template-parts/sections/global.php) i podpowiedz o przelaczniku jezykow
+ * bez Polylang — ta ostatnia dziedziczy kolor i rozmiar paska Top Header.
  */
 .cyber-wc-missing,
-.cyber-section-missing {
+.cyber-section-missing,
+.cyber-topheader__lang-missing {
 	padding: var(--cyber-space-1);
 	border: 1px dashed var(--cyber-color-border-1);
 	color: var(--cyber-color-text);

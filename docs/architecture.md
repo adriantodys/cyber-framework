@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 228 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 230 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -40,29 +40,30 @@ w ustalonej kolejności:
 | 11 | `inc/contact.php` | Walidacja pól kontaktowych przy zapisie w panelu. **Bez warstwy frontendowej** — patrz CLAUDE.md sekcja 22. |
 | 12 | `inc/woocommerce.php` | Warstwa ochronna miękkiej zależności od WooCommerce: wykrywanie, komunikaty, dane konta i koszyka. |
 | 13 | `inc/contact-form-7.php` | Warstwa ochronna miękkiej zależności od Contact Form 7: wykrywanie, HTML formularza, podpowiedź na froncie i ostrzeżenie w panelu (tylko gdy formularz jest użyty). Wzorzec jak `inc/woocommerce.php`. |
-| 14 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
-| 15 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
-| 16 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
-| 17 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
-| 18 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
-| 19 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
-| 20 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
-| 21 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
-| 22 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
-| 23 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
-| 24 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
-| 25 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
-| 26 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
-| 27 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
-| 28 | `inc/posts.php` | Wpis jako element karty (`cyber_post_card_item()`), data w formacie z Global Options, zajawka, dozwolone typy treści. Wspólne dla sekcji Wpisy, bloga i widgetu. |
-| 29 | `inc/sections-posts.php` | Sekcja „Wpisy”: zapytanie według źródła, elementy kart, lista typów treści w panelu, Swiper w trybie slidera. |
-| 30 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
-| 31 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
-| 32 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
-| 33 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
-| 34 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
-| 35 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
-| 36 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
+| 14 | `inc/polylang.php` | Warstwa ochronna miękkiej zależności od Polylang: wykrywanie, lista języków dla przełącznika w Top Header, podpowiedź na froncie i ostrzeżenie w panelu (tylko gdy przełącznik jest włączony). Wzorzec jak `inc/contact-form-7.php`. |
+| 15 | `inc/breadcrumb.php` | Ścieżka okruszków: rozstrzyga kontekst (sklep czy nie) i buduje ścieżkę poza sklepem. Ładowany **po** `inc/woocommerce.php`, bo z niego korzysta. |
+| 16 | `inc/woocommerce-cart.php` | Wygląd strony koszyka: hooki, etykiety i warunkowe assety. Bez nadpisań szablonów. |
+| 17 | `inc/woocommerce-checkout.php` | Wygląd strony zamówienia: kolejność pól, przeniesienie kuponu, etykiety, przycisk. |
+| 18 | `inc/woocommerce-shop.php` | Lista produktów: układ dwukolumnowy, obszary widgetów, pasek narzędzi, doładowywanie. |
+| 19 | `inc/woocommerce-product.php` | Strona pojedynczego produktu: układ dwukolumnowy, własna galeria, rejestr elementów z pozycjami, zakładki. Ładowany **po** `inc/woocommerce-shop.php`, bo zdejmuje jego opakowanie układu. |
+| 20 | `inc/sections.php` | Sekcje Flexible Content: rejestr typów, walidacja wartości per instancja, budowa opakowania, renderer. |
+| 21 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
+| 22 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
+| 23 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
+| 24 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 25 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
+| 26 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
+| 27 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
+| 28 | `inc/sections-contact.php` | Sekcja „Kontakt”: dane kontaktowe z Global Options według włączników sekcji, proporcje kolumn, wygląd formularza. Korzysta z `inc/contact-form-7.php` i komponentu ikon social media. |
+| 29 | `inc/posts.php` | Wpis jako element karty (`cyber_post_card_item()`), data w formacie z Global Options, zajawka, dozwolone typy treści. Wspólne dla sekcji Wpisy, bloga i widgetu. |
+| 30 | `inc/sections-posts.php` | Sekcja „Wpisy”: zapytanie według źródła, elementy kart, lista typów treści w panelu, Swiper w trybie slidera. |
+| 31 | `inc/sections-table.php` | Sekcja „Tabela”: normalizacja wierszy, liczba kolumn z danych, klasy i zmienne. |
+| 32 | `inc/class-cyber-recent-posts-widget.php` | Widget „Cyber: Ostatnie wpisy” (klasyczny `WP_Widget`). Ładowany **przed** `inc/blog.php`, który go rejestruje. |
+| 33 | `inc/blog.php` | Blog: obszar widgetów, hierarchia szablonów (`templates/`), ustawienia z Global Options → Blog, zmienne CSS w `wp_head`, assety. |
+| 34 | `inc/page-header.php` | Page header: widoczność (Global Options + wyjątek pojedynczej strony), dane dla widoku, zmienne CSS, warunkowy arkusz. Wołany z `header.php` nad okruszkami. |
+| 35 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
+| 36 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
+| 37 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
 
 ## Stałe
 
@@ -397,6 +398,27 @@ Dwie decyzje warte zapamiętania:
   z własnym zestawem przełączników.
 - **Ikony dziedziczą kolor tekstu** przez `fill="currentColor"`. Osobne pole
   koloru ikon pozwoliłoby rozjechać je z tekstem na tym samym pasku.
+
+### Przełącznik języków (Polylang)
+
+Od 2026-10-01 pasek ma opcjonalny przełącznik języków (`PL / EN`) po prawej,
+za ikonami social media. **Polylang to trzecia zależność miękka** (po
+WooCommerce i Contact Form 7) i dostaje ten sam wzorzec: jeden plik decyzyjny
+(`inc/polylang.php`), jeden predykat (`cyber_is_polylang_active()`), trzy
+poziomy komunikatu:
+
+- gość — nie widzi nic, pasek renderuje się bez przełącznika,
+- administrator na froncie — podpowiedź w miejscu przełącznika, z przyczyną
+  (brak wtyczki albo mniej niż dwa języki z treścią),
+- panel — `notice-warning` dla `activate_plugins`, **tylko** gdy
+  `cyber_topheader_show_languages` jest włączone; z odnośnikiem do instalacji
+  dla `install_plugins`.
+
+Motyw **nie ma własnej listy języków** — języki, kody i adresy tłumaczeń
+pochodzą z `pll_the_languages( array( 'raw' => 1 ) )`, znormalizowane
+w `cyber_language_switcher_items()`, żeby widok nie znał struktury danych
+wtyczki. Kolejne moduły wielojęzyczne dopisują się do filtra
+`cyber_polylang_required_by`.
 
 ## Header Desktop
 
