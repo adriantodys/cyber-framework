@@ -245,6 +245,10 @@ return array(
 	'topheader_show_linkedin'                 => true,          // tekst          | LinkedIn
 	'topheader_show_tiktok'                   => true,          // tekst          | TikTok
 
+	/* --- Przelacznik jezykow (wymaga Polylang) ----------------------------- */
+	'topheader_show_languages'                => false,         // tak/nie        | Przelacznik jezykow
+	'topheader_lang_active_color'             => '#0057ff',     // kolor          | Kolor biezacego jezyka
+
 
 	/* ======================================================================
 	 * FOOTER

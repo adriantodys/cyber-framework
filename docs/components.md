@@ -89,7 +89,7 @@ Szczegóły pól: `docs/acf-schema.md`, „Sekcje — trzy grupy pól”.
 | Copyright | `template-parts/footer/copyright.php` | `text`, `links`, `variant` | sekcja „Copyright” w `assets/css/main.css` + zmienne z `cyber_copyright_css()` |
 | Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content`, `copyright`, `variant` | sekcja „Footer” w `assets/css/main.css` |
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
-| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
+| Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `languages`, `languages_hint`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
 | Breadcrumb | `template-parts/breadcrumb/breadcrumb.php` | `context`, `items`, `in_page_header` | sekcja „Breadcrumb” w `assets/css/main.css` + zmienne z `cyber_breadcrumb_css()` |
 | Breadcrumb WooCommerce | `template-parts/breadcrumb/breadcrumb-woocommerce.php` | `context`, `in_page_header` | ta sama sekcja CSS; ścieżkę wypisuje `woocommerce_breadcrumb()` we własnych znacznikach motywu |
@@ -169,6 +169,16 @@ i koperty, `cyber_get_social_icon()` dla profili — i są wypisywane bez escapo
 to stały markup z kodu, bez danych użytkownika; `esc_html()` zamieniłoby znaczniki
 SVG w tekst. Dostępna nazwa siedzi w `aria-label` linku, bo sama ikona ma
 `aria-hidden="true"`.
+
+Prawa strona paska to `.cyber-topheader__end`: ikony social media, a za nimi
+**przełącznik języków** (`<nav class="cyber-topheader__lang">` z listą `<ul>`).
+Dane: `languages` z `cyber_language_switcher_items()` (`inc/polylang.php`) —
+tablice `code`, `name`, `url`, `lang`, `current`. Bieżący język ma
+`aria-current="page"` i klasę `cyber-topheader__lang-link--current`; link niesie
+`lang`/`hreflang`, a pełną nazwę języka w `.screen-reader-text` (widoczny kod
+zostaje początkiem dostępnej nazwy). Ukośnik między kodami to pseudo-element
+z pustym tekstem alternatywnym. Gdy listy nie ma, a przełącznik jest włączony,
+administrator dostaje `languages_hint` w `.cyber-topheader__lang-missing`.
 
 #### Button
 

@@ -55,6 +55,7 @@ function cyber_load_modules() {
 		'inc/contact.php',
 		'inc/woocommerce.php',
 		'inc/contact-form-7.php',
+		'inc/polylang.php',
 		'inc/breadcrumb.php',
 		'inc/woocommerce-cart.php',
 		'inc/woocommerce-checkout.php',

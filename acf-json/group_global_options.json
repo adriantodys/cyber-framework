@@ -3137,6 +3137,74 @@
             "ui_off_text": ""
         },
         {
+            "key": "field_cyber_msg_topheader_languages",
+            "label": "Przełącznik języków",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Przełącznik języków (np. PL \/ EN) po prawej stronie paska. Języki i adresy tłumaczeń pochodzą z wtyczki <strong>Polylang<\/strong> — motyw nie ma własnej listy języków. Bez aktywnego Polylang przełącznik się nie wyświetla, a w panelu pojawia się ostrzeżenie. Przełącznik pokazuje się dopiero przy co najmniej dwóch językach z treścią.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_topheader_show_languages",
+            "label": "Przełącznik języków",
+            "name": "cyber_topheader_show_languages",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wymaga aktywnej wtyczki Polylang.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_topheader_lang_active_color",
+            "label": "Kolor bieżącego języka",
+            "name": "cyber_topheader_lang_active_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Wyróżnia język, w którym oglądana jest strona. Pozostałe kody i ukośnik mają kolor tekstu paska.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_topheader_show_languages",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#0057ff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
             "key": "field_cyber_tab_footer",
             "label": "Footer",
             "name": "",
@@ -6870,5 +6938,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790336168
+    "modified": 1790847065
 }

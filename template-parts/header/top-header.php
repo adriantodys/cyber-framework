@@ -16,6 +16,10 @@
  *                              pasek ma sie renderowac. Same ikony wypisuje
  *                              wspolny komponent cyber_social_icons().
  *     @type string     $variant Wariant paska. Domyslnie 'default'.
+ *     @type array      $languages      Lista tablic 'code', 'name', 'url', 'lang',
+ *                                      'current' (cyber_language_switcher_items()).
+ *     @type string     $languages_hint Podpowiedz dla administratora, gdy
+ *                                      wlaczonego przelacznika nie da sie pokazac.
  * }
  */
 
@@ -23,6 +27,8 @@ defined( 'ABSPATH' ) || exit;
 
 $cyber_phone = isset( $args['phone'] ) ? $args['phone'] : null;
 $cyber_email = isset( $args['email'] ) ? $args['email'] : null;
+$cyber_langs = isset( $args['languages'] ) ? $args['languages'] : array();
+$cyber_hint  = isset( $args['languages_hint'] ) ? $args['languages_hint'] : '';
 
 $cyber_class = cyber_variant_class( 'cyber-topheader', isset( $args['variant'] ) ? $args['variant'] : 'default' );
 ?>
@@ -52,15 +58,47 @@ $cyber_class = cyber_variant_class( 'cyber-topheader', isset( $args['variant'] )
 				<?php endif; ?>
 			</div>
 
-			<?php
-			// Wspolny komponent — na pasku respektuje wylaczniki cyber_topheader_show_*.
-			cyber_social_icons(
-				array(
-					'respect_toggles' => true,
-					'class'           => 'cyber-topheader__social',
-				)
-			);
-			?>
+			<div class="cyber-topheader__end">
+				<?php
+				// Wspolny komponent — na pasku respektuje wylaczniki cyber_topheader_show_*.
+				cyber_social_icons(
+					array(
+						'respect_toggles' => true,
+						'class'           => 'cyber-topheader__social',
+					)
+				);
+				?>
+
+				<?php if ( array() !== $cyber_langs ) : ?>
+					<nav class="cyber-topheader__lang" aria-label="<?php esc_attr_e( 'Wybor jezyka', 'cyber-framework' ); ?>">
+						<ul class="cyber-topheader__lang-list">
+							<?php foreach ( $cyber_langs as $cyber_lang ) : ?>
+								<li class="cyber-topheader__lang-item">
+									<a
+										class="cyber-topheader__lang-link<?php echo $cyber_lang['current'] ? ' cyber-topheader__lang-link--current' : ''; ?>"
+										href="<?php echo esc_url( $cyber_lang['url'] ); ?>"
+										<?php if ( '' !== $cyber_lang['lang'] ) : ?>
+											lang="<?php echo esc_attr( $cyber_lang['lang'] ); ?>"
+											hreflang="<?php echo esc_attr( $cyber_lang['lang'] ); ?>"
+										<?php endif; ?>
+										<?php if ( $cyber_lang['current'] ) : ?>
+											aria-current="page"
+										<?php endif; ?>
+									>
+										<?php echo esc_html( $cyber_lang['code'] ); ?>
+										<?php if ( '' !== $cyber_lang['name'] ) : ?>
+											<?php // Pelna nazwa dla czytnika; widoczny kod zostaje poczatkiem nazwy linku. ?>
+											<span class="screen-reader-text"><?php echo esc_html( $cyber_lang['name'] ); ?></span>
+										<?php endif; ?>
+									</a>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					</nav>
+				<?php elseif ( '' !== $cyber_hint ) : ?>
+					<span class="cyber-topheader__lang-missing"><?php echo esc_html( $cyber_hint ); ?></span>
+				<?php endif; ?>
+			</div>
 
 		</div>
 	</div>
