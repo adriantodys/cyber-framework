@@ -468,8 +468,8 @@
             "label": "Zaokraglenie rogow",
             "name": "cyber_cards_radius",
             "aria-label": "",
-            "type": "number",
-            "instructions": "",
+            "type": "select",
+            "instructions": "„Z ustawień globalnych” = wartość z Global Options → Główne ustawienia strony → Zaokrąglenie rogów.",
             "required": 1,
             "conditional_logic": 0,
             "wrapper": {
@@ -477,13 +477,26 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": 0,
-            "min": 0,
-            "max": 200,
-            "step": 1,
+            "choices": {
+                "global": "Z ustawień globalnych",
+                "0": "0 px",
+                "4": "4 px",
+                "8": "8 px",
+                "12": "12 px",
+                "16": "16 px",
+                "20": "20 px",
+                "24": "24 px"
+            },
+            "default_value": "global",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
             "placeholder": "",
-            "prepend": "",
-            "append": "px"
+            "create_options": 0,
+            "save_options": 0
         },
         {
             "key": "field_cyber_cards_shadow",
@@ -1164,5 +1177,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Karty (icon boxes): repeater elementow plus ustawienia siatki i wygladu. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789834243
+    "modified": 1790860425
 }

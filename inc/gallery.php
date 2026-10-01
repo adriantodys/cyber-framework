@@ -310,7 +310,7 @@ function cyber_gallery_attributes( array $row ) {
 		'--cyber-gallery-cols-t' => cyber_cards_column_count( isset( $row['cyber_gal_columns_tablet'] ) ? $row['cyber_gal_columns_tablet'] : 3, cyber_cards_columns_tablet(), 3 ),
 		'--cyber-gallery-cols-m' => cyber_cards_column_count( isset( $row['cyber_gal_columns_mobile'] ) ? $row['cyber_gal_columns_mobile'] : 2, array( 1, 2, 3 ), 2 ),
 		'--cyber-gallery-gap'    => sprintf( '%dpx', cyber_section_spacing( isset( $row['cyber_gal_gap'] ) ? $row['cyber_gal_gap'] : 12 ) ),
-		'--cyber-gallery-radius' => sprintf( '%dpx', min( 40, absint( isset( $row['cyber_gal_radius'] ) ? $row['cyber_gal_radius'] : 0 ) ) ),
+		'--cyber-gallery-radius' => cyber_section_radius( isset( $row['cyber_gal_radius'] ) ? $row['cyber_gal_radius'] : '', 0 ),
 	);
 
 	$ratio = cyber_section_choice(

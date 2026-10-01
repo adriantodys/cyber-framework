@@ -210,10 +210,10 @@ function cyber_columns_attributes( array $row ) {
 		$classes[] = 'cyber-columns--border';
 	}
 
-	$radius = absint( isset( $row['cyber_columns_radius'] ) ? $row['cyber_columns_radius'] : 0 );
+	$radius = cyber_section_radius( isset( $row['cyber_columns_radius'] ) ? $row['cyber_columns_radius'] : '', 0 );
 
-	if ( $radius > 0 ) {
-		$vars['--cyber-columns-radius'] = sprintf( '%dpx', min( $radius, 200 ) );
+	if ( '0px' !== $radius ) {
+		$vars['--cyber-columns-radius'] = $radius;
 	}
 
 	$style = cyber_css_declarations( $vars );

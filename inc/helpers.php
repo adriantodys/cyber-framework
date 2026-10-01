@@ -223,7 +223,7 @@ function cyber_header_variants() {
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 230 wpisow, a cyber_get_option() siega po niego
+	 * Schemat jest stala tablica 231 wpisow, a cyber_get_option() siega po niego
 	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
 	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
 	 */
@@ -281,6 +281,12 @@ function cyber_option_schema() {
 			'default' => 20,
 			'min'     => 0,
 			'max'     => 200,
+		),
+		'border_radius'               => array(
+			'type'    => 'px',
+			'default' => 0,
+			'min'     => 0,
+			'max'     => 100,
 		),
 		'font_size_h1'                => array(
 			'type'    => 'px',

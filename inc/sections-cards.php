@@ -156,10 +156,10 @@ function cyber_cards_attributes( array $row ) {
 		$classes[]                      = 'cyber-cards--hover';
 	}
 
-	$radius = absint( isset( $row['cyber_cards_radius'] ) ? $row['cyber_cards_radius'] : 0 );
+	$radius = cyber_section_radius( isset( $row['cyber_cards_radius'] ) ? $row['cyber_cards_radius'] : '', 0 );
 
-	if ( $radius > 0 ) {
-		$vars['--cyber-cards-radius'] = sprintf( '%dpx', min( $radius, 200 ) );
+	if ( '0px' !== $radius ) {
+		$vars['--cyber-cards-radius'] = $radius;
 	}
 
 	/*

@@ -58,6 +58,9 @@ return array(
 	'page_margin_mobile_l'                    => 30,            // px 0-200       | Margines (767px-479px)
 	'page_margin_mobile_s'                    => 20,            // px 0-200       | Margines (ponizej 479px)
 
+	/* --- Zaokraglenie rogow ------------------------------------------------ */
+	'border_radius'                           => 0,             // px 0-100       | Zaokraglenie rogow (globalne)
+
 
 	/* ======================================================================
 	 * USTAWIENIA CZCIONKI

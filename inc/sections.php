@@ -274,6 +274,76 @@ function cyber_section_choice( $value, array $allowed, $default ) {
 }
 
 /**
+ * Dozwolone zaokraglenia rogow w sekcjach (px).
+ *
+ * Lista zamknieta, tak jak skala odstepow — pole w panelu jest Selectem.
+ * Obok liczb pole ma opcje 'global', czyli wartosc z Global Options →
+ * Glowne ustawienia strony (cyber_border_radius, zmienna --cyber-radius).
+ * Kolejny prog dopisuje sie tutaj i w choices pol w acf-json.
+ *
+ * @return int[]
+ */
+function cyber_section_radii() {
+	return array( 0, 4, 8, 12, 16, 20, 24 );
+}
+
+/**
+ * Pola zaokraglenia rogow w sekcjach.
+ *
+ * cyber_cards_radius obsluguje tez Karuzele kart i Wpisy (klon pol kart).
+ *
+ * @return string[]
+ */
+function cyber_section_radius_fields() {
+	return array( 'cyber_cards_radius', 'cyber_columns_radius', 'cyber_gal_radius', 'cyber_table_radius' );
+}
+
+/**
+ * Wartosc CSS zaokraglenia z pola sekcji.
+ *
+ * 'global' → var(--cyber-radius). Liczba spoza listy (zapisana jeszcze polem
+ * liczbowym, np. 10 albo 200) laduje na najblizszym progu. Brak wartosci —
+ * wiersz sprzed powstania pola — daje $default, czyli dotychczasowe
+ * zachowanie sekcji.
+ *
+ * @param mixed $value   Wartosc z pola.
+ * @param int   $default Zaokraglenie, gdy pole nie ma wartosci.
+ * @return string Np. '8px' albo 'var(--cyber-radius)'.
+ */
+function cyber_section_radius( $value, $default = 0 ) {
+	if ( 'global' === $value ) {
+		return 'var(--cyber-radius)';
+	}
+
+	if ( ! is_numeric( $value ) ) {
+		$value = $default;
+	}
+
+	return sprintf( '%dpx', cyber_section_spacing( $value, cyber_section_radii() ) );
+}
+
+/**
+ * Panel: zaokraglenie zapisane polem liczbowym pokazuje sie jako najblizszy prog.
+ *
+ * Bez tego Select z wartoscia spoza choices pokazalby pierwsza opcje
+ * ("Z ustawien globalnych"), a zapis wpisu po cichu zmienilby wyglad.
+ *
+ * @param mixed $value Zapisana wartosc.
+ * @return mixed
+ */
+function cyber_section_radius_load_value( $value ) {
+	if ( ! is_numeric( $value ) ) {
+		return $value;
+	}
+
+	return (string) cyber_section_spacing( $value, cyber_section_radii() );
+}
+foreach ( cyber_section_radius_fields() as $cyber_radius_field ) {
+	add_filter( 'acf/load_value/name=' . $cyber_radius_field, 'cyber_section_radius_load_value' );
+}
+unset( $cyber_radius_field );
+
+/**
  * Sprowadza odstep do najblizszej dozwolonej wartosci ze skali.
  *
  * Wartosc spoza skali nie jest odrzucana na rzecz zera — to zjadaloby odstep

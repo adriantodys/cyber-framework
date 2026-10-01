@@ -293,6 +293,29 @@ function cyber_css_vars_from_map( array $map ) {
 }
 
 /**
+ * Globalne zaokraglenie rogow (Global Options → Glowne ustawienia strony).
+ *
+ * --cyber-radius konsumuja sekcje, w ktorych pole zaokraglenia ustawiono na
+ * "Z ustawien globalnych" (cyber_section_radius() w inc/sections.php).
+ *
+ * @return array<string, array{0: string, 1: string}> Mapa pol na zmienne.
+ */
+function cyber_radius_css_map() {
+	return array(
+		'border_radius' => array( '--cyber-radius', 'px' ),
+	);
+}
+
+/**
+ * Buduje CSS ze zmienna globalnego zaokraglenia.
+ *
+ * @return string CSS bez znacznika <style>.
+ */
+function cyber_radius_css() {
+	return cyber_css_vars_from_map( cyber_radius_css_map() );
+}
+
+/**
  * Mapa pol modulu "Header Desktop" na zmienne CSS.
  *
  * Klucz    = klucz opcji (bez prefiksu cyber_).
@@ -767,6 +790,7 @@ function cyber_header_mobile_css() {
  */
 function cyber_print_inline_css() {
 	$css = cyber_container_css()
+		. cyber_radius_css()
 		. cyber_font_css()
 		. cyber_header_css()
 		. cyber_header_mobile_css()

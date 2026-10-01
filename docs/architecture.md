@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 230 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 231 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
 
 ## Przepływ danych
 
@@ -98,6 +98,7 @@ cyber_get_option()            ← walidacja typu i zakresu (inc/helpers.php)
       │
       ▼
 cyber_container_css()         ← moduł „Główne ustawienia strony”
+cyber_radius_css()            ← moduł „Główne ustawienia strony” (zaokrąglenie)
 cyber_font_css()              ← moduł „Ustawienia czcionki”
 cyber_header_css()            ← moduł „Header Desktop”
 cyber_header_mobile_css()     ← moduł „Header Mobile”

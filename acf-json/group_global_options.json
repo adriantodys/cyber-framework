@@ -259,6 +259,46 @@
             "append": "px"
         },
         {
+            "key": "field_cyber_msg_radius",
+            "label": "Zaokrąglenie rogów",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Globalne zaokrąglenie rogów. Używają go sekcje (Karty, Karuzela kart, Wpisy, Kolumny, Galeria, Tabela), w których pole „Zaokrąglenie rogów” ustawiono na „Z ustawień globalnych”.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_border_radius",
+            "label": "Zaokrąglenie rogów",
+            "name": "cyber_border_radius",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 0,
+            "min": 0,
+            "max": 100,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "px"
+        },
+        {
             "key": "field_cyber_tab_font",
             "label": "Ustawienia czcionki",
             "name": "",
@@ -6938,5 +6978,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790847065
+    "modified": 1790860425
 }

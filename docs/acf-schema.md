@@ -101,6 +101,12 @@ SEO itd.) to kolejne, nieplanowane jeszcze moduły.
 | Margines (767px–479px) | `cyber_page_margin_mobile_l` | Number | `30` | px | Margines boczny w zakresie 767px–479px. |
 | Margines (poniżej 479px) | `cyber_page_margin_mobile_s` | Number | `20` | px | Margines boczny poniżej 479px. |
 
+**Sub-sekcja: Zaokrąglenie rogów**
+
+| Field Label | Field Name | Typ ACF | Domyślna wartość | Append | Przeznaczenie |
+|---|---|---|---|---|---|
+| Zaokrąglenie rogów | `cyber_border_radius` | Number (0–100) | `0` | px | Zmienna `--cyber-radius`. Używają jej sekcje, w których pole zaokrąglenia ma wartość „Z ustawień globalnych”. Przycisk do góry ma własne pole (`cyber_totop_radius`). |
+
 > **Potwierdzone:** `cyber_page_margin_tablet` i `cyber_page_margin_mobile_l` mają
 > celowo tę samą wartość domyślną (30px) — nie jest to literówka (potwierdzone
 > przez autora projektu).
@@ -1340,6 +1346,8 @@ Nie trzeba jej klikać w UI — wystarczy Sync (patrz README, sekcja „Instalac
 | `cyber_page_margin_tablet` | `field_cyber_page_margin_tablet` | Number |
 | `cyber_page_margin_mobile_l` | `field_cyber_page_margin_mobile_l` | Number |
 | `cyber_page_margin_mobile_s` | `field_cyber_page_margin_mobile_s` | Number |
+| — (nagłówek sekcji) | `field_cyber_msg_radius` | Message |
+| `cyber_border_radius` | `field_cyber_border_radius` | Number |
 
 Zakładka „Ustawienia czcionki” (klucz pola = `field_` + nazwa pola, bez wyjątków):
 
@@ -1746,7 +1754,7 @@ zdarza się przy każdym zapisie i nie ma po co rysować po nim pustej ramki.
 | Odstęp między kolumnami / wierszami | `cyber_cards_gap_x` `_gap_y` | Select (skala) | `24` / `24` |
 | Odstęp wewnętrzny X / Y | `cyber_cards_pad_x` `_pad_y` | Select (skala) | `24` / `24` |
 | Tło elementu / po najechaniu | `cyber_cards_bg` `_bg_hover` | Color (alpha) | `''` |
-| Zaokrąglenie rogów | `cyber_cards_radius` | Number 0–200 | `0` |
+| Zaokrąglenie rogów | `cyber_cards_radius` | Select: globalne / 0 / 4 / 8 / 12 / 16 / 20 / 24 px | `global` |
 | Cień | `cyber_cards_shadow` | True/False | `false` |
 | Obramowanie | `cyber_cards_border` | True/False | `false` |
 | Zdjęcie jako tło elementu | `cyber_cards_image_as_bg` | True/False | `false` |
@@ -1851,7 +1859,7 @@ proporcji.
 | Pozycja tła — poziom / pion | `cyber_columns_bg_position_x` `_y` | Select | `center` / `center` |
 | Powtarzaj tło | `cyber_columns_bg_repeat` | True/False | `false` |
 | Obramowanie | `cyber_columns_border` | True/False | `false` |
-| Zaokrąglenie rogów | `cyber_columns_radius` | Number 0–200 | `0` |
+| Zaokrąglenie rogów | `cyber_columns_radius` | Select: globalne / 0 / 4 / 8 / 12 / 16 / 20 / 24 px | `global` |
 
 > **Wartości `50-50`, `40-60` itd. są kontraktem**, tak jak klucz layoutu —
 > zapisuje je baza. Etykietę można zmienić, wartości nie.
@@ -2087,7 +2095,7 @@ i lightbox są w obu trybach te same, więc druga sekcja byłaby kopią kodu.
 | Kolumny (desktop / tablet / telefon) | `cyber_gal_columns` `_columns_tablet` `_columns_mobile` | Select 1–6 / 1–4 / 1–3 | `4` / `3` / `2` | |
 | Odstęp między zdjęciami | `cyber_gal_gap` | Select (skala) | `12` | |
 | Proporcje zdjęć | `cyber_gal_ratio` | Select `auto` `1-1` `4-3` `3-2` `16-9` | `4-3` | `auto` = bez przycinania |
-| Zaokrąglenie rogów | `cyber_gal_radius` | Number 0–40 px | `0` | |
+| Zaokrąglenie rogów | `cyber_gal_radius` | Select: globalne / 0 / 4 / 8 / 12 / 16 / 20 / 24 px | `global` | |
 | Lightbox po kliknięciu | `cyber_gal_lightbox` | True/False | `true` | |
 | Powiększenie po najechaniu | `cyber_gal_zoom` | True/False | `true` | |
 | Podpis pod zdjęciem | `cyber_gal_caption` | Select `none` / `title` / `caption` | `none` | Tytuł albo podpis załącznika z biblioteki mediów |
@@ -2296,7 +2304,7 @@ Layout `table`. Tabela porównania do 6 kolumn.
 | Minimalna szerokość tabeli | `cyber_table_min_width` | Number 0–2000 px | `640` | Poniżej — przewijanie poziome; 0 = wyłączone |
 | Tło tabeli / wiersza nagłówkowego | `cyber_table_bg` `_head_bg` | Color (alpha) | `''` | Puste = białe / jak tabela |
 | Kolor linii | `cyber_table_border` | Color (alpha) | `''` | Puste = Obramowanie 1 |
-| Zaokrąglenie rogów | `cyber_table_radius` | Number 0–40 px | `8` | |
+| Zaokrąglenie rogów | `cyber_table_radius` | Select: globalne / 0 / 4 / 8 / 12 / 16 / 20 / 24 px | `8` | |
 | Pasy + tło pasów | `cyber_table_stripes` + `cyber_table_stripe_bg` | True/False + Color | `false` | |
 | Odstęp w komórce Y / X | `cyber_table_pad_y` `_pad_x` | Select (skala) | `36` / `24` | Telefon: 24 / 12 |
 | Rozmiar / grubość: nagłówki, etykiety, treść | `cyber_table_head_size` `_label_size` `_cell_size` + `_weight` | Select `text` `h6`–`h3` / 300–800 | `text`/600, `text`/400, `h5`/600 | |
@@ -2415,6 +2423,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-10-01 — **Zaokrąglenie rogów: select w sekcjach + wartość globalna.** Nowe pole Global Options `cyber_border_radius` (Number 0–100 px, domyślnie `0`, zakładka „Główne ustawienia strony”, zmienna `--cyber-radius`) — Global Options mają teraz **231 pól**. Pola `cyber_cards_radius` (także Karuzela kart i Wpisy), `cyber_columns_radius`, `cyber_gal_radius`, `cyber_table_radius` zmienione z Number na Select: „Z ustawień globalnych” / 0 / 4 / 8 / 12 / 16 / 20 / 24 px (`cyber_section_radii()` w `inc/sections.php`). Domyślnie „Z ustawień globalnych”, tabela zostaje przy `8`. Liczby zapisane wcześniej poza listą (np. 10, 200) front i panel sprowadzają do najbliższego progu — filtr `acf/load_value`, żeby Select nie pokazał „Z ustawień globalnych” i zapis nie zmienił wyglądu. `cyber_totop_radius` (Przycisk do góry) bez zmian.
 
 - 2026-10-01 — **Odstęp góra / dół sekcji: nowa lista wartości.** Pola `cyber_section_pt`, `_pb`, `_pt_m`, `_pb_m` (grupa `group_section_settings`, czyli ustawienia wszystkich sekcji) mają teraz 0/6/12/24/36/48/64/72/84/96/108/128/140/152/164 px zamiast skali ogólnej. Prawo/Lewo i pozostałe odstępy bez zmian. Zapisane `94` czyta się jako `96`. Wartości domyślne (64 / 36) bez zmian.
 

@@ -198,8 +198,8 @@
             "label": "Zaokraglenie rogow",
             "name": "cyber_table_radius",
             "aria-label": "",
-            "type": "number",
-            "instructions": "",
+            "type": "select",
+            "instructions": "„Z ustawień globalnych” = wartość z Global Options → Główne ustawienia strony → Zaokrąglenie rogów.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -207,14 +207,26 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": 8,
-            "min": 0,
-            "max": 40,
+            "choices": {
+                "global": "Z ustawień globalnych",
+                "0": "0 px",
+                "4": "4 px",
+                "8": "8 px",
+                "12": "12 px",
+                "16": "16 px",
+                "20": "20 px",
+                "24": "24 px"
+            },
+            "default_value": "8",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
             "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
             "placeholder": "",
-            "step": 1,
-            "prepend": "",
-            "append": "px"
+            "create_options": 0,
+            "save_options": 0
         },
         {
             "key": "field_cyber_table_stripes",
@@ -898,5 +910,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Tabela: wiersze (do 6 kolumn), struktura, wyglad, typografia. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789940659
+    "modified": 1790860425
 }

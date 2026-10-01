@@ -171,7 +171,7 @@ function cyber_table_attributes( array $row ) {
 	$vars['--cyber-table-cell-weight']  = $weight( 'cyber_table_cell_weight', '600' );
 	$vars['--cyber-table-pad-y']        = sprintf( '%dpx', cyber_section_spacing( isset( $row['cyber_table_pad_y'] ) ? $row['cyber_table_pad_y'] : 36 ) );
 	$vars['--cyber-table-pad-x']        = sprintf( '%dpx', cyber_section_spacing( isset( $row['cyber_table_pad_x'] ) ? $row['cyber_table_pad_x'] : 24 ) );
-	$vars['--cyber-table-radius']       = sprintf( '%dpx', min( 40, absint( isset( $row['cyber_table_radius'] ) ? $row['cyber_table_radius'] : 8 ) ) );
+	$vars['--cyber-table-radius']       = cyber_section_radius( isset( $row['cyber_table_radius'] ) ? $row['cyber_table_radius'] : '', 8 );
 
 	$min_width = min( 2000, absint( isset( $row['cyber_table_min_width'] ) ? $row['cyber_table_min_width'] : 640 ) );
 

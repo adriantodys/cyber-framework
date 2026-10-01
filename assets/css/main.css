@@ -117,6 +117,8 @@
 	--cyber-color-shadow: rgba(0, 0, 0, 0.12);
 	--cyber-color-shadow-hover: rgba(0, 0, 0, 0.2);
 
+	--cyber-radius: 0px;
+
 	--cyber-topheader-bg: #111111;
 	--cyber-topheader-color: #ffffff;
 	--cyber-topheader-font-size: 14px;
