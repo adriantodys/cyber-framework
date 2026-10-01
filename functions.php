@@ -79,6 +79,7 @@ function cyber_load_modules() {
 		'inc/gallery.php',
 		'inc/animations.php',
 		'inc/go-to-top.php',
+		'inc/login.php',
 	);
 
 	foreach ( $modules as $module ) {

@@ -64,6 +64,7 @@ w ustalonej kolejności:
 | 35 | `inc/gallery.php` | Galerie: typ treści `cyber_gallery` z kategoriami, dane i klasy sekcji „Galeria”, szablon pojedynczej galerii, warunkowe assety (arkusz i skrypt lightboxa). |
 | 36 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
 | 37 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
+| 38 | `inc/login.php` | Strona logowania: logo z `cyber_header_logo` zamiast logo WordPressa, link na stronę główną, nazwa witryny jako tekst linku. Arkusz `assets/css/login.css` tylko przy wgranym logo; bez loga zostaje logo WordPressa. Bez własnych pól. |
 
 ## Stałe
 

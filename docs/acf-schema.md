@@ -241,7 +241,7 @@ menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego 
 
 | Field Label | Field Name | Typ | Return format | Default | Przeznaczenie |
 |---|---|---|---|---|---|
-| Logo | `cyber_header_logo` | Image | **`url`** | *(puste)* | Obraz linkowany do strony głównej. Puste = w headerze pojawia się tekstowa nazwa witryny. |
+| Logo | `cyber_header_logo` | Image | **`url`** | *(puste)* | Obraz linkowany do strony głównej. Puste = w headerze pojawia się tekstowa nazwa witryny. To samo logo zastępuje logo WordPressa na stronie logowania (`inc/login.php`); puste = zostaje logo WordPressa. |
 
 > **Precedens dla pól Image.** To pierwsze pole obrazu w projekcie. Przyjęty
 > return format to **`url`** — pole zwraca sam adres pliku, a `cyber_get_option()`
@@ -2409,6 +2409,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-10-01 — **Logo na stronie logowania.** `cyber_header_logo` jest teraz używane także na `wp-login.php` zamiast logo WordPressa (link na stronę główną, nazwa witryny jako tekst linku). Bez nowych pól — gdy logo nie jest wgrane, strona logowania wygląda standardowo. Nowy `inc/login.php` i `assets/css/login.css`.
 
 - 2026-10-01 — **Przełącznik języków w Top Header.** Dwa nowe pola w zakładce „Top Header”: `cyber_topheader_show_languages` (True/False, domyślnie `false`) i `cyber_topheader_lang_active_color` (Color Picker z alfą, `#0057ff`, zmienna `--cyber-topheader-lang-active`). Global Options mają teraz **230 pól**. Języki pochodzą z Polylang — nowa zależność miękka z plikiem decyzyjnym `inc/polylang.php` i predykatem `cyber_is_polylang_active()`; ostrzeżenie w panelu tylko przy włączonym przełączniku. Domyślnie wyłączony, więc synchronizacja niczego nie zmienia na froncie.
 

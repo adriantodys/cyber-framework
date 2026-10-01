@@ -1,0 +1,20 @@
+/**
+ * Strona logowania — logo witryny zamiast logo WordPressa.
+ *
+ * Arkusz laduje sie wylacznie wtedy, gdy w Global Options → Header Desktop jest
+ * wgrane logo (inc/login.php). Adres przychodzi w zmiennej --cyber-login-logo.
+ *
+ * Wymiary sa stale: logo miesci sie w pasie szerokosci formularza (320px)
+ * i wysokosci 84px — tyle, ile zajmuje logo WordPressa — z zachowaniem proporcji.
+ * Selektor ma te sama specyficznosc co regula WordPressa, a arkusz laduje sie
+ * po niej (zaleznosc od 'login').
+ */
+
+.login h1 a {
+	width: 100%;
+	height: 84px;
+	background-image: var(--cyber-login-logo);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
