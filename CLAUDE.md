@@ -392,6 +392,16 @@ Odstęp spoza skali wymaga takiego samego jawnego uzasadnienia jak nowy
 breakpoint (sekcja 18) — inaczej odstępy między sekcjami przestają do siebie
 pasować, a różnica 2px w dwudziestu miejscach jest nie do wyśledzenia.
 
+> **Wyjątek: odstęp góra / dół sekcji (od 2026-10-01).** Cztery pola ustawień
+> sekcji — `cyber_section_pt`, `_pb`, `_pt_m`, `_pb_m` — mają własną, gęstszą
+> listę: `0 · 6 · 12 · 24 · 36 · 48 · 64 · 72 · 84 · 96 · 108 · 128 · 140 · 152 · 164 px`
+> (`cyber_section_vertical_spacings()` w `inc/sections.php`). Decyzja
+> użytkownika: odstęp pionowy między sekcjami potrzebuje większych kroków niż
+> paddingi w środku komponentów. Wyjątek dotyczy **wyłącznie** tych czterech
+> pól; lewo/prawo sekcji, gap i paddingi wewnętrzne zostają na skali wyżej.
+> Stara wartość `94` nie istnieje na nowej liście — front i panel sprowadzają
+> ją do `96` (najbliższy próg), więc zapis wpisu niczego nie zeruje.
+
 **Co skali nie podlega i wpisuje się wprost:**
 
 - **Wymiary elementu** wynikające z jego proporcji, nie z rytmu strony:

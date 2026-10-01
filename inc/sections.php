@@ -161,6 +161,55 @@ function cyber_section_spacings() {
 }
 
 /**
+ * Dozwolone odstepy GORA / DOL sekcji (pola cyber_section_pt, _pb, _pt_m, _pb_m).
+ *
+ * Swiadomy wyjatek od skali z CLAUDE.md sekcja 6 (decyzja z 2026-10-01): odstep
+ * pionowy miedzy sekcjami potrzebuje gestszych i wiekszych krokow niz paddingi
+ * w srodku komponentow. Dotyczy WYLACZNIE tych czterech pol — lewo/prawo, gap
+ * i paddingi wewnetrzne sekcji zostaja na cyber_section_spacings().
+ *
+ * Wartosc 94 ze starej skali nie istnieje w tej liscie; zapisane 94 sprowadza
+ * do 96 cyber_section_spacing() (najblizszy prog), a panel pokazuje 96 dzieki
+ * cyber_section_vertical_spacing_load_value().
+ *
+ * @return int[] Dozwolone wartosci w px.
+ */
+function cyber_section_vertical_spacings() {
+	return array( 0, 6, 12, 24, 36, 48, 64, 72, 84, 96, 108, 128, 140, 152, 164 );
+}
+
+/**
+ * Nazwy pol odstepu gora / dol w ustawieniach sekcji.
+ *
+ * @return string[]
+ */
+function cyber_section_vertical_spacing_fields() {
+	return array( 'cyber_section_pt', 'cyber_section_pb', 'cyber_section_pt_m', 'cyber_section_pb_m' );
+}
+
+/**
+ * Panel: wartosc spoza nowej listy (np. 94) pokazuje sie jako najblizszy prog.
+ *
+ * Bez tego Select z wartoscia spoza choices pokazalby pierwsza opcje ("0 px"),
+ * a zapis wpisu po cichu wyzerowalby odstep. Pusta wartosc (odstep mobilny
+ * "dziedzicz z desktopu") zostaje pusta.
+ *
+ * @param mixed $value Zapisana wartosc.
+ * @return mixed
+ */
+function cyber_section_vertical_spacing_load_value( $value ) {
+	if ( '' === $value || null === $value || ! is_numeric( $value ) ) {
+		return $value;
+	}
+
+	return (string) cyber_section_spacing( $value, cyber_section_vertical_spacings() );
+}
+foreach ( cyber_section_vertical_spacing_fields() as $cyber_spacing_field ) {
+	add_filter( 'acf/load_value/name=' . $cyber_spacing_field, 'cyber_section_vertical_spacing_load_value' );
+}
+unset( $cyber_spacing_field );
+
+/**
  * Dozwolone wartosci background-size.
  *
  * @return string[]
@@ -231,11 +280,12 @@ function cyber_section_choice( $value, array $allowed, $default ) {
  * bez sladu. Zamiast tego laduje na najblizszym progu, czyli tam, gdzie
  * redaktor prawdopodobnie celowal.
  *
- * @param mixed $value Wartosc z pola.
+ * @param mixed      $value   Wartosc z pola.
+ * @param int[]|null $allowed Lista progow; domyslnie cyber_section_spacings().
  * @return int Odstep w px.
  */
-function cyber_section_spacing( $value ) {
-	$allowed = cyber_section_spacings();
+function cyber_section_spacing( $value, $allowed = null ) {
+	$allowed = null === $allowed ? cyber_section_spacings() : $allowed;
 
 	if ( ! is_numeric( $value ) ) {
 		return 0;
@@ -426,9 +476,14 @@ function cyber_section_attributes( $type, array $row ) {
 	);
 
 	foreach ( $sides as $short => $key ) {
+		// Gora / dol maja wlasna, gestsza liste; lewo / prawo — skale ogolna.
+		$allowed = in_array( $key, cyber_section_vertical_spacing_fields(), true )
+			? cyber_section_vertical_spacings()
+			: cyber_section_spacings();
+
 		$vars[ '--cyber-section-' . $short ] = sprintf(
 			'%dpx',
-			cyber_section_spacing( isset( $row[ $key ] ) ? $row[ $key ] : 0 )
+			cyber_section_spacing( isset( $row[ $key ] ) ? $row[ $key ] : 0, $allowed )
 		);
 
 		$mobile_key = $key . '_m';
@@ -442,7 +497,7 @@ function cyber_section_attributes( $type, array $row ) {
 		if ( isset( $row[ $mobile_key ] ) && '' !== $row[ $mobile_key ] ) {
 			$vars[ '--cyber-section-' . $short . '-m' ] = sprintf(
 				'%dpx',
-				cyber_section_spacing( $row[ $mobile_key ] )
+				cyber_section_spacing( $row[ $mobile_key ], $allowed )
 			);
 		}
 	}

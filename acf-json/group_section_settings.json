@@ -336,7 +336,14 @@
                 "36": "36 px",
                 "48": "48 px",
                 "64": "64 px",
-                "94": "94 px"
+                "72": "72 px",
+                "84": "84 px",
+                "96": "96 px",
+                "108": "108 px",
+                "128": "128 px",
+                "140": "140 px",
+                "152": "152 px",
+                "164": "164 px"
             },
             "default_value": "64",
             "return_format": "value",
@@ -406,7 +413,14 @@
                 "36": "36 px",
                 "48": "48 px",
                 "64": "64 px",
-                "94": "94 px"
+                "72": "72 px",
+                "84": "84 px",
+                "96": "96 px",
+                "108": "108 px",
+                "128": "128 px",
+                "140": "140 px",
+                "152": "152 px",
+                "164": "164 px"
             },
             "default_value": "64",
             "return_format": "value",
@@ -476,7 +490,14 @@
                 "36": "36 px",
                 "48": "48 px",
                 "64": "64 px",
-                "94": "94 px"
+                "72": "72 px",
+                "84": "84 px",
+                "96": "96 px",
+                "108": "108 px",
+                "128": "128 px",
+                "140": "140 px",
+                "152": "152 px",
+                "164": "164 px"
             },
             "default_value": "36",
             "return_format": "value",
@@ -546,7 +567,14 @@
                 "36": "36 px",
                 "48": "48 px",
                 "64": "64 px",
-                "94": "94 px"
+                "72": "72 px",
+                "84": "84 px",
+                "96": "96 px",
+                "108": "108 px",
+                "128": "128 px",
+                "140": "140 px",
+                "152": "152 px",
+                "164": "164 px"
             },
             "default_value": "36",
             "return_format": "value",
@@ -766,5 +794,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone. Nie renderuje sie nigdzie w panelu - lokalizacja celowo nie pasuje do niczego. Klonowana w calosci do kazdego layoutu sekcji, wiec wyglad wszystkich sekcji opisuje jeden zestaw pol. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1790243160
+    "modified": 1790858533
 }

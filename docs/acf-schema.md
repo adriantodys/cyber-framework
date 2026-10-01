@@ -1676,8 +1676,8 @@ była pierwsza, a wygląd pod ręką.
 | Powtarzaj tło | `cyber_section_bg_repeat` | True/False | `false` | Dla tekstur, nie dla zdjęć |
 | Pozycja tła — poziom | `cyber_section_bg_position_x` | Select | `center` | `left` / `center` / `right` |
 | Pozycja tła — pion | `cyber_section_bg_position_y` | Select | `center` | `top` / `center` / `bottom` |
-| Odstęp: Góra / Prawo / Dół / Lewo | `cyber_section_pt` `_pr` `_pb` `_pl` | Select | `64` / `0` / `64` / `0` | Padding desktop, wartości ze skali |
-| Odstęp mobile: Góra / Prawo / Dół / Lewo | `cyber_section_pt_m` `_pr_m` `_pb_m` `_pl_m` | Select | `36` / `0` / `36` / `0` | Padding poniżej 767px |
+| Odstęp: Góra / Prawo / Dół / Lewo | `cyber_section_pt` `_pr` `_pb` `_pl` | Select | `64` / `0` / `64` / `0` | Padding desktop. Góra/Dół: lista pionowa 0–164; Prawo/Lewo: skala ogólna |
+| Odstęp mobile: Góra / Prawo / Dół / Lewo | `cyber_section_pt_m` `_pr_m` `_pb_m` `_pl_m` | Select | `36` / `0` / `36` / `0` | Padding poniżej 767px. Góra/Dół: lista pionowa 0–164; Prawo/Lewo: skala ogólna |
 | Animacja wejścia | `cyber_section_animation` | Select (opcje z `cyber_animation_types()`) | `none` | Jak cała sekcja pojawia się przy przewijaniu: `none`, `fade`, `from-bottom`, `from-top`, `from-left`, `from-right`, `zoom-in`, `zoom-out`, `blur`. Parametry: Global Options → Animacje |
 | Kotwica (ID) | `cyber_section_anchor` | Text | `''` | Bez `#`; pozwala linkować do sekcji |
 | Dodatkowe klasy CSS | `cyber_section_class` | Text | `''` | Dowolna liczba klas rozdzielonych spacją |
@@ -1697,10 +1697,16 @@ była pierwsza, a wygląd pod ręką.
 > a wtedy zmiana szerokości witryny wymaga obejścia wszystkich sekcji na
 > wszystkich podstronach.
 
-> **Odstępy są Selectem, nie liczbą.** Wartości pochodzą z zamkniętej skali
-> 0/6/12/24/36/48/64/94 (CLAUDE.md sekcja 6). Przy polu liczbowym redaktor wpisze
-> 35 i po trzech stronach skala przestanie istnieć; Select czyni ją egzekwowalną
-> przez panel, a nie przez dyscyplinę.
+> **Odstępy są Selectem, nie liczbą.** Prawo/Lewo biorą wartości z zamkniętej
+> skali 0/6/12/24/36/48/64/94 (CLAUDE.md sekcja 6). **Góra/Dół** (desktop
+> i mobile) mają od 2026-10-01 własną listę
+> 0/6/12/24/36/48/64/72/84/96/108/128/140/152/164 — `cyber_section_vertical_spacings()`.
+> Przy polu liczbowym redaktor wpisze 35 i po trzech stronach skala przestanie
+> istnieć; Select czyni ją egzekwowalną przez panel, a nie przez dyscyplinę.
+>
+> Zapisane wcześniej `94` (nie ma go na nowej liście) front i panel pokazują
+> jako `96` — filtr `acf/load_value` na tych czterech polach. Bez niego Select
+> pokazałby „0 px”, a zapis wpisu wyzerowałby odstęp.
 
 > **Klucz animacji jest zapisywany w bazie przy każdej sekcji.** Obowiązuje ta
 > sama zasada co przy kluczu layoutu (CLAUDE.md sekcja 7): etykietę można
@@ -2409,6 +2415,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-10-01 — **Odstęp góra / dół sekcji: nowa lista wartości.** Pola `cyber_section_pt`, `_pb`, `_pt_m`, `_pb_m` (grupa `group_section_settings`, czyli ustawienia wszystkich sekcji) mają teraz 0/6/12/24/36/48/64/72/84/96/108/128/140/152/164 px zamiast skali ogólnej. Prawo/Lewo i pozostałe odstępy bez zmian. Zapisane `94` czyta się jako `96`. Wartości domyślne (64 / 36) bez zmian.
 
 - 2026-10-01 — **Logo na stronie logowania.** `cyber_header_logo` jest teraz używane także na `wp-login.php` zamiast logo WordPressa (link na stronę główną, nazwa witryny jako tekst linku). Bez nowych pól — gdy logo nie jest wgrane, strona logowania wygląda standardowo. Nowy `inc/login.php` i `assets/css/login.css`.
 
