@@ -1444,7 +1444,15 @@
                                 "field_cyber_posts_show_button",
                                 "field_cyber_posts_button_label",
                                 "field_cyber_posts_title_tag",
-                                "field_cyber_posts_acc_end"
+                                "field_cyber_posts_acc_end",
+                                "field_cyber_posts_price_acc",
+                                "field_cyber_posts_price_color",
+                                "field_cyber_posts_price_size",
+                                "field_cyber_posts_price_weight",
+                                "field_cyber_posts_sale_color",
+                                "field_cyber_posts_sale_size",
+                                "field_cyber_posts_sale_weight",
+                                "field_cyber_posts_price_acc_end"
                             ],
                             "display": "seamless",
                             "layout": "block",
@@ -2096,5 +2104,5 @@
     "active": true,
     "description": "Sekcje budujace tresc strony. Kazdy layout ma odpowiednik w rejestrze cyber_section_types() (inc\/sections.php) i jeden plik w template-parts\/sections\/. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1790243160
+    "modified": 1792946893
 }

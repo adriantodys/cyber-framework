@@ -300,6 +300,59 @@
 	margin-top: auto;
 }
 
+/*
+ * Karta produktu (sekcja Wpisy z typem "Produkty"). Cena i przycisk zakupu
+ * ida za kolorem sklepu, tak jak na liscie produktow (woocommerce-shop.css) —
+ * nie za zakladka Przyciski.
+ */
+.cyber-card__price {
+	margin: 0 0 var(--cyber-cards-gap-text, 24px);
+	color: var(--cyber-posts-price-color, var(--cyber-wc-color-main));
+	font-size: var(--cyber-posts-price-size, var(--cyber-font-size-text));
+	font-weight: var(--cyber-posts-price-weight, 700);
+}
+
+/* Stara cena w promocji: wyglad zwyklej ceny, przekreslona i przygaszona. */
+.cyber-card__price del {
+	margin-right: var(--cyber-space-1);
+	opacity: 0.6;
+}
+
+/* Nowa cena w promocji — pola "cena promocyjna", bez nich wyglad zwyklej ceny. */
+.cyber-card__price ins {
+	color: var(--cyber-posts-sale-color, inherit);
+	font-size: var(--cyber-posts-sale-size, inherit);
+	font-weight: var(--cyber-posts-sale-weight, inherit);
+	text-decoration: none;
+}
+
+.cyber-card__cart {
+	border-color: var(--cyber-wc-color-main);
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+}
+
+.cyber-card__cart:hover,
+.cyber-card__cart:focus-visible {
+	background-color: var(--cyber-wc-color-main);
+	color: #ffffff;
+	opacity: 0.85;
+}
+
+.cyber-card__cart.loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+/* Link "Zobacz koszyk", ktory wc-add-to-cart dopisuje po dodaniu produktu. */
+.cyber-card__footer .added_to_cart {
+	display: block;
+	margin-top: var(--cyber-space-2);
+	color: var(--cyber-color-links);
+	font-size: var(--cyber-font-size-links);
+	text-decoration: underline;
+}
+
 .cyber-card__link {
 	color: var(--cyber-color-links);
 	font-size: var(--cyber-font-size-links);
@@ -329,12 +382,79 @@
 .cyber-cards--title-center :is(.cyber-card__overtitle, .cyber-card__title) { text-align: center; }
 .cyber-cards--title-right :is(.cyber-card__overtitle, .cyber-card__title) { text-align: right; }
 
-.cyber-cards--text-left .cyber-card__text,
-.cyber-cards--text-left .cyber-card__footer { text-align: left; }
-.cyber-cards--text-center .cyber-card__text,
-.cyber-cards--text-center .cyber-card__footer { text-align: center; }
-.cyber-cards--text-right .cyber-card__text,
-.cyber-cards--text-right .cyber-card__footer { text-align: right; }
+.cyber-cards--text-left :is(.cyber-card__text, .cyber-card__price, .cyber-card__footer) { text-align: left; }
+.cyber-cards--text-center :is(.cyber-card__text, .cyber-card__price, .cyber-card__footer) { text-align: center; }
+.cyber-cards--text-right :is(.cyber-card__text, .cyber-card__price, .cyber-card__footer) { text-align: right; }
+
+/* --- Karta opinii (CPT Opinie, inc/reviews.php) -------------------------- */
+
+/*
+ * Uklad karty opinii: gwiazdki, tresc
+ * opinii (miejsce tytulu), pod nia okragle zdjecie osoby obok podpisu
+ * (miejsce tekstu). Siatka zamiast kolumny flex karty — zdjecie stoi w DOM
+ * na poczatku karty, a wizualnie w ostatnim wierszu, obok podpisu.
+ *
+ * Bez zdjecia podpis zajmuje caly wiersz (:has() — w przegladarce bez jego
+ * obslugi podpis stoi po prostu w drugiej kolumnie, obok pustego miejsca).
+ *
+ * Tlo, odstepy wewnetrzne, kolumny, rozmiar i grubosc tytulu oraz kolor
+ * podpisu pochodza z ustawien kart sekcji — tak jak w kazdej sekcji kart.
+ */
+.cyber-card--review {
+	display: grid;
+	grid-template-columns: 48px minmax(0, 1fr);
+	column-gap: var(--cyber-space-2);
+	align-content: start;
+}
+
+.cyber-card--review > * {
+	grid-column: 1 / -1;
+}
+
+/* Gwiazdki w kolorze ikon (Global Options -> Kolory -> Ikony). */
+.cyber-card--review .cyber-card__rating {
+	grid-row: 1;
+	margin: 0 0 var(--cyber-space-3);
+	color: var(--cyber-color-icons);
+	letter-spacing: 0.12em;
+	line-height: 1;
+}
+
+.cyber-card--review .cyber-card__rating span {
+	color: inherit;
+	font-size: var(--cyber-font-size-text);
+}
+
+.cyber-card--review .cyber-card__title {
+	grid-row: 2;
+}
+
+.cyber-card--review .cyber-card__media {
+	grid-row: 3;
+	grid-column: 1;
+	width: 48px;
+	height: 48px;
+	margin: 0;
+	overflow: hidden;
+	border-radius: 50%;
+	aspect-ratio: 1 / 1;
+}
+
+.cyber-card--review .cyber-card__media .cyber-card__image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cyber-card--review .cyber-card__text {
+	grid-row: 3;
+	align-self: center;
+	margin: 0;
+}
+
+.cyber-card--review:has(.cyber-card__media) .cyber-card__text {
+	grid-column: 2;
+}
 
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
 

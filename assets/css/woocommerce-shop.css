@@ -216,6 +216,8 @@
 	padding: 0;
 	float: none;
 	clear: none;
+	/* Global Options -> WooCommerce -> Tlo kart i pudelek sklepu. */
+	background-color: var(--cyber-wc-box-bg);
 }
 
 .cyber-shop__main ul.products li.product a img {

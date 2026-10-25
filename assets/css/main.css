@@ -147,6 +147,8 @@
 	--cyber-breadcrumb-wc-color-active: #111111;
 
 	--cyber-wc-color-main: #d32f2f;
+	--cyber-wc-bg: #ffffff;
+	--cyber-wc-box-bg: #f7f7f7;
 	--cyber-product-col-image: 40%;
 	--cyber-product-col-summary: 60%;
 	--cyber-product-media-height: 500px;
@@ -1173,6 +1175,18 @@ h6 :is(a, span),
 	margin-inline: var(--cyber-space-1);
 	color: var(--cyber-breadcrumb-color);
 	opacity: 0.6;
+}
+
+/* --- Tlo stron sklepu ---------------------------------------------------- */
+
+/*
+ * Global Options -> WooCommerce -> Tlo stron sklepu (--cyber-wc-bg).
+ * Klase woocommerce-page WooCommerce nadaje <body> na wszystkich swoich
+ * widokach: sklep i kategorie, produkt, koszyk, zamowienie, konto. Page header
+ * i stopka maja wlasne tla, bo leza poza <main>.
+ */
+.woocommerce-page .cyber-main {
+	background-color: var(--cyber-wc-bg);
 }
 
 /* --- Dostepnosc ----------------------------------------------------------- */

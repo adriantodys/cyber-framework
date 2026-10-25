@@ -4070,6 +4070,48 @@
             "show_color_wheel": true
         },
         {
+            "key": "field_cyber_wc_bg_color",
+            "label": "Tło stron sklepu",
+            "name": "cyber_wc_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Tło pod treścią listy produktów, koszyka i zamówienia (page header i stopka mają własne tła). Zmienna --cyber-wc-bg.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#ffffff",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_wc_box_bg_color",
+            "label": "Tło kart i pudełek sklepu",
+            "name": "cyber_wc_box_bg_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Karty produktów, tabela koszyka, podsumowanie, formularz zamówienia. Powinno odcinać się od tła stron sklepu. Zmienna --cyber-wc-box-bg.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "#f7f7f7",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
             "key": "field_cyber_msg_wc_product_layout",
             "label": "Strona produktu — uklad",
             "name": "",
@@ -4192,6 +4234,57 @@
             "message": "",
             "new_lines": "wpautop",
             "esc_html": 0
+        },
+        {
+            "key": "field_cyber_wc_product_show_category",
+            "label": "Kategoria nad tytulem",
+            "name": "cyber_wc_product_show_category",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pierwsza kategoria produktu, malym krojem nad nazwa.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_category",
+            "label": "Pozycja: Kategoria nad tytulem",
+            "name": "cyber_wc_product_pos_category",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_category",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 5,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
         },
         {
             "key": "field_cyber_wc_product_show_title",
@@ -4449,6 +4542,57 @@
             "append": ""
         },
         {
+            "key": "field_cyber_wc_product_show_weight",
+            "label": "Waga netto",
+            "name": "cyber_wc_product_show_weight",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Pole \"Waga netto\" w edycji produktu. Puste pole = element sie nie pokazuje.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_weight",
+            "label": "Pozycja: Waga netto",
+            "name": "cyber_wc_product_pos_weight",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_weight",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 45,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
             "key": "field_cyber_wc_product_show_stock",
             "label": "Dostepnosc w magazynie",
             "name": "cyber_wc_product_show_stock",
@@ -4543,6 +4687,57 @@
                 "id": ""
             },
             "default_value": 60,
+            "min": 1,
+            "max": 200,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_wc_product_show_perks",
+            "label": "Kafelki: wieksze opakowanie i darmowa dostawa",
+            "name": "cyber_wc_product_show_perks",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "\"Wieksze opakowanie\" tylko przy produktach z polem \"Sztuk w opakowaniu\" wiekszym niz 1. \"Darmowa dostawa\" tylko gdy w ustawieniach wysylki WooCommerce jest metoda \"Darmowa wysylka\" z minimalna kwota.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_wc_product_pos_perks",
+            "label": "Pozycja: Kafelki: wieksze opakowanie i darmowa dostawa",
+            "name": "cyber_wc_product_pos_perks",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_wc_product_show_perks",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 65,
             "min": 1,
             "max": 200,
             "step": 1,
@@ -6978,5 +7173,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1790860425
+    "modified": 1792948019
 }

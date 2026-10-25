@@ -525,6 +525,89 @@
 	margin-bottom: var(--cyber-space-2);
 }
 
+/* --- Tlo pudelek (Global Options -> WooCommerce) --------------------------- */
+
+/*
+ * Dane klienta i podsumowanie jako dwa pudelka na tle kart sklepu
+ * (--cyber-wc-box-bg). Naglowek "Twoje zamowienie" i tabela podsumowania
+ * to rodzenstwo w siatce, wiec tworza jedno pudelko: naglowek ma gorna
+ * czesc paddingu, tabela dolna.
+ */
+.woocommerce-checkout #customer_details {
+	padding: var(--cyber-space-4);
+	background-color: var(--cyber-wc-box-bg);
+}
+
+.woocommerce-checkout #order_review_heading {
+	margin-bottom: 0;
+	padding: var(--cyber-space-4) var(--cyber-space-4) var(--cyber-space-3);
+	background-color: var(--cyber-wc-box-bg);
+}
+
+.woocommerce-checkout #order_review {
+	padding: 0 var(--cyber-space-4) var(--cyber-space-4);
+	background-color: var(--cyber-wc-box-bg);
+}
+
+@media (max-width: 767px) {
+	.woocommerce-checkout #customer_details {
+		padding: var(--cyber-space-3);
+	}
+
+	.woocommerce-checkout #order_review_heading {
+		padding: var(--cyber-space-3) var(--cyber-space-3) var(--cyber-space-2);
+	}
+
+	.woocommerce-checkout #order_review {
+		padding: 0 var(--cyber-space-3) var(--cyber-space-3);
+	}
+}
+
+/* --- Zgoda na regulamin i polityke prywatnosci ---------------------------- */
+
+/*
+ * Checkbox #cyber_privacy_consent (cyber_wc_checkout_privacy_checkbox())
+ * i podpowiedz .cyber-consent-hint pod przyciskiem (cyber_wc_checkout_order_button()).
+ * Klikniecie bez zgody zatrzymuje assets/js/checkout.js; tu tylko wyglad.
+ */
+.woocommerce-checkout .cyber-privacy-consent .woocommerce-privacy-policy-text {
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.woocommerce-checkout .cyber-privacy-consent .woocommerce-privacy-policy-text a {
+	font-size: inherit;
+}
+
+/* Bez zgody: przycisk wyszarzony, kursor "zakazu", podpowiedz widoczna. */
+form.checkout:has(#cyber_privacy_consent:not(:checked)) .cyber-wc-place-order {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.woocommerce-checkout .cyber-consent-hint {
+	display: none;
+	margin: var(--cyber-space-1) 0 0;
+	color: var(--cyber-color-text);
+	font-size: 13px;
+	line-height: 1.4;
+	text-align: center;
+}
+
+form.checkout:has(#cyber_privacy_consent:not(:checked)) .cyber-consent-hint {
+	display: block;
+}
+
+/* Po kliknieciu bez zgody: checkbox i tekst w kolorze sklepu. */
+.woocommerce-checkout .cyber-privacy-consent.woocommerce-invalid :is(label, .woocommerce-privacy-policy-text) {
+	color: var(--cyber-wc-color-main);
+}
+
+.woocommerce-checkout .cyber-privacy-consent.woocommerce-invalid input[type="checkbox"] {
+	outline: 2px solid var(--cyber-wc-color-main);
+	outline-offset: 2px;
+}
+
 /* --- Breakpointy (CLAUDE.md sekcja 18) ------------------------------------- */
 
 @media (max-width: 980px) {

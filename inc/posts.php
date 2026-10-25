@@ -45,6 +45,10 @@ function cyber_post_date( WP_Post $post ) {
  *
  * Bez zalacznikow (nie maja strony z trescia) i bez sekcji globalnych.
  *
+ * Typy niepubliczne (bez wlasnej strony na froncie, np. Opinie) dopisuja sie
+ * filtrem cyber_post_card_types — sekcja moze je pokazac, choc WordPress
+ * nie wymienia ich wsrod publicznych.
+ *
  * @return array<string, string> Slug => etykieta.
  */
 function cyber_post_card_types() {
@@ -58,7 +62,12 @@ function cyber_post_card_types() {
 		$types[ $slug ] = $object->labels->name;
 	}
 
-	return $types;
+	/**
+	 * Typy tresci dostepne w sekcji "Wpisy".
+	 *
+	 * @param array<string, string> $types Slug => etykieta.
+	 */
+	return (array) apply_filters( 'cyber_post_card_types', $types );
 }
 
 /**
@@ -75,6 +84,46 @@ function cyber_post_excerpt( WP_Post $post, $words ) {
 	$text = '' !== trim( $post->post_excerpt ) ? $post->post_excerpt : strip_shortcodes( $post->post_content );
 
 	return wp_trim_words( wp_strip_all_tags( $text ), max( 1, (int) $words ), '…' );
+}
+
+/**
+ * Dane sklepowe karty produktu: cena i przycisk dodania do koszyka.
+ *
+ * Bez WooCommerce produkt nie istnieje jako obiekt — karta wraca wtedy do
+ * zwyklego wygladu wpisu (zaleznosc miekka, CLAUDE.md sekcja 2).
+ *
+ * Tekst, adres i tryb przycisku podaje sam WooCommerce, tak jak w petli
+ * sklepu: produkt prosty dostaje "Dodaj do koszyka" przez AJAX, zmienny
+ * "Wybierz opcje" z linkiem do produktu, niedostepny — "Czytaj dalej".
+ *
+ * @param WP_Post $post Wpis.
+ * @return array|null Tablica 'price' (HTML) i 'cart' albo null, gdy to nie produkt.
+ */
+function cyber_post_card_product( WP_Post $post ) {
+	if ( 'product' !== $post->post_type || ! cyber_is_woocommerce_active() ) {
+		return null;
+	}
+
+	$product = wc_get_product( $post );
+
+	if ( ! $product ) {
+		return null;
+	}
+
+	$ajax = $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock();
+
+	return array(
+		'price' => (string) $product->get_price_html(),
+		'cart'  => array(
+			'url'        => (string) $product->add_to_cart_url(),
+			'label'      => (string) $product->add_to_cart_text(),
+			'aria_label' => (string) $product->add_to_cart_description(),
+			'product_id' => (int) $product->get_id(),
+			'sku'        => (string) $product->get_sku(),
+			'type'       => (string) $product->get_type(),
+			'ajax'       => $ajax,
+		),
+	);
 }
 
 /**
@@ -124,7 +173,33 @@ function cyber_post_card_item( WP_Post $post, array $opts ) {
 		}
 	}
 
-	$url = (string) get_permalink( $post );
+	$url     = (string) get_permalink( $post );
+	$product = cyber_post_card_product( $post );
+
+	/*
+	 * Produkt wyglada jak w sklepie: zdjecie, nazwa, cena, "Dodaj do koszyka".
+	 * Data, kategoria wpisu, zajawka i "Czytaj wiecej" nie dotycza produktu,
+	 * wiec przelaczniki sekcji sa tu pomijane.
+	 */
+	if ( $product ) {
+		return array(
+			'image_id'    => $opts['image'] ? (int) get_post_thumbnail_id( $post ) : 0,
+			'image_url'   => '',
+			'overtitle'   => '',
+			'meta'        => '',
+			'title'       => wp_strip_all_tags( get_the_title( $post ) ),
+			'title_url'   => $url,
+			'title_tag'   => $opts['title_tag'],
+			'text'        => '',
+			'price'       => $product['price'],
+			'cart'        => $product['cart'],
+			'url'         => '',
+			'label'       => '',
+			'target'      => '',
+			'link_style'  => 'button',
+			'button_size' => $opts['button_size'],
+		);
+	}
 
 	return array(
 		'image_id'    => $opts['image'] ? (int) get_post_thumbnail_id( $post ) : 0,

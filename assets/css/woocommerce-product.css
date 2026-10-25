@@ -226,6 +226,45 @@
 	display: block;
 }
 
+/* Kategoria nad tytulem: kroj, rozmiar i kolor nadtytulu z Global Options. */
+.woocommerce .cyber-product__top .summary > .cyber-product__category {
+	margin-bottom: var(--cyber-space-1);
+}
+
+/* Waga stoi tuz pod cena — mniejszy odstep nad nia. */
+.woocommerce .cyber-product__top .summary .price:has(+ .cyber-product__weight) {
+	margin-bottom: var(--cyber-space-2);
+}
+
+/* Waga netto (pole produktu "Waga netto"): plakietka na tle kart sklepu. */
+.woocommerce .cyber-product__top .summary > .cyber-product__weight {
+	display: flex;
+	width: fit-content;
+	align-items: center;
+	gap: var(--cyber-space-1);
+	padding: var(--cyber-space-1) var(--cyber-space-2);
+	border: 1px solid var(--cyber-color-border-1);
+	border-radius: var(--cyber-radius);
+	background-color: var(--cyber-wc-box-bg);
+	color: var(--cyber-color-text);
+	font-size: 14px;
+}
+
+.cyber-product__weight span,
+.cyber-product__weight strong {
+	font-size: inherit;
+}
+
+.cyber-product__weight strong {
+	color: var(--cyber-color-headings);
+}
+
+.cyber-product__weight .cyber-icon {
+	flex-shrink: 0;
+	width: 18px;
+	height: 18px;
+}
+
 /* --- Formularz zakupu ------------------------------------------------------ */
 
 /* Ilosc po lewej, przycisk zaraz obok — kolejnosc i odstep z flexa. */
@@ -332,6 +371,55 @@
 .woocommerce .cyber-product__top form.cart .single_add_to_cart_button:hover,
 .cyber-product__top form.cart .single_add_to_cart_button:hover {
 	opacity: 0.85;
+}
+
+/* Tlo pod zdjeciem glownym i miniaturami (Global Options -> WooCommerce). */
+.cyber-product__stage,
+.cyber-product__thumb {
+	background-color: var(--cyber-wc-box-bg);
+}
+
+/* --- Kafelki pod przyciskiem (template-parts/components/product-perks.php) -- */
+
+.woocommerce .cyber-product__top .summary > .cyber-product__perks {
+	display: grid;
+	gap: var(--cyber-space-2);
+	padding: 0;
+	list-style: none;
+}
+
+.cyber-product__perk {
+	display: grid;
+	grid-template-columns: 40px minmax(0, 1fr);
+	align-items: center;
+	gap: var(--cyber-space-3);
+	margin: 0;
+	padding: var(--cyber-space-3);
+	border-radius: var(--cyber-radius);
+	background-color: var(--cyber-wc-box-bg);
+}
+
+.cyber-product__perk-icon .cyber-icon {
+	display: block;
+	width: 40px;
+	height: 40px;
+}
+
+.cyber-product__perk-text {
+	display: flex;
+	flex-direction: column;
+	color: var(--cyber-color-text);
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.cyber-product__perk-text strong {
+	color: var(--cyber-color-headings);
+	font-size: 15px;
+}
+
+.cyber-product__perk-text span {
+	font-size: inherit;
 }
 
 /* --- Zakladki -------------------------------------------------------------- */

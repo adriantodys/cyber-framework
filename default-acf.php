@@ -322,6 +322,8 @@ return array(
 
 	/* --- Kolory sklepu ----------------------------------------------------- */
 	'wc_color_main'                           => '#d32f2f',     // kolor          | Glowny kolor sklepu
+	'wc_bg_color'                             => '#ffffff',     // kolor          | Tlo stron sklepu
+	'wc_box_bg_color'                         => '#f7f7f7',     // kolor          | Tlo kart i pudelek sklepu
 
 	/* --- Strona produktu - uklad ------------------------------------------- */
 	'wc_product_col_image'                    => 40,            // proc. 20-80    | Szerokosc kolumny ze zdjeciami
@@ -330,7 +332,9 @@ return array(
 	'wc_product_thumb_height'                 => 158,           // px 60-400      | Wysokosc miniatury w galerii
 
 	/* --- Strona produktu - elementy ---------------------------------------- */
-	'wc_product_show_title'                   => true,          // tekst          | Tytul produktu
+	'wc_product_show_category'                => true,          // tak/nie        | Kategoria nad tytulem
+	'wc_product_pos_category'                 => 5,             // liczba 1-200   | Pozycja: Kategoria nad tytulem
+	'wc_product_show_title'                   => true,         // tekst          | Tytul produktu
 	'wc_product_pos_title'                    => 10,            // liczba 1-200   | Pozycja: Tytul produktu
 	'wc_product_show_sku'                     => true,          // tekst          | SKU
 	'wc_product_pos_sku'                      => 20,            // liczba 1-200   | Pozycja: SKU
@@ -340,10 +344,14 @@ return array(
 	'wc_product_pos_excerpt'                  => 30,            // liczba 1-200   | Pozycja: Krotki opis
 	'wc_product_show_price'                   => true,          // tekst          | Cena
 	'wc_product_pos_price'                    => 40,            // liczba 1-200   | Pozycja: Cena
+	'wc_product_show_weight'                  => true,          // tak/nie        | Waga netto
+	'wc_product_pos_weight'                   => 45,            // liczba 1-200   | Pozycja: Waga netto
 	'wc_product_show_stock'                   => true,          // tekst          | Dostepnosc w magazynie
 	'wc_product_pos_stock'                    => 50,            // liczba 1-200   | Pozycja: Dostepnosc w magazynie
 	'wc_product_show_cart'                    => true,          // tekst          | Ilosc i przycisk Dodaj do koszyka
 	'wc_product_pos_cart'                     => 60,            // liczba 1-200   | Pozycja: Ilosc i przycisk Dodaj do koszyka
+	'wc_product_show_perks'                   => true,          // tak/nie        | Kafelki: wieksze opakowanie i darmowa dostawa
+	'wc_product_pos_perks'                    => 65,            // liczba 1-200   | Pozycja: Kafelki
 	'wc_product_show_meta'                    => false,         // tekst          | Kategorie i tagi
 	'wc_product_pos_meta'                     => 70,            // liczba 1-200   | Pozycja: Kategorie i tagi
 	'wc_product_show_quantity'                => true,          // tekst          | Pole ilosci

@@ -8,7 +8,7 @@
 
 Ostatnia aktualizacja: 2026-09-25
 Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
-Pozostałe grupy pól (16): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`) i **Kategoria produktu** (`group_product_category.json`).
+Pozostałe grupy pól (18): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`), **Opinia** (`group_review.json`), **Produkt** (`group_product.json`) i **Kategoria produktu** (`group_product_category.json`).
 
 ---
 
@@ -1075,6 +1075,8 @@ WooCommerce trafiają **tutaj**, a nie do nowych zakładek.
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
 | Główny kolor sklepu | `cyber_wc_color_main` | Color Picker (alpha) | `#d32f2f` | Wspólna barwa **wszystkich** widoków sklepu: ceny, przyciski zakupu, liczniki ilości, stany aktywne, plakietka promocji |
+| Tło stron sklepu | `cyber_wc_bg_color` | Color Picker (alpha) | `#ffffff` | Tło `<main>` na widokach WooCommerce (`body.woocommerce-page`: sklep, kategorie, produkt, koszyk, zamówienie, konto) → `--cyber-wc-bg`, reguła w `main.css` |
+| Tło kart i pudełek sklepu | `cyber_wc_box_bg_color` | Color Picker (alpha) | `#f7f7f7` | → `--cyber-wc-box-bg`: karty produktów na liście, podsumowanie koszyka, dane klienta i podsumowanie zamówienia, tło zdjęć produktu, plakietka wagi, kafelki |
 
 > **Obowiązuje we wszystkich czterech widokach sklepu**, nie tylko na stronie
 > produktu: lista produktów, strona produktu, koszyk i zamówienie. Pełna mapa
@@ -1120,13 +1122,16 @@ elemencie.
 
 | Element | Wyłącznik | Pozycja | Default | Sekcja |
 |---|---|---|---|---|
+| Kategoria nad tytułem | `cyber_wc_product_show_category` | `cyber_wc_product_pos_category` | on / `5` | prawa kolumna — pierwsza kategoria, styl nadtytułu |
 | Tytuł produktu | `cyber_wc_product_show_title` | `cyber_wc_product_pos_title` | on / `10` | prawa kolumna |
 | SKU | `cyber_wc_product_show_sku` | `cyber_wc_product_pos_sku` | on / `20` | prawa kolumna |
 | Ocena i liczba opinii | `cyber_wc_product_show_rating` | `cyber_wc_product_pos_rating` | off / `25` | prawa kolumna |
 | Krótki opis | `cyber_wc_product_show_excerpt` | `cyber_wc_product_pos_excerpt` | on / `30` | prawa kolumna |
 | Cena | `cyber_wc_product_show_price` | `cyber_wc_product_pos_price` | on / `40` | prawa kolumna |
+| Waga netto | `cyber_wc_product_show_weight` | `cyber_wc_product_pos_weight` | on / `45` | prawa kolumna — z pola produktu `cyber_product_net_weight`; puste = brak elementu |
 | Dostępność w magazynie | `cyber_wc_product_show_stock` | `cyber_wc_product_pos_stock` | on / `50` | prawa kolumna |
 | Ilość i przycisk „Dodaj do koszyka” | `cyber_wc_product_show_cart` | `cyber_wc_product_pos_cart` | on / `60` | prawa kolumna |
+| Kafelki: większe opakowanie i darmowa dostawa | `cyber_wc_product_show_perks` | `cyber_wc_product_pos_perks` | on / `65` | prawa kolumna — „Większe opakowanie” przy `cyber_product_pack_qty` > 1; „Darmowa dostawa od X” tylko przy metodzie WooCommerce „Darmowa wysyłka” z minimalną kwotą |
 | Kategorie i tagi | `cyber_wc_product_show_meta` | `cyber_wc_product_pos_meta` | off / `70` | prawa kolumna |
 | Pole ilości | `cyber_wc_product_show_quantity` | — | on | wnętrze formularza zakupu |
 | Plakietka promocji | `cyber_wc_product_show_sale` | — | on | zdjęcie główne |
@@ -2272,6 +2277,28 @@ Własne są źródło i ustawienia elementu.
 | Przycisk / link + tekst | `cyber_posts_show_button` + `cyber_posts_button_label` | True/False + Text | `true`, `Czytaj więcej` |
 | Znacznik tytułu | `cyber_posts_title_tag` | Select `h2` `h3` `h4` | `h3` |
 
+> Przy produktach (karta produktu, `docs/components.md`) przełączniki daty,
+> kategorii, zajawki i tekst przycisku są pomijane — przycisk to „Dodaj do koszyka”.
+
+**Cena produktu** — akordeon widoczny **tylko przy `cyber_posts_type` = `product`**
+(warunek na akordeonie `field_cyber_posts_price_acc`). Wartości jadą jako
+zmienne na opakowaniu sekcji (`cyber_posts_price_attributes()` w
+`inc/sections-posts.php`, filtr `cyber_section_attributes`), więc działają
+w siatce i w sliderze.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Kolor ceny | `cyber_posts_price_color` | Color Picker (z alfą) | `''` | Puste = kolor sklepu `--cyber-wc-color-main` → `--cyber-posts-price-color` |
+| Rozmiar ceny | `cyber_posts_price_size` | Select `text` `h6` … `h1` | `text` | Odwołanie do `--cyber-font-size-*` (skaluje się na breakpointach) → `--cyber-posts-price-size` |
+| Grubość ceny | `cyber_posts_price_weight` | Select 300–800 | `700` | → `--cyber-posts-price-weight` (stała, nie skalowana — sekcja 19) |
+| Kolor ceny promocyjnej | `cyber_posts_sale_color` | Color Picker (z alfą) | `''` | Nowa cena w promocji (`<ins>`); puste = kolor ceny → `--cyber-posts-sale-color` |
+| Rozmiar ceny promocyjnej | `cyber_posts_sale_size` | Select `inherit` `text` `h6` … `h1` | `inherit` | `inherit` („Jak cena”) = bez zmiennej → `--cyber-posts-sale-size` |
+| Grubość ceny promocyjnej | `cyber_posts_sale_weight` | Select `inherit` 300–800 | `inherit` | `inherit` („Jak cena”) = bez zmiennej → `--cyber-posts-sale-weight` |
+
+Stara cena w promocji (`<del>`) ma wygląd zwykłej ceny, przekreślona
+i przygaszona (`opacity: 0.6`). Warunek akordeonu sprawdza pole „Typ treści”
+— przy ręcznym wyborze produktów ustaw tam „Produkty”, żeby zobaczyć te pola.
+
 > **Siatka albo slider — ustawienia same się chowają.** Pola siatki (kolumny,
 > odstępy) są widoczne tylko bez slidera, ustawienia karuzeli tylko ze
 > sliderem. ACF nie przenosi warunku z pola Clone na pola klonowane, więc warunki
@@ -2362,6 +2389,28 @@ do niego przypięta, więc stronę galerii buduje się tak samo jak zwykłą str
 |---|---|---|---|
 | Zdjęcia galerii | `cyber_gallery_images` | Gallery (ID) | Kolejność przeciągnięciem; podpisy z biblioteki mediów |
 
+### `group_review` — Opinia (CPT `cyber_review`)
+
+Plik: `acf-json/group_review.json`. Lokalizacja: **Post Type is equal to Opinie**
+(`cyber_review`). Typ treści **Opinie** jest niepubliczny (tylko panel, bez
+strony i archiwum) — wyświetla go sekcja „Wpisy / CPT” (`inc/reviews.php`).
+Tytuł wpisu = podpis autora, obrazek wyróżniający = zdjęcie osoby (opcjonalne).
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Treść opinii | `cyber_review_text` | Textarea (wymagane) | `''` | Sam tekst; cudzysłowy dokłada karta |
+| Ocena | `cyber_review_rating` | Select `5`…`1` | `5` | Liczba gwiazdek; brak/błędna wartość = 5 |
+
+### `group_product` — Produkt
+
+Plik: `acf-json/group_product.json`. Lokalizacja: **Post Type is equal to Product**,
+w bocznej kolumnie edycji produktu.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Waga netto | `cyber_product_net_weight` | Text | `''` | Z jednostką, np. `300 g`; element „Waga netto” na stronie produktu. To **nie** waga do wysyłki WooCommerce |
+| Sztuk w opakowaniu | `cyber_product_pack_qty` | Number 1–24 | `1` | Więcej niż 1 = kafelek „Większe opakowanie, lepsza cena” z ceną za sztukę |
+
 ### `group_product_category` — Kategoria produktu
 
 Plik: `acf-json/group_product_category.json`. Lokalizacja: **Taxonomy is equal to
@@ -2424,6 +2473,7 @@ nie ustawieniem globalnym.
 
 ## Historia zmian
 
+- 2026-10-25 — **Opinie, pola produktu, tła sklepu.** Nowy CPT `cyber_review` (Opinie) z grupą `group_review` (`cyber_review_text`, `cyber_review_rating`) — karta opinii w sekcji „Wpisy / CPT”. Nowa grupa `group_product` (`cyber_product_net_weight`, `cyber_product_pack_qty`). Global Options → WooCommerce: **8 nowych pól** — `cyber_wc_bg_color`, `cyber_wc_box_bg_color` oraz wyłączniki i pozycje elementów strony produktu `category`, `weight`, `perks` (z rejestru `cyber_product_elements()`) — Global Options mają teraz **239 pól**.
 - 2026-10-01 — **Zaokrąglenie rogów: select w sekcjach + wartość globalna.** Nowe pole Global Options `cyber_border_radius` (Number 0–100 px, domyślnie `0`, zakładka „Główne ustawienia strony”, zmienna `--cyber-radius`) — Global Options mają teraz **231 pól**. Pola `cyber_cards_radius` (także Karuzela kart i Wpisy), `cyber_columns_radius`, `cyber_gal_radius`, `cyber_table_radius` zmienione z Number na Select: „Z ustawień globalnych” / 0 / 4 / 8 / 12 / 16 / 20 / 24 px (`cyber_section_radii()` w `inc/sections.php`). Domyślnie „Z ustawień globalnych”, tabela zostaje przy `8`. Liczby zapisane wcześniej poza listą (np. 10, 200) front i panel sprowadzają do najbliższego progu — filtr `acf/load_value`, żeby Select nie pokazał „Z ustawień globalnych” i zapis nie zmienił wyglądu. `cyber_totop_radius` (Przycisk do góry) bez zmian.
 
 - 2026-10-01 — **Odstęp góra / dół sekcji: nowa lista wartości.** Pola `cyber_section_pt`, `_pb`, `_pt_m`, `_pb_m` (grupa `group_section_settings`, czyli ustawienia wszystkich sekcji) mają teraz 0/6/12/24/36/48/64/72/84/96/108/128/140/152/164 px zamiast skali ogólnej. Prawo/Lewo i pozostałe odstępy bez zmian. Zapisane `94` czyta się jako `96`. Wartości domyślne (64 / 36) bez zmian.
