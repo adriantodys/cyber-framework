@@ -70,6 +70,13 @@ function cyber_icons() {
 		'cart'      => '<path d="M2.5 3.5h2l1.8 8.5h8.2l1.6-6H5.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>'
 			. '<circle cx="8" cy="15.6" r="1.4"/>'
 			. '<circle cx="13.8" cy="15.6" r="1.4"/>',
+		'jar'       => '<path d="M5.8 2.5h8.4v2.5H5.8zM5 6.7h10v10a.8.8 0 0 1-.8.8H5.8a.8.8 0 0 1-.8-.8z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>'
+			. '<path d="M7.5 10.8h5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+		'pack'      => '<path d="M2 8.5h5.5v9H2zM2.5 6.5h4.5v2H2.5zM9.5 5.5h8.5v12H9.5zM10 3h7.5v2.5H10z" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/>'
+			. '<path d="M11.5 11.5h4.5" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linecap="round"/>',
+		'truck'     => '<path d="M1.5 5h10.5v8.5H1.5zM12 8h3.5l3 3v2.5H12z" fill="none" stroke="currentColor" stroke-width="0.9" stroke-linejoin="round"/>'
+			. '<circle cx="5" cy="15" r="1.5" fill="none" stroke="currentColor" stroke-width="0.9"/>'
+			. '<circle cx="15" cy="15" r="1.5" fill="none" stroke="currentColor" stroke-width="0.9"/>',
 		'grid'      => '<rect x="2.5" y="2.5" width="6" height="6" rx="1"/>'
 			. '<rect x="11.5" y="2.5" width="6" height="6" rx="1"/>'
 			. '<rect x="2.5" y="11.5" width="6" height="6" rx="1"/>'
@@ -223,7 +230,7 @@ function cyber_header_variants() {
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 231 wpisow, a cyber_get_option() siega po niego
+	 * Schemat jest stala tablica 239 wpisow, a cyber_get_option() siega po niego
 	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
 	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
 	 */
@@ -939,6 +946,14 @@ function cyber_option_schema() {
 			'type'    => 'color_alpha',
 			'default' => '#d32f2f',
 		),
+		'wc_bg_color'                 => array(
+			'type'    => 'color_alpha',
+			'default' => '#ffffff',
+		),
+		'wc_box_bg_color'             => array(
+			'type'    => 'color_alpha',
+			'default' => '#f7f7f7',
+		),
 		'wc_product_col_image'        => array(
 			'type'    => 'percent',
 			'default' => 40,
@@ -1297,6 +1312,12 @@ function cyber_option_schema() {
  */
 function cyber_product_elements() {
 	return array(
+		'category' => array(
+			'label'    => 'Kategoria nad tytulem',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 5,
+		),
 		'title'    => array(
 			'label'    => 'Tytul produktu',
 			'section'  => 'summary',
@@ -1327,6 +1348,12 @@ function cyber_product_elements() {
 			'show'     => true,
 			'position' => 40,
 		),
+		'weight'   => array(
+			'label'    => 'Waga netto',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 45,
+		),
 		'stock'    => array(
 			'label'    => 'Dostepnosc w magazynie',
 			'section'  => 'summary',
@@ -1338,6 +1365,12 @@ function cyber_product_elements() {
 			'section'  => 'summary',
 			'show'     => true,
 			'position' => 60,
+		),
+		'perks'    => array(
+			'label'    => 'Kafelki: wieksze opakowanie i darmowa dostawa',
+			'section'  => 'summary',
+			'show'     => true,
+			'position' => 65,
 		),
 		'meta'     => array(
 			'label'    => 'Kategorie i tagi',

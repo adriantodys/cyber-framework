@@ -73,13 +73,16 @@ function cyber_product_position( $key ) {
  */
 function cyber_product_element_callbacks() {
 	return array(
+		'category' => array( 'woocommerce_single_product_summary', 'cyber_product_category' ),
 		'title'   => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_title' ),
 		'sku'     => array( 'woocommerce_single_product_summary', 'cyber_product_sku' ),
 		'rating'  => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating' ),
 		'excerpt' => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt' ),
 		'price'   => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_price' ),
+		'weight'  => array( 'woocommerce_single_product_summary', 'cyber_product_weight' ),
 		'stock'   => array( 'woocommerce_single_product_summary', 'cyber_product_stock' ),
 		'cart'    => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart' ),
+		'perks'   => array( 'woocommerce_single_product_summary', 'cyber_product_perks' ),
 		'meta'    => array( 'woocommerce_single_product_summary', 'cyber_product_meta' ),
 		'tabs'    => array( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs' ),
 		'upsells' => array( 'woocommerce_after_single_product_summary', 'woocommerce_upsell_display' ),
@@ -589,3 +592,148 @@ function cyber_product_assets() {
 	);
 }
 add_action( 'wp_enqueue_scripts', 'cyber_product_assets', 20 );
+
+/* -------------------------------------------------------------------------- *
+ * Elementy podsumowania: kategoria, waga netto, kafelki
+ * -------------------------------------------------------------------------- */
+
+/**
+ * Wartosc pola produktu z grupy group_product.
+ *
+ * @param int    $product_id Produkt.
+ * @param string $key        Nazwa pola bez prefiksu cyber_product_.
+ * @return mixed Pusty string, gdy ACF nie dziala albo pole jest puste.
+ */
+function cyber_product_field( $product_id, $key ) {
+	if ( ! cyber_is_acf_active() ) {
+		return '';
+	}
+
+	$value = get_field( 'cyber_product_' . $key, $product_id );
+
+	return ( null === $value || false === $value ) ? '' : $value;
+}
+
+/**
+ * Kategoria produktu nad tytulem (styl nadtytulu z Global Options).
+ *
+ * Pierwsza przypisana kategoria — sam tekst, bez linku: to podpis produktu,
+ * nie nawigacja (nawigacje daja okruszki).
+ *
+ * @return void
+ */
+function cyber_product_category() {
+	global $product;
+
+	if ( ! $product instanceof WC_Product ) {
+		return;
+	}
+
+	$terms = get_the_terms( $product->get_id(), 'product_cat' );
+
+	if ( ! $terms || is_wp_error( $terms ) ) {
+		return;
+	}
+
+	printf(
+		'<p class="cyber-overtitle cyber-product__category">%s</p>',
+		esc_html( $terms[0]->name )
+	);
+}
+
+/**
+ * Waga netto z pola produktu "Waga netto" (np. "300 g").
+ *
+ * Swiadomie NIE waga WooCommerce: tamta sluzy do liczenia wysylki (brutto,
+ * w jednostce sklepu), a klient ma widziec wage zawartosci opakowania.
+ *
+ * @return void
+ */
+function cyber_product_weight() {
+	global $product;
+
+	if ( ! $product instanceof WC_Product ) {
+		return;
+	}
+
+	$weight = trim( (string) cyber_product_field( $product->get_id(), 'net_weight' ) );
+
+	if ( '' === $weight ) {
+		return;
+	}
+
+	printf(
+		'<p class="cyber-product__weight">%1$s<span>%2$s <strong>%3$s</strong></span></p>',
+		cyber_get_icon( 'jar' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- staly markup z rejestru ikon.
+		esc_html__( 'Waga netto:', 'cyber-framework' ),
+		esc_html( $weight )
+	);
+}
+
+/**
+ * Dane kafelkow pod przyciskiem "Dodaj do koszyka".
+ *
+ * - "Wieksze opakowanie, lepsza cena" — tylko gdy pole "Sztuk w opakowaniu"
+ *   jest wieksze niz 1; cena za sztuke liczona z ceny produktu.
+ * - "Darmowa dostawa od X" — tylko gdy sklep ma darmowa wysylke z progiem
+ *   (cyber_wc_free_shipping_threshold() w inc/woocommerce-cart.php).
+ *
+ * @param WC_Product $product Produkt.
+ * @return array[] Lista tablic 'icon', 'title', 'text'.
+ */
+function cyber_product_perk_items( WC_Product $product ) {
+	$items = array();
+	$qty   = absint( cyber_product_field( $product->get_id(), 'pack_qty' ) );
+	$price = (float) wc_get_price_to_display( $product );
+
+	if ( $qty > 1 && $price > 0 ) {
+		$items[] = array(
+			'icon'  => 'pack',
+			'title' => __( 'Większe opakowanie, lepsza cena', 'cyber-framework' ),
+			'text'  => sprintf(
+				/* translators: 1: liczba sztuk, 2: cena za sztuke. */
+				__( 'Zestaw %1$d szt. — %2$s za sztukę', 'cyber-framework' ),
+				$qty,
+				html_entity_decode( wp_strip_all_tags( wc_price( $price / $qty ) ), ENT_QUOTES, 'UTF-8' )
+			),
+		);
+	}
+
+	$threshold = function_exists( 'cyber_wc_free_shipping_threshold' ) ? cyber_wc_free_shipping_threshold() : null;
+
+	if ( null !== $threshold ) {
+		$amount = (float) $threshold['amount'];
+
+		$items[] = array(
+			'icon'  => 'truck',
+			'title' => sprintf(
+				/* translators: %s: prog darmowej dostawy. */
+				__( 'Darmowa dostawa od %s', 'cyber-framework' ),
+				// Pelne zlotowki bez ",00" — "od 200 zl", nie "od 200,00 zl".
+				html_entity_decode( wp_strip_all_tags( wc_price( $amount, array( 'decimals' => floor( $amount ) === $amount ? 0 : 2 ) ) ), ENT_QUOTES, 'UTF-8' )
+			),
+			'text'  => __( 'Dla zamówień powyżej tej kwoty', 'cyber-framework' ),
+		);
+	}
+
+	return $items;
+}
+
+/**
+ * Kafelki pod przyciskiem "Dodaj do koszyka".
+ *
+ * @return void
+ */
+function cyber_product_perks() {
+	global $product;
+
+	if ( ! $product instanceof WC_Product ) {
+		return;
+	}
+
+	$items = cyber_product_perk_items( $product );
+
+	if ( $items ) {
+		get_template_part( 'template-parts/components/product-perks', null, array( 'items' => $items ) );
+	}
+}

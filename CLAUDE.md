@@ -209,6 +209,8 @@ cyber-framework/
 │   ├── group_section_*.json       ← grupy źródłowe klonowane do layoutów sekcji
 │   ├── group_page_header.json     ← wyjątki page headera dla pojedynczej strony
 │   ├── group_gallery.json         ← zdjęcia CPT `cyber_gallery`
+│   ├── group_review.json          ← treść i ocena CPT `cyber_review` (Opinie)
+│   ├── group_product.json         ← waga netto i sztuk w opakowaniu (produkt WooCommerce)
 │   └── group_product_category.json ← treść kategorii produktu (WooCommerce)
 │
 ├── docs/
@@ -717,7 +719,7 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
    Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
-   Animacje, Przycisk do góry — razem **231 pól**.
+   Animacje, Przycisk do góry — razem **239 pól**.
 
    Pięć ostatnich dołożyło się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
@@ -755,7 +757,9 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
    tagi, archiwa dat i autorów) i `templates/single-post.php` z paskiem bocznym
    widgetów, wpięte filtrami hierarchii (`inc/blog.php`). Ustawienia: Global
    Options → Blog. Do tego `templates/single-gallery.php` — strona pojedynczej
-   galerii CPT `cyber_gallery` (`inc/gallery.php`).
+   galerii CPT `cyber_gallery` (`inc/gallery.php`). Od 2026-10-25 CPT
+   `cyber_review` (Opinie, `inc/reviews.php`) — bez własnej strony, wyświetla
+   go sekcja „Wpisy / CPT” jako karty opinii.
    Do zrobienia: page, front page, 404, search, archiwa CPT.
 6. Formularze / AJAX (jeśli dotyczy) — pełne zabezpieczenie zgodnie z sekcją 9.
 7. Podstawy SEO (meta, struktura nagłówków, dane strukturalne jeśli zasadne).

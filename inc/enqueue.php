@@ -549,6 +549,8 @@ function cyber_breadcrumb_css() {
 function cyber_woocommerce_css_map() {
 	return array(
 		'wc_color_main'           => array( '--cyber-wc-color-main', '' ),
+		'wc_bg_color'             => array( '--cyber-wc-bg', '' ),
+		'wc_box_bg_color'         => array( '--cyber-wc-box-bg', '' ),
 		'wc_product_col_image'    => array( '--cyber-product-col-image', '%' ),
 		'wc_product_col_summary'  => array( '--cyber-product-col-summary', '%' ),
 		'wc_product_media_height' => array( '--cyber-product-media-height', 'px' ),

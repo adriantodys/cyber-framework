@@ -234,6 +234,228 @@
             "endpoint": 1
         },
         {
+            "key": "field_cyber_posts_price_acc",
+            "label": "Cena produktu",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_posts_type",
+                        "operator": "==",
+                        "value": "product"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 0
+        },
+        {
+            "key": "field_cyber_posts_price_color",
+            "label": "Kolor ceny",
+            "name": "cyber_posts_price_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Puste pole = kolor sklepu z Global Options -> WooCommerce.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_posts_price_size",
+            "label": "Rozmiar ceny",
+            "name": "cyber_posts_price_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wielkosc czcionki wg Global Options -> Ustawienia czcionki (skaluje sie na breakpointach).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "text": "Tekst",
+                "h6": "H6",
+                "h5": "H5",
+                "h4": "H4",
+                "h3": "H3",
+                "h2": "H2",
+                "h1": "H1"
+            },
+            "default_value": "text",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_posts_price_weight",
+            "label": "Grubosc ceny",
+            "name": "cyber_posts_price_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "700",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_posts_sale_color",
+            "label": "Kolor ceny promocyjnej",
+            "name": "cyber_posts_sale_color",
+            "aria-label": "",
+            "type": "color_picker",
+            "instructions": "Nowa cena produktu w promocji. Puste pole = kolor ceny.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "enable_opacity": 1,
+            "return_format": "string",
+            "custom_palette_source": "",
+            "palette_colors": "",
+            "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_posts_sale_size",
+            "label": "Rozmiar ceny promocyjnej",
+            "name": "cyber_posts_sale_size",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Wielkosc czcionki wg Global Options -> Ustawienia czcionki (skaluje sie na breakpointach).",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "inherit": "Jak cena",
+                "text": "Tekst",
+                "h6": "H6",
+                "h5": "H5",
+                "h4": "H4",
+                "h3": "H3",
+                "h2": "H2",
+                "h1": "H1"
+            },
+            "default_value": "inherit",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_posts_sale_weight",
+            "label": "Grubosc ceny promocyjnej",
+            "name": "cyber_posts_sale_weight",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "inherit": "Jak cena",
+                "300": "300",
+                "400": "400",
+                "500": "500",
+                "600": "600",
+                "700": "700",
+                "800": "800"
+            },
+            "default_value": "inherit",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        },
+        {
+            "key": "field_cyber_posts_price_acc_end",
+            "label": "",
+            "name": "",
+            "aria-label": "",
+            "type": "accordion",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "open": 0,
+            "multi_expand": 1,
+            "endpoint": 1
+        },
+        {
             "key": "field_cyber_posts_show_top",
             "label": "Pokaz tresc nad elementami",
             "name": "cyber_posts_show_top",
@@ -542,5 +764,5 @@
     "active": true,
     "description": "Grupa ZRODLOWA dla pola Clone - nie renderuje sie nigdzie w panelu. Pola sekcji Wpisy: zrodlo (typ tresci, najnowsze albo reczny wybor), slider, ustawienia elementu. Wyglad karty klonowany z group_section_cards, przewijanie z group_section_carousel. Zrodlo prawdy: docs\/acf-schema.md.",
     "show_in_rest": 0,
-    "modified": 1789834930
+    "modified": 1792946893
 }

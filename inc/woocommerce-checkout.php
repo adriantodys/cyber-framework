@@ -204,13 +204,156 @@ function cyber_wc_checkout_order_button( $html ) {
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- patrz wyzej.
 	$text = apply_filters( 'woocommerce_order_button_text', __( 'Kupuję i płacę', 'cyber-framework' ) );
 
+	/*
+	 * Podpowiedz pod przyciskiem: widoczna tylko bez zaznaczonej zgody
+	 * (CSS :has w woocommerce-checkout.css), czytnik ekranu dostaje ja przez
+	 * aria-describedby. Klikniecie bez zgody zatrzymuje assets/js/checkout.js.
+	 */
 	return sprintf(
-		'<button type="submit" class="btn btn-large cyber-wc-place-order" name="woocommerce_checkout_place_order" id="place_order" value="%1$s" data-value="%1$s">%2$s</button>',
+		'<button type="submit" class="btn btn-large cyber-wc-place-order" name="woocommerce_checkout_place_order" id="place_order" value="%1$s" data-value="%1$s" aria-describedby="cyber-consent-hint">%2$s</button><p class="cyber-consent-hint" id="cyber-consent-hint">%3$s</p>',
 		esc_attr( $text ),
-		esc_html( $text )
+		esc_html( $text ),
+		esc_html__( 'Zaakceptuj regulamin sklepu oraz politykę prywatności, aby złożyć zamówienie.', 'cyber-framework' )
 	);
 }
 add_filter( 'woocommerce_order_button_html', 'cyber_wc_checkout_order_button' );
+
+/**
+ * Nazwa pola zgody na przetwarzanie danych (polityka prywatnosci).
+ */
+const CYBER_CHECKOUT_PRIVACY_FIELD = 'cyber_privacy_consent';
+
+/**
+ * Obowiazkowy checkbox "Akceptuje regulamin sklepu oraz polityke prywatnosci"
+ * zamiast akapitu o polityce prywatnosci.
+ *
+ * WooCommerce wypisuje w tym miejscu tekst z ustawien (WooCommerce ->
+ * Ustawienia -> Konta i prywatnosc) jako sam akapit, bez potwierdzenia.
+ * Zdejmujemy jego funkcje z hooka i wstawiamy w to samo miejsce checkbox
+ * ze stalym tekstem — tekst z ustawien WooCommerce przestaje byc tu uzywany.
+ *
+ * Rejestracja na init: hooki szablonow WooCommerce sa juz wtedy dodane.
+ *
+ * @return void
+ */
+function cyber_wc_checkout_privacy_setup() {
+	if ( ! cyber_is_woocommerce_active() ) {
+		return;
+	}
+
+	remove_action( 'woocommerce_checkout_terms_and_conditions', 'wc_checkout_privacy_policy_text', 20 );
+	add_action( 'woocommerce_checkout_terms_and_conditions', 'cyber_wc_checkout_privacy_checkbox', 20 );
+
+	/*
+	 * Nasz checkbox obejmuje juz regulamin. Przy ustawionej stronie regulaminu
+	 * WooCommerce dodalby drugi checkbox ("Przeczytalem i akceptuje regulamin",
+	 * wlaczany niepustym tekstem — wc_terms_and_conditions_checkbox_enabled())
+	 * i rozwijana tresc regulaminu pod nim. Oba wylaczamy; regulamin otwiera
+	 * sie z odnosnika w naszym tekscie.
+	 */
+	remove_action( 'woocommerce_checkout_terms_and_conditions', 'wc_terms_and_conditions_page_content', 30 );
+	add_filter( 'woocommerce_get_terms_and_conditions_checkbox_text', '__return_empty_string' );
+	add_action( 'woocommerce_after_checkout_validation', 'cyber_wc_checkout_privacy_validate', 10, 2 );
+	add_action( 'woocommerce_checkout_create_order', 'cyber_wc_checkout_privacy_save' );
+}
+add_action( 'init', 'cyber_wc_checkout_privacy_setup' );
+
+/**
+ * Czy klient zaznaczyl zgode.
+ *
+ * Dwa zrodla: wyslany formularz zamowienia ($_POST) oraz odswiezenie
+ * podsumowania AJAX-em (wc-ajax=update_order_review), ktore przesyla caly
+ * formularz jako jeden ciag post_data. Bez drugiego zrodla zaznaczenie
+ * znikaloby przy kazdej zmianie metody dostawy — skrypt WooCommerce
+ * przywraca po odswiezeniu tylko swoj checkbox regulaminu (#terms).
+ *
+ * Nonce sprawdza WooCommerce przed oboma zadaniami; tu tylko odczyt flagi.
+ *
+ * @return bool
+ */
+function cyber_wc_checkout_privacy_checked() {
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce weryfikuje WooCommerce, patrz wyzej.
+	if ( ! empty( $_POST[ CYBER_CHECKOUT_PRIVACY_FIELD ] ) ) {
+		return true;
+	}
+
+	if ( isset( $_POST['post_data'] ) && is_string( $_POST['post_data'] ) ) {
+		parse_str( wp_unslash( $_POST['post_data'] ), $data ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- uzywamy tylko flagi niepustosci.
+
+		return ! empty( $data[ CYBER_CHECKOUT_PRIVACY_FIELD ] );
+	}
+	// phpcs:enable
+
+	return false;
+}
+
+/**
+ * Checkbox zgody z tekstem polityki prywatnosci.
+ *
+ * Markup jak checkbox regulaminu WooCommerce (.form-row.validate-required,
+ * label.checkbox), wiec dziedziczy style formularza zamowienia.
+ *
+ * @return void
+ */
+function cyber_wc_checkout_privacy_checkbox() {
+	/*
+	 * Odnosniki do stron wskazanych w ustawieniach: regulamin z WooCommerce ->
+	 * Ustawienia -> Zaawansowane, polityka z Ustawienia -> Prywatnosc.
+	 * Strona nieustawiona = sam tekst, bez linku.
+	 */
+	$terms_id = wc_terms_and_conditions_page_id();
+	$links    = array(
+		'terms'   => array( $terms_id ? get_permalink( $terms_id ) : '', __( 'regulamin sklepu', 'cyber-framework' ) ),
+		'privacy' => array( get_privacy_policy_url(), __( 'politykę prywatności', 'cyber-framework' ) ),
+	);
+
+	foreach ( $links as $key => $link ) {
+		$links[ $key ] = $link[0]
+			? sprintf( '<a href="%1$s" target="_blank" rel="noopener">%2$s</a>', esc_url( $link[0] ), esc_html( $link[1] ) )
+			: esc_html( $link[1] );
+	}
+
+	/* translators: 1: odnosnik do regulaminu, 2: odnosnik do polityki prywatnosci. */
+	$text = sprintf( esc_html__( 'Akceptuję %1$s oraz %2$s', 'cyber-framework' ), $links['terms'], $links['privacy'] );
+
+	?>
+	<p class="form-row validate-required cyber-privacy-consent">
+		<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+			<input type="checkbox" class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" name="<?php echo esc_attr( CYBER_CHECKOUT_PRIVACY_FIELD ); ?>" id="<?php echo esc_attr( CYBER_CHECKOUT_PRIVACY_FIELD ); ?>" value="1" <?php checked( cyber_wc_checkout_privacy_checked() ); ?>>
+			<span class="woocommerce-privacy-policy-text"><?php echo wp_kses_post( $text ); ?>&nbsp;<abbr class="required" title="<?php esc_attr_e( 'wymagane', 'cyber-framework' ); ?>">*</abbr></span>
+		</label>
+	</p>
+	<?php
+}
+
+/**
+ * Bez zaznaczonej zgody zamowienie nie zostanie zlozone.
+ *
+ * @param array    $data   Dane zamowienia (nieuzywane).
+ * @param WP_Error $errors Bledy walidacji WooCommerce.
+ * @return void
+ */
+function cyber_wc_checkout_privacy_validate( $data, $errors ) {
+	unset( $data );
+
+	if ( ! cyber_wc_checkout_privacy_checked() ) {
+		$errors->add(
+			CYBER_CHECKOUT_PRIVACY_FIELD,
+			__( 'Zaakceptuj regulamin sklepu oraz politykę prywatności, aby złożyć zamówienie.', 'cyber-framework' ),
+			array( 'id' => CYBER_CHECKOUT_PRIVACY_FIELD )
+		);
+	}
+}
+
+/**
+ * Moment udzielenia zgody zapisany w zamowieniu — dowod dla RODO.
+ *
+ * @param WC_Order $order Tworzone zamowienie.
+ * @return void
+ */
+function cyber_wc_checkout_privacy_save( $order ) {
+	$order->update_meta_data( '_cyber_privacy_consent', current_time( 'mysql' ) );
+}
 
 /**
  * Etykiety WooCommerce dopasowane do projektu.

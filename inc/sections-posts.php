@@ -167,6 +167,12 @@ function cyber_posts_items( array $row ) {
 	foreach ( cyber_posts_query( $row ) as $post ) {
 		$item = cyber_post_card_item( $post, $opts );
 
+		// Opinia ma wlasny uklad karty (inc/reviews.php) — bez daty, linku i trybu "zdjecie jako tlo".
+		if ( CYBER_REVIEW_TYPE === $post->post_type ) {
+			$items[] = cyber_review_card_item( $item, $post, $opts['image'] );
+			continue;
+		}
+
 		$item['image_size'] = CYBER_POSTS_IMAGE_SIZE;
 
 		// Tryb "zdjecie jako tlo" z ustawien kart dziala tak samo jak w kartach.
@@ -179,6 +185,67 @@ function cyber_posts_items( array $row ) {
 
 	return $items;
 }
+
+/**
+ * Dozwolone rozmiary ceny — nazwy globalnych wielkosci czcionek.
+ *
+ * Odwolanie do --cyber-font-size-*, nie liczba px: te zmienne skaluja sie na
+ * breakpointach (CLAUDE.md sekcja 19), wiec cena skaluje sie razem z nimi.
+ *
+ * @return string[]
+ */
+function cyber_posts_price_sizes() {
+	return array_merge( array( 'text' ), cyber_heading_levels() );
+}
+
+/**
+ * Wyglad ceny produktu jako zmienne CSS na opakowaniu sekcji Wpisy.
+ *
+ * Opakowanie, a nie kontener kart, bo siatka i slider buduja kontener
+ * roznymi funkcjami — zmienna dziedziczy sie do kart w obu trybach.
+ * Zmienna powstaje tylko dla ustawionej wartosci; bez niej arkusz bierze
+ * kolor sklepu i rozmiar tekstu, a cena promocyjna — wartosci zwyklej ceny.
+ *
+ * Podpiete pod filtr cyber_section_attributes (inc/sections.php).
+ *
+ * @param array  $attributes Atrybuty opakowania sekcji.
+ * @param string $type       Klucz layoutu.
+ * @param array  $row        Wiersz Flexible Content.
+ * @return array
+ */
+function cyber_posts_price_attributes( $attributes, $type, $row ) {
+	if ( 'posts' !== $type || ! isset( $row['cyber_posts_type'] ) || 'product' !== $row['cyber_posts_type'] ) {
+		return $attributes;
+	}
+
+	$vars    = array();
+	$weights = cyber_font_weight_choices();
+
+	foreach ( array( 'price', 'sale' ) as $part ) {
+		$color = cyber_sanitize_color( isset( $row[ "cyber_posts_{$part}_color" ] ) ? $row[ "cyber_posts_{$part}_color" ] : '' );
+
+		if ( '' !== $color ) {
+			$vars[ "--cyber-posts-{$part}-color" ] = $color;
+		}
+
+		$size = isset( $row[ "cyber_posts_{$part}_size" ] ) ? (string) $row[ "cyber_posts_{$part}_size" ] : '';
+
+		if ( in_array( $size, cyber_posts_price_sizes(), true ) ) {
+			$vars[ "--cyber-posts-{$part}-size" ] = sprintf( 'var(--cyber-font-size-%s)', $size );
+		}
+
+		$weight = isset( $row[ "cyber_posts_{$part}_weight" ] ) ? (string) $row[ "cyber_posts_{$part}_weight" ] : '';
+
+		if ( in_array( $weight, $weights, true ) ) {
+			$vars[ "--cyber-posts-{$part}-weight" ] = $weight;
+		}
+	}
+
+	$attributes['style'] .= cyber_css_declarations( $vars );
+
+	return $attributes;
+}
+add_filter( 'cyber_section_attributes', 'cyber_posts_price_attributes', 10, 3 );
 
 /**
  * Czy wpis ma sekcje Wpisy w trybie slidera — wtedy laduje sie Swiper.

@@ -190,6 +190,9 @@
 .woocommerce .cart-collaterals .cart_totals,
 .woocommerce-page .cart-collaterals .cart_totals {
 	width: 100%;
+	/* Pudelko podsumowania na tle kart sklepu (Global Options -> WooCommerce). */
+	padding: var(--cyber-space-3);
+	background-color: var(--cyber-wc-box-bg);
 }
 
 .woocommerce-cart .cart_totals > table {

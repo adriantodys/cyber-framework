@@ -1,0 +1,68 @@
+{
+    "key": "group_product",
+    "title": "Cyber Framework — Produkt",
+    "fields": [
+        {
+            "key": "field_cyber_product_net_weight",
+            "label": "Waga netto",
+            "name": "cyber_product_net_weight",
+            "aria-label": "",
+            "type": "text",
+            "instructions": "Z jednostką, tak jak ma się wyświetlić, np. 300 g. Puste = bez wagi na stronie produktu. To nie jest waga do wysyłki (zakładka Wysyłka).",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": 30,
+            "allow_in_bindings": 0,
+            "placeholder": "np. 300 g",
+            "prepend": "",
+            "append": ""
+        },
+        {
+            "key": "field_cyber_product_pack_qty",
+            "label": "Sztuk w opakowaniu",
+            "name": "cyber_product_pack_qty",
+            "aria-label": "",
+            "type": "number",
+            "instructions": "Np. 3 dla zestawu trzech sztuk. Więcej niż 1 = na stronie produktu kafelek „Większe opakowanie, lepsza cena” z ceną za sztukę.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": 1,
+            "min": 1,
+            "max": 24,
+            "step": 1,
+            "placeholder": "",
+            "prepend": "",
+            "append": "szt."
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "product"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "side",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Dane produktu wyświetlane na stronie produktu (waga netto, zestaw). Źródło prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1792947981
+}

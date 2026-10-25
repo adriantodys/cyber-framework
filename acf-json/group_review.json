@@ -1,0 +1,78 @@
+{
+    "key": "group_review",
+    "title": "Cyber Framework — Opinia",
+    "fields": [
+        {
+            "key": "field_cyber_review_text",
+            "label": "Treść opinii",
+            "name": "cyber_review_text",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Sam tekst, bez cudzysłowów — na stronie dostaje je automatycznie. Podpis autora wpisz w tytule opinii, zdjęcie osoby (opcjonalne) ustaw jako obrazek wyróżniający.",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "allow_in_bindings": 0,
+            "rows": 5,
+            "placeholder": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_cyber_review_rating",
+            "label": "Ocena",
+            "name": "cyber_review_rating",
+            "aria-label": "",
+            "type": "select",
+            "instructions": "Liczba gwiazdek nad treścią opinii.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "33",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "5": "★★★★★ (5)",
+                "4": "★★★★☆ (4)",
+                "3": "★★★☆☆ (3)",
+                "2": "★★☆☆☆ (2)",
+                "1": "★☆☆☆☆ (1)"
+            },
+            "default_value": "5",
+            "return_format": "value",
+            "multiple": 0,
+            "allow_null": 0,
+            "allow_in_bindings": 0,
+            "ui": 0,
+            "ajax": 0,
+            "placeholder": "",
+            "create_options": 0,
+            "save_options": 0
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "cyber_review"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Treść i ocena pojedynczej opinii (CPT cyber_review). Wyświetla ją sekcja \"Wpisy \/ CPT\". Źródło prawdy: docs\/acf-schema.md.",
+    "show_in_rest": 0,
+    "modified": 1792947757
+}

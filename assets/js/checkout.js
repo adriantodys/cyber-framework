@@ -312,3 +312,50 @@
 		} );
 	}
 } )();
+
+/**
+ * Strona zamowienia — przycisk "Kupuje i place" bez zaznaczonej zgody.
+ *
+ * Osobny modul: nie zalezy od konfiguracji licznika ilosci (wyzej modul
+ * konczy sie, gdy jej brak). Przycisk NIE dostaje atrybutu disabled — bramki
+ * platnosci przerenderowuja go i przelaczaja same, a wylaczony przycisk nie
+ * przyjmuje klikniecia, wiec nie daloby sie pokazac, czego brakuje.
+ * Wyglad (wyszarzenie, podpowiedz) daje CSS :has w woocommerce-checkout.css; tu tylko
+ * zatrzymanie wysylki i wskazanie checkboxa. Delegacja — #payment jest
+ * przerenderowywany po kazdym 'update_checkout'.
+ */
+( function () {
+	'use strict';
+
+	document.addEventListener( 'click', function ( event ) {
+		var button = event.target.closest( '#place_order' );
+		var consent = document.getElementById( 'cyber_privacy_consent' );
+
+		if ( ! button || ! consent || consent.checked ) {
+			return;
+		}
+
+		event.preventDefault();
+
+		var row = consent.closest( '.form-row' );
+
+		if ( row ) {
+			row.classList.add( 'woocommerce-invalid' );
+		}
+
+		consent.focus();
+	} );
+
+	// Zaznaczenie zdejmuje oznaczenie bledu.
+	document.addEventListener( 'change', function ( event ) {
+		if ( 'cyber_privacy_consent' !== event.target.id || ! event.target.checked ) {
+			return;
+		}
+
+		var row = event.target.closest( '.form-row' );
+
+		if ( row ) {
+			row.classList.remove( 'woocommerce-invalid' );
+		}
+	} );
+} )();

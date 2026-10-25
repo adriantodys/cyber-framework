@@ -352,6 +352,10 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 | `assets/css/gallery.css` | siatka, pasek filtrów, lightbox, strona galerii |
 | `acf-json/group_section_gallery.json` | źródło klonowania: pola sekcji Galeria |
 | `acf-json/group_gallery.json` | zdjęcia pojedynczej galerii (CPT) |
+| `inc/reviews.php` | CPT `cyber_review` (Opinie), karta opinii w sekcji Wpisy |
+| `acf-json/group_review.json` | treść i ocena opinii (CPT) |
+| `template-parts/components/product-perks.php` | kafelki pod przyciskiem „Dodaj do koszyka” na stronie produktu (`cyber_product_perks()` w `inc/woocommerce-product.php`) |
+| `acf-json/group_product.json` | waga netto i liczba sztuk w opakowaniu (produkt WooCommerce) |
 | `inc/sections-global.php` | layout `global` — CPT `cyber_global_section`, odczyt, kolumna „Używana na” |
 | `template-parts/sections/global.php` | layout `global` — **tylko** podpowiedź dla redaktora, gdy nie ma czego pokazać |
 | `assets/css/sections.css` | style opakowania — ładowany **tylko** gdy wpis ma sekcje |
@@ -690,6 +694,42 @@ dotyczy nowych uploadów (starsze wymagają ponownego wygenerowania miniatur).
 | `title_url` | tytuł `.cyber-card__title-link` i zdjęcie `.cyber-card__media-link` prowadzą do wpisu (zdjęcie poza tabulacją) |
 | `title_tag` | `h2` / `h3` / `h4`; domyślnie `h3` |
 | `image_size` | `medium` / `medium_large` / `large`; domyślnie `large`. Wartość spoza listy (także `thumbnail`) wraca do `large` |
+| `price` | `<p class="cyber-card__price">` pod tytułem — cena produktu (HTML z `get_price_html()`, przez `wp_kses_post()`) |
+| `rating` | `<p class="cyber-card__rating">` — gwiazdki 1–5 (`aria-hidden`) + ocena tekstem dla czytnika |
+| `variant` | wariant karty: klasa `.cyber-card--[wariant]` na `<article>` (opinie: `review`) |
+| `cart` | przycisk `.cyber-card__cart` w `.cyber-card__footer` zamiast zwykłego przycisku/linku karty (dane z `cyber_post_card_product()`) |
+
+### Karta opinii
+
+Element typu **Opinie** (`cyber_review`) w sekcji Wpisy buduje
+`cyber_review_card_item()` (`inc/reviews.php`): gwiazdki, treść opinii
+w „…” w miejscu **tytułu**, podpis (tytuł wpisu) w miejscu **tekstu**, okrągłe
+zdjęcie osoby (rozmiar `thumbnail`, 48 px) obok podpisu. Bez daty, linku,
+przycisku i trybu „zdjęcie jako tło”. Klasa `.cyber-card--review`; układ
+w `assets/css/sections.css` (siatka zamiast kolumny flex, `:has()` dla wariantu
+bez zdjęcia). Rozmiarem i grubością treści sterują pola tytułu kart, podpisem —
+pola tekstu. Gwiazdki w kolorze ikon (`--cyber-color-icons`).
+
+### Karta produktu
+
+Gdy element sekcji Wpisy jest produktem WooCommerce (typ treści „Produkty”
+albo produkt z ręcznego wyboru), `cyber_post_card_item()` (`inc/posts.php`)
+buduje go jak na liście sklepu: **zdjęcie, nazwa, cena, „Dodaj do koszyka”**.
+Decyzja zapada **per element**, więc ręczny wybór mieszający wpisy i produkty
+działa poprawnie.
+
+- Przełączniki sekcji „Pokaż datę”, „Pokaż kategorię”, „Pokaż zajawkę” i tekst
+  przycisku **nie dotyczą produktu** — są pomijane. Działają nadal
+  „Pokaż zdjęcie”, znacznik tytułu i rozmiar przycisku.
+- Tekst, adres i tryb przycisku podaje WooCommerce (`add_to_cart_text()`,
+  `add_to_cart_url()`): produkt prosty — „Dodaj do koszyka” przez AJAX
+  (klasy `add_to_cart_button ajax_add_to_cart` + `data-product_id`, obsługuje
+  je skrypt wtyczki `wc-add-to-cart`), zmienny — „Wybierz opcje” z linkiem do
+  produktu, niedostępny — „Czytaj dalej”.
+- Po dodaniu wtyczka dopisuje w stopce karty link `.added_to_cart` („Zobacz koszyk”).
+- Cena i przycisk biorą kolor sklepu `--cyber-wc-color-main`, jak lista
+  produktów — nie zakładkę Przyciski.
+- Bez WooCommerce (zależność miękka) karta wraca do wyglądu zwykłego wpisu.
 
 Proporcje zdjęcia: klasy `.cyber-cards--ratio-16-9` / `-3-2` / `-4-3` / `-1-1`
 na kontenerze (pole `cyber_cards_image_ratio`).
