@@ -188,6 +188,48 @@ function cyber_blog_card_opts() {
 }
 
 /**
+ * Atrybut sizes zdjec na liscie bloga.
+ *
+ * Domyslny sizes WordPressa dla 'large' to "(max-width: 1024px) 100vw, 1024px"
+ * — nie zna kolumn, marginesow kontenera ani paska bocznego, wiec przegladarka
+ * pobiera plik kilka razy szerszy niz karta. Tu szerokosc liczona jest z tych
+ * samych ustawien, ktore buduja uklad: progi z cyber_breakpoints() (CLAUDE.md
+ * sekcja 18), marginesy i szerokosc kontenera (cyber_container_css()), kolumny
+ * i pasek boczny z Global Options -> Blog.
+ *
+ * Odstepy miedzy kolumnami i padding karty sa pominiete — wartosc wychodzi
+ * odrobine za duza, nigdy za mala, wiec zdjecie nie bywa rozmyte.
+ *
+ * @return string
+ */
+function cyber_blog_image_sizes() {
+	$breakpoints = cyber_breakpoints();
+	$cols_tablet = max( 1, (int) cyber_get_option( 'blog_columns_tablet' ) );
+	$cols        = max( 1, (int) cyber_get_option( 'blog_columns' ) );
+
+	// Pasek boczny znika ponizej progu tabletu (blog.css), wiec liczy sie tylko na desktopie.
+	$main = cyber_blog_has_sidebar() ? ( 100 - (int) cyber_get_option( 'blog_sidebar_width' ) ) / 100 : 1;
+
+	// Ta sama regula co w cyber_container_css(): 0 = brak limitu szerokosci.
+	$type      = cyber_get_option( 'page_width_type' );
+	$container = '100' === $type ? (int) cyber_get_option( 'page_width_100' ) : (int) cyber_get_option( 'page_width_' . $type );
+	$margin    = 2 * (int) cyber_get_option( 'page_margin_desktop' );
+
+	$sizes = array(
+		sprintf( '(max-width: %dpx) calc(100vw - %dpx)', $breakpoints['mobile'], 2 * (int) cyber_get_option( 'page_margin_mobile_l' ) ),
+		sprintf( '(max-width: %dpx) calc((100vw - %dpx) / %d)', $breakpoints['tablet'], 2 * (int) cyber_get_option( 'page_margin_tablet' ), $cols_tablet ),
+	);
+
+	if ( $container > 0 ) {
+		$sizes[] = sprintf( '(min-width: %dpx) %dpx', $container, (int) ceil( ( $container - $margin ) * $main / $cols ) );
+	}
+
+	$sizes[] = sprintf( 'calc((100vw - %dpx) * %s / %d)', $margin, round( $main, 2 ), $cols );
+
+	return implode( ', ', $sizes );
+}
+
+/**
  * Tytul listy bloga.
  *
  * Strona wpisow: tytul strony ustawionej w Ustawienia -> Czytanie albo "Blog".
