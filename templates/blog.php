@@ -16,6 +16,7 @@ get_header();
 $cyber_cards = cyber_blog_cards_row();
 $cyber_cards = cyber_cards_attributes( $cyber_cards );
 $cyber_opts  = cyber_blog_card_opts();
+$cyber_sizes = cyber_blog_image_sizes();
 ?>
 
 <div class="<?php echo esc_attr( cyber_blog_layout_class() ); ?>">
@@ -35,7 +36,9 @@ $cyber_opts  = cyber_blog_card_opts();
 				<?php
 				while ( have_posts() ) :
 					the_post();
-					get_template_part( 'template-parts/components/card', null, array( 'item' => cyber_post_card_item( get_post(), $cyber_opts ) ) );
+					$cyber_item                = cyber_post_card_item( get_post(), $cyber_opts );
+					$cyber_item['image_sizes'] = $cyber_sizes;
+					get_template_part( 'template-parts/components/card', null, array( 'item' => $cyber_item ) );
 				endwhile;
 				?>
 			</div>

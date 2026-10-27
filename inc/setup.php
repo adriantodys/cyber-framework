@@ -36,11 +36,18 @@ function cyber_theme_setup() {
 	);
 
 	/*
-	 * Rozmiary obrazkow nie sa jeszcze zdefiniowane — zostana dodane razem
-	 * z pierwszymi komponentami, ktore ich faktycznie potrzebuja (etap 4).
 	 * Nie definiujemy rozmiarow "na zapas": kazdy add_image_size() to dodatkowe
 	 * pliki generowane przy kazdym uploadzie.
+	 *
+	 * cyber-card-m — karta wpisu na telefonie (lista bloga). Wbudowane rozmiary
+	 * przeskakuja z 300 px (medium) od razu na 768 px (medium_large), a karta
+	 * na telefonie potrzebuje ok. 600 px (szerokosc ekranu x gestosc pikseli).
+	 * Bez posredniego rozmiaru przegladarka bierze 768 px i PageSpeed zglasza
+	 * "obrazy o niewlasciwym rozmiarze". Proporcjonalny (bez przycinania), wiec
+	 * trafia do srcset obok 'large'. Dotyczy nowych uploadow — istniejace
+	 * zdjecia trzeba przegenerowac (wp media regenerate).
 	 */
+	add_image_size( 'cyber-card-m', 640, 0 );
 
 	/*
 	 * Bez tej deklaracji WooCommerce traktuje motyw jako niewspierany i owija

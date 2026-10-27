@@ -34,6 +34,8 @@ if ( ! $cyber_item ) {
  * link   : adres tytulu i zdjecia (karta wpisu prowadzi do wpisu),
  * tag    : znacznik tytulu; na liscie bloga h2, bo h1 to tytul strony.
  * image_size : rozmiar obrazka z biblioteki mediow (sekcja Wpisy: 'medium').
+ * image_sizes: atrybut sizes zdjecia (lista bloga: cyber_blog_image_sizes());
+ *          bez niego WordPress wstawia domyslny, nieznajacy kolumn siatki.
  * price  : cena produktu jako HTML z WooCommerce (get_price_html()),
  * cart   : przycisk "Dodaj do koszyka" z cyber_post_card_product().
  * rating : ocena 1-5 jako gwiazdki (opinie, inc/reviews.php),
@@ -48,8 +50,14 @@ $cyber_meta  = isset( $cyber_item['meta'] ) ? (string) $cyber_item['meta'] : '';
 $cyber_link  = isset( $cyber_item['title_url'] ) ? (string) $cyber_item['title_url'] : '';
 $cyber_tag   = isset( $cyber_item['title_tag'] ) && in_array( $cyber_item['title_tag'], array( 'h2', 'h3', 'h4' ), true ) ? $cyber_item['title_tag'] : 'h3';
 $cyber_size  = isset( $cyber_item['image_size'] ) && in_array( $cyber_item['image_size'], array( 'thumbnail', 'medium', 'medium_large', 'large' ), true ) ? $cyber_item['image_size'] : 'large';
+$cyber_attrs = array( 'class' => 'cyber-card__image' );
+
+if ( ! empty( $cyber_item['image_sizes'] ) ) {
+	$cyber_attrs['sizes'] = (string) $cyber_item['image_sizes'];
+}
+
 $cyber_image = '' === $cyber_item['image_url'] && $cyber_item['image_id']
-	? wp_get_attachment_image( $cyber_item['image_id'], $cyber_size, false, array( 'class' => 'cyber-card__image' ) )
+	? wp_get_attachment_image( $cyber_item['image_id'], $cyber_size, false, $cyber_attrs )
 	: '';
 
 // Zdjecie jako tlo karty — adres idzie zmienna, nie atrybutem src.
