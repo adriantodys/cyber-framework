@@ -54,6 +54,7 @@ cyber_section_open( $cyber_attributes, $cyber_inner );
 		data-delay="<?php echo esc_attr( (string) $cyber_config['delay'] ); ?>"
 		data-navigation="<?php echo $cyber_config['navigation'] ? '1' : '0'; ?>"
 		data-pagination="<?php echo $cyber_config['pagination'] ? '1' : '0'; ?>"
+		data-i18n="<?php echo esc_attr( cyber_slider_i18n() ); ?>"
 	>
 		<div class="swiper-wrapper">
 			<?php foreach ( $cyber_slides as $cyber_index => $cyber_slide ) : ?>
@@ -107,6 +108,13 @@ cyber_section_open( $cyber_attributes, $cyber_inner );
 			<button type="button" class="swiper-button-prev cyber-slider__prev"></button>
 			<button type="button" class="swiper-button-next cyber-slider__next"></button>
 		<?php endif; ?>
+
+		<?php
+		// Ruch samoczynny musi dac sie zatrzymac (WCAG 2.2.2). Przycisk odslania skrypt.
+		if ( $cyber_config['autoplay'] ) {
+			cyber_slider_autoplay_button( 'cyber-slider' );
+		}
+		?>
 	</div>
 
 <?php

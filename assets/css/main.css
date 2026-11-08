@@ -1127,10 +1127,18 @@ h6 :is(a, span),
 	color: var(--cyber-breadcrumb-wc-color);
 }
 
-.cyber-breadcrumb__nav {
+/*
+ * Okruszki to lista <ol> (wzorzec WAI-ARIA "Breadcrumb"), ale wygladaja jak
+ * jeden wiersz tekstu: reset punktorow, marginesu i wciecia listy, uklad flex
+ * jak wczesniej na <nav>.
+ */
+.cyber-breadcrumb__list {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 /*
@@ -1140,6 +1148,8 @@ h6 :is(a, span),
  */
 .cyber-breadcrumb__item,
 .cyber-breadcrumb__item a {
+	margin: 0;
+	padding: 0;
 	font-size: inherit;
 	color: inherit;
 }
@@ -1154,9 +1164,9 @@ h6 :is(a, span),
 }
 
 /*
- * Ostatni okruszek to strona biezaca. W naszym markupie niesie aria-current,
- * ale WooCommerce takiego atrybutu nie dodaje — dlatego selektor opiera sie
- * na pozycji, ktora jest prawdziwa w obu przypadkach.
+ * Ostatni okruszek to strona biezaca. Oba warianty niosa aria-current="page"
+ * (w sklepie dopisuje je szablon po WooCommerce), ale selektor zostaje na
+ * pozycji — jest prawdziwa niezaleznie od tego, czy atrybut dotarl.
  */
 .cyber-breadcrumb__item:last-child {
 	color: var(--cyber-breadcrumb-color-active);

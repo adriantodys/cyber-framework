@@ -17,10 +17,21 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Adres logo do strony logowania albo pusty string, gdy logo nie wgrano.
  *
+ * Pole zwraca ID zalacznika (schemat 'attachment'); tutaj potrzebny jest
+ * sam adres, bo logo wchodzi jako background-image w CSS, a nie jako <img>.
+ *
  * @return string
  */
 function cyber_login_logo_url() {
-	return (string) cyber_get_option( 'header_logo' );
+	$logo_id = absint( cyber_get_option( 'header_logo' ) );
+
+	if ( ! $logo_id ) {
+		return '';
+	}
+
+	$url = wp_get_attachment_image_url( $logo_id, 'full' );
+
+	return $url ? (string) $url : '';
 }
 
 /**

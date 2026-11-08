@@ -275,23 +275,6 @@ function cyber_cards_attributes( array $row ) {
 }
 
 /**
- * Czy blok WYSIWYG nad albo pod kartami ma sie wyswietlic.
- *
- * Domyslnie NIE — wlacznik trzeba swiadomie wlaczyc. Brak wartosci liczy sie
- * jako wylaczony, zgodnie z default_value pola w ACF, zeby front i panel
- * zawsze pokazywaly ten sam stan.
- *
- * @param array  $row  Wiersz Flexible Content.
- * @param string $slot 'top' albo 'bottom'.
- * @return bool
- */
-function cyber_cards_shows_wysiwyg( array $row, $slot ) {
-	$key = 'cyber_cards_show_' . $slot;
-
-	return ! empty( $row[ $key ] );
-}
-
-/**
  * Normalizuje elementy repeatera do postaci gotowej dla widoku.
  *
  * Widok nie dostaje surowych wartosci ACF, tylko gotowe dane (CLAUDE.md
@@ -339,15 +322,8 @@ function cyber_cards_items( array $row ) {
 			continue;
 		}
 
-		$url    = '';
-		$label  = '';
-		$target = '';
-
-		if ( is_array( $link ) && ! empty( $link['url'] ) ) {
-			$url    = esc_url_raw( (string) $link['url'] );
-			$label  = isset( $link['title'] ) ? sanitize_text_field( (string) $link['title'] ) : '';
-			$target = isset( $link['target'] ) && '_blank' === $link['target'] ? '_blank' : '';
-		}
+		// Wspolna normalizacja pola Link (inc/helpers.php) — ta sama co w sliderze.
+		$link = cyber_normalize_link( $link );
 
 		$out[] = array(
 			'image_id'    => $image_id,
@@ -355,9 +331,9 @@ function cyber_cards_items( array $row ) {
 			'overtitle'   => $over,
 			'title'       => $title,
 			'text'        => $text,
-			'url'         => $url,
-			'label'       => $label,
-			'target'      => $target,
+			'url'         => $link ? $link['url'] : '',
+			'label'       => $link ? $link['label'] : '',
+			'target'      => $link ? $link['target'] : '',
 			'link_style'  => $link_style,
 			'button_size' => $button_size,
 		);

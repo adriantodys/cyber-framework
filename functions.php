@@ -83,14 +83,15 @@ function cyber_load_modules() {
 		'inc/login.php',
 	);
 
+	/*
+	 * Twarde require_once, bez is_readable(). Wczesniej brakujacy plik byl
+	 * pomijany po cichu, a blad wychodzil dopiero u pierwszego konsumenta —
+	 * np. jako "undefined function cyber_is_acf_active()" w inc/helpers.php,
+	 * czyli w pliku, ktory z brakiem nie mial nic wspolnego. Fatal z PHP
+	 * wskazuje od razu pelna sciezke modulu, ktorego nie ma.
+	 */
 	foreach ( $modules as $module ) {
-		$path = CYBER_DIR . '/' . $module;
-
-		if ( ! is_readable( $path ) ) {
-			continue;
-		}
-
-		require_once $path;
+		require_once CYBER_DIR . '/' . $module;
 	}
 }
 cyber_load_modules();

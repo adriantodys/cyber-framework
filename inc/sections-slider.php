@@ -242,15 +242,8 @@ function cyber_slider_slides( array $row ) {
 			continue;
 		}
 
-		$url    = '';
-		$label  = '';
-		$target = '';
-
-		if ( is_array( $link ) && ! empty( $link['url'] ) ) {
-			$url    = esc_url_raw( (string) $link['url'] );
-			$label  = isset( $link['title'] ) ? sanitize_text_field( (string) $link['title'] ) : '';
-			$target = isset( $link['target'] ) && '_blank' === $link['target'] ? '_blank' : '';
-		}
+		// Wspolna normalizacja pola Link (inc/helpers.php) — ta sama co w kartach.
+		$link = cyber_normalize_link( $link );
 
 		$out[] = array(
 			// Bez zdjecia desktopowego mobilne gra obie role.
@@ -258,9 +251,9 @@ function cyber_slider_slides( array $row ) {
 			'image_m'     => $image ? $mobile : 0,
 			'video'       => $video,
 			'content'     => $content,
-			'url'         => $url,
-			'label'       => $label,
-			'target'      => $target,
+			'url'         => $link ? $link['url'] : '',
+			'label'       => $link ? $link['label'] : '',
+			'target'      => $link ? $link['target'] : '',
 			'button_size' => $button_size,
 		);
 	}
@@ -452,58 +445,84 @@ function cyber_slider_assets() {
 	wp_enqueue_style( 'swiper-a11y', $vendor . '/modules/a11y.min.css', array( 'swiper' ), null );
 	// phpcs:enable WordPress.WP.EnqueuedResourceParameters.MissingVersion
 
-	wp_enqueue_script(
+	/*
+	 * MODUL ES NATYWNIE. Biblioteka Swiper jest dostarczona jako moduly ES
+	 * (import/export), a skrypt motywu je importuje — przegladarka wykona
+	 * import tylko ze skryptu type="module". WordPress od 6.5 ma do tego
+	 * wlasne API (Script Modules): wypisuje znacznik z wlasciwym typem
+	 * i odklada go na koniec dokumentu. Wczesniej motyw podmienial atrybut
+	 * type regexem w filtrze script_loader_tag — stad "Requires at least: 6.5"
+	 * w style.css.
+	 *
+	 * Moduly NIE obsluguja wp_localize_script() ani wp_add_inline_script():
+	 * etykiety dla czytnikow ekranu jada w atrybucie data-i18n kazdej karuzeli
+	 * (cyber_slider_i18n()), a etykiety przycisku pauzy w data-* na samym
+	 * przycisku (cyber_slider_autoplay_button()).
+	 */
+	wp_enqueue_script_module(
 		'cyber-slider',
 		CYBER_URI . '/assets/js/slider.js',
 		array(),
-		cyber_asset_version( 'assets/js/slider.js' ),
-		array( 'in_footer' => true )
-	);
-
-	wp_localize_script(
-		'cyber-slider',
-		'cyberSlider',
-		array(
-			'prev'       => __( 'Poprzedni slajd', 'cyber-framework' ),
-			'next'       => __( 'Następny slajd', 'cyber-framework' ),
-			'first'      => __( 'To jest pierwszy slajd', 'cyber-framework' ),
-			'last'       => __( 'To jest ostatni slajd', 'cyber-framework' ),
-			'pagination' => __( 'Przejdź do slajdu {{index}}', 'cyber-framework' ),
-		)
+		cyber_asset_version( 'assets/js/slider.js' )
 	);
 }
 add_action( 'wp_enqueue_scripts', 'cyber_slider_assets', 20 );
 
 /**
- * Laduje skrypt slidera jako modul ES.
+ * Etykiety karuzeli dla czytnikow ekranu (modul dostepnosci Swipera).
  *
- * Biblioteka Swiper jest dostarczona jako moduly ES (import/export), a skrypt
- * motywu je importuje — przegladarka wykona import tylko ze skryptu typu module.
- * Moduly sa odkladane (defer) z natury, wiec nie blokuja renderowania.
+ * @return array<string, string>
+ */
+function cyber_slider_strings() {
+	return array(
+		'prev'       => __( 'Poprzedni slajd', 'cyber-framework' ),
+		'next'       => __( 'Następny slajd', 'cyber-framework' ),
+		'first'      => __( 'To jest pierwszy slajd', 'cyber-framework' ),
+		'last'       => __( 'To jest ostatni slajd', 'cyber-framework' ),
+		'pagination' => __( 'Przejdź do slajdu {{index}}', 'cyber-framework' ),
+	);
+}
+
+/**
+ * Etykiety karuzeli jako JSON do atrybutu data-i18n.
  *
- * wp_localize_script() wypisuje dane jako osobny, zwykly <script> PRZED tym
- * znacznikiem, wiec window.cyberSlider jest dostepne w module.
+ * Skrypt jest modulem ES, wiec nie dostanie danych przez wp_localize_script()
+ * — czyta je z atrybutu elementu karuzeli. Wynik trafia w szablonie do
+ * esc_attr(); cudzyslowy JSON-a wracaja do postaci dla skryptu przy odczycie
+ * atrybutu przez przegladarke.
  *
- * @param string $tag    Znacznik <script>.
- * @param string $handle Uchwyt skryptu.
  * @return string
  */
-function cyber_slider_module_tag( $tag, $handle ) {
-	if ( 'cyber-slider' !== $handle ) {
-		return $tag;
-	}
-
-	/*
-	 * Motyw z html5 => script wypisuje <script> bez atrybutu type, ale bez tego
-	 * wsparcia WordPress dodaje type="text/javascript". Drugi atrybut type
-	 * bylby niepoprawny, wiec istniejacy podmieniamy, a brakujacy dopisujemy.
-	 */
-	$pattern = '/\stype=("|\')[^"\']*\1/';
-
-	if ( preg_match( $pattern, $tag ) ) {
-		return preg_replace( $pattern, ' type="module"', $tag, 1 );
-	}
-
-	return preg_replace( '/<script\b/', '<script type="module"', $tag, 1 );
+function cyber_slider_i18n() {
+	return (string) wp_json_encode( cyber_slider_strings() );
 }
-add_filter( 'script_loader_tag', 'cyber_slider_module_tag', 10, 2 );
+
+/**
+ * Wypisuje przycisk zatrzymania automatycznego przewijania (WCAG 2.2.2).
+ *
+ * Ruch, ktory startuje sam i trwa dluzej niz piec sekund, musi dac sie
+ * zatrzymac — dotyczy autoplay Swipera i tasmy ciaglej karuzeli. Przycisk
+ * wychodzi z atrybutem hidden: bez JavaScriptu nie ma czego zatrzymywac,
+ * a przy ograniczeniu animacji w systemie skrypt autoplay nie uruchamia
+ * i przycisku nie odslania. Oba stany (pauza / wznowienie) niosa osobne
+ * etykiety w data-*, skrypt przelacza je razem z aria-pressed.
+ *
+ * Ikony pauzy i odtwarzania pochodza z rejestru cyber_icons() ('pause',
+ * 'play') przez cyber_get_icon() — CLAUDE.md sekcja 22, zadnych SVG poza rejestrem.
+ *
+ * @param string $base Przedrostek klas BEM karuzeli: 'cyber-slider' albo 'cyber-carousel'.
+ * @return void
+ */
+function cyber_slider_autoplay_button( $base ) {
+	$base = sanitize_html_class( $base );
+
+	printf(
+		'<button type="button" class="cyber-autoplay %1$s__autoplay" aria-pressed="false" aria-label="%2$s" data-label-pause="%2$s" data-label-play="%3$s" hidden>%4$s%5$s</button>',
+		esc_attr( $base ),
+		esc_attr__( 'Zatrzymaj automatyczne przewijanie', 'cyber-framework' ),
+		esc_attr__( 'Wznow automatyczne przewijanie', 'cyber-framework' ),
+		// Ikony z rejestru cyber_icons() (CLAUDE.md sekcja 22): zaufany, staly markup SVG.
+		cyber_get_icon( 'pause' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		cyber_get_icon( 'play' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	);
+}

@@ -48,6 +48,7 @@ $cyber_carousel = cyber_carousel_attributes( $cyber_row, count( $cyber_items ) )
 		data-delay="<?php echo esc_attr( (string) $cyber_config['delay'] ); ?>"
 		data-navigation="<?php echo $cyber_config['navigation'] ? '1' : '0'; ?>"
 		data-pagination="<?php echo $cyber_config['pagination'] ? '1' : '0'; ?>"
+		data-i18n="<?php echo esc_attr( cyber_slider_i18n() ); ?>"
 	>
 		<?php if ( $cyber_config['continuous'] ) : ?>
 			<?php
@@ -101,9 +102,14 @@ $cyber_carousel = cyber_carousel_attributes( $cyber_row, count( $cyber_items ) )
 	 * Strzalki i kropki leza POD rzedem kart, w jednym pasku: <- . . . ->
 	 * Nad kartami przykrywalyby tresc skrajnych kart — w karuzeli, inaczej
 	 * niz w sliderze, karty wypelniaja cala szerokosc az do krawedzi.
+	 *
+	 * Przycisk pauzy (WCAG 2.2.2) stoi na koncu paska — przy autoplay Swipera
+	 * i przy tasmie ciaglej, ktora bez niego nie dalaby sie zatrzymac. Wychodzi
+	 * ukryty, odslania go skrypt (cyber_slider_autoplay_button()).
 	 */
+	$cyber_pausable = $cyber_config['autoplay'] || $cyber_config['continuous'];
 	?>
-	<?php if ( $cyber_config['navigation'] || $cyber_config['pagination'] ) : ?>
+	<?php if ( $cyber_config['navigation'] || $cyber_config['pagination'] || $cyber_pausable ) : ?>
 		<div class="cyber-carousel__controls">
 			<?php if ( $cyber_config['navigation'] ) : ?>
 				<button type="button" class="swiper-button-prev cyber-carousel__prev"></button>
@@ -116,6 +122,12 @@ $cyber_carousel = cyber_carousel_attributes( $cyber_row, count( $cyber_items ) )
 			<?php if ( $cyber_config['navigation'] ) : ?>
 				<button type="button" class="swiper-button-next cyber-carousel__next"></button>
 			<?php endif; ?>
+
+			<?php
+			if ( $cyber_pausable ) {
+				cyber_slider_autoplay_button( 'cyber-carousel' );
+			}
+			?>
 		</div>
 	<?php endif; ?>
 </div>

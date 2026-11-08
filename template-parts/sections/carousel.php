@@ -33,8 +33,9 @@ if ( ! $cyber_attributes ) {
 
 $cyber_items = cyber_cards_items( $cyber_row );
 $cyber_show  = array(
-	'top'    => cyber_cards_shows_wysiwyg( $cyber_row, 'top' ) && ! empty( $cyber_row['cyber_section_wysiwyg_top'] ),
-	'bottom' => cyber_cards_shows_wysiwyg( $cyber_row, 'bottom' ) && ! empty( $cyber_row['cyber_section_wysiwyg_bottom'] ),
+	// Karuzela klonuje wlaczniki kart (cyber_cards_show_*), stad ten przedrostek.
+	'top'    => cyber_section_shows_wysiwyg( $cyber_row, 'cyber_cards_show', 'top' ),
+	'bottom' => cyber_section_shows_wysiwyg( $cyber_row, 'cyber_cards_show', 'bottom' ),
 );
 
 if ( ! $cyber_items && ! $cyber_show['top'] && ! $cyber_show['bottom'] ) {

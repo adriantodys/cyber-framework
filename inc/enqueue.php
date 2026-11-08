@@ -43,6 +43,19 @@ function cyber_enqueue_assets() {
 	);
 
 	/*
+	 * Arkusz sekcji jest tu tylko REJESTROWANY — sciezka, zaleznosc i wersja
+	 * w jednym miejscu. Kolejkuja go po uchwycie moduly, ktore go potrzebuja
+	 * (inc/sections.php na stronach z sekcjami, inc/blog.php na widokach
+	 * bloga), na priorytecie 20, czyli po tej rejestracji.
+	 */
+	wp_register_style(
+		'cyber-sections',
+		CYBER_URI . '/assets/css/sections.css',
+		array( 'cyber-main' ),
+		cyber_asset_version( 'assets/css/sections.css' )
+	);
+
+	/*
 	 * Skrypt headera ma sens tylko wtedy, gdy jest co rozwijac — bez menu
 	 * przypisanego do lokalizacji 'primary' hamburger sie nie renderuje
 	 * (CLAUDE.md sekcja 10, enqueue warunkowy).
@@ -355,9 +368,9 @@ function cyber_header_css_map() {
  * Wyrownanie (menu i submenu) NIE trafia tutaj — jest modyfikatorem klasy
  * w markupie (.cyber-menu--center itd.), bo zmienia uklad, a nie wartosc.
  *
- * Kolory pochodza z pol typu 'color', wiec cyber_get_option() przepuszcza
- * wylacznie poprawny HEX; liczby sa rzutowane na int. Do CSS nie trafia
- * zaden ciag spoza tych dwoch ksztaltow.
+ * Kolory pochodza z pol typu 'color_alpha', wiec cyber_get_option() przepuszcza
+ * wylacznie poprawny HEX albo rgb()/rgba(); liczby sa rzutowane na int. Do CSS
+ * nie trafia zaden ciag spoza tych ksztaltow.
  *
  * @return string CSS bez znacznika <style>.
  */
@@ -802,7 +815,8 @@ function cyber_print_inline_css() {
 		. cyber_footer_css()
 		. cyber_copyright_css()
 		. cyber_breadcrumb_css()
-		. cyber_woocommerce_css()
+		// Zmienne sklepu tylko przy aktywnej wtyczce — bez niej nic ich nie czyta.
+		. ( cyber_is_woocommerce_active() ? cyber_woocommerce_css() : '' )
 		. cyber_blog_css()
 		. cyber_page_header_css()
 		. cyber_animation_css()

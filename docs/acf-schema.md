@@ -6,7 +6,7 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-09-25
+Ostatnia aktualizacja: 2026-11-08
 Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
 Pozostałe grupy pól (18): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`), **Opinia** (`group_review.json`), **Produkt** (`group_product.json`) i **Kategoria produktu** (`group_product_category.json`).
 
@@ -247,19 +247,25 @@ menu główne i podmenu. Widok mobilny (hamburger) **nie jest** częścią tego 
 
 | Field Label | Field Name | Typ | Return format | Default | Przeznaczenie |
 |---|---|---|---|---|---|
-| Logo | `cyber_header_logo` | Image | **`url`** | *(puste)* | Obraz linkowany do strony głównej. Puste = w headerze pojawia się tekstowa nazwa witryny. To samo logo zastępuje logo WordPressa na stronie logowania (`inc/login.php`); puste = zostaje logo WordPressa. |
+| Logo | `cyber_header_logo` | Image | **`id`** | `0` | Obraz linkowany do strony głównej. `<img>` buduje `wp_get_attachment_image()` (`width`/`height`, `srcset` — przeglądarka rezerwuje miejsce, bez przeskoku layoutu/CLS). Typ schematu `attachment` (`absint()` + `wp_attachment_is_image()`; pusta wartość = `0`). Puste = w headerze pojawia się tekstowa nazwa witryny. To samo logo zastępuje logo WordPressa na stronie logowania (`inc/login.php` pobiera adres przez `wp_get_attachment_image_url()`); puste = zostaje logo WordPressa. |
 
-> **Precedens dla pól Image.** To pierwsze pole obrazu w projekcie. Przyjęty
-> return format to **`url`** — pole zwraca sam adres pliku, a `cyber_get_option()`
-> waliduje go typem `url` (`esc_url_raw`, pusta wartość jest dozwolona i znacząca).
-> Kolejne pola Image trzymają się tego formatu, chyba że konkretny przypadek
-> wymaga rozmiarów lub `srcset` — wtedy zmiana wymaga jawnej decyzji, bo dotyczy
-> całej warstwy dostępu do obrazów.
+> **Precedens dla pól Image — dwa formaty, zależnie od tego, dokąd idzie wartość.**
+> Logo headera i stopki (od 2026-11-08) mają return format **`id`**: pole zwraca
+> ID załącznika, `cyber_get_option()` waliduje je typem schematu **`attachment`**
+> (`absint()` + `wp_attachment_is_image()` — załącznik musi istnieć i być
+> obrazkiem; pusta wartość to `0` i jest znacząca), a widok buduje `<img>` przez
+> `wp_get_attachment_image()`. Dzięki temu znacznik ma `width`/`height` i `srcset`,
+> więc duże logo nie przesuwa układu przy ładowaniu (CLS). Do 2026-11-08 oba pola
+> zwracały `url` i ten koszt był opisany tu jako znany dług.
 >
-> **Koszt tej decyzji:** mając sam URL, motyw nie zna wymiarów pliku, więc znacznik
-> `<img>` nie ma `width`/`height` ani `srcset`. Przy dużym logo oznacza to możliwy
-> CLS. Format `id` + `wp_get_attachment_image()` rozwiązałby to jednym wywołaniem —
-> jeśli logo okaże się problemem wydajnościowym, to jest miejsce do zmiany.
+> Format **`url`** (typ schematu `url`, `esc_url_raw()`) zostaje dla pól Image
+> i File, których wartość trafia do CSS jako `background-image` albo do `<video>`
+> — tło i wideo page headera (`cyber_pageheader_bg_image`, `cyber_pageheader_bg_video`,
+> `cyber_ph_image`, `cyber_ph_video`). Tam wymiary i `srcset` nie mają zastosowania.
+>
+> **Zmiana formatu nie dotyka bazy.** ACF zawsze trzyma w `wp_options` ID
+> załącznika — return format steruje wyłącznie odczytem. Po Sync grupy *Global
+> Options* nic nie trzeba zapisywać ponownie.
 
 **Sekcja: Wariant układu**
 
@@ -683,7 +689,8 @@ Wszystkie pola: typ ACF **URL**, opcjonalne, `nullable`. Puste pole znaczy
 
 **Walidacja bez nowego kodu.** Typ ACF URL sprawdza format w panelu, a po stronie
 odczytu pola używają istniejącego typu schematu **`url`** — tego samego, który
-obsługuje logo nagłówka (`esc_url_raw()`). Adres bez protokołu albo z protokołem
+obsługuje adres CTA headera oraz tło i wideo page headera (`esc_url_raw()`;
+logo headera i stopki od 2026-11-08 używa typu `attachment`). Adres bez protokołu albo z protokołem
 spoza białej listy WordPressa (np. `javascript:`) wraca jako pusty. Moduł nie ma
 własnego pliku w `inc/` — nie było czego dokładać.
 
@@ -811,13 +818,13 @@ Stopka ma **cztery kolumny**, ale pola ACF dostaje wyłącznie pierwsza.
 
 | Field Label | Field Name | Typ ACF | Return format | Przeznaczenie |
 |---|---|---|---|---|
-| Logo stopki | `cyber_footer_logo` | Image | **`url`** | Logo w kolumnie 1, linkowane do strony głównej. |
+| Logo stopki | `cyber_footer_logo` | Image | **`id`** | Logo w kolumnie 1, linkowane do strony głównej. `<img>` przez `wp_get_attachment_image()` (`width`/`height`, `srcset`); typ schematu `attachment`, pusta wartość = `0`. |
 | Treść kolumny 1 | `cyber_footer_content` | WYSIWYG (toolbar `basic`, bez uploadu mediów) | HTML | Tekst opisowy pod logo. |
 
 > **Logo stopki jest osobnym polem od `cyber_header_logo`** — celowo, nie przez
 > przeoczenie. Stopka może mieć inne tło i wymagać innej wersji znaku (np. jasnej
-> na ciemnym). Return format `url` jest ten sam co w nagłówku, zgodnie z precedensem
-> z modułu Header Desktop.
+> na ciemnym). Return format `id` jest ten sam co w nagłówku, zgodnie z precedensem
+> z modułu Header Desktop (do 2026-11-08 oba pola zwracały `url`).
 
 **Skąd bierze się zawartość każdej kolumny:**
 
@@ -1185,21 +1192,21 @@ i pojedynczego wpisu. Widoki: `templates/blog.php` i `templates/single-post.php`
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
 | Widoczny tytuł strony bloga | `cyber_blog_show_title` | True/False | `false` | Wyłączony: `<h1>` tylko dla czytników ekranu (makieta go nie ma). Archiwa pokazują tytuł zawsze |
-| Kolumny (desktop / tablet) | `cyber_blog_columns` `_columns_tablet` | Select 1–3 / 1–2 | `2` / `2` | Telefon zawsze 1 |
-| Odstęp między kolumnami / wierszami | `cyber_blog_gap_x` `_gap_y` | Select (skala) | `24` / `48` | |
+| Kolumny (desktop / tablet) | `cyber_blog_columns` / `cyber_blog_columns_tablet` | Select 1–3 / 1–2 | `2` / `2` | Telefon zawsze 1 |
+| Odstęp między kolumnami / wierszami | `cyber_blog_gap_x` / `cyber_blog_gap_y` | Select (skala) | `24` / `48` | |
 | Proporcje zdjęcia | `cyber_blog_image_ratio` | Select `auto` `16-9` `3-2` `4-3` `1-1` | `16-9` | |
-| Data / Kategoria / Zajawka / Przycisk | `cyber_blog_show_date` `_show_category` `_show_excerpt` `_show_button` | True/False | `true` / `false` / `false` / `false` | Elementy karty wpisu |
+| Data / Kategoria / Zajawka / Przycisk | `cyber_blog_show_date` / `cyber_blog_show_category` / `cyber_blog_show_excerpt` / `cyber_blog_show_button` | True/False | `true` / `false` / `false` / `false` | Elementy karty wpisu |
 | Długość zajawki (słowa) | `cyber_blog_excerpt_length` | Number 5–60 | `20` | |
 | Tekst przycisku | `cyber_blog_button_label` | Text | `Czytaj więcej` | |
 | Rozmiar przycisku | `cyber_blog_button_size` | Select `large` `medium` `small` | `small` | Wygląd z zakładki Przyciski |
-| Rozmiar / grubość tytułu na liście | `cyber_blog_title_size` `_title_weight` | Select `h1`–`h6` / 300–800 | `h5` / `400` | Tytuł karty to `<h2>` |
+| Rozmiar / grubość tytułu na liście | `cyber_blog_title_size` / `cyber_blog_title_weight` | Select `h1`–`h6` / 300–800 | `h5` / `400` | Tytuł karty to `<h2>` |
 
 **Pojedynczy wpis**
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
-| Zdjęcie wyróżniające / Data / Kategorie / Autor | `cyber_blog_single_image` `_single_date` `_single_category` `_single_author` | True/False | `true` / `true` / `false` / `false` | Kolejność: zdjęcie, tytuł, data i meta, treść |
-| Rozmiar / grubość tytułu wpisu | `cyber_blog_single_title_size` `_single_title_weight` | Select `h1`–`h6` / 300–800 | `h3` / `400` | Znacznik zawsze `<h1>`; `--cyber-blog-post-title-size` |
+| Zdjęcie wyróżniające / Data / Kategorie / Autor | `cyber_blog_single_image` / `cyber_blog_single_date` / `cyber_blog_single_category` / `cyber_blog_single_author` | True/False | `true` / `true` / `false` / `false` | Kolejność: zdjęcie, tytuł, data i meta, treść |
+| Rozmiar / grubość tytułu wpisu | `cyber_blog_single_title_size` / `cyber_blog_single_title_weight` | Select `h1`–`h6` / 300–800 | `h3` / `400` | Znacznik zawsze `<h1>`; `--cyber-blog-post-title-size` |
 
 **Wspólne**
 
@@ -1227,15 +1234,15 @@ CPT może to nadpisać w skrzynce „Cyber Framework — Page header”
 | Page header włączony | `cyber_pageheader_enable` | True/False | `false` | Wyłącznik całego modułu |
 | Typy treści | `cyber_pageheader_types` | Checkbox (lista uzupełnia się sama: `acf/load_field`) | `page` | Gdzie ma się pojawiać; typ spoza listy nadal może wymusić page header u siebie |
 | Szerokość | `cyber_pageheader_width` | Select `full` / `container` | `full` | 100% szerokości ekranu albo szerokość strony |
-| Wysokość (desktop / telefon) | `cyber_pageheader_height` `_height_mobile` | Number 120–900 / 100–700 px | `360` / `240` | Telefon poniżej 767px; `0` w nadpisaniu strony = wysokość z treści |
+| Wysokość (desktop / telefon) | `cyber_pageheader_height` / `cyber_pageheader_height_mobile` | Number 120–900 / 100–700 px | `360` / `240` | Telefon poniżej 767px; `0` w nadpisaniu strony = wysokość z treści |
 | Wyrównanie treści | `cyber_pageheader_align` | Select (CLAUDE.md sekcja 20) | `center` | |
 | Domyślne zdjęcie | `cyber_pageheader_bg_image` | Image (URL) | `''` | Tło, gdy strona nie ma własnego; przy wideo także kadr startowy |
 | Domyślne wideo | `cyber_pageheader_bg_video` | File (URL), `mp4, webm` | `''` | Leży nad zdjęciem; bez dźwięku, w pętli |
 | Nakładka na tło | `cyber_pageheader_overlay` | Color (alpha) | `rgba(0,0,0,0.35)` | Puste = bez nakładki |
 | Kolor tła | `cyber_pageheader_bg_color` | Color (alpha) | `#111111` | Widoczny bez zdjęcia i wideo |
-| Rozmiar / grubość / kolor tytułu | `cyber_pageheader_title_size` `_title_weight` `_title_color` | Select `h1`–`h6` / 300–800 / Color | `h1` / `700` / `#ffffff` | Znacznik zawsze `<h1>` |
+| Rozmiar / grubość / kolor tytułu | `cyber_pageheader_title_size` / `cyber_pageheader_title_weight` / `cyber_pageheader_title_color` | Select `h1`–`h6` / 300–800 / Color | `h1` / `700` / `#ffffff` | Znacznik zawsze `<h1>` |
 | Zajawka pod tytułem | `cyber_pageheader_show_excerpt` | True/False | `false` | Domyślnie dla wszystkich; strona może włączyć albo wyłączyć u siebie |
-| Rozmiar / kolor zajawki | `cyber_pageheader_excerpt_size` `_excerpt_color` | Select `text` `h6` `h5` `h4` / Color | `text` / `#ffffff` | |
+| Rozmiar / kolor zajawki | `cyber_pageheader_excerpt_size` / `cyber_pageheader_excerpt_color` | Select `text` `h6` `h5` `h4` / Color | `text` / `#ffffff` | |
 | Breadcrumb w page headerze | `cyber_pageheader_breadcrumb` | True/False | `false` | Okruszki pod tytułem (i pod zajawką, jeśli jest) zamiast osobnego paska pod page headerem. Kolor: zajawki; bieżąca strona: tytułu |
 
 > **Breadcrumb w page headerze to położenie, nie włącznik.** Czy okruszki w ogóle
@@ -1301,8 +1308,8 @@ przewinięciu strony w dół i wraca nią na samą górę. **Domyślnie wyłącz
 | Rozmiar przycisku | `cyber_totop_size` | Number 32–96 px | `48` | Bok kwadratu; `--cyber-totop-size` |
 | Rozmiar strzałki | `cyber_totop_icon_size` | Number 12–48 px | `20` | `--cyber-totop-icon-size` |
 | Zaokrąglenie rogów | `cyber_totop_radius` | Number 0–48 px | `0` | `0` = kwadrat; `--cyber-totop-radius` |
-| Kolor tła / po najechaniu | `cyber_totop_bg` `_bg_hover` | Color (alpha) | `#111111` / `#333333` | `--cyber-totop-bg`, `--cyber-totop-bg-hover` |
-| Kolor strzałki / po najechaniu | `cyber_totop_color` `_color_hover` | Color (alpha) | `#ffffff` / `#ffffff` | `--cyber-totop-color`, `--cyber-totop-color-hover`; nadpisuje wspólny kolor ikon (Kolory → Ikony) |
+| Kolor tła / po najechaniu | `cyber_totop_bg` / `cyber_totop_bg_hover` | Color (alpha) | `#111111` / `#333333` | `--cyber-totop-bg`, `--cyber-totop-bg-hover` |
+| Kolor strzałki / po najechaniu | `cyber_totop_color` / `cyber_totop_color_hover` | Color (alpha) | `#ffffff` / `#ffffff` | `--cyber-totop-color`, `--cyber-totop-color-hover`; nadpisuje wspólny kolor ikon (Kolory → Ikony) |
 
 Pola poza wyłącznikiem pokazują się tylko przy włączonym przycisku.
 
@@ -1330,12 +1337,19 @@ context i miejscem na ewentualny cache.
 
 ---
 
-## Odwzorowanie w kodzie — stan wdrożenia v0.1.0
+## Odwzorowanie w kodzie — stan wdrożenia v0.1.0 (wycinek historyczny)
 
 Grupa pól jest już zapisana jako Local JSON: **`acf-json/group_global_options.json`**.
 Nie trzeba jej klikać w UI — wystarczy Sync (patrz README, sekcja „Instalacja”).
 
-### Klucze pól (field keys)
+> **Ta sekcja opisuje stan z v0.1.0 (2026-09-09) i nie była rozszerzana.**
+> Tabela kluczy niżej obejmuje 39 z 239 pól Global Options — zakładki
+> „Główne ustawienia strony” i „Header Desktop” w ówczesnym kształcie. **Pełna
+> i aktualna lista kluczy (`field_cyber_*`) jest w `acf-json/group_global_options.json`**
+> — to on jest źródłem prawdy, nie ta tabela. Nazwy pól i ich przeznaczenie dla
+> wszystkich zakładek opisują tabele w sekcji „Field Group: Global Options” wyżej.
+
+### Klucze pól (field keys) — wycinek z v0.1.0
 
 | Field Name | Field Key | Typ |
 |---|---|---|
@@ -1451,6 +1465,26 @@ Gwarancje `cyber_get_option()`:
   znacząca i zwracana jest pusta wartość `''`),
 - brak aktywnego ACF PRO → wartości domyślne (motyw działa, traci konfigurowalność),
 - nieznany klucz → `_doing_it_wrong()`, żeby literówka nie zamieniła się w ciche `null`.
+
+**Typy schematu** (`type` w `cyber_option_schema()`, walidacja w `cyber_validate_option_value()`):
+
+| Typ | Co przyjmuje | Przykład pola |
+|---|---|---|
+| `choice` | jedna wartość z listy `choices` | `cyber_page_width_type` |
+| `choices` | wielokrotny wybór z pola Checkbox — lista kluczy przez `sanitize_key()`; dozwolone wartości nie są wpisane w schemacie, bo zależą od zarejestrowanych typów treści | `cyber_pageheader_types` |
+| `px` / `percent` / `int` | liczba całkowita w zakresie `min`–`max`; różnią się tylko jednostką (`int` bez jednostki, np. pozycja elementu strony produktu) | `cyber_page_width_80`, `cyber_font_scale_tablet`, pozycje z `cyber_product_option_schema()` |
+| `color_alpha` | HEX albo `rgb()`/`rgba()` — **wszystkie** pola Color Picker | `cyber_color_headings` |
+| `color` | sam HEX — typ bez przypisanego pola (CLAUDE.md sekcja 5) | — |
+| `url` | adres przez `esc_url_raw()` — pola URL, Page Link oraz Image/File z return format `url`, których wartość idzie do CSS albo `<video>` | `cyber_social_facebook`, `cyber_pageheader_bg_image` |
+| `attachment` | ID załącznika-obrazka z pola Image z return format `id`: `absint()` + `wp_attachment_is_image()`; pusta wartość `0` | `cyber_header_logo`, `cyber_footer_logo` |
+| `bool` | pole True/False | `cyber_header_sticky` |
+| `text` / `textarea` | tekst, opcjonalnie sprawdzany kluczem `pattern` | `cyber_contact_nip` |
+| `email` | `sanitize_email()` | `cyber_contact_email` |
+| `html` | treść z pola WYSIWYG | `cyber_footer_content` |
+| `link` | pole ACF Link (tablica `url` / `title` / `target`) | — (od 2026-09-10 bez pola; Copyright przeszedł na Page Link) |
+
+Klucz `nullable` oznacza, że pusta wartość jest poprawna i znacząca; pustka to
+`''` dla typów tekstowych, `array()` dla `choices` i `0` dla `attachment`.
 
 ### Stan: generowanie CSS
 
@@ -2472,6 +2506,8 @@ Reguła dotyczy wyłącznie Global Options. Grupy przypięte do wpisów lub taks
 nie ustawieniem globalnym.
 
 ## Historia zmian
+
+- 2026-11-08 — **Logo jako ID załącznika, autoload opcji.** `cyber_header_logo` i `cyber_footer_logo`: return format **`url` → `id`**, nowy typ schematu **`attachment`** (`absint()` + `wp_attachment_is_image()`, pusta wartość `0`). `<img>` buduje `wp_get_attachment_image()` (`width`/`height`/`srcset` — bez CLS), strona logowania (`inc/login.php`) bierze adres przez `wp_get_attachment_image_url()`. **Dane w bazie bez zmian** — ACF zawsze trzymał tam ID załącznika, return format steruje tylko odczytem; po Sync grupy *Global Options* niczego nie trzeba zapisywać ponownie. Format `url` zostaje dla pól, których wartość idzie do CSS albo `<video>` (tło i wideo page headera). `acf_add_options_page()` rejestruje Options Page z **`autoload => true`** — flaga działa przy zapisie, więc istniejące instalacje przełącza jedno kliknięcie „Zapisz ustawienia”; nowe mają autoload od pierwszego zapisu. Bez nowych pól — Global Options nadal **239 pól**. Pełna nazwa każdego pola w tabelach zakładek Blog, Page header i Przycisk do góry (wcześniej skróty z sufiksem w jednej komórce).
 
 - 2026-10-25 — **Opinie, pola produktu, tła sklepu.** Nowy CPT `cyber_review` (Opinie) z grupą `group_review` (`cyber_review_text`, `cyber_review_rating`) — karta opinii w sekcji „Wpisy / CPT”. Nowa grupa `group_product` (`cyber_product_net_weight`, `cyber_product_pack_qty`). Global Options → WooCommerce: **8 nowych pól** — `cyber_wc_bg_color`, `cyber_wc_box_bg_color` oraz wyłączniki i pozycje elementów strony produktu `category`, `weight`, `perks` (z rejestru `cyber_product_elements()`) — Global Options mają teraz **239 pól**.
 - 2026-10-01 — **Zaokrąglenie rogów: select w sekcjach + wartość globalna.** Nowe pole Global Options `cyber_border_radius` (Number 0–100 px, domyślnie `0`, zakładka „Główne ustawienia strony”, zmienna `--cyber-radius`) — Global Options mają teraz **231 pól**. Pola `cyber_cards_radius` (także Karuzela kart i Wpisy), `cyber_columns_radius`, `cyber_gal_radius`, `cyber_table_radius` zmienione z Number na Select: „Z ustawień globalnych” / 0 / 4 / 8 / 12 / 16 / 20 / 24 px (`cyber_section_radii()` w `inc/sections.php`). Domyślnie „Z ustawień globalnych”, tabela zostaje przy `8`. Liczby zapisane wcześniej poza listą (np. 10, 200) front i panel sprowadzają do najbliższego progu — filtr `acf/load_value`, żeby Select nie pokazał „Z ustawień globalnych” i zapis nie zmienił wyglądu. `cyber_totop_radius` (Przycisk do góry) bez zmian.

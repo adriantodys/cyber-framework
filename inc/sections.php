@@ -443,7 +443,7 @@ function cyber_section_classes( $value ) {
  *
  * @param string $type Klucz layoutu.
  * @param array  $row  Wiersz Flexible Content.
- * @return array{class: string, style: string, id: string, data: array<string, string>} Czesci atrybutow.
+ * @return array{class: string, style: string, id: string, data: array<string, string>, overlay: bool} Czesci atrybutow.
  */
 function cyber_section_attributes( $type, array $row ) {
 	$classes = array(
@@ -486,8 +486,9 @@ function cyber_section_attributes( $type, array $row ) {
 
 	$image = cyber_section_image_url( isset( $row['cyber_section_bg_image'] ) ? $row['cyber_section_bg_image'] : 0 );
 
+	// url("…") w cudzyslowie, jak w inc/login.php. Adres przeszedl przez esc_url_raw(), ktore usuwa cudzyslow, wiec nie moze zamknac ani url(), ani atrybutu.
 	if ( '' !== $image ) {
-		$vars['--cyber-section-bg-image'] = sprintf( 'url(%s)', $image );
+		$vars['--cyber-section-bg-image'] = sprintf( 'url("%s")', $image );
 	}
 
 	$image_mobile = cyber_section_image_url(
@@ -495,7 +496,7 @@ function cyber_section_attributes( $type, array $row ) {
 	);
 
 	if ( '' !== $image_mobile ) {
-		$vars['--cyber-section-bg-image-mobile'] = sprintf( 'url(%s)', $image_mobile );
+		$vars['--cyber-section-bg-image-mobile'] = sprintf( 'url("%s")', $image_mobile );
 	}
 
 	if ( '' !== $image || '' !== $image_mobile ) {
@@ -532,7 +533,9 @@ function cyber_section_attributes( $type, array $row ) {
 		isset( $row['cyber_section_overlay_color'] ) ? $row['cyber_section_overlay_color'] : ''
 	);
 
-	if ( '' !== $overlay ) {
+	$has_overlay = '' !== $overlay;
+
+	if ( $has_overlay ) {
 		$vars['--cyber-section-overlay'] = $overlay;
 		$classes[]                       = 'cyber-section--has-overlay';
 	}
@@ -576,17 +579,24 @@ function cyber_section_attributes( $type, array $row ) {
 
 	$anchor = isset( $row['cyber_section_anchor'] ) ? sanitize_title( (string) $row['cyber_section_anchor'] ) : '';
 
+	/*
+	 * 'overlay' to jawna flaga dla cyber_section_open(), ktore dorysowuje
+	 * pudelko nakladki. Wczesniej szukalo klasy w stringu — a klasy wlasne
+	 * redaktora (cyber_section_class) laduja w tym samym stringu, wiec wpisanie
+	 * tam "cyber-section--has-overlay" dawalo pudelko bez koloru.
+	 */
 	$attributes = array(
-		'class' => implode( ' ', $classes ),
-		'style' => $style,
-		'id'    => $anchor,
-		'data'  => array(),
+		'class'   => implode( ' ', $classes ),
+		'style'   => $style,
+		'id'      => $anchor,
+		'data'    => array(),
+		'overlay' => $has_overlay,
 	);
 
 	/**
 	 * Filtruje atrybuty opakowania sekcji.
 	 *
-	 * @param array  $attributes Klasy, style, kotwica i atrybuty data-* (nazwa bez prefiksu "data-" => wartosc).
+	 * @param array  $attributes Klasy, style, kotwica, atrybuty data-* (nazwa bez prefiksu "data-" => wartosc) i flaga 'overlay'.
 	 * @param string $type       Klucz layoutu.
 	 * @param array  $row        Wiersz Flexible Content.
 	 */
@@ -758,7 +768,8 @@ function cyber_section_open( array $attributes, $with_inner = true ) {
 	);
 
 	// Nakladka nad zdjeciem, pod trescia. Puste pudelko, bez roli dla czytnikow.
-	if ( false !== strpos( $attributes['class'], 'cyber-section--has-overlay' ) ) {
+	// Decyduje jawna flaga z cyber_section_attributes(), nie obecnosc klasy w stringu.
+	if ( ! empty( $attributes['overlay'] ) ) {
 		echo '<div class="cyber-section__overlay" aria-hidden="true"></div>';
 	}
 
@@ -804,6 +815,10 @@ function cyber_section_wysiwyg( array $row, $slot ) {
  * Dla sekcji, w ktorych edytory maja wlaczniki (domyslnie wylaczone). Brak
  * wartosci liczy sie jako wylaczony, zgodnie z default_value pola, wiec panel
  * i front pokazuja ten sam stan. Pusty edytor tez nie daje bloku.
+ *
+ * JEDYNA funkcja tego rodzaju w motywie: karty i karuzela pytaja z przedrostkiem
+ * 'cyber_cards_show', FAQ z 'cyber_faq_show' itd. Wczesniej karty i FAQ mialy
+ * wlasne wrappery o tej samej logice (usuniete 2026-11-08).
  *
  * @param array  $row    Wiersz Flexible Content.
  * @param string $toggle Przedrostek wlacznika, np. 'cyber_faq_show'.
@@ -1027,6 +1042,11 @@ function cyber_kses_content( $html ) {
  * Enqueue warunkowy zgodnie z CLAUDE.md sekcja 10. Puste pole Flexible Content
  * na stronie bez sekcji nie ma powodu ciagnac arkusza.
  *
+ * Arkusz jest ZAREJESTROWANY raz, w cyber_enqueue_assets() (inc/enqueue.php),
+ * razem ze sciezka, zaleznosciami i wersja. Tutaj i w inc/blog.php zostaje
+ * sam uchwyt — druga pelna rejestracja w innym pliku rozjezdzala sie przy
+ * pierwszej zmianie zaleznosci.
+ *
  * @return void
  */
 function cyber_section_assets() {
@@ -1039,11 +1059,6 @@ function cyber_section_assets() {
 		return;
 	}
 
-	wp_enqueue_style(
-		'cyber-sections',
-		CYBER_URI . '/assets/css/sections.css',
-		array( 'cyber-main' ),
-		cyber_asset_version( 'assets/css/sections.css' )
-	);
+	wp_enqueue_style( 'cyber-sections' );
 }
 add_action( 'wp_enqueue_scripts', 'cyber_section_assets', 20 );

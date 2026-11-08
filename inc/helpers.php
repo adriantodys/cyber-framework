@@ -82,6 +82,9 @@ function cyber_icons() {
 			. '<rect x="2.5" y="11.5" width="6" height="6" rx="1"/>'
 			. '<rect x="11.5" y="11.5" width="6" height="6" rx="1"/>',
 		'arrow-up'  => '<path d="M10 16.5v-13M4.5 9 10 3.5 15.5 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+		'pause'     => '<rect x="5" y="4" width="3.5" height="12" rx="1"/>'
+			. '<rect x="11.5" y="4" width="3.5" height="12" rx="1"/>',
+		'play'      => '<path d="M6.5 4.3a1 1 0 0 1 1.5-.9l8 5.7a1 1 0 0 1 0 1.8l-8 5.7a1 1 0 0 1-1.5-.9z"/>',
 		'list'      => '<rect x="2.5" y="3" width="4" height="4" rx="1"/>'
 			. '<rect x="8.5" y="4.2" width="9" height="1.6" rx="0.8"/>'
 			. '<rect x="2.5" y="8" width="4" height="4" rx="1"/>'
@@ -210,29 +213,41 @@ function cyber_header_variants() {
  * docs/acf-schema.md; kazda zmiana pola musi byc odzwierciedlona w obu miejscach.
  *
  * Znaczenie kluczy konfiguracji:
- * - type      : 'choice' (wartosc musi nalezec do 'choices'), 'px' albo 'percent'
- *              (oba to liczba calkowita w zadanym zakresie; roznia sie tylko jednostka),
+ * - type      : 'choice' (jedna wartosc, musi nalezec do 'choices'),
+ *              'choices' (wielokrotny wybor z pola Checkbox — lista kluczy
+ *              sanityzowanych przez sanitize_key(); dozwolone wartosci NIE sa
+ *              wpisane w schemacie, bo zaleza od zarejestrowanych typow tresci;
+ *              uzywa go pageheader_types),
+ *              'px', 'percent' albo 'int' (liczba calkowita w zakresie min / max;
+ *              roznia sie tylko jednostka — 'int' jest bez jednostki, np. kolejnosc
+ *              elementow karty produktu),
  *              'color_alpha' (HEX albo rgb/rgba — Color Picker z wlaczona
  *              przezroczystoscia; uzywaja go WSZYSTKIE pola kolorystyczne),
- *              'color' (sam HEX; typ chwilowo bez pola), 'url' (adres pliku, np. logo
- *              z pola Image), 'bool' (pole True/False), 'text' / 'textarea'
- *              (tekst, opcjonalnie sprawdzany kluczem 'pattern'), 'email'
- *              'html' (tresc z pola WYSIWYG) albo 'link' (pole ACF Link,
+ *              'color' (sam HEX; typ chwilowo bez pola), 'url' (adres pliku, np.
+ *              wideo z pola File z return_format 'url'), 'attachment' (ID
+ *              zalacznika-obrazka z pola Image z return_format 'id' — logo
+ *              headera i stopki; widok buduje <img> przez wp_get_attachment_image(),
+ *              zeby dostac width / height / srcset), 'bool' (pole True/False),
+ *              'text' / 'textarea' (tekst, opcjonalnie sprawdzany kluczem 'pattern'),
+ *              'email', 'html' (tresc z pola WYSIWYG) albo 'link' (pole ACF Link,
  *              tablica url / title / target).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
  * - min / max : dopuszczalny zakres dla typu 'px' / 'percent' / 'int' (walidacja zakresu, sekcja 9).
  * - nullable  : true = pusta wartosc jest poprawna i znaczaca (brak limitu,
- *              brak logo, niewypelnione pole kontaktowe).
+ *              brak logo, niewypelnione pole kontaktowe). Pusta wartosc to ''
+ *              dla typow tekstowych, array() dla 'choices' i 0 dla 'attachment'.
  * - pattern   : wzorzec preg dla typu 'text' — wartosc niepasujaca jest odrzucana.
  *
  * @return array<string, array<string, mixed>> Schemat opcji.
  */
 function cyber_option_schema() {
 	/*
-	 * Schemat jest stala tablica 239 wpisow, a cyber_get_option() siega po niego
-	 * przy KAZDYM wywolaniu — takze wtedy, gdy trafia we wlasny memo-cache.
-	 * Bez tego statica jedna podstrona przebudowywala go 150-250 razy.
+	 * Schemat jest stala tablica ok. 239 wpisow (razem z polami karty produktu
+	 * doklejanymi przez cyber_product_option_schema() na koncu), a
+	 * cyber_get_option() siega po niego przy KAZDYM wywolaniu — takze wtedy,
+	 * gdy trafia we wlasny memo-cache. Bez tego statica jedna podstrona
+	 * przebudowywala go 150-250 razy.
 	 */
 	static $cached = null;
 
@@ -405,8 +420,8 @@ function cyber_option_schema() {
 			'choices' => cyber_font_weight_choices(),
 		),
 		'header_logo'                 => array(
-			'type'     => 'url',
-			'default'  => '',
+			'type'     => 'attachment',
+			'default'  => 0,
 			'nullable' => true,
 		),
 		'header_menu_alignment'       => array(
@@ -819,8 +834,8 @@ function cyber_option_schema() {
 			'default' => '#0057ff',
 		),
 		'footer_logo'                 => array(
-			'type'     => 'url',
-			'default'  => '',
+			'type'     => 'attachment',
+			'default'  => 0,
 			'nullable' => true,
 		),
 		'footer_content'              => array(
@@ -1457,6 +1472,40 @@ function cyber_tel_href( $phone ) {
 }
 
 /**
+ * Normalizuje wartosc pola ACF Link do postaci gotowej dla widoku.
+ *
+ * Pole Link zwraca tablice url / title / target albo pusty string. Adres
+ * przechodzi przez esc_url_raw(), etykieta przez sanitize_text_field(),
+ * a target przyjmuje wylacznie '_blank' — kazda inna wartosc znika. Link bez
+ * adresu nie ma czego wskazac, wiec zwracany jest null.
+ *
+ * Regula stala w dwoch identycznych kopiach: w kartach (inc/sections-cards.php)
+ * i w sliderze (inc/sections-slider.php). Ta sama zasada co przy
+ * cyber_tel_href() — jesli dwa moduly maja "robic tak samo", potrzebuja
+ * funkcji, nie komentarza.
+ *
+ * @param mixed $link Wartosc pola ACF Link (tablica) albo cokolwiek innego.
+ * @return array{url: string, label: string, target: string}|null Null, gdy brak adresu.
+ */
+function cyber_normalize_link( $link ) {
+	if ( ! is_array( $link ) || empty( $link['url'] ) ) {
+		return null;
+	}
+
+	$url = esc_url_raw( (string) $link['url'] );
+
+	if ( '' === $url ) {
+		return null;
+	}
+
+	return array(
+		'url'    => $url,
+		'label'  => isset( $link['title'] ) ? sanitize_text_field( (string) $link['title'] ) : '',
+		'target' => isset( $link['target'] ) && '_blank' === $link['target'] ? '_blank' : '',
+	);
+}
+
+/**
  * Wybiera z wiersza sekcji te kolory, ktore redaktor faktycznie ustawil.
  *
  * Pole koloru puste = "zostaw wartosc z arkusza", wiec pusta wartosc NIE
@@ -1719,7 +1768,12 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 	$is_empty = ( null === $value || '' === $value || array() === $value );
 
 	if ( $is_empty ) {
-		return ! empty( $config['nullable'] ) ? '' : $fallback;
+		if ( ! empty( $config['nullable'] ) ) {
+			// Pusta wartosc w typie tego pola: 0 dla ID zalacznika, '' dla reszty.
+			return 'attachment' === $config['type'] ? 0 : '';
+		}
+
+		return $fallback;
 	}
 
 	if ( 'choice' === $config['type'] ) {
@@ -1835,6 +1889,27 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 		$color = cyber_sanitize_color( $value );
 
 		return ( '' === $color ) ? $fallback : $color;
+	}
+
+	if ( 'attachment' === $config['type'] ) {
+		/*
+		 * Pole Image z return_format 'id' zwraca int; 'array' zwrocilby tablice
+		 * z kluczem 'ID' — wyciagamy go, zeby przestawienie pola w UI nie
+		 * wywrocilo widoku. Zalacznik musi istniec i byc obrazkiem: ID po
+		 * skasowanym pliku albo wskazujace na PDF nie ma czego wyrenderowac.
+		 * Pusta wartosc tego typu to 0, nie '' (widok robi (int) i porownuje z 0).
+		 */
+		if ( is_array( $value ) ) {
+			$value = isset( $value['ID'] ) ? $value['ID'] : ( isset( $value['id'] ) ? $value['id'] : 0 );
+		}
+
+		$id = absint( $value );
+
+		if ( ! $id || ! wp_attachment_is_image( $id ) ) {
+			return ! empty( $config['nullable'] ) ? 0 : $fallback;
+		}
+
+		return $id;
 	}
 
 	if ( 'url' === $config['type'] ) {

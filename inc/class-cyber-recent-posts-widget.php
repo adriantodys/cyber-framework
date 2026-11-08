@@ -62,12 +62,14 @@ class Cyber_Recent_Posts_Widget extends WP_Widget {
 		$instance = wp_parse_args( (array) $instance, $this->defaults() );
 		$posts    = get_posts(
 			array(
-				'post_type'           => 'post',
-				'posts_per_page'      => max( 1, min( 10, (int) $instance['number'] ) ),
-				'post_status'         => 'publish',
-				'post__not_in'        => is_singular( 'post' ) ? array( get_queried_object_id() ) : array(),
-				'ignore_sticky_posts' => true,
-				'no_found_rows'       => true,
+				'post_type'                   => 'post',
+				'posts_per_page'              => max( 1, min( 10, (int) $instance['number'] ) ),
+				'post_status'                 => 'publish',
+				'post__not_in'                => is_singular( 'post' ) ? array( get_queried_object_id() ) : array(),
+				'ignore_sticky_posts'         => true,
+				'no_found_rows'               => true,
+				// Miniatury ladowane razem z wpisami — karta pyta o nie per wpis.
+				'update_post_thumbnail_cache' => true,
 			)
 		);
 

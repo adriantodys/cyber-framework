@@ -126,11 +126,12 @@ wtyczki część miejsc milknie cicho, a część głośno.
 > `inc/options.php` celowo dalej sprawdza `acf_add_options_page()` — to inna
 > zdolność wtyczki i nie wolno jej zlewać z poprzednią.
 >
-> Uwaga na tryb awarii: `cyber_get_option()` w `inc/helpers.php` woła teraz
-> funkcję z `inc/acf.php`. `cyber_load_modules()` pomija po cichu nieczytelny
-> plik (`is_readable()`), więc brak `inc/acf.php` kończy się teraz błędem
-> krytycznym, a nie cichą degradacją. `inc/acf.php` stoi w kolejności ładowania
-> **przed** wszystkimi konsumentami i tak musi zostać.
+> Uwaga na tryb awarii: `cyber_get_option()` w `inc/helpers.php` woła
+> funkcję z `inc/acf.php`. `cyber_load_modules()` ładuje każdy moduł twardym
+> `require_once`, więc brak dowolnego pliku z listy — także `inc/acf.php` —
+> kończy się błędem krytycznym z jego pełną ścieżką, a nie cichą degradacją.
+> `inc/acf.php` stoi w kolejności ładowania **przed** wszystkimi konsumentami
+> i tak musi zostać.
 
 **Komunikat o braku zależności miękkiej ma trzy poziomy i żaden nie jest opcjonalny:**
 

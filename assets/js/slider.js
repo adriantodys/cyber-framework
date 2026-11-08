@@ -1,8 +1,10 @@
 /**
  * Karuzele Swipera — sekcje "Slider" i "Karuzela kart".
  *
- * Ladowany jako modul ES (type="module", patrz cyber_slider_module_tag())
- * i wylacznie na wpisie, ktory ma ktoras z tych sekcji.
+ * Ladowany jako modul ES przez wp_enqueue_script_module() (inc/sections-slider.php)
+ * i wylacznie na wpisie, ktory ma ktoras z tych sekcji. Modul nie dostaje
+ * danych z wp_localize_script() — etykiety czyta z atrybutu data-i18n
+ * kazdej karuzeli, a etykiety przycisku pauzy z data-* na samym przycisku.
  *
  * Importujemy rdzen i piec modulow zamiast pelnej paczki swiper-bundle:
  * 27,7 kB gzip zamiast 43,8 kB. Sciezki sa wzgledne wobec tego pliku, a wersja
@@ -24,13 +26,28 @@ import Autoplay from '../vendor/swiper-14.2.0/modules/autoplay.min.mjs';
 import A11y from '../vendor/swiper-14.2.0/modules/a11y.min.mjs';
 import Keyboard from '../vendor/swiper-14.2.0/modules/keyboard.min.mjs';
 
-const strings = window.cyberSlider || {};
-
 /*
  * Uzytkownik, ktory w systemie wylaczyl animacje, nie dostaje samoczynnie
  * przewijanej karuzeli. Strzalki, kropki i przeciaganie dzialaja dalej.
  */
 const reducedMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+/**
+ * Czyta etykiety dla czytnikow ekranu z atrybutu data-i18n.
+ *
+ * JSON pochodzi z PHP (cyber_slider_i18n()); uszkodzony atrybut daje pusty
+ * obiekt, a Swiper uzywa wtedy swoich angielskich domyslnych.
+ *
+ * @param {HTMLElement} el Element karuzeli.
+ * @return {Object}
+ */
+function strings( el ) {
+	try {
+		return JSON.parse( el.getAttribute( 'data-i18n' ) || '{}' ) || {};
+	} catch ( error ) {
+		return {};
+	}
+}
 
 /**
  * Czyta wlacznik z atrybutu data-*.
@@ -66,6 +83,7 @@ function number( el, name, fallback ) {
  * @return {Object}
  */
 function commonOptions( el, scope, base ) {
+	const labels = strings( el );
 	const options = {
 		modules: [ Navigation, Pagination, Autoplay, A11y, Keyboard ],
 		loop: flag( el, 'loop' ),
@@ -73,11 +91,11 @@ function commonOptions( el, scope, base ) {
 		grabCursor: true,
 		keyboard: { enabled: true, onlyInViewport: true },
 		a11y: {
-			prevSlideMessage: strings.prev,
-			nextSlideMessage: strings.next,
-			firstSlideMessage: strings.first,
-			lastSlideMessage: strings.last,
-			paginationBulletMessage: strings.pagination,
+			prevSlideMessage: labels.prev,
+			nextSlideMessage: labels.next,
+			firstSlideMessage: labels.first,
+			lastSlideMessage: labels.last,
+			paginationBulletMessage: labels.pagination,
 		},
 	};
 
@@ -108,6 +126,68 @@ function commonOptions( el, scope, base ) {
 }
 
 /**
+ * Przycisk zatrzymania ruchu (WCAG 2.2.2) — wspolny dla autoplay Swipera
+ * i tasmy ciaglej.
+ *
+ * Przycisk wychodzi z PHP z atrybutem hidden (cyber_slider_autoplay_button()):
+ * odslaniamy go dopiero tutaj, gdy jest co zatrzymywac. Przy ograniczeniu
+ * animacji w systemie ruchu nie ma, wiec przycisk zostaje ukryty — wywolujacy
+ * po prostu go nie podpina.
+ *
+ * aria-pressed="true" oznacza stan zatrzymany; etykieta zmienia sie razem
+ * z nim, zeby czytnik ekranu oglaszal, co zrobi nastepne nacisniecie.
+ *
+ * @param {HTMLElement|null} button   Element .cyber-autoplay albo null.
+ * @param {Function}         onToggle Wywolywane z true (zatrzymaj) albo false (wznow).
+ * @return {void}
+ */
+function bindAutoplayButton( button, onToggle ) {
+	if ( ! button ) {
+		return;
+	}
+
+	const labelPause = button.getAttribute( 'data-label-pause' ) || '';
+	const labelPlay = button.getAttribute( 'data-label-play' ) || '';
+
+	button.hidden = false;
+
+	button.addEventListener( 'click', () => {
+		const paused = 'true' !== button.getAttribute( 'aria-pressed' );
+
+		button.setAttribute( 'aria-pressed', paused ? 'true' : 'false' );
+		button.setAttribute( 'aria-label', paused ? labelPlay : labelPause );
+		onToggle( paused );
+	} );
+}
+
+/**
+ * Podpina przycisk pauzy pod autoplay Swipera.
+ *
+ * Wywolywane tylko wtedy, gdy autoplay faktycznie jest w opcjach — przy
+ * wylaczonym autoplay albo ograniczeniu animacji commonOptions() go nie
+ * ustawil i przycisk zostaje ukryty.
+ *
+ * @param {Object}      swiper  Instancja Swipera.
+ * @param {Object}      options Opcje, z ktorymi powstala.
+ * @param {HTMLElement} scope   Element, w ktorym szukac przycisku.
+ * @param {string}      base    Przedrostek klas karuzeli.
+ * @return {void}
+ */
+function bindSwiperAutoplay( swiper, options, scope, base ) {
+	if ( ! options.autoplay ) {
+		return;
+	}
+
+	bindAutoplayButton( scope.querySelector( '.' + base + '__autoplay' ), ( paused ) => {
+		if ( paused ) {
+			swiper.autoplay.stop();
+		} else {
+			swiper.autoplay.start();
+		}
+	} );
+}
+
+/**
  * Slider: jeden slajd na widoku.
  *
  * @param {HTMLElement} el Element .cyber-slider.
@@ -124,7 +204,7 @@ function initSlider( el ) {
 		};
 	}
 
-	new Swiper( el, options );
+	bindSwiperAutoplay( new Swiper( el, options ), options, el, 'cyber-slider' );
 }
 
 /**
@@ -167,16 +247,26 @@ function syncVideos( swiper ) {
  * @return {void}
  */
 function initCarousel( el ) {
+	const scope = el.closest( '.cyber-carousel-wrap' ) || el;
+
 	/*
 	 * Tryb ciagly nie uzywa Swipera: to tasma z animacja CSS (patrz
 	 * cyber_carousel_continuous_items() w PHP). Uruchomienie Swipera na niej
-	 * nadpisaloby transform tasmy i zatrzymalo animacje.
+	 * nadpisaloby transform tasmy i zatrzymalo animacje. Skrypt doklada tu
+	 * wylacznie przycisk pauzy: klasa stanu .cyber-carousel--paused zatrzymuje
+	 * animacje w arkuszu (animation-play-state). Przy ograniczeniu animacji
+	 * tasma i tak stoi, wiec przycisk zostaje ukryty.
 	 */
 	if ( el.classList.contains( 'cyber-carousel--continuous' ) ) {
+		if ( ! reducedMotion ) {
+			bindAutoplayButton( scope.querySelector( '.cyber-carousel__autoplay' ), ( paused ) => {
+				el.classList.toggle( 'cyber-carousel--paused', paused );
+			} );
+		}
+
 		return;
 	}
 
-	const scope = el.closest( '.cyber-carousel-wrap' ) || el;
 	const options = commonOptions( el, scope, 'cyber-carousel' );
 
 	// Karuzela jedzie dalej rowniez pod kursorem — inaczej niz slider.
@@ -219,7 +309,7 @@ function initCarousel( el ) {
 	// Karty mniej niz miejsc na widoku: nie ma czego przewijac.
 	options.watchOverflow = true;
 
-	new Swiper( el, options );
+	bindSwiperAutoplay( new Swiper( el, options ), options, scope, 'cyber-carousel' );
 }
 
 document.querySelectorAll( '.cyber-slider' ).forEach( initSlider );

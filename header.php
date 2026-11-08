@@ -41,7 +41,7 @@ get_template_part(
 	'template-parts/header/header',
 	null,
 	array(
-		'logo_url'          => cyber_get_option( 'header_logo' ),
+		'logo_id'           => cyber_get_option( 'header_logo' ),
 		'site_name'         => get_bloginfo( 'name' ),
 		'menu_alignment'    => cyber_get_option( 'header_menu_alignment' ),
 		'menu_indicator'    => cyber_get_option( 'header_submenu_indicator' ),

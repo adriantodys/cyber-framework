@@ -672,6 +672,77 @@
 	padding-bottom: var(--cyber-space-6);
 }
 
+/* --- Przycisk zatrzymania ruchu (WCAG 2.2.2) -------------------------------- */
+
+/*
+ * Wspolny dla autoplay slidera, autoplay karuzeli i tasmy ciaglej. Przycisk
+ * wychodzi z PHP z atrybutem hidden i odslania go skrypt — stad regula na
+ * [hidden] o wyzszej specyficznosci niz display ponizej. 44x44 px to minimalny
+ * cel dotyku; ikona jest mniejsza, reszte wypelnia pole klikalne.
+ *
+ * Kolor dziedziczy ze zmiennych strzalek Swipera (--swiper-navigation-color),
+ * ktore slider i karuzela ustawiaja kazdy po swojemu — na zdjeciu biale,
+ * w karuzeli w kolorze linkow.
+ */
+.cyber-autoplay {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 50%;
+	background: none;
+	color: var(--swiper-navigation-color, var(--cyber-color-links));
+	cursor: pointer;
+}
+
+.cyber-autoplay[hidden] {
+	display: none;
+}
+
+.cyber-autoplay:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+/*
+ * Ikony pochodza z rejestru cyber_icons() (klasy .cyber-icon--pause / --play).
+ * Wspolna .cyber-icon niesie kolor z Global Options -> Kolory -> Ikony; tutaj
+ * ikona ma dziedziczyc kolor przycisku (bialy nad slajdem, kolor linkow
+ * w karuzeli), wiec nadpisujemy go na inherit.
+ */
+.cyber-autoplay .cyber-icon {
+	width: 20px;
+	height: 20px;
+	color: inherit;
+	fill: currentColor;
+}
+
+/* Ikona odpowiada nastepnej akcji: pauza w ruchu, odtwarzanie po zatrzymaniu. */
+.cyber-autoplay .cyber-icon--play,
+.cyber-autoplay[aria-pressed="true"] .cyber-icon--pause {
+	display: none;
+}
+
+.cyber-autoplay[aria-pressed="true"] .cyber-icon--play {
+	display: block;
+}
+
+/*
+ * W sliderze przycisk lezy w prawym dolnym rogu slajdu, na tej samej wysokosci
+ * co kropki (--swiper-pagination-bottom) i w tej samej odleglosci od krawedzi
+ * co strzalki. z-index jak kropki Swipera (10), zeby lezal nad trescia slajdu.
+ */
+.cyber-slider .cyber-slider__autoplay {
+	position: absolute;
+	right: var(--cyber-space-3);
+	bottom: var(--cyber-space-2);
+	z-index: 10;
+}
+
 .cyber-slider--y-top .cyber-slide__body { justify-content: flex-start; }
 .cyber-slider--y-center .cyber-slide__body { justify-content: center; }
 .cyber-slider--y-bottom .cyber-slide__body { justify-content: flex-end; }
@@ -739,10 +810,19 @@
 }
 
 /*
- * Tasma NIE zatrzymuje sie po najechaniu mysza ani po wejsciu klawiatura —
- * decyzja projektowa: ruch ma byc ciagly. Osoby z ograniczeniem animacji
- * w systemie dostaja rzad nieruchomy (blok prefers-reduced-motion nizej).
+ * Tasma zatrzymuje sie (WCAG 2.2.2) na trzy sposoby: pod kursorem, gdy fokus
+ * klawiatury wejdzie na karte, i po nacisnieciu przycisku pauzy, ktory
+ * przelacza klase stanu .cyber-carousel--paused (assets/js/slider.js).
+ * Zatrzymanie to animation-play-state, nie wylaczenie animacji — tasma rusza
+ * dalej z miejsca, w ktorym stanela, bez przeskoku. Osoby z ograniczeniem
+ * animacji w systemie dostaja rzad nieruchomy (blok prefers-reduced-motion
+ * nizej). Zmiana decyzji z 2026-11: wczesniej tasma jechala takze pod kursorem.
  */
+.cyber-carousel--continuous:hover .cyber-carousel__band,
+.cyber-carousel--continuous:focus-within .cyber-carousel__band,
+.cyber-carousel--continuous.cyber-carousel--paused .cyber-carousel__band {
+	animation-play-state: paused;
+}
 
 @keyframes cyber-carousel-band {
 	from {
@@ -884,6 +964,20 @@
 	border: 0;
 	background: none;
 	cursor: pointer;
+}
+
+/*
+ * Przycisk pauzy stoi w pasku jako ostatni, w zwyklym przeplywie. Gdy jest
+ * sam (tasma ciagla bez strzalek i kropek), pasek ma tylko jego — a dopoki
+ * skrypt go nie odslonil (albo nie odsloni wcale, przy ograniczeniu animacji),
+ * pusty pasek nie zostawia po sobie marginesu.
+ */
+.cyber-carousel__controls .cyber-carousel__autoplay {
+	position: static;
+}
+
+.cyber-carousel__controls:has(> .cyber-autoplay[hidden]:only-child) {
+	display: none;
 }
 
 /*

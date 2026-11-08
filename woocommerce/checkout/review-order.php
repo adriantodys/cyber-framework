@@ -17,7 +17,7 @@
 
 /*
  * ---------------------------------------------------------------------------
- * NADPISANIE MOTYWU Cyber Framework — JEDYNE w calym projekcie.
+ * NADPISANIE MOTYWU Cyber Framework — pierwsze z dwoch (drugie: cart/cart-shipping.php).
  *
  * Skopiowane z WooCommerce 11.1.0, plik templates/checkout/review-order.php
  * w wersji @version 11.0.0. Naglowek powyzej zostaje NIETKNIETY, inaczej

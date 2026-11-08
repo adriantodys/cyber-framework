@@ -41,16 +41,25 @@ if ( $cyber_inside ) {
 	<?php if ( ! $cyber_inside ) : ?>
 	<div class="cyber-container">
 	<?php endif; ?>
+		<?php
+		/*
+		 * Lista uporzadkowana, nie ciag <span>: czytnik ekranu oglasza liczbe
+		 * okruszkow i pozycje biezacego (wzorzec WAI-ARIA "Breadcrumb").
+		 * Separator rysuje pseudoelement w CSS — nie ma go w markupie.
+		 */
+		?>
 		<nav class="cyber-breadcrumb__nav" aria-label="<?php esc_attr_e( 'Okruszki', 'cyber-framework' ); ?>">
-			<?php foreach ( $cyber_items as $cyber_item ) : ?>
-				<?php if ( '' !== $cyber_item['url'] ) : ?>
-					<span class="cyber-breadcrumb__item">
-						<a href="<?php echo esc_url( $cyber_item['url'] ); ?>"><?php echo esc_html( $cyber_item['label'] ); ?></a>
-					</span>
-				<?php else : ?>
-					<span class="cyber-breadcrumb__item" aria-current="page"><?php echo esc_html( $cyber_item['label'] ); ?></span>
-				<?php endif; ?>
-			<?php endforeach; ?>
+			<ol class="cyber-breadcrumb__list">
+				<?php foreach ( $cyber_items as $cyber_item ) : ?>
+					<?php if ( '' !== $cyber_item['url'] ) : ?>
+						<li class="cyber-breadcrumb__item">
+							<a href="<?php echo esc_url( $cyber_item['url'] ); ?>"><?php echo esc_html( $cyber_item['label'] ); ?></a>
+						</li>
+					<?php else : ?>
+						<li class="cyber-breadcrumb__item" aria-current="page"><?php echo esc_html( $cyber_item['label'] ); ?></li>
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</ol>
 		</nav>
 	<?php if ( ! $cyber_inside ) : ?>
 	</div>

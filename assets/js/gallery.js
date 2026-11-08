@@ -103,9 +103,26 @@
 		var link = links[ current ];
 		var thumb = link.querySelector( 'img' );
 		var text = link.dataset.caption || '';
+		var width = parseInt( link.dataset.width, 10 );
+		var height = parseInt( link.dataset.height, 10 );
 
 		image.src = link.getAttribute( 'href' );
 		image.alt = thumb ? thumb.getAttribute( 'alt' ) || '' : '';
+
+		/*
+		 * Wymiary pliku z data-* (components/gallery.php): przegladarka zna
+		 * proporcje zdjecia przed pobraniem i nie przesuwa podpisu, gdy ono
+		 * dotrze. Arkusz skaluje obraz przez max-width/max-height, wiec
+		 * atrybuty nie wymuszaja rozmiaru.
+		 */
+		if ( width > 0 && height > 0 ) {
+			image.width = width;
+			image.height = height;
+		} else {
+			image.removeAttribute( 'width' );
+			image.removeAttribute( 'height' );
+		}
+
 		caption.textContent = text;
 		caption.hidden = '' === text;
 		counter.textContent = ( current + 1 ) + ' ' + strings.of + ' ' + links.length;
@@ -148,6 +165,14 @@
 		if ( index < 0 ) {
 			return false;
 		}
+
+		/*
+		 * Okno dialogowe ma miec dostepna nazwe — bez niej czytnik ekranu oglasza
+		 * tylko "okno dialogowe". Etykieta przychodzi z PHP w data-lightbox-label
+		 * na kontenerze galerii (tlumaczalna); skrypt ma zapas na wypadek
+		 * starszego markupu.
+		 */
+		dialog.setAttribute( 'aria-label', gallery.dataset.lightboxLabel || strings.lightbox || 'Powiekszone zdjecie' );
 
 		show( index );
 		dialog.showModal();

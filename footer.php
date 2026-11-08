@@ -28,7 +28,7 @@ get_template_part(
 	'template-parts/footer/footer',
 	null,
 	array(
-		'logo_url'  => cyber_get_option( 'footer_logo' ),
+		'logo_id'   => cyber_get_option( 'footer_logo' ),
 		'site_name' => get_bloginfo( 'name' ),
 		'content'   => cyber_get_option( 'footer_content' ),
 		'copyright' => cyber_copyright_has_content( $cyber_copyright ) ? $cyber_copyright : null,

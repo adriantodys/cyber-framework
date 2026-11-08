@@ -29,7 +29,6 @@
 	 */
 	var mobileQuery = window.matchMedia( '(max-width:' + breakpoint + 'px)' );
 	var parents = menu.querySelectorAll( '.menu-item-has-children' );
-	var wasMobile = mobileQuery.matches;
 	var labelOpen = toggle.getAttribute( 'data-label-open' ) || '';
 	var labelClose = toggle.getAttribute( 'data-label-close' ) || '';
 
@@ -114,10 +113,30 @@
 		setState( ! isOpen() );
 	} );
 
+	/**
+	 * Czy link prowadzi pod prawdziwy adres.
+	 *
+	 * Rodzic podmenu bywa pozycja "Niestandardowy link" z adresem "#" —
+	 * taki link nie ma dokad prowadzic i sluzy wylacznie do rozwijania.
+	 *
+	 * @param {Element} link Link pozycji.
+	 * @return {boolean} Czy ma adres inny niz pusty lub "#".
+	 */
+	function hasDestination( link ) {
+		var href = ( link.getAttribute( 'href' ) || '' ).trim();
+
+		return '' !== href && '#' !== href;
+	}
+
 	/*
 	 * Delegacja zamiast nasluchu na kazdej pozycji: menu moze byc dowolnie
 	 * dlugie, a pozycje bez dzieci maja dzialac normalnie — dlatego handler
 	 * wychodzi natychmiast, gdy klikniety link nie nalezy do pozycji z podmenu.
+	 *
+	 * Dwa dotkniecia rodzica: pierwsze rozwija podmenu (link nie przechodzi
+	 * dalej), drugie — na pozycji juz rozwinietej — przechodzi do strony
+	 * rodzica, jesli ma dokad. Bez tego strona rodzica bylaby na telefonie
+	 * nieosiagalna. Link bez adresu albo z "#" tylko zwija i rozwija.
 	 */
 	menu.addEventListener( 'click', function ( event ) {
 		if ( ! mobileQuery.matches ) {
@@ -133,6 +152,10 @@
 		var item = link.closest( 'li' );
 
 		if ( ! item || ! item.classList.contains( 'menu-item-has-children' ) || itemLink( item ) !== link ) {
+			return;
+		}
+
+		if ( 'true' === link.getAttribute( 'aria-expanded' ) && hasDestination( link ) ) {
 			return;
 		}
 
@@ -159,15 +182,13 @@
 		setState( false );
 	} );
 
-	window.addEventListener( 'resize', function () {
-		var isMobile = mobileQuery.matches;
-
-		// Reagujemy tylko na przekroczenie progu, nie na kazdy piksel zmiany.
-		if ( isMobile === wasMobile ) {
-			return;
-		}
-
-		wasMobile = isMobile;
+	/*
+	 * Zdarzenie "change" na matchMedia zamiast "resize": przegladarka wola je
+	 * wylacznie przy przekroczeniu progu, a nie przy kazdym pikselu zmiany
+	 * szerokosci, wiec handler nie musi sam porownywac stanu.
+	 */
+	mobileQuery.addEventListener( 'change', function ( event ) {
+		var isMobile = event.matches;
 
 		// Po przejsciu na widok desktopowy menu desktopowe przejmuje role panelu.
 		if ( ! isMobile && isOpen() ) {

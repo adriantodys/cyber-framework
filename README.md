@@ -10,7 +10,7 @@ i obowiązkowa lektura przed każdą zmianą.
 
 | | |
 |---|---|
-| WordPress | 6.4+ (testowane na 7.1) |
+| WordPress | 6.5+ (testowane na 7.1) — od 6.5, bo slider ładuje skrypt przez Script Modules API (`wp_enqueue_script_module()`) |
 | PHP | 8.0+ |
 | ACF PRO | wymagane (twarda zależność — bez niego motyw działa na wartościach domyślnych) |
 | WooCommerce | opcjonalne (zależność miękka — bez niego funkcje sklepu wyłączają się same) |
@@ -27,11 +27,17 @@ i obowiązkowa lektura przed każdą zmianą.
    zamiast domyślnych motywu, i nie trzeba przeklikiwać osiemnastu zakładek.
    Pełny przebieg opisuje nagłówek tego pliku; zasady — CLAUDE.md sekcja 16.
 5. Wejdź w **Custom Fields → Field Groups → Sync available** i zsynchronizuj
-   **wszystkie** grupy *Cyber Framework — …* (17 plików w `acf-json/`) — nie trzeba
+   **wszystkie** grupy *Cyber Framework — …* (19 plików w `acf-json/`) — nie trzeba
    klikać żadnego pola ręcznie. Są wśród nich: *Global Options*, *Sekcje* wraz
    z grupami źródłowymi *Sekcje: …* (pola klonowane do layoutów — bez nich sekcje
-   nie mają pól), *Page header*, *Galeria* i *Kategoria produktu*. Ta ostatnia
-   dotyczy taksonomii `product_cat` i ma sens dopiero z WooCommerce.
+   nie mają pól), *Page header*, *Galeria*, *Opinia*, *Produkt* i *Kategoria
+   produktu*. Dwie ostatnie dotyczą WooCommerce (produkt i taksonomia
+   `product_cat`) i mają sens dopiero z tą wtyczką.
+   **Aktualizacja istniejącej instalacji do tej wersji (2026-11-08):** kliknij
+   **Sync** dla *Global Options* (pola logo zwracają teraz ID załącznika zamiast
+   adresu — dane w bazie bez zmian) i raz **Zapisz ustawienia** w menu Cyber
+   Framework, żeby opcje przełączyły się na `autoload` (jedno zapytanie zamiast
+   setek pojedynczych `SELECT`-ów na każdym żądaniu).
 6. Ustawienia znajdziesz w menu **Cyber Framework** (slug `cyber-settings`).
    Zapisz je raz — wartości trafią do `wp_options` i od tej chwili to one
    decydują o wyglądzie.

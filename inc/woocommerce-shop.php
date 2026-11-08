@@ -42,9 +42,12 @@ function cyber_shop_per_page_choices() {
 const CYBER_SHOP_VIEW_COOKIE = 'cyber_shop_view';
 
 /**
- * Klucz nonce dla doladowywania produktow.
+ * Nazwa akcji AJAX doladowywania produktow.
+ *
+ * Do 2026-11-08 ta sama stala sluzyla takze jako klucz nonce — nonce
+ * zostal usuniety, uzasadnienie w docblocku cyber_shop_load_more_products().
  */
-const CYBER_SHOP_MORE_NONCE = 'cyber_shop_more';
+const CYBER_SHOP_MORE_ACTION = 'cyber_shop_more';
 
 /**
  * Czy biezacy widok to lista produktow.
@@ -294,7 +297,8 @@ function cyber_shop_toolbar_controls() {
 
 		<form class="cyber-shop__per-page" method="get">
 			<label for="cyber-per-page"><?php esc_html_e( 'Na stronie:', 'cyber-framework' ); ?></label>
-			<select name="per_page" id="cyber-per-page" onchange="this.form.submit()">
+			<?php // Wyslanie formularza po zmianie obsluguje assets/js/shop.js — bez inline JS. ?>
+			<select name="per_page" id="cyber-per-page" class="cyber-shop__per-page-select">
 				<?php foreach ( cyber_shop_per_page_choices() as $choice ) : ?>
 					<option value="<?php echo esc_attr( $choice ); ?>" <?php selected( $per_page, $choice ); ?>>
 						<?php echo esc_html( $choice ); ?>
@@ -518,19 +522,29 @@ add_action( 'wp', 'cyber_shop_setup_hooks' );
 /**
  * AJAX: kolejna strona produktow dla przycisku "Pokaz wiecej".
  *
- * Komplet zabezpieczen wg CLAUDE.md sekcja 9:
+ * Zabezpieczenia wg CLAUDE.md sekcja 9:
  *
- * - NONCE — check_ajax_referer() na wejsciu.
  * - SANITIZACJA — kazdy parametr osobno, zgodnie z jego typem.
  * - WALIDACJA — strona i liczba na stronie z bialej listy, sortowanie z listy
  *   opcji projektu, taksonomia musi nalezec do produktow, a termin istniec.
  * - ESCAPING — odpowiedz to JSON; markup produktow buduje szablon WooCommerce,
  *   ktory escapuje u siebie.
  *
- * BRAK current_user_can() jest swiadomy: to publiczna lista produktow, ta sama,
- * ktora kazdy widzi bez logowania. Endpoint niczego nie zapisuje i nie
- * przyjmuje zadnego identyfikatora uzytkownika — zwraca wylacznie to, co
- * i tak jest widoczne pod adresem kategorii.
+ * BRAK NONCE jest swiadomy (decyzja z 2026-11-08). Nonce chroni przed
+ * wykonaniem w imieniu uzytkownika akcji, ktora zmienia stan — a tu nie ma
+ * zadnego stanu do podrobienia: endpoint tylko czyta publiczna liste
+ * produktow, te sama, ktora kazdy dostaje pod adresem kategorii. Nonce
+ * wnosil za to realny koszt: przy cache pelnych stron zapisany w HTML-u token
+ * wygasa po 12-24 h i przycisk "Pokaz wiecej" przestawal dzialac u kazdego,
+ * kto dostal strone z cache. Endpoint zamowienia (cyber_checkout_qty,
+ * inc/woocommerce-checkout.php) nonce ZACHOWUJE, bo zmienia stan koszyka —
+ * a WooCommerce i tak wylacza cache koszyka i zamowienia, wiec tam ten
+ * problem nie wystepuje.
+ *
+ * BRAK current_user_can() jest swiadomy z tego samego powodu: to publiczna
+ * lista produktow. Endpoint niczego nie zapisuje i nie przyjmuje zadnego
+ * identyfikatora uzytkownika — zwraca wylacznie to, co i tak jest widoczne
+ * bez logowania.
  *
  * Parametry sa przepisywane na zapytanie OD ZERA, a nie przyjmowane jako
  * gotowa tablica argumentow. Przyjecie argumentow WP_Query od przegladarki
@@ -539,8 +553,7 @@ add_action( 'wp', 'cyber_shop_setup_hooks' );
  * @return void
  */
 function cyber_shop_load_more_products() {
-	check_ajax_referer( CYBER_SHOP_MORE_NONCE, 'nonce' );
-
+	// phpcs:disable WordPress.Security.NonceVerification.Missing -- publiczny odczyt bez stanu, patrz docblock.
 	if ( ! cyber_is_woocommerce_active() ) {
 		wp_send_json_error( array( 'message' => __( 'Sklep jest niedostępny.', 'cyber-framework' ) ), 400 );
 	}
@@ -607,6 +620,8 @@ function cyber_shop_load_more_products() {
 		);
 	}
 
+	// phpcs:enable WordPress.Security.NonceVerification.Missing
+
 	$args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
 	// Sortowanie liczy WooCommerce, zeby cena i popularnosc dzialaly tak samo jak w petli.
@@ -642,8 +657,8 @@ function cyber_shop_load_more_products() {
 		)
 	);
 }
-add_action( 'wp_ajax_' . CYBER_SHOP_MORE_NONCE, 'cyber_shop_load_more_products' );
-add_action( 'wp_ajax_nopriv_' . CYBER_SHOP_MORE_NONCE, 'cyber_shop_load_more_products' );
+add_action( 'wp_ajax_' . CYBER_SHOP_MORE_ACTION, 'cyber_shop_load_more_products' );
+add_action( 'wp_ajax_nopriv_' . CYBER_SHOP_MORE_ACTION, 'cyber_shop_load_more_products' );
 
 /**
  * Ukrywa natywne pole Opis w edycji kategorii produktu.
@@ -700,8 +715,7 @@ function cyber_shop_assets() {
 		'cyberShop',
 		array(
 			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-			'action'  => CYBER_SHOP_MORE_NONCE,
-			'nonce'   => wp_create_nonce( CYBER_SHOP_MORE_NONCE ),
+			'action'  => CYBER_SHOP_MORE_ACTION,
 			'cookie'  => CYBER_SHOP_VIEW_COOKIE,
 			'error'   => __( 'Nie udało się wczytać kolejnych produktów. Odśwież stronę i spróbuj ponownie.', 'cyber-framework' ),
 		)

@@ -64,20 +64,6 @@ function cyber_faq_items( array $row ) {
 }
 
 /**
- * Czy blok WYSIWYG nad albo pod pytaniami ma sie wyswietlic.
- *
- * Domyslnie NIE — tak jak w kartach. Brak wartosci liczy sie jako wylaczony,
- * zgodnie z default_value pola, wiec panel i front pokazuja ten sam stan.
- *
- * @param array  $row  Wiersz Flexible Content.
- * @param string $slot 'top' albo 'bottom'.
- * @return bool
- */
-function cyber_faq_shows_wysiwyg( array $row, $slot ) {
-	return cyber_section_shows_wysiwyg( $row, 'cyber_faq_show', $slot );
-}
-
-/**
  * Pytania rozdzielone na kolumny.
  *
  * Dwie kolumny to dwie OSOBNE listy, nie siatka: w siatce otwarcie pytania

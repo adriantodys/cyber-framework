@@ -177,7 +177,8 @@ function cyber_columns_attributes( array $row ) {
 	$image = cyber_section_image_url( isset( $row['cyber_columns_bg_image'] ) ? $row['cyber_columns_bg_image'] : 0 );
 
 	if ( '' !== $image ) {
-		$vars['--cyber-columns-bg-image'] = sprintf( 'url(%s)', $image );
+		// url("…") w cudzyslowie — adres przeszedl przez esc_url_raw(), ktore usuwa cudzyslow.
+		$vars['--cyber-columns-bg-image'] = sprintf( 'url("%s")', $image );
 
 		$vars['--cyber-columns-bg-size'] = cyber_section_choice(
 			isset( $row['cyber_columns_bg_size'] ) ? $row['cyber_columns_bg_size'] : 'cover',

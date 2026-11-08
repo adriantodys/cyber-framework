@@ -35,7 +35,13 @@ $cyber_attributes = isset( $args['attributes'] ) ? $args['attributes'] : array(
 $cyber_filters    = isset( $args['filters'] ) ? $args['filters'] : array();
 $cyber_all        = isset( $args['all_label'] ) && '' !== $args['all_label'] ? $args['all_label'] : __( 'Wszystkie', 'cyber-framework' );
 ?>
-<div class="<?php echo esc_attr( $cyber_attributes['class'] ); ?>" style="<?php echo esc_attr( $cyber_attributes['style'] ); ?>">
+<?php
+/*
+ * Etykieta okna lightboxa (aria-label na <dialog>) jedzie w data-*, zeby
+ * tlumaczenie zylo w PHP, a skrypt nie mial wpisanego tekstu na stale.
+ */
+?>
+<div class="<?php echo esc_attr( $cyber_attributes['class'] ); ?>" style="<?php echo esc_attr( $cyber_attributes['style'] ); ?>" data-lightbox-label="<?php esc_attr_e( 'Powiekszone zdjecie', 'cyber-framework' ); ?>">
 
 	<?php if ( $cyber_filters ) : ?>
 		<?php
@@ -59,12 +65,27 @@ $cyber_all        = isset( $args['all_label'] ) && '' !== $args['all_label'] ? $
 
 	<div class="cyber-gallery__grid">
 		<?php foreach ( $cyber_items as $cyber_index => $cyber_item ) : ?>
+			<?php
+			/*
+			 * Wymiary pliku w pelnym rozmiarze dla lightboxa: skrypt nadaje je
+			 * powiekszonemu <img>, zeby przegladarka znala proporcje przed
+			 * pobraniem zdjecia. Metadane zalacznika sa juz w cache po
+			 * wp_get_attachment_image() nizej, wiec to nie jest dodatkowe zapytanie.
+			 */
+			$cyber_full_src = wp_get_attachment_image_src( $cyber_item['id'], 'full' );
+			$cyber_width    = $cyber_full_src ? absint( $cyber_full_src[1] ) : 0;
+			$cyber_height   = $cyber_full_src ? absint( $cyber_full_src[2] ) : 0;
+			?>
 			<figure class="cyber-gallery__item" data-terms="<?php echo esc_attr( implode( ' ', $cyber_item['terms'] ) ); ?>">
 				<a
 					class="cyber-gallery__link"
 					href="<?php echo esc_url( $cyber_item['full'] ); ?>"
 					data-index="<?php echo esc_attr( (string) $cyber_index ); ?>"
 					data-caption="<?php echo esc_attr( $cyber_item['caption'] ); ?>"
+					<?php if ( $cyber_width && $cyber_height ) : ?>
+					data-width="<?php echo esc_attr( (string) $cyber_width ); ?>"
+					data-height="<?php echo esc_attr( (string) $cyber_height ); ?>"
+					<?php endif; ?>
 				>
 					<?php
 					echo wp_get_attachment_image(
