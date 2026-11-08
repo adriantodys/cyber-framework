@@ -45,16 +45,40 @@ if ( $cyber_inside ) {
 	<div class="cyber-container">
 	<?php endif; ?>
 		<?php
+		/*
+		 * Ten sam markup co w breadcrumb.php: <nav> > <ol> > <li>. WooCommerce
+		 * daje kazdemu okruszkowi identyczny znacznik "before", wiec
+		 * aria-current="page" dla ostatniego trzeba dopisac po fakcie —
+		 * bufor wyjscia i podmiana OSTATNIEGO wystapienia otwierajacego <li>.
+		 * Markup jest juz wyescapowany przez WooCommerce (esc_url / esc_html
+		 * w templates/global/breadcrumb.php), a podmieniany fragment jest staly.
+		 */
+		$cyber_item_open = '<li class="cyber-breadcrumb__item">';
+
+		ob_start();
 		woocommerce_breadcrumb(
 			array(
 				'delimiter'   => '',
-				'wrap_before' => '<nav class="cyber-breadcrumb__nav" aria-label="' . esc_attr__( 'Okruszki', 'cyber-framework' ) . '">',
-				'wrap_after'  => '</nav>',
-				'before'      => '<span class="cyber-breadcrumb__item">',
-				'after'       => '</span>',
+				'wrap_before' => '<nav class="cyber-breadcrumb__nav" aria-label="' . esc_attr__( 'Okruszki', 'cyber-framework' ) . '"><ol class="cyber-breadcrumb__list">',
+				'wrap_after'  => '</ol></nav>',
+				'before'      => $cyber_item_open,
+				'after'       => '</li>',
 				'home'        => __( 'Strona glowna', 'cyber-framework' ),
 			)
 		);
+		$cyber_html = (string) ob_get_clean();
+		$cyber_last = strrpos( $cyber_html, $cyber_item_open );
+
+		if ( false !== $cyber_last ) {
+			$cyber_html = substr_replace(
+				$cyber_html,
+				'<li class="cyber-breadcrumb__item" aria-current="page">',
+				$cyber_last,
+				strlen( $cyber_item_open )
+			);
+		}
+
+		echo $cyber_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup WooCommerce, wyescapowany u zrodla.
 		?>
 	<?php if ( ! $cyber_inside ) : ?>
 	</div>

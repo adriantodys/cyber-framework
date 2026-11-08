@@ -32,6 +32,18 @@ function cyber_register_options_page() {
 			'position'        => 59,
 			'update_button'   => __( 'Zapisz ustawienia', 'cyber-framework' ),
 			'updated_message' => __( 'Ustawienia zapisane.', 'cyber-framework' ),
+			/*
+			 * ACF domyslnie zapisuje opcje z autoload = false. Blok <style>
+			 * w wp_head czyta ponad 130 kluczy na KAZDYM zadaniu, a kazdy klucz
+			 * to dwa wiersze wp_options (wartosc + referencja do pola). Bez
+			 * autoloadu zaden z nich nie siedzi w cache alloptions, wiec kazde
+			 * wejscie na strone placilo setkami pojedynczych SELECT-ow.
+			 *
+			 * Flaga dziala przy ZAPISIE: istniejace instalacje przelacza sie
+			 * po ponownym zapisaniu ustawien w panelu (jedno klikniecie
+			 * "Zapisz ustawienia"), nowe maja autoload od pierwszego zapisu.
+			 */
+			'autoload'        => true,
 		)
 	);
 }

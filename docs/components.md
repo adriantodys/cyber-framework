@@ -1,10 +1,13 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-30 (moduły: Top Header, Header desktop/mobile, Footer,
+Ostatnia aktualizacja: 2026-11-08 (moduły: Top Header, Header desktop/mobile, Footer,
 Copyright, Breadcrumb, Button, Social icons, Page header, Przycisk do góry, blog;
 warianty wrapperów, przyklejony header, cztery warianty układu headera ze slotem
 akcji; 11 layoutów Flexible Content i animacje wejścia sekcji; warstwa sklepowa
-WooCommerce — koszyk, zamówienie, lista produktów i strona produktu).
+WooCommerce — koszyk, zamówienie, lista produktów i strona produktu. Poprawki
+2026-11-08: logo jako ID załącznika, przycisk pauzy autoplay, okruszki jako `<ol>`,
+ukryty `<h1>` stron bez page headera, jawna flaga `overlay`, wspólne
+`cyber_section_shows_wysiwyg()` i `cyber_normalize_link()`).
 
 ## Status
 
@@ -87,7 +90,7 @@ Szczegóły pól: `docs/acf-schema.md`, „Sekcje — trzy grupy pól”.
 | Komponent | Plik | Argumenty (`$args`) | Assety |
 |---|---|---|---|
 | Copyright | `template-parts/footer/copyright.php` | `text`, `links`, `variant` | sekcja „Copyright” w `assets/css/main.css` + zmienne z `cyber_copyright_css()` |
-| Footer | `template-parts/footer/footer.php` | `logo_url`, `site_name`, `content`, `copyright`, `variant` | sekcja „Footer” w `assets/css/main.css` |
+| Footer | `template-parts/footer/footer.php` | `logo_id` (ID załącznika albo `0`; `<img>` buduje `wp_get_attachment_image()`), `site_name`, `content`, `copyright`, `variant` | sekcja „Footer” w `assets/css/main.css` |
 | Social icons | `template-parts/components/social-icons.php` | `items`, `class` | `.cyber-social-icons` w `assets/css/main.css`; ikony z `cyber_icons()` |
 | Top Header | `template-parts/header/top-header.php` | `phone`, `email`, `social`, `languages`, `languages_hint`, `variant` | sekcja „Top Header” w `assets/css/main.css` + zmienne z `cyber_top_header_css()`; ikony z `cyber_icons()` |
 | Button | `template-parts/components/button.php` | `text`, `url`, `size`, `target`, `rel` | sekcja „Przyciski” w `assets/css/main.css` + zmienne z `cyber_button_css()` |
@@ -97,7 +100,7 @@ Szczegóły pól: `docs/acf-schema.md`, „Sekcje — trzy grupy pól”.
 | Header — slot akcji: WooCommerce | `template-parts/header/actions-woocommerce.php` | `wc` | sekcja „Header: konto i koszyk WooCommerce” w `assets/css/main.css`; ikony `user` i `cart` z `cyber_icons()` |
 | Header — licznik koszyka | `template-parts/header/cart-count.php` | `count` | `.cyber-wc-count` w `assets/css/main.css` |
 | Przycisk do góry | `template-parts/go-to-top/go-to-top.php` | `class`, `show_after`, `label`, `icon` | `assets/css/go-to-top.css` + zmienne z `cyber_go_to_top_css()`, skrypt `assets/js/go-to-top.js` — oba tylko przy włączonym przycisku; ikona `arrow-up` z `cyber_icons()` |
-| Header (desktop + mobile) | `template-parts/header/header.php` | `logo_url`, `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu`, `variant`, `sticky` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
+| Header (desktop + mobile) | `template-parts/header/header.php` | `logo_id` (ID załącznika albo `0`; `<img>` buduje `wp_get_attachment_image()` z `loading="eager"` — logo stoi nad zgięciem), `site_name`, `menu_alignment`, `menu_indicator`, `mobile_breakpoint`, `has_menu`, `variant`, `sticky` | sekcje „Header Desktop” i „Header Mobile” w `assets/css/main.css`, zmienne z `cyber_header_css()`, blok `@media` z `cyber_header_mobile_css()`, skrypt `assets/js/header.js` (enqueue warunkowy) |
 
 #### Social icons
 
@@ -209,8 +212,10 @@ Dwa widoki dzielą **identyczny markup**, więc obsługuje je jeden blok CSS:
 <div class="cyber-breadcrumb cyber-breadcrumb--default">   <!-- albo --wc -->
   <div class="cyber-container">
     <nav class="cyber-breadcrumb__nav" aria-label="Okruszki">
-      <span class="cyber-breadcrumb__item"><a href="…">Strona glowna</a></span>
-      <span class="cyber-breadcrumb__item" aria-current="page">Bieżąca</span>
+      <ol class="cyber-breadcrumb__list">
+        <li class="cyber-breadcrumb__item"><a href="…">Strona glowna</a></li>
+        <li class="cyber-breadcrumb__item" aria-current="page">Bieżąca</li>
+      </ol>
     </nav>
   </div>
 </div>
@@ -218,11 +223,18 @@ Dwa widoki dzielą **identyczny markup**, więc obsługuje je jeden blok CSS:
 
 Różnica jest jedna: w wariancie `default` pętlę po okruszkach wykonuje widok,
 w wariancie `wc` wypisuje ją `woocommerce_breadcrumb()` — ale w **tych samych**
-znacznikach, podstawionych przez `wrap_before` / `before` / `after`.
+znacznikach, podstawionych przez `wrap_before` / `wrap_after` / `before` / `after`.
 
-Ostatni okruszek to strona bieżąca. W naszym markupie niesie `aria-current="page"`;
-WooCommerce takiego atrybutu nie dodaje, dlatego kolor bieżącej strony bierze się
-z selektora `:last-child`, prawdziwego w obu przypadkach.
+Lista uporządkowana, nie ciąg `<span>` (od 2026-11-08, wzorzec WAI-ARIA
+„Breadcrumb”): czytnik ekranu ogłasza liczbę okruszków i pozycję bieżącego.
+Separator rysuje pseudoelement `::before` w CSS — w markupie go nie ma, więc
+czytnik go nie czyta.
+
+Ostatni okruszek to strona bieżąca i w obu wariantach niesie `aria-current="page"`.
+WooCommerce daje każdemu okruszkowi identyczny znacznik `before`, więc widok `wc`
+buforuje wyjście `woocommerce_breadcrumb()` i podmienia **ostatnie** otwierające
+`<li>` na wersję z atrybutem. Kolor bieżącej strony nadal bierze się z selektora
+`:last-child` — prawdziwego niezależnie od tego, czy atrybut dotarł.
 
 Widok WooCommerce sprawdza `function_exists( 'woocommerce_breadcrumb' )` mimo że
 wariant jest wybrany w panelu — wtyczkę można wyłączyć w każdej chwili, a brak
@@ -306,7 +318,7 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 
 | Plik | Rola |
 |---|---|
-| `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, assety |
+| `inc/sections.php` | rejestr, walidacja wartości, budowa opakowania, renderer, kolejkowanie arkusza `cyber-sections` po uchwycie (rejestracja **raz**, w `inc/enqueue.php`) |
 | `inc/animations.php` | animacje wejścia — rejestr animacji, atrybut `data-cyber-animate`, warunkowe assety |
 | `assets/js/animations.js` | animacje wejścia — kiedy uruchomić (IntersectionObserver) |
 | `assets/css/animations.css` | animacje wejścia — jak wygląda każda animacja |
@@ -316,9 +328,9 @@ obecnych w tablicy, a pierwotna pętla nadpisywała.
 | `inc/sections-columns.php` | layout `columns` — proporcje i siatka |
 | `template-parts/sections/columns.php` | layout `columns` — widok |
 | `acf-json/group_section_columns.json` | źródło klonowania: pola sekcji Kolumny |
-| `inc/sections-slider.php` | layout `slider` — logika i assety |
+| `inc/sections-slider.php` | layout `slider` — logika i assety; `cyber_slider_i18n()`, `cyber_slider_autoplay_button()` (także dla karuzeli) |
 | `template-parts/sections/slider.php` | layout `slider` — widok |
-| `assets/js/slider.js` | layout `slider` — inicjalizacja Swipera |
+| `assets/js/slider.js` | layout `slider` — inicjalizacja Swipera; moduł ES ładowany przez `wp_enqueue_script_module()`; obsługa przycisku pauzy |
 | `acf-json/group_section_slider.json` | źródło klonowania: pola sekcji Slider |
 | `inc/sections-carousel.php` | layout `carousel` — konfiguracja przewijania |
 | `template-parts/sections/carousel.php` | layout `carousel` — widok |
@@ -394,7 +406,7 @@ pól się **nie kopiuje** — wchodzą polem Clone.
 |---|---|
 | `.cyber-section` | `cyber_section_open()`, wspólna dla wszystkich layoutów |
 | `.cyber-section--[layout]` | klucz layoutu, punkt zaczepienia dla stylów jednego typu sekcji |
-| `.cyber-section--has-overlay` | dokładana tylko wtedy, gdy kolor nakładki jest ustawiony |
+| `.cyber-section--has-overlay` | dokładana tylko wtedy, gdy kolor nakładki jest ustawiony. Samo pudełko `.cyber-section__overlay` rysuje `cyber_section_open()` na podstawie **jawnej flagi `overlay`** (bool) z `cyber_section_attributes()`, nie obecności tej klasy w stringu — klasy własne redaktora (`cyber_section_class`) lądują w tym samym stringu, więc wpisanie tam `cyber-section--has-overlay` dawało pudełko bez koloru (poprawione 2026-11-08) |
 | `.cyber-section__inner` | kontener treści; szerokość ze zmiennej, marginesy boczne wspólne z resztą strony |
 | `.cyber-section__overlay` | warstwa nad zdjęciem, `aria-hidden` |
 
@@ -405,7 +417,8 @@ Dodatkowe klasy z pola ACF dokładane są do `.cyber-section`, każda przez
 
 `cyber_section_attributes()` oddaje wynik przez filtr
 `cyber_section_attributes( $attributes, $type, $row )`. Tablica ma klucze
-`class`, `style`, `id` i `data` — ten ostatni to atrybuty `data-*`
+`class`, `style`, `id`, `data` i `overlay` (bool — czy `cyber_section_open()` ma
+narysować pudełko nakładki). `data` to atrybuty `data-*`
 (nazwa bez prefiksu `data-` → wartość), wypisywane przez `cyber_section_open()`
 z `sanitize_key()` na nazwie i `esc_attr()` na wartości.
 
@@ -551,11 +564,15 @@ dzięki temu zmiana w opakowaniu nie wymaga dotykania żadnej sekcji.
 | `.cyber-card__footer` | `margin-top: auto` — przyciski wszystkich kart w wierszu stoją w jednej linii |
 
 Przycisk renderuje wspólny komponent `cyber_button()`, więc karty nie mają
-własnego markupu przycisku ani własnych pól jego wyglądu.
+własnego markupu przycisku ani własnych pól jego wyglądu. Odnośnik elementu
+(pole Link) normalizuje `cyber_normalize_link()` (`inc/helpers.php`) — ta sama
+funkcja co w sliderze, zamiast dwóch kopii tej samej pętli.
 
 Treść nad i pod siatką ma **osobne włączniki** (`cyber_cards_show_top`,
 `cyber_cards_show_bottom`), stojące w panelu bezpośrednio nad swoim edytorem.
-Na froncie sprawdza je `cyber_cards_shows_wysiwyg()`, w panelu edytor chowa
+Na froncie sprawdza je `cyber_section_shows_wysiwyg( $row, 'cyber_cards_show', $slot )`
+(ta sama funkcja dla kart i karuzeli; własny wrapper `cyber_cards_shows_wysiwyg()`
+usunięty 2026-11-08), w panelu edytor chowa
 wspólny filtr `cyber_section_wysiwyg_condition()` — warunek nie może siedzieć w JSON-ie,
 bo edytory są wspólne dla wszystkich sekcji.
 Oba są **domyślnie wyłączone**; brak wartości liczy się jako wyłączony,
@@ -595,7 +612,7 @@ Karuzela na **Swiperze 14.2.0** (rejestr bibliotek: CLAUDE.md sekcja 2).
 |---|---|
 | `inc/sections-slider.php` | walidacja, konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe assety |
 | `template-parts/sections/slider.php` | widok; konfiguracja w atrybutach `data-*` |
-| `assets/js/slider.js` | inicjalizacja Swipera — **moduł ES** |
+| `assets/js/slider.js` | inicjalizacja Swipera — **moduł ES**, ładowany przez `wp_enqueue_script_module()` (WP ≥ 6.5); przycisk pauzy autoplay |
 | `assets/vendor/swiper-14.2.0/` | rdzeń + 5 modułów, bajt w bajt z npm |
 | `acf-json/group_section_slider.json` | pola: ustawienia + repeater slajdów |
 
@@ -606,6 +623,7 @@ Karuzela na **Swiperze 14.2.0** (rejestr bibliotek: CLAUDE.md sekcja 2).
 | `.cyber-slider--x-*` / `--y-*` | położenie treści — klasa, nie zmienna (sekcja 20) |
 | `.cyber-slider--has-overlay` | tylko przy ustawionym kolorze nakładki |
 | `.cyber-slider--has-pagination` | większy dolny odstęp treści, żeby przycisk nie wchodził na kropki |
+| `.cyber-autoplay` + `.cyber-slider__autoplay` | przycisk pauzy autoplay (WCAG 2.2.2) — `cyber_slider_autoplay_button( 'cyber-slider' )` z `inc/sections-slider.php`; wychodzi z `hidden` i odsłania go skrypt (bez JS i przy `prefers-reduced-motion` go nie ma); `aria-pressed="true"` = zatrzymany; etykiety w `data-label-pause` / `data-label-play`; ikony `pause` / `play` z `cyber_icons()` |
 | `.cyber-slide__media` / `__image` | `<picture>` z osobnym `<source>` dla telefonu |
 | `.cyber-slide__body` / `__content` | warstwa treści nad zdjęciem |
 
@@ -614,6 +632,12 @@ zdjęcie ma tekst alternatywny i `srcset`. Pierwszy slajd ładuje się z
 `fetchpriority="high"`, kolejne z `loading="lazy"`.
 
 Przycisk renderuje wspólny `cyber_button()` — wygląd z zakładki Przyciski.
+Odnośnik przycisku slajdu normalizuje `cyber_normalize_link()` — wspólnie z kartami.
+
+**Dane dla skryptu wyłącznie w `data-*`.** Moduł ES nie dostaje
+`wp_localize_script()` ani `wp_add_inline_script()`: konfiguracja karuzeli jedzie
+w `data-*` kontenera, etykiety ARIA Swipera w `data-i18n` (`cyber_slider_i18n()`,
+JSON przez `esc_attr()`), etykiety przycisku pauzy w `data-*` na samym przycisku.
 
 
 ### Sekcja `faq` — FAQ
@@ -623,7 +647,7 @@ i bez JavaScriptu.
 
 | Plik | Rola |
 |---|---|
-| `inc/sections-faq.php` | normalizacja pytań, podział na kolumny, konfiguracja, klasy i zmienne, ikona z lewej, włącznik treści nad/pod (`cyber_faq_shows_wysiwyg()`) |
+| `inc/sections-faq.php` | normalizacja pytań, podział na kolumny, konfiguracja, klasy i zmienne, ikona z lewej; włącznik treści nad/pod sprawdza wspólne `cyber_section_shows_wysiwyg( $row, 'cyber_faq_show', $slot )` (własny wrapper usunięty 2026-11-08) |
 | `template-parts/sections/faq.php` | widok |
 | `acf-json/group_section_faq.json` | pola: repeater pytań i ustawienia |
 
@@ -646,18 +670,21 @@ Sekcje z włącznikami (`cards`, `carousel`, `faq`, `counter`, `contact`, `posts
 filtrów. Mapa „klucz klonu edytora → klucz włącznika” jest jedna:
 `cyber_section_wysiwyg_toggles()` w `inc/sections.php`, a warunek nakłada
 `cyber_section_wysiwyg_condition()`. Na froncie sprawdza je
-`cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )`.
+`cyber_section_shows_wysiwyg( $row, 'cyber_[sekcja]_show', $slot )` — **jedyna**
+funkcja tego rodzaju w motywie: karty i karuzela pytają z przedrostkiem
+`cyber_cards_show`, FAQ z `cyber_faq_show` (wrappery `cyber_cards_shows_wysiwyg()`
+i `cyber_faq_shows_wysiwyg()` o tej samej logice usunięte 2026-11-08).
 **Nowa sekcja z włącznikami dopisuje dwa wiersze do mapy** zamiast kopiować filtr.
 
 ### Sekcja `gallery` — Galeria
 
 | Klasa | Skąd |
 |---|---|
-| `.cyber-gallery` | kontener; zmienne `--cyber-gallery-*` w `style` |
+| `.cyber-gallery` | kontener; zmienne `--cyber-gallery-*` w `style`; `data-lightbox-label` — tłumaczony `aria-label` okna `<dialog>` (tekst żyje w PHP, nie w skrypcie) |
 | `--ratio-1-1` / `-4-3` / `-3-2` / `-16-9` | proporcje kadru; brak klasy = zdjęcia naturalne |
 | `--zoom` / `--lightbox` | powiększenie po najechaniu / kliknięcie otwiera lightbox |
 | `.cyber-gallery__filters` / `__filter` | pasek kategorii; aktywna ma `.is-active` i `aria-pressed` |
-| `.cyber-gallery__grid` / `__item` / `__link` / `__image` / `__caption` | siatka i zdjęcie (link do pliku w pełnym rozmiarze) |
+| `.cyber-gallery__grid` / `__item` / `__link` / `__image` / `__caption` | siatka i zdjęcie (link do pliku w pełnym rozmiarze; na linku `data-width` / `data-height` pliku, żeby powiększony `<img>` miał proporcje przed pobraniem) |
 | `.cyber-lightbox` | `<dialog>` budowany przez skrypt przy pierwszym otwarciu |
 | `.cyber-gallery-page` | strona pojedynczej galerii (CPT) |
 
@@ -671,6 +698,11 @@ element to `template-parts/components/card.php`.
 |---|---|
 | `.cyber-section--posts` | opakowanie; otwierane bez kontenera, jak karuzela (tryb „full”) |
 | `.cyber-cards` / `.cyber-carousel` | siatka albo slider — te same klasy co w sekcjach Karty i Karuzela |
+
+**Losowa kolejność bez `ORDER BY RAND()`** (od 2026-11-08): `cyber_posts_random_ids()`
+pobiera same identyfikatory pasujące do warunków, losuje je w PHP i przekazuje
+`post__in` — szczegóły w `docs/architecture.md`, „Cache i koszt na żądanie”.
+W trybie slidera karuzela ma przycisk pauzy autoplay jak sekcja Karuzela kart.
 
 **Rozmiar zdjęcia: `medium`** (od 2026-09-25, stała `CYBER_POSTS_IMAGE_SIZE`
 w `inc/sections-posts.php`). Wbudowany rozmiar WordPressa: maks. 300 × 300 px,
@@ -775,6 +807,12 @@ Pasek z tytułem strony nad treścią, wypisywany z `header.php` nad okruszkami.
 | `.cyber-page-header__title` / `__excerpt` | `<h1>` strony i zajawka |
 | `.cyber-breadcrumb--in-page-header` | okruszki wewnątrz page headera (stan obok wariantu `--default` / `--wc`) |
 
+**Strony bez page headera** (od 2026-11-08): `index.php` wypisuje
+`<h1 class="screen-reader-text">` z tytułem strony — wygląd bez zmian (pierwszy
+widoczny nagłówek nadal daje redaktor w treści albo w sekcji), ale czytnik ekranu
+i wyszukiwarka dostają jeden `<h1>`. Wpisy bez page headera mają widoczny `<h1>`
+jak dotąd.
+
 **Breadcrumb w page headerze** (pole `cyber_pageheader_breadcrumb`). Kolejność
 wewnątrz page headera: tytuł → zajawka (jeśli włączona) → okruszki. Osobny pasek
 pod page headerem wtedy się nie pojawia — `header.php` pyta
@@ -842,10 +880,10 @@ Global Options → Przycisk do góry. **Domyślnie wyłączony.**
 
 | Plik | Rola |
 |---|---|
-| `inc/blog.php` | obszar widgetów, hierarchia szablonów, ustawienia z Global Options → Blog, CSS, assety |
+| `inc/blog.php` | obszar widgetów, hierarchia szablonów, ustawienia z Global Options → Blog, CSS, assety (arkusz `cyber-sections` kolejkowany po uchwycie — rejestracja w `inc/enqueue.php`), `cyber_blog_single_image( $post )` |
 | `inc/class-cyber-recent-posts-widget.php` | widget „Cyber: Ostatnie wpisy” — karty ze zdjęciem, datą i przyciskiem |
 | `templates/blog.php` | lista: strona wpisów, kategorie, tagi, archiwa dat i autorów |
-| `templates/single-post.php` | pojedynczy wpis (tylko typ `post`) |
+| `templates/single-post.php` | pojedynczy wpis (tylko typ `post`); o zdjęciu wyróżniającym decyduje `cyber_blog_single_image( $post )` z `inc/blog.php` (ustawienie Global Options + `has_post_thumbnail()`), nie widok |
 | `template-parts/blog/sidebar.php` | pasek boczny — `dynamic_sidebar( 'cyber-blog' )` |
 | `assets/css/blog.css` | układ, wpis, pasek boczny, paginacja — tylko na widokach bloga |
 
@@ -897,6 +935,11 @@ Global Options → Przycisk do góry. **Domyślnie wyłączony.**
 | `.cyber-counter__value` | wiersz liczby: `__prefix`, `__number`, `__suffix` (`aria-hidden`) + `.screen-reader-text` |
 | `.cyber-counter__title` | tytuł pod liczbą (`<h3>`), rozmiar z `--cyber-counter-title-size` |
 | `.cyber-counter__label` | opis pod liczbą |
+
+**Grubość liczby** (`cyber_counter_number_weight`) waliduje się listą
+`cyber_font_weight_choices()` **plus `900` jako jawny wyjątek**: pole ma tę wartość
+w `choices` (duża liczba znosi najgrubszą wagę), a reszta projektu kończy się na
+800. Usunięcie `900` z listy po cichu zerowałoby zapisany wybór redaktora.
 
 ### Sekcja `global` — Sekcja globalna
 
@@ -961,11 +1004,13 @@ Karty z sekcji `cards` w przewijanym rzędzie, na tym samym Swiperze co Slider.
 | `.cyber-carousel--section` / `--full` | tryb szerokości |
 | `.cyber-carousel-wrap` | opakowanie karuzeli i paska sterowania |
 | `.cyber-carousel__slide` | slajd; `height:auto`, żeby karty w rzędzie miały równą wysokość |
-| `.cyber-carousel__controls` | pasek pod rzędem: strzałka, kropki, strzałka |
+| `.cyber-carousel__controls` | pasek pod rzędem: strzałka, kropki, strzałka, przycisk pauzy; pasek z samym ukrytym przyciskiem znika (`:has()`) |
+| `.cyber-autoplay` + `.cyber-carousel__autoplay` | przycisk pauzy (WCAG 2.2.2) — `cyber_slider_autoplay_button( 'cyber-carousel' )`, wypisywany przy autoplay **i** w trybie ciągłym; `hidden` bez JS i przy `prefers-reduced-motion`; `aria-pressed="true"` = zatrzymany; etykiety w `data-label-pause` / `data-label-play` |
 | `.cyber-card__overtitle` | nadtytuł karty; razem z globalną `.cyber-overtitle` (wygląd z Global Options) |
 | `.cyber-slide__video` | wideo w tle slajdu, nad `<picture>`; gra tylko na aktywnym slajdzie |
 | `.cyber-wysiwyg` | każde opakowanie treści edytora (sekcje, kolumny, slajd, treść strony); odstępy nagłówków z `--cyber-wysiwyg-heading-mt` / `-mb` w `main.css` |
-| `.cyber-carousel--continuous` | tryb ciągły — taśma z animacją CSS, Swiper się nie uruchamia |
+| `.cyber-carousel--continuous` | tryb ciągły — taśma z animacją CSS, Swiper się nie uruchamia; taśma zatrzymuje się (`animation-play-state: paused`) na `:hover`, `:focus-within` i przy `.cyber-carousel--paused` — zmiana decyzji z 2026-09-19 o ruchu także pod kursorem (2026-11-08, WCAG 2.2.2) |
+| `.cyber-carousel--paused` | stan (nie wariant): taśma zatrzymana przyciskiem pauzy; przełącza `assets/js/slider.js` |
 | `.cyber-carousel__band` | taśma: zestaw kart wypisany dwa razy, animowany o `-50%` |
 | `.cyber-carousel__slide--copy` | kopia karty w taśmie: `aria-hidden`, linki z `tabindex="-1"` |
 
@@ -997,7 +1042,7 @@ pojedynczego produktu".
 | `assets/js/cart.js` | licznik ilości w koszyku, automatyczne przeliczanie |
 | `assets/js/checkout.js` | licznik ilości i kupon na stronie zamówienia |
 | `assets/css/woocommerce-shop.css` | style listy produktów — ładowany **tylko** na sklepie i archiwach produktów |
-| `assets/js/shop.js` | przełącznik widoku siatka/lista i doładowywanie produktów |
+| `assets/js/shop.js` | przełącznik widoku siatka/lista, doładowywanie produktów (bez nonce — publiczny odczyt, patrz `docs/security.md`) i wysłanie formularza liczby na stronie po zmianie selekta |
 | `inc/woocommerce-product.php` | strona produktu: układ dwukolumnowy, własna galeria, rejestr elementów, zakładki |
 | `assets/css/woocommerce-product.css` | style strony produktu — ładowany **tylko** na `is_product()` |
 | `assets/js/product.js` | przeciąganie galerii i licznik ilości na stronie produktu |
@@ -1046,7 +1091,7 @@ Nie są to komponenty reużywalne — istnieją wyłącznie wewnątrz widoków s
 | `.cyber-wc-checkout-button` | koszyk | hook `woocommerce_proceed_to_checkout`, klasy `btn btn-large` |
 | `.cyber-wc-place-order` | zamówienie | filtr `woocommerce_order_button_html`, klasy `btn btn-large` |
 | `.cyber-shop__view` | lista produktów | `cyber_shop_toolbar_controls()`; aktywny stan niesie `aria-pressed`, bez osobnej klasy |
-| `.cyber-shop__per-page` | lista produktów | formularz GET z polami ukrytymi, żeby nie kasować sortowania |
+| `.cyber-shop__per-page` | lista produktów | formularz GET z polami ukrytymi, żeby nie kasować sortowania; select `.cyber-shop__per-page-select` wysyła formularz przez `shop.js` (`requestSubmit()`), bez inline `onchange` |
 | `.cyber-shop__more-button` | lista produktów | `cyber_shop_load_more()`, klasy `btn btn-large`; kontekst archiwum w `data-*` |
 | `.cyber-product__excerpt` | lista produktów | hook `woocommerce_after_shop_loop_item_title`; w siatce ukryty CSS-em |
 | `.cyber-product__media` | strona produktu | `cyber_product_gallery()` — zdjęcie główne plus pionowy pasek miniatur |

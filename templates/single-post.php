@@ -24,7 +24,7 @@ while ( have_posts() ) :
 	?>
 	<div class="<?php echo esc_attr( cyber_blog_layout_class() ); ?>">
 		<article <?php post_class( 'cyber-blog__main cyber-post' ); ?>>
-			<?php if ( cyber_get_option( 'blog_single_image' ) && has_post_thumbnail() ) : ?>
+			<?php if ( cyber_blog_single_image( $cyber_post ) ) : ?>
 				<div class="cyber-post__image">
 					<?php
 					// Pierwszy obraz ekranu — laduje sie od razu i z wysokim priorytetem.

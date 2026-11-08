@@ -1,6 +1,6 @@
 # Bezpieczeństwo — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-14 (dwa endpointy AJAX w motywie).
+Ostatnia aktualizacja: 2026-11-08 (endpoint `cyber_shop_more` bez nonce — uzasadnienie niżej).
 Dokument nadrzędny: CLAUDE.md sekcja 9. Tutaj są checklisty do odhaczania przy review.
 
 ## Stan obecny (v0.1.0)
@@ -49,7 +49,7 @@ Zarejestrowany dla zalogowanych i niezalogowanych — lista produktów jest publ
 
 | Warstwa | Realizacja |
 |---|---|
-| Nonce | `check_ajax_referer( 'cyber_shop_more', 'nonce' )` na pierwszej linii |
+| Nonce | **brak — świadomie** (od 2026-11-08, uzasadnienie niżej) |
 | Sanitizacja | `absint()` dla numerów, `sanitize_key()` dla sortowania i taksonomii |
 | Walidacja | strona ≥ 2; liczba na stronie i sortowanie z **białej listy**; taksonomia musi należeć do produktów (`get_object_taxonomies( 'product' )`), a termin istnieć |
 | Escaping | odpowiedź to JSON; markup produktów buduje szablon WooCommerce, który escapuje u siebie |
@@ -68,8 +68,30 @@ Zarejestrowany dla zalogowanych i niezalogowanych — lista produktów jest publ
 > wyłącznie to, co i tak jest dostępne pod adresem kategorii. Uzasadnienie
 > wymagane regułą przy poprzednim endpoincie.
 
-Sprawdzone realnymi żądaniami: brak nonce → `403`, obca taksonomia → błąd,
+> **Dlaczego nie ma nonce.** Nonce chroni przed wykonaniem w imieniu
+> użytkownika akcji, która **zmienia stan** (CSRF). Ten endpoint stanu nie ma:
+> nie zapisuje, nie czyta sesji, nie przyjmuje identyfikatora użytkownika —
+> zwraca publiczny HTML listy produktów. Podrobione żądanie dostaje dokładnie
+> to samo, co każdy odwiedzający pod adresem kategorii, więc nonce niczego tu
+> nie chronił.
+>
+> Miał za to realny koszt: przy **cache pełnych stron** token zapisany
+> w HTML-u (`wp_localize_script`) wygasa po 12–24 h, a strona z cache serwuje
+> go dalej — przycisk „Pokaż więcej" dostawał `403` u każdego, kto trafił na
+> stronę starszą niż doba. Dlatego nonce usunięto razem z `wp_create_nonce()`
+> i polem `nonce` w `assets/js/shop.js`. Sanitizacja i białe listy zostają
+> w całości — to one, nie nonce, są granicą bezpieczeństwa tego endpointu.
+>
+> **Endpoint zamówienia (`cyber_checkout_qty`) nonce ZACHOWUJE**: zmienia
+> ilość pozycji w koszyku, czyli stan, a WooCommerce i tak blokuje cache
+> koszyka i zamówienia (`DONOTCACHEPAGE`, nagłówki no-cache), więc problem
+> wygasania tam nie występuje. Różnica między oboma endpointami jest więc
+> zasadą, nie wyjątkiem: **nonce przy zapisie, brak nonce przy publicznym
+> odczycie bez stanu** — zawsze z jawnym uzasadnieniem w docblocku handlera.
+
+Sprawdzone realnymi żądaniami (przed usunięciem nonce): obca taksonomia → błąd,
 strona `1` → odrzucona, poprawne żądanie → 3 produkty i `has_more: false`.
+Po zmianie żądanie bez pola `nonce` jest poprawne i zwraca listę.
 
 Checklisty poniżej obowiązują od momentu, w którym pojawi się pierwszy formularz.
 
@@ -101,7 +123,10 @@ Checklisty poniżej obowiązują od momentu, w którym pojawi się pierwszy form
 
 Wszystkie cztery elementy, nigdy część:
 
-- [ ] **Nonce** — `check_ajax_referer( 'cyber_akcja', 'nonce' )`.
+- [ ] **Nonce** — `check_ajax_referer( 'cyber_akcja', 'nonce' )` przy każdej akcji,
+      która zmienia stan. Publiczny odczyt bez stanu (jak `cyber_shop_more`) może
+      go nie mieć — wyłącznie ze świadomą decyzją i komentarzem w docblocku,
+      dlaczego nie ma czego podrobić.
 - [ ] **Capability** — `current_user_can()`; dla akcji publicznych świadoma decyzja
       + komentarz, dlaczego brak sprawdzenia jest bezpieczny.
 - [ ] **Sanitizacja wejścia** — każdego pola z osobna.

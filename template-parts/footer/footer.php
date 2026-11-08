@@ -14,7 +14,7 @@
  * @package Cyber_Framework
  *
  * @param array $args {
- *     @type string     $logo_url  URL logo stopki albo pusty string.
+ *     @type int        $logo_id   ID zalacznika logo stopki albo 0.
  *     @type string     $site_name Nazwa witryny — alt logo i tekst zastepczy.
  *     @type string     $content   Tresc kolumny 1 z pola WYSIWYG albo pusty string.
  *     @type array|null $copyright Dane paska Copyright albo null, gdy nie ma czego pokazac.
@@ -24,12 +24,30 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$cyber_logo_url  = isset( $args['logo_url'] ) ? $args['logo_url'] : '';
+$cyber_logo_id   = isset( $args['logo_id'] ) ? absint( $args['logo_id'] ) : 0;
 $cyber_site_name = isset( $args['site_name'] ) ? $args['site_name'] : '';
 $cyber_content   = isset( $args['content'] ) ? $args['content'] : '';
 $cyber_copyright = isset( $args['copyright'] ) ? $args['copyright'] : null;
 
 $cyber_class = cyber_variant_class( 'cyber-footer', isset( $args['variant'] ) ? $args['variant'] : 'default' );
+
+/*
+ * wp_get_attachment_image() zamiast recznego <img>: width / height, srcset
+ * i sizes z rdzenia. Stopka jest pod zgieciem, wiec domyslne 'lazy' zostaje.
+ * Pusty string (skasowany zalacznik) = brak bloku z logo, jak przy pustym polu.
+ */
+$cyber_logo_html = $cyber_logo_id
+	? wp_get_attachment_image(
+		$cyber_logo_id,
+		'full',
+		false,
+		array(
+			'class'    => 'cyber-footer__logo',
+			'alt'      => $cyber_site_name,
+			'decoding' => 'async',
+		)
+	)
+	: '';
 ?>
 
 <footer class="<?php echo esc_attr( $cyber_class ); ?>">
@@ -46,14 +64,10 @@ $cyber_class = cyber_variant_class( 'cyber-footer', isset( $args['variant'] ) ? 
 			<div class="cyber-footer__grid">
 
 				<div class="cyber-footer__col cyber-footer__col--1">
-					<?php if ( '' !== $cyber_logo_url ) : ?>
+					<?php if ( '' !== $cyber_logo_html ) : ?>
 						<p class="cyber-footer__brand">
 							<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-								<img
-									class="cyber-footer__logo"
-									src="<?php echo esc_url( $cyber_logo_url ); ?>"
-									alt="<?php echo esc_attr( $cyber_site_name ); ?>"
-								>
+								<?php echo $cyber_logo_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup z wp_get_attachment_image(), atrybuty escapowane w rdzeniu. ?>
 							</a>
 						</p>
 					<?php endif; ?>

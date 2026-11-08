@@ -914,7 +914,7 @@
             "name": "cyber_header_logo",
             "aria-label": "",
             "type": "image",
-            "instructions": "Zwracany jest sam URL pliku.",
+            "instructions": "Zwracany jest identyfikator załącznika — motyw buduje z niego obrazek z wymiarami i srcset.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -922,7 +922,7 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "url",
+            "return_format": "id",
             "library": "all",
             "min_width": "",
             "min_height": "",
@@ -3286,7 +3286,7 @@
             "name": "cyber_footer_logo",
             "aria-label": "",
             "type": "image",
-            "instructions": "Osobne od logo nagłówka — stopka może wymagać innej wersji, np. jasnej na ciemnym tle. Zwracany jest sam URL pliku.",
+            "instructions": "Osobne od logo nagłówka — stopka może wymagać innej wersji, np. jasnej na ciemnym tle. Zwracany jest identyfikator załącznika.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -3294,7 +3294,7 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "url",
+            "return_format": "id",
             "library": "all",
             "min_width": "",
             "min_height": "",
@@ -7173,5 +7173,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1792948019
+    "modified": 1794149542
 }

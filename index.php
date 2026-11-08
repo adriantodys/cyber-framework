@@ -36,19 +36,24 @@ get_header();
 		?>
 		<?php
 		/*
-		 * Strony (page) nie wypisuja tytulu — naglowek strony (page-header)
-		 * powstanie jako osobny modul. Do tego czasu strona NIE MA <h1>
-		 * i pierwszy naglowek musi dac redaktor w tresci albo w sekcji.
-		 * Wpisy i pozostale typy tresci zachowuja tytul — chyba ze tytul niesie
-		 * page header (wtedy byly by dwa <h1> na stronie).
+		 * Tytul niesie page header, jesli jest wlaczony — wtedy szablon nie
+		 * wypisuje drugiego <h1>. Bez page headera: wpisy i pozostale typy
+		 * tresci dostaja widoczny <h1>, a strony (page) <h1> UKRYTY WIZUALNIE
+		 * (.screen-reader-text). Strona nie zmienia wygladu — pierwszy widoczny
+		 * naglowek nadal daje redaktor w tresci albo w sekcji — ale czytnik
+		 * ekranu i wyszukiwarka dostaja jeden <h1> na kazdej stronie
+		 * (CLAUDE.md sekcja 11).
 		 *
 		 * Pusta tresc edytora nie zostawia po sobie pustego kontenera — strona
-		 * zlozona wylacznie z sekcji zaczyna sie od pierwszej sekcji.
-		 * Tresc zostaje, bo na niej stoja m.in. strony sklepu (shortcode koszyka
-		 * i zamowienia).
+		 * zlozona wylacznie z sekcji zaczyna sie od pierwszej sekcji. Ukryty
+		 * <h1> nie otwiera wtedy kontenera (nie ma wymiarow, wiec nie zostawia
+		 * odstepu) i stoi przed sekcjami sam. Tresc zostaje, bo na niej stoja
+		 * m.in. strony sklepu (shortcode koszyka i zamowienia).
 		 */
-		$cyber_show_title = ! is_page() && ! cyber_page_header_shows();
-		$cyber_has_body   = '' !== trim( (string) get_the_content() );
+		$cyber_page_header  = cyber_page_header_shows();
+		$cyber_show_title   = ! is_page() && ! $cyber_page_header;
+		$cyber_hidden_title = is_page() && ! $cyber_page_header;
+		$cyber_has_body     = '' !== trim( (string) get_the_content() );
 		?>
 
 		<?php if ( $cyber_show_title || $cyber_has_body ) : ?>
@@ -56,6 +61,8 @@ get_header();
 				<article <?php post_class(); ?>>
 					<?php if ( $cyber_show_title ) : ?>
 						<h1><?php the_title(); ?></h1>
+					<?php elseif ( $cyber_hidden_title ) : ?>
+						<h1 class="screen-reader-text"><?php the_title(); ?></h1>
 					<?php endif; ?>
 
 					<?php if ( $cyber_has_body ) : ?>
@@ -65,6 +72,8 @@ get_header();
 					<?php endif; ?>
 				</article>
 			</div>
+		<?php elseif ( $cyber_hidden_title ) : ?>
+			<h1 class="screen-reader-text"><?php the_title(); ?></h1>
 		<?php endif; ?>
 
 		<?php cyber_render_sections(); ?>

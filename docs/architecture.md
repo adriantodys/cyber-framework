@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-09-25 (Global Options ma osiemnaście zakładek i 231 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu).
+Ostatnia aktualizacja: 2026-11-08 (Global Options ma osiemnaście zakładek i 239 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
 
 ## Przepływ danych
 
@@ -23,16 +23,22 @@ dla danych globalnych i nigdy nie zawiera logiki biznesowej.
 ## Bootstrap
 
 `functions.php` nie zawiera logiki — definiuje stałe i ładuje moduły z `inc/`
-w ustalonej kolejności:
+w ustalonej kolejności (`cyber_load_modules()`). Każdy moduł wchodzi **twardym
+`require_once`**: brak pliku to błąd krytyczny PHP z pełną ścieżką brakującego
+modułu. Do 2026-11-08 pętla pomijała po cichu plik, którego `is_readable()` nie
+potwierdziło, a błąd wychodził dopiero u pierwszego konsumenta — np. jako
+„undefined function `cyber_is_acf_active()`” w `inc/helpers.php`, czyli w pliku,
+który z brakiem nie miał nic wspólnego. Fatal wskazujący właściwy plik jest
+tańszy w diagnozie niż cicha degradacja z mylącym objawem.
 
 | # | Plik | Odpowiedzialność |
 |---|---|---|
-| 1 | `inc/helpers.php` | Schemat opcji, walidacja, `cyber_get_option()`, kanoniczne breakpointy `cyber_breakpoints()`. Musi być pierwszy — reszta może z niego korzystać. |
+| 1 | `inc/helpers.php` | Schemat opcji, walidacja, `cyber_get_option()`, kanoniczne breakpointy `cyber_breakpoints()`, wspólne funkcje formatujące (`cyber_tel_href()`, `cyber_normalize_link()`), rejestr ikon `cyber_icons()`. Musi być pierwszy — reszta może z niego korzystać. |
 | 2 | `inc/fonts.php` | Rejestr rodzin czcionek: opcje w panelu, lista dozwolonych wartości dla schematu, warunkowe ładowanie `assets/css/fonts.css`. Ładowany **po** `inc/helpers.php`, bo z jego schematu korzysta. |
 | 3 | `inc/acf.php` | Ścieżki Local JSON (save/load), ostrzeżenie o braku ACF PRO. Musi być przed ładowaniem pól przez ACF. |
-| 4 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`. |
+| 4 | `inc/options.php` | `acf_add_options_page()` na hooku `acf/init`, z `autoload => true` (od 2026-11-08; patrz „Cache i koszt na żądanie”). |
 | 5 | `inc/setup.php` | `add_theme_support()`, menu, rozmiary obrazków. |
-| 6 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. |
+| 6 | `inc/enqueue.php` | Rejestracja assetów, wersjonowanie przez `filemtime()`, inline CSS Custom Properties wszystkich modułów w `wp_head`. Tu też **jedyna** rejestracja arkusza sekcji `cyber-sections` (`assets/css/sections.css`) — `inc/sections.php` i `inc/blog.php` tylko kolejkują go po uchwycie. |
 | 7 | `inc/editor.php` | Wyłączenie edytora blokowego (Gutenberg) dla wszystkich typów treści. |
 | 8 | `inc/header.php` | Argumenty `wp_nav_menu()` i klasy podmenu dla modułów Header Desktop i Mobile, dane paska Top Header. Stała `CYBER_HEADER_MENU_LOCATION`. |
 | 9 | `inc/footer.php` | Dane paska Copyright (`cyber_copyright_data()`). Odpowiednik `inc/header.php` po stronie stopki. |
@@ -50,7 +56,7 @@ w ustalonej kolejności:
 | 21 | `inc/sections-global.php` | Sekcje globalne: typ treści `cyber_global_section`, odczyt jego sekcji, rozwijanie wierszy `global` dla assetów, kolumna „Używana na”. Ładowany **po** `inc/sections.php`; `inc/sections-slider.php` korzysta z jego `cyber_section_rows_expanded()`. |
 | 22 | `inc/sections-cards.php` | Sekcja „Karty”: walidacja ustawień siatki i normalizacja elementów repeatera. Ładowany **po** `inc/sections.php`, bo korzysta z jego walidatorów. |
 | 23 | `inc/sections-columns.php` | Sekcja „Kolumny tekstowe”: proporcje z zamkniętej listy, automatyczny układ na tablecie i telefonie. Ładowany **po** `inc/sections.php`. |
-| 24 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES. Ładowany **po** `inc/sections.php`. |
+| 24 | `inc/sections-slider.php` | Sekcja „Slider”: konfiguracja karuzeli, zdjęcie jako `<picture>`, warunkowe ładowanie Swipera jako modułu ES przez `wp_enqueue_script_module()` (WP ≥ 6.5), etykiety dla czytników w `data-i18n` (`cyber_slider_i18n()`), przycisk pauzy autoplay (`cyber_slider_autoplay_button()`). Ładowany **po** `inc/sections.php`. |
 | 25 | `inc/sections-carousel.php` | Sekcja „Karuzela kart”: ustawienia przewijania; karty, wygląd i markup wspólne z sekcją „Karty”. Ładowany **po** `inc/sections-cards.php` i `inc/sections-slider.php`. |
 | 26 | `inc/sections-faq.php` | Sekcja „FAQ”: normalizacja pytań, podział na kolumny, klasy i zmienne. Natywne `<details>`, bez JS. Ładowany **po** `inc/sections-cards.php` (rozmiary pytania z `cyber_cards_title_sizes()`). |
 | 27 | `inc/sections-counter.php` | Sekcja „Licznik”: normalizacja i formatowanie liczb, klasy i zmienne, warunkowe ładowanie `assets/js/counter.js`. Ładowany **po** `inc/sections-cards.php` (listy kolumn i rozmiarów) i `inc/sections-global.php` (rozwinięte sekcje). |
@@ -109,7 +115,7 @@ cyber_top_header_css()        ← moduł „Top Header”
 cyber_footer_css()            ← moduł „Footer”
 cyber_copyright_css()         ← moduł „Copyright”
 cyber_breadcrumb_css()        ← moduły „Breadcrumb” i „Breadcrumb WooCommerce”
-cyber_woocommerce_css()       ← moduł „WooCommerce”
+cyber_woocommerce_css()       ← moduł „WooCommerce” (doklejany tylko przy aktywnej wtyczce)
 cyber_animation_css()         ← moduł „Animacje”
 cyber_go_to_top_css()         ← moduł „Przycisk do góry”        (inc/enqueue.php)
 cyber_blog_css()              ← moduł „Blog”                    (inc/blog.php)
@@ -253,14 +259,23 @@ robiło wolniej.
 
 | Co | Gdzie | Dlaczego |
 |---|---|---|
-| `cyber_option_schema()` | `inc/helpers.php` | Tablica 208 wpisów z 17 zagnieżdżonymi wywołaniami rejestrów i jednym `__()`. `cyber_get_option()` sięgała po nią przy **każdym** wywołaniu — również wtedy, gdy trafiała we własny memo-cache — czyli 150–250 razy na podstronę. Pomiar: 1,98 ms → 0,08 ms na 200 wywołań |
+| `cyber_option_schema()` | `inc/helpers.php` | Tablica ok. 239 wpisów (208 w chwili pomiaru) z 17 zagnieżdżonymi wywołaniami rejestrów i jednym `__()`. `cyber_get_option()` sięgała po nią przy **każdym** wywołaniu — również wtedy, gdy trafiała we własny memo-cache — czyli 150–250 razy na podstronę. Pomiar: 1,98 ms → 0,08 ms na 200 wywołań |
 | `cyber_get_option()` | `inc/helpers.php` | Memoizacja wyniku. Celowo **tylko** dla wywołań bez nadpisanego `$default` — inaczej pierwszy `$default` zamroziłby wynik dla wszystkich kolejnych |
 | `cyber_section_rows_expanded()` | `inc/sections-global.php` | Pięć modułów pyta o to samo drzewo sekcji na tym samym hooku (`wp_enqueue_scripts`, priorytet 20): arkusz sekcji, slider, licznik, galeria, animacje |
 | `cyber_global_section_rows()` | `inc/sections-global.php` | Jak wyżej, poziom niżej |
-| `cyber_page_header_data()` | `inc/page-header.php` | Dane czytane i przez `cyber_page_header_shows()`, i przez samo renderowanie |
+| `cyber_page_header_data()` | `inc/page-header.php` | Dane czytane i przez `cyber_page_header_shows()`, i przez samo renderowanie. Wynik zapamiętywany **dopiero po akcji `wp`** — wcześniej zapytanie główne nie jest gotowe, `is_singular()` zwraca `false`, a zapamiętany wtedy `null` zamroziłby „brak page headera” na całe żądanie. Samo liczenie, bez cache, robi `cyber_page_header_resolve()` |
 | Mapy etykiet `gettext` | `inc/woocommerce-cart.php`, `inc/woocommerce-checkout.php` | Zawierają `__()`, a filtr odpala się dla każdego ciągu na stronie |
 
-**Dwie decyzje poza `static`:**
+**Decyzje poza `static`:**
+
+Options Page jest rejestrowana z **`autoload => true`** (`inc/options.php`, od
+2026-11-08). ACF domyślnie zapisuje opcje z `autoload = false`, a blok `<style>`
+w `wp_head` czyta ponad 130 kluczy na **każdym** żądaniu — każdy klucz to dwa
+wiersze `wp_options` (wartość + referencja do pola). Bez autoloadu żaden z nich
+nie siedzi w cache `alloptions`, więc każde wejście na stronę płaciło setkami
+pojedynczych `SELECT`-ów. Flaga działa przy **zapisie**: istniejące instalacje
+przełącza jedno kliknięcie „Zapisz ustawienia” w panelu, nowe mają autoload od
+pierwszego zapisu.
 
 `cyber_gallery_rewrites` zapisujemy z `autoload = true`. Flaga jest czytana
 w warunku na **każdym** żądaniu, a opcja bez autoloadu nie siedzi w cache
@@ -280,13 +295,32 @@ shortcode'ów zarejestrowanych w instalacji, wtyczek włącznie. Wzorzec zawęż
 radzi sobie z zagnieżdżeniem **lepiej** niż rekurencja `has_shortcode()`: obcy
 shortcode dookoła nie pasuje do wzorca, więc nie „zjada" naszego.
 
+**Losowa kolejność wpisów bez `ORDER BY RAND()`** (sekcja Wpisy,
+`inc/sections-posts.php`, od 2026-11-08). MySQL liczy wtedy losową wartość dla
+**każdego** wiersza tabeli i sortuje po niej cały wynik bez indeksu — na dużym
+blogu to najwolniejsze zapytanie strony. `cyber_posts_random_ids()` robi to
+dwuetapowo: lekkie zapytanie po same identyfikatory pasujące do warunków
+(`fields => ids`, bez metadanych, terminów i miniatur), `shuffle()` w PHP,
+a właściwe zapytanie dostaje `post__in` z `orderby => post__in`.
+
+**Cache miniatur i terminów ładowany razem z wpisami.** Zapytania sekcji Wpisy,
+widgetu „Ostatnie wpisy” i listy galerii mają jawne
+`update_post_thumbnail_cache` / `update_post_term_cache` — karta pyta o miniaturę
+i kategorie każdego wpisu, a bez tego każde pytanie było osobnym `SELECT`-em.
+W galerii `cyber_gallery_prime_images()` ładuje wpisy i metadane załączników
+jednym `_prime_post_caches()` (galeria z 60 zdjęciami robiła ponad 100 zapytań),
+a kategorie galerii czyta `get_the_terms()` z cache terminów zamiast
+`wp_get_post_terms()` w pętli.
+
 ## Moduły bez frontu: Kontakt i Social Media
 
 Dwa moduły **celowo nie mają warstwy widoku**: żadnych zmiennych CSS, markupu ani
 wpisu w `cyber_print_inline_css()` (CLAUDE.md sekcja 22).
 
 **Social Media** nie ma nawet pliku w `inc/` — 6 pól typu URL w całości obsługuje
-istniejący typ schematu `url` (`esc_url_raw()`), ten sam, którego używa logo nagłówka.
+istniejący typ schematu `url` (`esc_url_raw()`), ten sam, którego używa adres CTA
+headera i tło page headera (logo headera i stopki od 2026-11-08 ma typ `attachment`
+— ID załącznika zamiast adresu, `<img>` przez `wp_get_attachment_image()`).
 Nie było czego dokładać.
 
 **Kontakt** ma `inc/contact.php` z wyłączną walidacją przy zapisie w panelu.
@@ -1000,8 +1034,13 @@ WooCommerce przerenderowuje cały #order_review — z nową ilością i sumami
   **w dwóch miejscach** — w skrypcie i w endpoincie — bo pierwsze można ominąć.
 
 Zabezpieczenia endpointu opisuje `docs/security.md`; to pierwszy endpoint AJAX
-w motywie. Drugi — doładowywanie produktów (`cyber_shop_more`) — należy do listy
-produktów, opisanej niżej.
+w motywie i **jedyny z nonce** — zmienia stan koszyka. Drugi — doładowywanie
+produktów (`cyber_shop_more`) — należy do listy produktów, opisanej niżej, i od
+2026-11-08 **świadomie nie ma nonce**: to publiczny odczyt bez żadnego stanu do
+podrobienia, a token zapisany w HTML-u wygasał razem z cache pełnych stron
+(po 12–24 h przycisk „Pokaż więcej” przestawał działać u każdego, kto dostał
+stronę z cache). Uzasadnienie w `docs/security.md`; stała akcji nazywa się teraz
+`CYBER_SHOP_MORE_ACTION` (dawniej `CYBER_SHOP_MORE_NONCE`).
 
 ### Świadome odstępstwa od projektu graficznego
 
@@ -1132,6 +1171,10 @@ Parametr z adresu przechodzi przez białą listę `12 / 24 / 48 / 96` —
 `absint()` sam nie wystarczy, bo `per_page=100000` jest poprawną liczbą, a zabiłby
 zapytanie. Formularz niesie pozostałe parametry w polach ukrytych
 (`wc_query_string_form_fields`), żeby zmiana liczby nie kasowała sortowania.
+Zmiana wartości w selekcie wysyła formularz przez `assets/js/shop.js`
+(`.cyber-shop__per-page-select`, `requestSubmit()` z `submit()` jako ścieżką
+zapasową), nie przez inline `onchange` — inline JS nie przechodzi przez CSP bez
+`'unsafe-inline'`.
 
 ### Pułapka: `get_main_tax_query()` nie działa w AJAX
 
@@ -1338,7 +1381,7 @@ group_sections.json           ← pole Flexible Content (strony, wpisy)
 cyber_render_sections()       ← pętla po wierszach
         │
         ├──→ cyber_section_types()        ← rejestr: klucz → szablon
-        ├──→ cyber_section_attributes()   ← klasy + zmienne CSS + data-*
+        ├──→ cyber_section_attributes()   ← klasy + zmienne CSS + data-* + flaga overlay
         │         └─→ filtr cyber_section_attributes   ← moduły dokładające coś
         │                                                do każdej sekcji (animacje)
         │
@@ -1348,6 +1391,13 @@ template-parts/sections/[szablon].php     ← dane jawnie w $args
         ▼
 .cyber-section + assets/css/sections.css
 ```
+
+Arkusz `sections.css` jest **rejestrowany raz** — `wp_register_style( 'cyber-sections' )`
+w `cyber_enqueue_assets()` (`inc/enqueue.php`), ze ścieżką, zależnością od
+`cyber-main` i wersją. `inc/sections.php` (strony z sekcjami) i `inc/blog.php`
+(widoki bloga) tylko **kolejkują** go po uchwycie, na priorytecie 20, czyli po tej
+rejestracji. Do 2026-11-08 oba pliki rejestrowały arkusz w całości — druga pełna
+rejestracja rozjeżdżała się przy pierwszej zmianie zależności.
 
 ### Trzy grupy pól zamiast jednej
 
@@ -1476,6 +1526,25 @@ w arkuszu. To świadoma rezygnacja z kontroli na rzecz spójności: karty w cał
 projekcie wyglądają tak samo, a zmiana palety działa wszędzie naraz. Tak samo
 przycisk — cały wygląd z zakładki Przyciski, sekcja wybiera tylko rozmiar.
 
+### Jedna reguła, jedna funkcja: `cyber_tel_href()` i `cyber_normalize_link()`
+
+Dwie funkcje w `inc/helpers.php` istnieją z tego samego powodu: reguła stała
+w dwóch kopiach, a komentarz w drugiej odsyłał do pierwszej **słowami** („jak
+w module X”) zamiast wywołaniem. Komentarz nie jest mechanizmem reużycia — nie
+pilnuje, żeby obie kopie zmieniły się razem (CLAUDE.md sekcja 22).
+
+- **`cyber_tel_href( $phone )`** — adres `tel:`: w treści zostaje zapis redaktora
+  (spacje, myślniki, nawiasy), w `href` trafiają wyłącznie cyfry i wiodący plus.
+  Używają go Top Header i sekcja Kontakt.
+- **`cyber_normalize_link( $link )`** (od 2026-11-08) — pole ACF Link do postaci
+  dla widoku: `url` przez `esc_url_raw()`, `label` przez `sanitize_text_field()`,
+  `target` przyjmuje wyłącznie `_blank`; bez adresu zwraca `null`. Wcześniej ta
+  sama logika stała w `inc/sections-cards.php` i `inc/sections-slider.php`; dziś
+  obie sekcje (a przez karty także Karuzela kart) wołają helper.
+
+Rejestr ikon `cyber_icons()` w tym samym pliku dostał 2026-11-08 `pause` i `play`
+— ikony przycisku pauzy autoplay (niżej).
+
 ### Slider: Swiper jako moduły ES
 
 Slider jest pierwszym miejscem w motywie z biblioteką zewnętrzną. Kilka decyzji
@@ -1486,11 +1555,24 @@ gzip. Rdzeń z nawigacją, paginacją, autoplay, dostępnością i klawiaturą t
 27,7 kB. Pliki `.mjs` są importowane bezpośrednio z `assets/vendor/`, więc
 motyw nadal nie ma żadnego narzędzia do budowania.
 
-**`slider.js` jest ładowany jako `type="module"`.** WordPress wypisuje
-`<script>` bez tego atrybutu, więc dokłada go filtr
-`cyber_slider_module_tag()` — podmienia istniejący `type` albo dopisuje brakujący,
-żeby nie powstały dwa. `wp_localize_script()` dalej działa: dane lądują w
-zwykłym `<script>` przed modułem.
+**`slider.js` jest ładowany przez `wp_enqueue_script_module()`** (Script Modules
+API, WordPress ≥ 6.5 — stąd `Requires at least: 6.5` w `style.css`). WordPress
+sam wypisuje znacznik z `type="module"` i odkłada go na koniec dokumentu; filtr
+`script_loader_tag` podmieniający atrybut regexem (`cyber_slider_module_tag()`)
+został usunięty 2026-11-08. Moduły **nie obsługują** `wp_localize_script()` ani
+`wp_add_inline_script()`, więc dane z PHP jadą wyłącznie w atrybutach `data-*`:
+etykiety dla czytników ekranu w `data-i18n` każdej karuzeli (`cyber_slider_i18n()`
+— JSON przez `esc_attr()`), etykiety przycisku pauzy w `data-label-pause` /
+`data-label-play` na samym przycisku (`cyber_slider_autoplay_button()`).
+
+**Przycisk pauzy autoplay (WCAG 2.2.2).** Ruch, który startuje sam i trwa dłużej
+niż pięć sekund, musi dać się zatrzymać. `cyber_slider_autoplay_button( $base )`
+(`inc/sections-slider.php`) wypisuje `<button class="cyber-autoplay cyber-slider__autoplay">`
+(w karuzeli `cyber-carousel__autoplay`) z ikonami `pause` i `play` z rejestru
+`cyber_icons()`. Przycisk wychodzi z atrybutem `hidden` — odsłania go skrypt, więc
+bez JavaScriptu i przy `prefers-reduced-motion` (autoplay wtedy nie startuje) go
+nie ma. `aria-pressed="true"` oznacza stan zatrzymany; etykieta przełącza się
+razem z nim. Dotyczy slidera, karuzeli kart i sekcji Wpisy w trybie slidera.
 
 **Rdzeń eksportuje klasę pod nazwą `S`** (`export{Swiper as S}`). To wewnętrzna
 nazwa pliku `swiper-core.min.mjs`, nie publiczne API — przy aktualizacji
@@ -1600,6 +1682,14 @@ linkiem do pliku w pełnym rozmiarze, więc bez JavaScriptu galeria nadal dział
 **Lightbox widzi tylko zdjęcia widoczne** w chwili otwarcia, więc po
 przefiltrowaniu kategorii strzałki nie przeskakują do ukrytych.
 
+**Etykieta i wymiary dla lightboxa jadą w `data-*`** (od 2026-11-08).
+`.cyber-gallery` niesie `data-lightbox-label` — tłumaczony `aria-label` okna
+`<dialog>`, żeby tekst żył w PHP, a nie na stałe w skrypcie — a link każdego
+zdjęcia `data-width` / `data-height` pliku w pełnym rozmiarze, żeby powiększony
+`<img>` dostał proporcje przed pobraniem. Metadane są już w cache po
+`wp_get_attachment_image()`, więc to nie jest dodatkowe zapytanie; sam cache
+ładuje `cyber_gallery_prime_images()` (patrz „Cache i koszt na żądanie”).
+
 **Jednorazowe odświeżenie reguł adresów** po dodaniu typu treści
 (`cyber_gallery_flush_rewrites()`): bez niego pierwsza galeria zwracałaby 404,
 dopóki ktoś nie zapisałby ustawień bezpośrednich odnośników. Operacja jest
@@ -1650,11 +1740,18 @@ O tym, czy pasek się pokaże, decyduje **jedna funkcja** —
 samo, dopiero potem globalny włącznik i lista typów treści. Widok dostaje
 gotową tablicę albo `null` i nie pyta o żadne ustawienie. Wynik jest liczony
 raz na żądanie (statyczny cache), bo pytają o niego trzy miejsca: kolejkowanie
-arkusza, `header.php` i szablony.
+arkusza, `header.php` i szablony — ale zapamiętywany **dopiero po akcji `wp`**
+(od 2026-11-08); wcześniej `is_singular()` zwraca `false` i zapamiętany `null`
+zamroziłby brak page headera na całe żądanie. Liczenie bez cache robi
+`cyber_page_header_resolve()`.
 
 **Jeden `<h1>` na stronę.** Tytuł niesie page header, więc `index.php`
 i `templates/single-post.php` pytają `cyber_page_header_shows()` i wtedy nie
-wypisują własnego tytułu (CLAUDE.md sekcja 11).
+wypisują własnego tytułu (CLAUDE.md sekcja 11). Bez page headera wpisy dostają
+widoczny `<h1>`, a strony (`page`) — od 2026-11-08 — `<h1 class="screen-reader-text">`
+z tytułem w `index.php`: wygląd się nie zmienia (pierwszy widoczny nagłówek nadal
+daje redaktor w treści albo w sekcji), ale czytnik ekranu i wyszukiwarka dostają
+jeden `<h1>` na każdej stronie.
 
 **Lokalizacja grupy przez regułę przeczącą.** Zamiast wyliczać typy treści
 (co pomijałoby CPT dodane później), grupa ma warunek `post_type != attachment`
@@ -1721,6 +1818,11 @@ implementację.
 `template-parts/components/carousel.php`; sekcja Wpisy w trybie slidera używa
 go bez zmian. Sprawdzone: HTML istniejących sekcji (strona #176, sekcja globalna
 #496) identyczny przed i po przeniesieniu.
+
+**Decyzja o zdjęciu wyróżniającym poza widokiem.** `cyber_blog_single_image( $post )`
+(`inc/blog.php`, od 2026-11-08) łączy ustawienie Global Options → Blog
+z `has_post_thumbnail()`; `templates/single-post.php` dostaje gotowy `bool`
+i nie pyta o opcję sam (CLAUDE.md sekcja 4).
 
 **Pasek boczny.** Obszar widgetów `cyber-blog`; pusty obszar nie zostawia
 pustej kolumny (treść na całą szerokość), a zalogowany administrator widzi
@@ -1901,16 +2003,22 @@ Szczegóły, które mają znaczenie:
   czytnik ekranu i klawiatura przechodzą przez każdą kartę raz.
 - **Czas animacji = szybkość na kartę × liczba kart w zestawie**, więc pole
   „Szybkość" znaczy to samo niezależnie od liczby kart.
-- **Bez pauzy po najechaniu** (od 2026-09-19). Pierwsza wersja zatrzymywała
-  taśmę przez `animation-play-state: paused`; decyzją projektową ruch ma być
-  ciągły, więc reguła została usunięta. Autoplay krokowy karuzeli też nie
-  zatrzymuje się pod kursorem (`pauseOnMouseEnter: false`); slider — tak.
+- **Taśma zatrzymuje się** (zmiana decyzji 2026-11-08; od 2026-09-19 do tego
+  dnia jechała także pod kursorem). Trzy sposoby, wszystkie przez
+  `animation-play-state: paused`, więc taśma rusza dalej z miejsca, w którym
+  stanęła, bez przeskoku: `:hover`, `:focus-within` (fokus klawiatury na karcie)
+  i przycisk pauzy, który przełącza klasę stanu `.cyber-carousel--paused`
+  (`assets/js/slider.js`). Powód: WCAG 2.2.2 — ruch startujący sam musi dać się
+  zatrzymać. Autoplay **krokowy** karuzeli nadal nie zatrzymuje się pod kursorem
+  (`pauseOnMouseEnter: false`); slider — tak; oba mają przycisk pauzy.
 
-**Zmierzone po zmianie:** 1071 odczytów przez 12,5 s, obejmujących zawinięcie
-taśmy po 10 s — **0 przeskoków, 0 zatrzymań**, mediana prędkości 164,5 px/s przy
-oczekiwanych 166. (Pomiar pauzy po najechaniu dotyczył wersji sprzed
-2026-09-19; po jej usunięciu ten sam test pokazuje ruch także pod kursorem.) Przy emulowanym `prefers-reduced-motion` animacja jest
-wyłączona, kopie ukryte, a rząd przewijalny ręcznie.
+**Zmierzone (wersja z 2026-09-19, bez pauzy pod kursorem):** 1071 odczytów przez
+12,5 s, obejmujących zawinięcie taśmy po 10 s — **0 przeskoków, 0 zatrzymań**,
+mediana prędkości 164,5 px/s przy oczekiwanych 166. Pauza pod kursorem wróciła
+2026-11-08 jako wymóg dostępności; geometria taśmy się nie zmieniła, więc pomiar
+przeskoków pozostaje aktualny. Przy emulowanym `prefers-reduced-motion` animacja
+jest wyłączona, kopie ukryte, rząd przewijalny ręcznie, a przycisk pauzy zostaje
+ukryty.
 
 **Dwa błędy wychwycone pomiarem, nie przeglądem kodu:**
 `cyber_carousel_attributes()` pytał o konfigurację z liczbą kart 0, więc klasa
@@ -1996,10 +2104,11 @@ Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaim
   i archiwów CPT; te widoki obsługuje fallback `index.php` w rootcie.
   `header.php` i `footer.php` w rootcie **nie** są już szkieletem — zbierają
   dane przez `cyber_get_option()` i przekazują je jawnie do `template-parts/`.
-  **Strony (`page`) nie wypisują tytułu w treści** (od 2026-09-19) — `<h1>`
-  niesie page header (`inc/page-header.php`, od 2026-09-21). Page header jest
-  **domyślnie wyłączony**, więc bez jego włączenia strona nie ma `<h1>`, dopóki
-  redaktor nie da go w treści albo w sekcji. Wpisy zachowują tytuł, gdy page
+  **Strony (`page`) nie wypisują widocznego tytułu w treści** (od 2026-09-19) —
+  `<h1>` niesie page header (`inc/page-header.php`, od 2026-09-21). Page header
+  jest **domyślnie wyłączony**; bez niego strona dostaje (od 2026-11-08) `<h1>`
+  ukryty wizualnie (`.screen-reader-text`), a pierwszy widoczny nagłówek nadal
+  daje redaktor w treści albo w sekcji. Wpisy zachowują widoczny tytuł, gdy page
   header się nie wyświetla. Pusta treść edytora nie zostawia pustego kontenera; treść zostaje,
   bo stoją na niej strony sklepu (shortcode koszyka i zamówienia).
 - **Etap 7** — podstawy SEO.
@@ -2008,8 +2117,11 @@ Zgodnie z kolejnością budowy (CLAUDE.md sekcja 17) — świadomie **nie** zaim
 
 **Etap 6 (formularze / AJAX) jest częściowo zrobiony**, wbrew kolejności z sekcji
 17: istnieją **dwa endpointy AJAX** — zmiana ilości pozycji na stronie zamówienia
-i doładowywanie produktów na liście. Oba powstały jako część widoków sklepu,
-oba mają nonce i pełną sanityzację, oba są opisane w `docs/security.md`.
+i doładowywanie produktów na liście. Oba powstały jako część widoków sklepu
+i oba są opisane w `docs/security.md`. Nonce ma tylko `cyber_checkout_qty`
+(zmienia stan koszyka); `cyber_shop_more` od 2026-11-08 świadomie go nie ma —
+publiczny odczyt bez stanu, a token w HTML-u wygasał razem z cache pełnych stron
+po 12–24 h. Oba mają pełną sanityzację wejścia i escaping wyjścia.
 Nie ma natomiast żadnego formularza własnego motywu — i to zostaje na etap 6.
 
 Osobno, poza kolejnością etapów: kolumny 2 i 3 stopki oraz część pól zakładki

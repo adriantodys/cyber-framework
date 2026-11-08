@@ -74,19 +74,19 @@ function cyber_product_position( $key ) {
 function cyber_product_element_callbacks() {
 	return array(
 		'category' => array( 'woocommerce_single_product_summary', 'cyber_product_category' ),
-		'title'   => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_title' ),
-		'sku'     => array( 'woocommerce_single_product_summary', 'cyber_product_sku' ),
-		'rating'  => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating' ),
-		'excerpt' => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt' ),
-		'price'   => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_price' ),
-		'weight'  => array( 'woocommerce_single_product_summary', 'cyber_product_weight' ),
-		'stock'   => array( 'woocommerce_single_product_summary', 'cyber_product_stock' ),
-		'cart'    => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart' ),
-		'perks'   => array( 'woocommerce_single_product_summary', 'cyber_product_perks' ),
-		'meta'    => array( 'woocommerce_single_product_summary', 'cyber_product_meta' ),
-		'tabs'    => array( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs' ),
-		'upsells' => array( 'woocommerce_after_single_product_summary', 'woocommerce_upsell_display' ),
-		'related' => array( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products' ),
+		'title'    => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_title' ),
+		'sku'      => array( 'woocommerce_single_product_summary', 'cyber_product_sku' ),
+		'rating'   => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating' ),
+		'excerpt'  => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt' ),
+		'price'    => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_price' ),
+		'weight'   => array( 'woocommerce_single_product_summary', 'cyber_product_weight' ),
+		'stock'    => array( 'woocommerce_single_product_summary', 'cyber_product_stock' ),
+		'cart'     => array( 'woocommerce_single_product_summary', 'woocommerce_template_single_add_to_cart' ),
+		'perks'    => array( 'woocommerce_single_product_summary', 'cyber_product_perks' ),
+		'meta'     => array( 'woocommerce_single_product_summary', 'cyber_product_meta' ),
+		'tabs'     => array( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs' ),
+		'upsells'  => array( 'woocommerce_after_single_product_summary', 'woocommerce_upsell_display' ),
+		'related'  => array( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products' ),
 	);
 }
 

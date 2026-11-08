@@ -193,11 +193,17 @@ function cyber_gallery_posts( array $row ) {
 	$terms = array_values( array_filter( array_map( 'absint', (array) ( isset( $row['cyber_gal_terms'] ) ? $row['cyber_gal_terms'] : array() ) ) ) );
 
 	$query = array(
-		'post_type'           => CYBER_GALLERY_TYPE,
-		'post_status'         => 'publish',
-		'posts_per_page'      => $ids ? count( $ids ) : 50,
-		'ignore_sticky_posts' => true,
-		'no_found_rows'       => true,
+		'post_type'              => CYBER_GALLERY_TYPE,
+		'post_status'            => 'publish',
+		'posts_per_page'         => $ids ? count( $ids ) : 50,
+		'ignore_sticky_posts'    => true,
+		'no_found_rows'          => true,
+		/*
+		 * Jawnie, bo cyber_gallery_data() czyta kategorie kazdej galerii przez
+		 * get_the_terms() — ta siega do cache terminow, ktory musi byc
+		 * zaladowany jednym zapytaniem tutaj, a nie osobnym per galeria.
+		 */
+		'update_post_term_cache' => true,
 	);
 
 	if ( $ids ) {
@@ -222,6 +228,26 @@ function cyber_gallery_posts( array $row ) {
 }
 
 /**
+ * Laduje do cache wpisy i metadane zalacznikow jednym zapytaniem.
+ *
+ * cyber_gallery_item() pyta kazde zdjecie o adres (metadane), tytul i podpis
+ * (wpis). Bez tego kroku kazda z tych funkcji robila wlasny SELECT per
+ * zdjecie — galeria z 60 zdjeciami to bylo ponad 100 zapytan.
+ * _prime_post_caches() pomija identyfikatory, ktore juz sa w cache.
+ *
+ * @param int[] $ids Identyfikatory zalacznikow.
+ * @return void
+ */
+function cyber_gallery_prime_images( array $ids ) {
+	$ids = array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) );
+
+	if ( $ids ) {
+		// Bez terminow (zalaczniki ich nie maja), z metadanymi (adres i wymiary).
+		_prime_post_caches( $ids, false, true );
+	}
+}
+
+/**
  * Zdjecia sekcji razem z lista kategorii do filtrowania.
  *
  * @param array $row Wiersz Flexible Content.
@@ -243,10 +269,15 @@ function cyber_gallery_data( array $row ) {
 	);
 
 	if ( 'galleries' === $source ) {
-		foreach ( cyber_gallery_posts( $row ) as $gallery ) {
-			$terms = wp_get_post_terms( $gallery->ID, CYBER_GALLERY_TAX );
+		// Najpierw komplet galerii, zeby zalaczniki dalo sie zaladowac jednym zapytaniem.
+		$galleries = array();
+		$image_ids = array();
 
-			if ( is_wp_error( $terms ) ) {
+		foreach ( cyber_gallery_posts( $row ) as $gallery ) {
+			// get_the_terms() czyta cache terminow zaladowany w cyber_gallery_posts(); zwraca false albo WP_Error, gdy nie ma kategorii.
+			$terms = get_the_terms( $gallery, CYBER_GALLERY_TAX );
+
+			if ( ! is_array( $terms ) ) {
 				$terms = array();
 			}
 
@@ -258,8 +289,19 @@ function cyber_gallery_data( array $row ) {
 				);
 			}
 
-			foreach ( cyber_gallery_images( $gallery->ID ) as $image_id ) {
-				$item = cyber_gallery_item( $image_id, $caption, wp_list_pluck( $terms, 'term_id' ) );
+			$images      = cyber_gallery_images( $gallery->ID );
+			$image_ids   = array_merge( $image_ids, $images );
+			$galleries[] = array(
+				'terms'  => wp_list_pluck( $terms, 'term_id' ),
+				'images' => $images,
+			);
+		}
+
+		cyber_gallery_prime_images( $image_ids );
+
+		foreach ( $galleries as $gallery ) {
+			foreach ( $gallery['images'] as $image_id ) {
+				$item = cyber_gallery_item( $image_id, $caption, $gallery['terms'] );
 
 				if ( $item ) {
 					$items[] = $item;
@@ -268,6 +310,8 @@ function cyber_gallery_data( array $row ) {
 		}
 	} else {
 		$images = isset( $row['cyber_gal_images'] ) ? (array) $row['cyber_gal_images'] : array();
+
+		cyber_gallery_prime_images( $images );
 
 		foreach ( $images as $image_id ) {
 			$item = cyber_gallery_item( $image_id, $caption );

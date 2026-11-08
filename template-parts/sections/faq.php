@@ -27,8 +27,8 @@ if ( ! $cyber_attributes ) {
 
 $cyber_items = cyber_faq_items( $cyber_row );
 $cyber_show  = array(
-	'top'    => cyber_faq_shows_wysiwyg( $cyber_row, 'top' ),
-	'bottom' => cyber_faq_shows_wysiwyg( $cyber_row, 'bottom' ),
+	'top'    => cyber_section_shows_wysiwyg( $cyber_row, 'cyber_faq_show', 'top' ),
+	'bottom' => cyber_section_shows_wysiwyg( $cyber_row, 'cyber_faq_show', 'bottom' ),
 );
 
 if ( ! $cyber_items && ! $cyber_show['top'] && ! $cyber_show['bottom'] ) {

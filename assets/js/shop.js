@@ -15,7 +15,14 @@
  *
  * 2. DOLADOWYWANIE. Dziala tylko wtedy, gdy w Global Options wybrano tryb
  *    z przyciskiem. Przycisk niesie kontekst archiwum w atrybutach data-*,
- *    a serwer sklada z nich zapytanie od zera.
+ *    a serwer sklada z nich zapytanie od zera. Zadanie nie niesie nonce:
+ *    to publiczny odczyt listy produktow bez zadnego stanu do podrobienia,
+ *    a token zapisany w HTML-u wygasalby razem z cache pelnych stron
+ *    (uzasadnienie: inc/woocommerce-shop.php, cyber_shop_load_more_products()).
+ *
+ * 3. LICZBA NA STRONIE. Zmiana wartosci w selekcie wysyla formularz — ten
+ *    nasluch zastepuje inline onchange, ktorego nie dopuszcza CSP bez
+ *    'unsafe-inline'.
  */
 ( function () {
 	'use strict';
@@ -90,7 +97,7 @@
 	 * @return {void}
 	 */
 	function loadMore( button ) {
-		if ( busy || ! config.ajaxUrl || ! config.nonce ) {
+		if ( busy || ! config.ajaxUrl || ! config.action ) {
 			return;
 		}
 
@@ -110,7 +117,6 @@
 		var body = new window.URLSearchParams();
 
 		body.append( 'action', config.action );
-		body.append( 'nonce', config.nonce );
 		body.append( 'page', String( page ) );
 		body.append( 'per_page', button.getAttribute( 'data-per-page' ) || '' );
 		body.append( 'orderby', button.getAttribute( 'data-orderby' ) || '' );
@@ -194,6 +200,29 @@
 
 		if ( moreButton ) {
 			loadMore( moreButton );
+		}
+	} );
+
+	/* ------------------------------------------------------------------ *
+	 * Liczba produktow na stronie
+	 * ------------------------------------------------------------------ */
+
+	/*
+	 * Delegacja z tego samego powodu co wyzej. requestSubmit() przechodzi
+	 * przez walidacje formularza i zdarzenie submit, jak klikniecie
+	 * przycisku; submit() to zapasowa sciezka dla starszych przegladarek.
+	 */
+	document.addEventListener( 'change', function ( event ) {
+		var select = event.target.closest ? event.target.closest( '.cyber-shop__per-page-select' ) : null;
+
+		if ( ! select || ! select.form ) {
+			return;
+		}
+
+		if ( 'function' === typeof select.form.requestSubmit ) {
+			select.form.requestSubmit();
+		} else {
+			select.form.submit();
 		}
 	} );
 } )();

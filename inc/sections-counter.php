@@ -143,9 +143,17 @@ function cyber_counter_attributes( array $row ) {
 		)
 	);
 
-	$weight = isset( $row['cyber_counter_number_weight'] ) ? (string) $row['cyber_counter_number_weight'] : '';
+	/*
+	 * Lista grubosci z jednego zrodla (cyber_font_weight_choices()) plus 900
+	 * jako jawny wyjatek: pole cyber_counter_number_weight w acf-json ma te
+	 * wartosc w choices (duza liczba znosi najgrubsza wage), a reszta projektu
+	 * konczy sie na 800. Usuniecie 900 z listy po cichu zerowaloby zapisany
+	 * wybor redaktora.
+	 */
+	$weight  = isset( $row['cyber_counter_number_weight'] ) ? (string) $row['cyber_counter_number_weight'] : '';
+	$weights = array_merge( cyber_font_weight_choices(), array( '900' ) );
 
-	if ( in_array( $weight, array( '300', '400', '500', '600', '700', '800', '900' ), true ) ) {
+	if ( in_array( $weight, $weights, true ) ) {
 		$vars['--cyber-counter-weight'] = $weight;
 	}
 

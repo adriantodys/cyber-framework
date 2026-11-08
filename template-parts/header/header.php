@@ -10,7 +10,7 @@
  * @package Cyber_Framework
  *
  * @param array $args {
- *     @type string $logo_url       URL logo albo pusty string, gdy nie wgrano.
+ *     @type int    $logo_id        ID zalacznika logo albo 0, gdy nie wgrano.
  *     @type string $site_name      Nazwa witryny — trafia w alt logo.
  *     @type string $menu_alignment Wyrownanie menu: left, center albo right.
  *     @type bool   $menu_indicator   Czy pozycje z podmenu maja dostac strzalke.
@@ -25,7 +25,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$cyber_logo_url       = isset( $args['logo_url'] ) ? $args['logo_url'] : '';
+$cyber_logo_id        = isset( $args['logo_id'] ) ? absint( $args['logo_id'] ) : 0;
 $cyber_site_name      = isset( $args['site_name'] ) ? $args['site_name'] : '';
 $cyber_menu_alignment = isset( $args['menu_alignment'] ) ? $args['menu_alignment'] : 'right';
 $cyber_has_menu       = ! empty( $args['has_menu'] );
@@ -53,6 +53,26 @@ if ( $cyber_sticky ) {
  * (dla aria-controls), prog dla JS oraz klase wariantu pozycji.
  */
 $cyber_mobile_menu_id = 'cyber-mobile-menu';
+
+/*
+ * wp_get_attachment_image() zamiast recznego <img>: dostajemy width / height
+ * (przegladarka rezerwuje miejsce — zero przeskoku layoutu), srcset i sizes.
+ * Logo stoi nad zgieciem, wiec 'eager' — domyslne 'lazy' opoznialoby pierwszy
+ * widoczny element strony. Pusty string (skasowany zalacznik) = nazwa tekstowa.
+ */
+$cyber_logo_html = $cyber_logo_id
+	? wp_get_attachment_image(
+		$cyber_logo_id,
+		'full',
+		false,
+		array(
+			'class'    => 'cyber-header__logo',
+			'alt'      => $cyber_site_name,
+			'loading'  => 'eager',
+			'decoding' => 'async',
+		)
+	)
+	: '';
 ?>
 
 <header class="<?php echo esc_attr( $cyber_header_class ); ?>">
@@ -61,12 +81,8 @@ $cyber_mobile_menu_id = 'cyber-mobile-menu';
 
 			<p class="cyber-header__brand">
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
-					<?php if ( '' !== $cyber_logo_url ) : ?>
-						<img
-							class="cyber-header__logo"
-							src="<?php echo esc_url( $cyber_logo_url ); ?>"
-							alt="<?php echo esc_attr( $cyber_site_name ); ?>"
-						>
+					<?php if ( '' !== $cyber_logo_html ) : ?>
+						<?php echo $cyber_logo_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- markup z wp_get_attachment_image(), atrybuty escapowane w rdzeniu. ?>
 					<?php else : ?>
 						<?php echo esc_html( $cyber_site_name ); ?>
 					<?php endif; ?>

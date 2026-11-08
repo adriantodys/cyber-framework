@@ -164,18 +164,36 @@ function cyber_page_header_excerpt( $post_id ) {
 /**
  * Komplet danych page headera albo null, gdy sie nie pokazuje.
  *
+ * Dane liczone raz na zadanie: pyta o nie kolejkowanie assetow, header.php
+ * i szablony. Wynik jest zapamietywany DOPIERO po akcji 'wp' — wczesniej
+ * zapytanie glowne nie jest gotowe, is_singular() zwraca false, a zapamietany
+ * wtedy null zamrozilby "brak page headera" na cale zadanie, takze dla
+ * wywolan, ktore przyszlyby juz po ustaleniu widoku.
+ *
  * @return array<string, mixed>|null
  */
 function cyber_page_header_data() {
 	static $cache = null;
 
-	// Dane liczone raz: pyta o nie kolejkowanie assetow, header.php i szablony.
 	if ( null !== $cache ) {
 		return $cache ? $cache : null;
 	}
 
-	$cache = false;
+	$data = cyber_page_header_resolve();
 
+	if ( did_action( 'wp' ) ) {
+		$cache = $data ? $data : false;
+	}
+
+	return $data;
+}
+
+/**
+ * Liczy dane page headera dla biezacego widoku, bez cache.
+ *
+ * @return array<string, mixed>|null
+ */
+function cyber_page_header_resolve() {
 	if ( ! is_singular() ) {
 		return null;
 	}
@@ -226,8 +244,9 @@ function cyber_page_header_data() {
 		'--cyber-ph-bg'     => (string) cyber_get_option( 'pageheader_bg_color' ),
 	);
 
+	// url("…") w cudzyslowie — adres przeszedl przez esc_url_raw(), ktore usuwa cudzyslow.
 	if ( '' !== $image ) {
-		$vars['--cyber-ph-image'] = sprintf( 'url(%s)', $image );
+		$vars['--cyber-ph-image'] = sprintf( 'url("%s")', $image );
 	}
 
 	if ( '' !== $overlay ) {
@@ -243,13 +262,13 @@ function cyber_page_header_data() {
 	 */
 	$breadcrumb = cyber_get_option( 'pageheader_breadcrumb' ) ? cyber_breadcrumb_data() : null;
 
-	$cache = array(
+	return array(
 		'title'      => '' !== $title ? $title : wp_strip_all_tags( get_the_title( $post_id ) ),
 		'excerpt'    => $excerpt,
 		'breadcrumb' => $breadcrumb,
 		'video'      => $video,
 		'has_bg'     => '' !== $image || $video,
-		'class'   => sprintf(
+		'class'      => sprintf(
 			'cyber-page-header cyber-page-header--%1$s cyber-page-header--%2$s%3$s',
 			'container' === $width ? 'container' : 'full',
 			cyber_get_option( 'pageheader_align' ),
@@ -257,8 +276,6 @@ function cyber_page_header_data() {
 		),
 		'style'      => $style,
 	);
-
-	return $cache;
 }
 
 /**

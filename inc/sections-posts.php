@@ -95,12 +95,14 @@ function cyber_posts_query( array $row ) {
 
 		return get_posts(
 			array(
-				'post_type'           => array_keys( $types ),
-				'post__in'            => array_slice( $ids, 0, 24 ),
-				'orderby'             => 'post__in',
-				'posts_per_page'      => 24,
-				'post_status'         => 'publish',
-				'ignore_sticky_posts' => true,
+				'post_type'                   => array_keys( $types ),
+				'post__in'                    => array_slice( $ids, 0, 24 ),
+				'orderby'                     => 'post__in',
+				'posts_per_page'              => 24,
+				'post_status'                 => 'publish',
+				'ignore_sticky_posts'         => true,
+				'update_post_term_cache'      => true,
+				'update_post_thumbnail_cache' => true,
 			)
 		);
 	}
@@ -112,15 +114,22 @@ function cyber_posts_query( array $row ) {
 		'date'
 	);
 
+	/*
+	 * Cache zdjec wyrozniajacych i terminow ladowany razem z wpisami, jednym
+	 * zapytaniem — karta pyta o miniature i kategorie kazdego wpisu, a bez
+	 * tego kazde pytanie bylo osobnym SELECT-em.
+	 */
 	$query = array(
-		'post_type'           => $type,
-		'posts_per_page'      => $count,
-		'post_status'         => 'publish',
-		'orderby'             => $orderby,
-		'order'               => 'date' === $orderby ? 'DESC' : 'ASC',
-		'post__not_in'        => $current ? array( $current ) : array(),
-		'ignore_sticky_posts' => true,
-		'no_found_rows'       => true,
+		'post_type'                   => $type,
+		'posts_per_page'              => $count,
+		'post_status'                 => 'publish',
+		'orderby'                     => $orderby,
+		'order'                       => 'date' === $orderby ? 'DESC' : 'ASC',
+		'post__not_in'                => $current ? array( $current ) : array(),
+		'ignore_sticky_posts'         => true,
+		'no_found_rows'               => true,
+		'update_post_term_cache'      => true,
+		'update_post_thumbnail_cache' => true,
 	);
 
 	$categories = array_filter( array_map( 'absint', (array) ( isset( $row['cyber_posts_category'] ) ? $row['cyber_posts_category'] : array() ) ) );
@@ -129,7 +138,48 @@ function cyber_posts_query( array $row ) {
 		$query['category__in'] = $categories;
 	}
 
+	if ( 'rand' === $orderby ) {
+		$ids = cyber_posts_random_ids( $query, $count );
+
+		if ( ! $ids ) {
+			return array();
+		}
+
+		$query['post__in'] = $ids;
+		$query['orderby']  = 'post__in';
+		unset( $query['order'] );
+	}
+
 	return get_posts( $query );
+}
+
+/**
+ * Losowe identyfikatory wpisow pasujacych do zapytania.
+ *
+ * ORDER BY RAND() w MySQL liczy losowa wartosc dla KAZDEGO wiersza tabeli
+ * i sortuje po niej caly wynik bez indeksu — na duzym blogu to najwolniejsze
+ * zapytanie strony. Zamiast tego: same identyfikatory pasujace do warunkow
+ * (lekkie, bez metadanych), losowanie w PHP i wlasciwe zapytanie po post__in.
+ *
+ * @param array $query Argumenty zapytania bez losowania (typ, status, kategorie, wykluczenia).
+ * @param int   $count Ile identyfikatorow zwrocic.
+ * @return int[] Wylosowane identyfikatory w losowej kolejnosci.
+ */
+function cyber_posts_random_ids( array $query, $count ) {
+	$query['fields']                      = 'ids';
+	$query['posts_per_page']              = -1;
+	$query['orderby']                     = 'ID';
+	$query['order']                       = 'ASC';
+	$query['no_found_rows']               = true;
+	$query['update_post_meta_cache']      = false;
+	$query['update_post_term_cache']      = false;
+	$query['update_post_thumbnail_cache'] = false;
+
+	$ids = array_map( 'intval', (array) get_posts( $query ) );
+
+	shuffle( $ids );
+
+	return array_slice( $ids, 0, max( 1, (int) $count ) );
 }
 
 /**

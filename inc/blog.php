@@ -266,6 +266,20 @@ function cyber_blog_title_visible() {
 }
 
 /**
+ * Czy pojedynczy wpis pokazuje zdjecie wyrozniajace.
+ *
+ * Decyzja laczy ustawienie Global Options -> Blog z tym, czy wpis w ogole ma
+ * miniature. Widok (templates/single-post.php) nie pyta o opcje sam — dostaje
+ * gotowa odpowiedz, jak pozostale dane wpisu (CLAUDE.md sekcja 4).
+ *
+ * @param WP_Post $post Wpis.
+ * @return bool
+ */
+function cyber_blog_single_image( WP_Post $post ) {
+	return (bool) cyber_get_option( 'blog_single_image' ) && has_post_thumbnail( $post );
+}
+
+/**
  * Linia meta pojedynczego wpisu: data, kategorie, autor — wedlug ustawien.
  *
  * @param WP_Post $post Wpis.
@@ -306,12 +320,8 @@ function cyber_blog_assets() {
 		return;
 	}
 
-	wp_enqueue_style(
-		'cyber-sections',
-		CYBER_URI . '/assets/css/sections.css',
-		array( 'cyber-main' ),
-		cyber_asset_version( 'assets/css/sections.css' )
-	);
+	// Arkusz sekcji jest zarejestrowany RAZ, w inc/enqueue.php — tu tylko kolejka.
+	wp_enqueue_style( 'cyber-sections' );
 
 	wp_enqueue_style(
 		'cyber-blog',
