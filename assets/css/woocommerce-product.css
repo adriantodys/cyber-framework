@@ -357,7 +357,7 @@
 .cyber-product__top form.cart .single_add_to_cart_button {
 	padding: var(--cyber-btn-medium-padding-y) var(--cyber-btn-medium-padding-x);
 	border: 0;
-	border-radius: 0;
+	border-radius: var(--cyber-radius, 0); /* jak .btn — globalne zaokraglenie */
 	background-color: var(--cyber-wc-color-main);
 	color: #ffffff;
 	font-family: var(--cyber-font-family-text);

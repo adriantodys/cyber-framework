@@ -1508,7 +1508,7 @@
 
 .cyber-contact__form .wpcf7-submit {
 	border: none;
-	border-radius: 0;
+	border-radius: var(--cyber-radius, 0); /* jak .btn — globalne zaokraglenie */
 	font-family: var(--cyber-font-family-text);
 	cursor: pointer;
 	transition: background-color 0.2s ease, color 0.2s ease;
