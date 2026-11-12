@@ -6,7 +6,7 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-11-08
+Ostatnia aktualizacja: 2026-11-12
 Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
 Pozostałe grupy pól (18): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`), **Opinia** (`group_review.json`), **Produkt** (`group_product.json`) i **Kategoria produktu** (`group_product_category.json`).
 
@@ -105,7 +105,7 @@ SEO itd.) to kolejne, nieplanowane jeszcze moduły.
 
 | Field Label | Field Name | Typ ACF | Domyślna wartość | Append | Przeznaczenie |
 |---|---|---|---|---|---|
-| Zaokrąglenie rogów | `cyber_border_radius` | Number (0–100) | `0` | px | Zmienna `--cyber-radius`. Używają jej sekcje, w których pole zaokrąglenia ma wartość „Z ustawień globalnych”. Przycisk do góry ma własne pole (`cyber_totop_radius`). |
+| Zaokrąglenie rogów | `cyber_border_radius` | Number (0–100) | `0` | px | Zmienna `--cyber-radius`. Używają jej: **wszystkie przyciski** (`.btn`, przycisk formularza CF7, „Dodaj do koszyka” na stronie produktu — od 2026-11-12), sekcje, w których pole zaokrąglenia ma wartość „Z ustawień globalnych”, oraz pudełka wagi i pakowania na stronie produktu. Przycisk do góry ma własne pole (`cyber_totop_radius`). |
 
 > **Potwierdzone:** `cyber_page_margin_tablet` i `cyber_page_margin_mobile_l` mają
 > celowo tę samą wartość domyślną (30px) — nie jest to literówka (potwierdzone
@@ -497,10 +497,13 @@ te same wartości powtarza `acf-json/` — dodanie grubości wymaga zmiany w obu
 > (CLAUDE.md sekcja 11). Domyślnie kolor hover równa się bazowemu, więc pole nic nie
 > zmienia, dopóki ktoś świadomie go nie ruszy.
 
-> **`border-radius` nie ma pola — celowo.** Projekt nie ma jeszcze ustalonego promienia
-> zaokrąglenia w żadnym komponencie, więc `.btn` używa `border-radius: 0` jako wartości
-> domyślnej. To brak decyzji, nie decyzja — gdy promień zostanie ustalony projektowo,
-> jest to jedno pole Number i jedna zmienna.
+> **`border-radius` nie ma własnego pola w tej zakładce — celowo.** Przyciski czytają
+> globalne pole Główne ustawienia strony → Zaokrąglenie rogów (`cyber_border_radius`,
+> zmienna `--cyber-radius`), to samo co sekcje. Jeden promień dla całej witryny, bez
+> osobnego pola do pilnowania. Do 2026-11-12 `.btn` miało wpisane `border-radius: 0`
+> i pole globalne przycisków nie dotyczyło — stan opisany wtedy jako „brak decyzji”.
+> Osobne pole dla przycisków (z opcją „Z ustawień globalnych”, jak w sekcjach) wymaga
+> jawnej decyzji (CLAUDE.md sekcja 15).
 
 ### Komponent `cyber_button()`
 
@@ -2507,6 +2510,7 @@ nie ustawieniem globalnym.
 
 ## Historia zmian
 
+- 2026-11-12 — **Zaokrąglenie rogów działa na przyciski.** `.btn` (`assets/css/main.css`), przycisk formularza CF7 w sekcji Kontakt i „Dodaj do koszyka” na stronie produktu mają `border-radius: var(--cyber-radius, 0)` zamiast wpisanego `0`. Pole `cyber_border_radius` steruje więc teraz przyciskami, sekcjami z wartością „Z ustawień globalnych” i pudełkami na stronie produktu. Bez nowych pól, bez zmian w `acf-json/` i `default-acf.php`.
 - 2026-11-08 — **Logo jako ID załącznika, autoload opcji.** `cyber_header_logo` i `cyber_footer_logo`: return format **`url` → `id`**, nowy typ schematu **`attachment`** (`absint()` + `wp_attachment_is_image()`, pusta wartość `0`). `<img>` buduje `wp_get_attachment_image()` (`width`/`height`/`srcset` — bez CLS), strona logowania (`inc/login.php`) bierze adres przez `wp_get_attachment_image_url()`. **Dane w bazie bez zmian** — ACF zawsze trzymał tam ID załącznika, return format steruje tylko odczytem; po Sync grupy *Global Options* niczego nie trzeba zapisywać ponownie. Format `url` zostaje dla pól, których wartość idzie do CSS albo `<video>` (tło i wideo page headera). `acf_add_options_page()` rejestruje Options Page z **`autoload => true`** — flaga działa przy zapisie, więc istniejące instalacje przełącza jedno kliknięcie „Zapisz ustawienia”; nowe mają autoload od pierwszego zapisu. Bez nowych pól — Global Options nadal **239 pól**. Pełna nazwa każdego pola w tabelach zakładek Blog, Page header i Przycisk do góry (wcześniej skróty z sufiksem w jednej komórce).
 
 - 2026-10-25 — **Opinie, pola produktu, tła sklepu.** Nowy CPT `cyber_review` (Opinie) z grupą `group_review` (`cyber_review_text`, `cyber_review_rating`) — karta opinii w sekcji „Wpisy / CPT”. Nowa grupa `group_product` (`cyber_product_net_weight`, `cyber_product_pack_qty`). Global Options → WooCommerce: **8 nowych pól** — `cyber_wc_bg_color`, `cyber_wc_box_bg_color` oraz wyłączniki i pozycje elementów strony produktu `category`, `weight`, `perks` (z rejestru `cyber_product_elements()`) — Global Options mają teraz **239 pól**.

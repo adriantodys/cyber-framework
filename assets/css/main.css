@@ -848,15 +848,17 @@ h6 :is(a, span),
  * .btn niesie wylacznie wlasciwosci strukturalne — te, ktorych ACF nie ustawia.
  * Wszystko, co konfigurowalne, przychodzi ze zmiennych rozmiaru.
  *
- * border-radius: 0 jest wartoscia domyslna, nie decyzja projektowa — projekt
- * nie ma jeszcze ustalonego promienia zaokraglenia i nie wymyslamy dla niego
- * pola na zapas (patrz docs/acf-schema.md).
+ * Zaokraglenie bierze sie z globalnego pola Glowne ustawienia strony ->
+ * Zaokraglenie rogow (--cyber-radius), tego samego, ktore czytaja sekcje
+ * z wartoscia "Z ustawien globalnych". Przyciski nie maja wlasnego pola:
+ * jeden promien dla calej witryny (docs/acf-schema.md). Fallback 0 na wypadek
+ * braku zmiennej (np. arkusz podgladu bez wp_head).
  */
 
 .btn {
 	display: inline-block;
 	border: none;
-	border-radius: 0;
+	border-radius: var(--cyber-radius, 0);
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
