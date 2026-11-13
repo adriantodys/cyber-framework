@@ -3,8 +3,9 @@ Theme Name:  Cyber Framework
 Theme URI:   https://cyber.pl/
 Author:      Cyber
 Description: Customowy motyw WordPress budowany od zera. Czysty PHP + ACF PRO jako
-             jedyny system zarzadzania danymi. Bez page buildera.
-Version:     0.1.0
+             jedyny system zarzadzania danymi. Bez page buildera. Motyw
+             NADRZEDNY: strony klientow uzywaja motywu potomnego.
+Version:     1.0.0
 Requires at least: 6.5
 Tested up to:      7.1
 Requires PHP:      8.0

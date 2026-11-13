@@ -37,6 +37,11 @@ defined( 'ABSPATH' ) || exit;
 const CYBER_SECTIONS_FIELD = 'cyber_sections';
 
 /**
+ * Klucz ACF pola Flexible Content z sekcjami (acf-json/group_sections.json).
+ */
+const CYBER_SECTIONS_FIELD_KEY = 'field_cyber_sections';
+
+/**
  * Rejestr typow sekcji.
  *
  * Jedno zrodlo prawdy: klucz layoutu ACF => opis. Z niego wynika, ktory plik
@@ -62,7 +67,7 @@ const CYBER_SECTIONS_FIELD = 'cyber_sections';
  * @return array<string, array<string, mixed>> Klucz layoutu => opis.
  */
 function cyber_section_types() {
-	return array(
+	$types = array(
 		'cards'    => array(
 			'label'    => 'Karty (icon boxes)',
 			'template' => 'cards',
@@ -126,7 +131,91 @@ function cyber_section_types() {
 			'contexts' => array( 'page', 'post' ),
 		),
 	);
+
+	/**
+	 * Typy sekcji childa i modulow.
+	 *
+	 * Wpis jak wyzej: label, template, contexts. 'template' to nazwa pliku
+	 * w template-parts/sections/ (child moze go tam polozyc) ALBO sciezka
+	 * bezwzgledna do pliku .php — wtedy modul trzyma szablon u siebie, w
+	 * child/modules/<modul>/. Sam typ nie wystarczy: layout w polu Sekcje
+	 * dodaje filtr `cyber_section_layouts` (cyber_section_inject_layouts()).
+	 * Kluczy parenta nie wolno nadpisywac ani usuwac (kontrakt wyzej).
+	 *
+	 * @param array<string, array<string, mixed>> $types Klucz layoutu => opis.
+	 */
+	return apply_filters( 'cyber_section_types', $types );
 }
+
+/**
+ * Dokleja do pola Sekcje layouty zgloszone przez child albo modul.
+ *
+ * Flexible Content jest JEDNYM polem w JEDNEJ grupie (group_sections.json),
+ * wiec modul nie moze przyniesc wlasnego JSON-a z layoutem. Zamiast tego
+ * zglasza layout filtrem `cyber_section_layouts`, a jego pola rejestruje
+ * acf_add_local_field() z 'parent' => CYBER_SECTIONS_FIELD_KEY i
+ * 'parent_layout' => klucz layoutu — na akcji acf/include_fields.
+ *
+ * Priorytet 5 jest istotny: ACF rozdziela pola do layoutow w swoim
+ * load_field (wariacje filtra na priorytecie 10), wiec layout musi istniec
+ * WCZESNIEJ, inaczej pola modulu nie znajda swojego layoutu.
+ *
+ * Wspolne ustawienia sekcji modul dostaje tak jak layouty parenta: polem
+ * clone grupy group_section_settings (display 'seamless').
+ *
+ * @param array $field Pole ACF w trakcie ladowania.
+ * @return array
+ */
+function cyber_section_inject_layouts( $field ) {
+	if ( empty( $field['key'] ) || CYBER_SECTIONS_FIELD_KEY !== $field['key'] || empty( $field['type'] ) || 'flexible_content' !== $field['type'] ) {
+		return $field;
+	}
+
+	/**
+	 * Layouty sekcji spoza parenta.
+	 *
+	 * @param array<string, array<string, mixed>> $layouts Klucz layoutu (= klucz
+	 *        typu z cyber_section_types) => array( 'label' => ..., opcjonalnie
+	 *        'key', 'display', 'min', 'max' ).
+	 */
+	$layouts = (array) apply_filters( 'cyber_section_layouts', array() );
+
+	if ( ! $layouts ) {
+		return $field;
+	}
+
+	$field['layouts'] = isset( $field['layouts'] ) && is_array( $field['layouts'] ) ? $field['layouts'] : array();
+	$existing         = wp_list_pluck( $field['layouts'], 'name' );
+
+	foreach ( $layouts as $name => $layout ) {
+		$name = sanitize_key( $name );
+
+		// Layout parenta jest kontraktem — modul nie moze go podmienic.
+		if ( '' === $name || in_array( $name, $existing, true ) || ! is_array( $layout ) ) {
+			continue;
+		}
+
+		$key = ! empty( $layout['key'] ) ? sanitize_key( $layout['key'] ) : 'layout_cyber_section_' . $name;
+
+		$field['layouts'][ $key ] = wp_parse_args(
+			$layout,
+			array(
+				'key'     => $key,
+				'name'    => $name,
+				'label'   => ucfirst( $name ),
+				'display' => 'block',
+				'min'     => '',
+				'max'     => '',
+			)
+		);
+		$field['layouts'][ $key ]['key']  = $key;
+		$field['layouts'][ $key ]['name'] = $name;
+		$existing[]                       = $name;
+	}
+
+	return $field;
+}
+add_filter( 'acf/load_field', 'cyber_section_inject_layouts', 5 );
 
 /**
  * Dozwolone szerokosci wnetrza sekcji.
@@ -635,6 +724,14 @@ function cyber_render_sections( $post_id = null ) {
 		return;
 	}
 
+	/**
+	 * Przed pierwsza sekcja strony (poza kontenerem tresci).
+	 *
+	 * @param int   $post_id ID wpisu, ktorego sekcje sa renderowane.
+	 * @param array $rows    Wiersze Flexible Content (przed rozwinieciem globalnych).
+	 */
+	do_action( 'cyber_before_sections', $post_id, $rows );
+
 	foreach ( $rows as $row ) {
 		if ( ! is_array( $row ) || empty( $row['acf_fc_layout'] ) ) {
 			continue;
@@ -675,6 +772,14 @@ function cyber_render_sections( $post_id = null ) {
 			cyber_render_section_row( $global_row );
 		}
 	}
+
+	/**
+	 * Po ostatniej sekcji strony.
+	 *
+	 * @param int   $post_id ID wpisu, ktorego sekcje zostaly wyrenderowane.
+	 * @param array $rows    Wiersze Flexible Content.
+	 */
+	do_action( 'cyber_after_sections', $post_id, $rows );
 }
 
 /**
@@ -695,14 +800,35 @@ function cyber_render_section_row( array $row ) {
 	$attributes       = cyber_section_attributes( $type, $row );
 	$attributes['id'] = cyber_section_unique_id( $attributes['id'] );
 
-	get_template_part(
-		'template-parts/sections/' . $types[ $type ]['template'],
-		null,
-		array(
-			'attributes' => $attributes,
-			'row'        => $row,
-		)
+	/**
+	 * Tuz przed wyrenderowaniem jednej sekcji.
+	 *
+	 * Modul kolejkuje tu swoje assety warunkowo — WordPress wypisze arkusz
+	 * w stopce (CLAUDE.md sekcja 10).
+	 *
+	 * @param string $type       Klucz layoutu.
+	 * @param array  $row        Wiersz Flexible Content.
+	 * @param array  $attributes Atrybuty opakowania sekcji.
+	 */
+	do_action( 'cyber_section_before_render', $type, $row, $attributes );
+
+	$args     = array(
+		'attributes' => $attributes,
+		'row'        => $row,
 	);
+	$template = (string) $types[ $type ]['template'];
+
+	/*
+	 * Szablon modulu moze lezec poza motywem (child/modules/<modul>/...).
+	 * get_template_part() szuka tylko w child i parent, wiec sciezka
+	 * bezwzgledna do istniejacego pliku idzie przez load_template().
+	 */
+	if ( path_is_absolute( $template ) && is_file( $template ) ) {
+		load_template( $template, false, $args );
+		return;
+	}
+
+	get_template_part( 'template-parts/sections/' . $template, null, $args );
 }
 
 /**

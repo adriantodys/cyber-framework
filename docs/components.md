@@ -1,6 +1,6 @@
 # Komponenty i layouty — Cyber Framework
 
-Ostatnia aktualizacja: 2026-11-08 (moduły: Top Header, Header desktop/mobile, Footer,
+Ostatnia aktualizacja: 2026-11-13 (1.0.0: sekcje z childa i modułów przez filtry; moduły: Top Header, Header desktop/mobile, Footer,
 Copyright, Breadcrumb, Button, Social icons, Page header, Przycisk do góry, blog;
 warianty wrapperów, przyklejony header, cztery warianty układu headera ze slotem
 akcji; 11 layoutów Flexible Content i animacje wejścia sekcji; warstwa sklepowa
@@ -274,6 +274,14 @@ przez PHP widoku: trafiają na front jako zmienne CSS w `wp_head`
 (patrz `docs/acf-schema.md`, sekcja „Stan: generowanie CSS”).
 
 ## Sekcje — Flexible Content
+
+> **Sekcja spoza parenta.** Child albo moduł dodaje własny typ sekcji bez
+> edycji `group_sections.json`: filtr `cyber_section_types` (render, szablon
+> może leżeć w katalogu modułu jako ścieżka bezwzględna), filtr
+> `cyber_section_layouts` (layout w polu Sekcje) i `acf_add_local_field()`
+> z `parent_layout` (pola layoutu). Przykład i kontrakt: `docs/architecture.md`,
+> „Motyw nadrzędny: punkty rozszerzeń”. Layouty parenta pozostają kontraktem
+> i nie podlegają podmianie.
 
 Treść strony budowana z klocków. Jedno pole `cyber_sections`, każdy klocek to
 layout ACF z odpowiednikiem w rejestrze i jednym plikiem w

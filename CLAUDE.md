@@ -9,7 +9,8 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 
 ## 1. Przegląd projektu
 
-- Customowy motyw WordPress budowany od zera, bez motywu nadrzędnego.
+- Customowy motyw WordPress budowany od zera. Od wersji 1.0.0 jest **motywem
+  nadrzędnym**: strony klientów używają motywu potomnego (sekcja 23).
 - Nazwa: `cyber-framework`.
 - Czysty PHP + **ACF PRO** jako jedyny system zarządzania danymi.
 - **Brak page buildera** (Elementor, Divi, Beaver Builder itp.).
@@ -38,7 +39,7 @@ projektem — również po długiej przerwie. Pamięć konwersacji nie jest źr�
 
 | Zależność | Rodzaj | Zachowanie przy braku |
 |---|---|---|
-| **ACF PRO** | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). |
+| **ACF PRO** (≥ 6.2) | twarda | Motyw renderuje się na wartościach domyślnych, admin dostaje `notice-error` (`inc/acf.php`). Od 6.2 jest filtr `acf/json/save_paths`, który kieruje zapis grupy do jej katalogu (sekcja 23). |
 | **WooCommerce** | miękka | Funkcje sklepowe wyłączają się same, reszta witryny działa bez zmian (`inc/woocommerce.php`). |
 | **Contact Form 7** | miękka | Sekcja Kontakt działa bez formularza; admin widzi podpowiedź, gość nic (`inc/contact-form-7.php`). |
 | **Polylang** | miękka | Top Header renderuje się bez przełącznika języków; admin widzi podpowiedź, gość nic, panel ostrzega tylko przy włączonym przełączniku (`inc/polylang.php`). |
@@ -218,7 +219,8 @@ cyber-framework/
 │   ├── acf-schema.md              ← mapa wszystkich pól ACF (ten plik jest ŻYWYM dokumentem)
 │   ├── architecture.md
 │   ├── security.md
-│   └── components.md
+│   ├── components.md
+│   └── child-theme.md             ← starter motywu potomnego i format modułu (sekcja 23)
 │
 ├── inc/
 │   ├── setup.php                  ← theme supports, menus, image sizes
@@ -598,6 +600,7 @@ Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
 - `docs/acf-schema.md` — pełna, aktualna mapa wszystkich pól ACF (patrz sekcja 5, pkt 2).
 - `docs/components.md` — mapa layoutów Flexible Content → pliki → pola.
 - `docs/security.md` — checklisty bezpieczeństwa dla formularzy/AJAX/REST.
+- `docs/child-theme.md` — starter motywu potomnego, format i instalacja modułów (sekcja 23).
 - Każda zmiana w ACF **musi** iść w parze ze zmianą w `docs/acf-schema.md` w tym samym commicie.
 
 ## 15. Zasady podejmowania decyzji przez Claude
@@ -988,3 +991,74 @@ plik ani nowa zależność.
 Każda ikona ma klasy `cyber-icon cyber-icon--[nazwa]`. Kolor daje wspólna
 `.cyber-icon` z pola Global Options → Kolory → Ikony (`--cyber-color-icons`);
 klasa z nazwą służy do nadpisania koloru jednej ikony w arkuszu.
+
+## 23. Motyw nadrzędny, child i moduły (od 1.0.0)
+
+Od wersji 1.0.0 `cyber-framework` jest **motywem nadrzędnym**. Strona klienta
+używa **motywu potomnego** (child), a parent na serwerze jest bajt w bajt
+kopią taga z GitHuba. Aktualizacja frameworka to podmiana katalogu parenta —
+nic z tego, co zrobiono dla konkretnej strony, nie ma prawa w nim leżeć.
+
+**Jeśli pracujesz nad stroną klienta i jesteś w katalogu `cyber-framework`,
+jesteś w złym katalogu.** Przejdź do childa. Zmiana w parencie to osobny
+commit w jego repozytorium, z podniesieniem wersji w `style.css`
+i `CYBER_VERSION`, i dopiero potem aktualizacja na stronach.
+
+### Co idzie do childa, a co do parenta
+
+| Rzecz | Gdzie | Jak |
+|---|---|---|
+| Własny CSS strony | child `style.css` | parent kolejkuje go jako ostatni arkusz `<head>` (`cyber_enqueue_child_style()`) |
+| Nadpisany widok | child `template-parts/…`, `templates/…`, `woocommerce/…` | ta sama ścieżka co w parencie; WordPress bierze plik childa |
+| Nowe pola ACF strony | child `acf-json/` | katalog **musi istnieć**; ACF zapisuje tam nowe grupy, panel ostrzega, gdy go brak |
+| Nowe klucze Global Options | filtr `cyber_option_schema` + grupa w child `acf-json/` z lokalizacją `options_page == cyber-settings` | nazwa pola `cyber_<prefiks>_…`, klucz schematu bez `cyber_` |
+| Nowy typ sekcji | filtry `cyber_section_types` + `cyber_section_layouts`, pola przez `acf_add_local_field()` | patrz `docs/architecture.md`, „Motyw nadrzędny: punkty rozszerzeń” |
+| Nowa ikona | filtr `cyber_icons` | nazwa z prefiksem strony lub modułu |
+| Zmienne CSS strony w `wp_head` | filtr `cyber_inline_css` + `cyber_css_root()` | nie drugi hook na `wp_head` |
+| Element reużywalny (popup, pasek, widget) | **moduł** w `child/modules/<nazwa>/`, źródło w repozytorium `cyber-modules` | kopiowany w całości, z numerem wersji w `child/modules/MODULES.md` |
+| Poprawka błędu frameworka, nowy layout dla wszystkich stron | **parent** | osobny commit, nowa wersja, tag |
+
+### Reguły, które obowiązują zawsze
+
+1. **Parent jest tylko do odczytu na stronie klienta.** Żaden plik parenta nie
+   jest edytowany, kopiowany pod tą samą ścieżką do childa „na wszelki wypadek”
+   ani zastępowany własną wersją bez potrzeby. Nadpisany widok to świadoma
+   decyzja z komentarzem w nagłówku pliku, *dlaczego* parent nie wystarczył.
+2. **Prefiks strony lub modułu, nigdy gołe `cyber_`.** Pola ACF, klucze
+   schematu, klasy CSS, funkcje PHP i uchwyty assetów w childzie mają własny
+   prefiks (`klient_`, `mod_cartpopup_`), żeby aktualizacja parenta nie
+   zderzyła się z nazwą, którą framework dołożył później.
+3. **Klucz grupy ACF jest unikalny w parencie, childzie i modułach razem.**
+   Przy powtórce wygrywa plik wczytany później i parent przestaje dostawać
+   zmiany. Child nie kopiuje grup parenta.
+4. **Grupa zapisuje się tam, skąd została wczytana** (`inc/acf.php`,
+   `acf/json/save_paths`, ACF PRO ≥ 6.2). Zapis grupy parenta w panelu strony
+   klienta trafia do parenta, nie do childa — jeśli to zmiana potrzebna
+   wszystkim, idzie do repozytorium parenta jako commit; jeśli tylko tej
+   stronie, to znak, że pole powinno być w childzie pod własną nazwą.
+5. **Moduł jest zamknięty.** Ma własny `module.php`, `acf-json/`, assety,
+   szablony i `README.md`; nie dotyka plików parenta ani innych modułów,
+   a z parentem rozmawia wyłącznie przez filtry i akcje z tej sekcji.
+   Poprawka modułu wraca do `cyber-modules`, nie zostaje w childzie.
+6. **Procedura `default-acf.php` (sekcja 16) nie zmienia się.** Dotyczy pól
+   parenta. Moduł z własnymi polami Global Options ma własny `default-acf.php`
+   w swoim katalogu, o tej samej strukturze.
+7. **Child ma własny `CLAUDE.md`** z tymi regułami i wskazaniem parenta.
+   Z Claude pracuje się z katalogu childa jako bieżącego — `CLAUDE.md`
+   parenta nie jest wtedy czytany, więc child musi być samowystarczalny.
+
+### Punkty zaczepienia parenta
+
+| Filtr / akcja | Co daje |
+|---|---|
+| `cyber_acf_json_dirs` | dodatkowe katalogi Local JSON (moduły) |
+| `cyber_option_schema` | klucze Global Options childa i modułów |
+| `cyber_section_types`, `cyber_section_layouts` | typ i layout sekcji spoza parenta |
+| `cyber_icons` | ikony spoza rejestru |
+| `cyber_inline_css` | zmienne CSS do wspólnego bloku `<style>` |
+| `cyber_section_attributes`, `cyber_product_tabs`, `cyber_post_card_types` | istniały wcześniej |
+| `cyber_before_main`, `cyber_after_main`, `cyber_body_end` | markup między headerem, treścią i stopką; nakładki na stronę |
+| `cyber_before_sections`, `cyber_after_sections`, `cyber_section_before_render` | wokół sekcji strony i przed każdą sekcją (enqueue warunkowy modułu) |
+
+Nowy punkt zaczepienia dopisuje się do tej tabeli i do `docs/architecture.md`
+w tym samym commicie. Starter childa i format modułu: `docs/child-theme.md`.

@@ -1,7 +1,9 @@
 # Cyber Framework
 
 Customowy motyw WordPress budowany od zera: czysty PHP + **ACF PRO** jako jedyny system
-zarządzania danymi. Bez motywu nadrzędnego, bez page buildera.
+zarządzania danymi. Bez page buildera. Od wersji 1.0.0 jest **motywem nadrzędnym**:
+strona klienta używa motywu potomnego, a ten katalog pozostaje identyczny z tagiem
+na GitHubie (zasady: CLAUDE.md sekcja 23, starter childa: `docs/child-theme.md`).
 
 Zasady pracy nad projektem opisuje **[CLAUDE.md](CLAUDE.md)** — jest to dokument nadrzędny
 i obowiązkowa lektura przed każdą zmianą.
@@ -12,7 +14,7 @@ i obowiązkowa lektura przed każdą zmianą.
 |---|---|
 | WordPress | 6.5+ (testowane na 7.1) — od 6.5, bo slider ładuje skrypt przez Script Modules API (`wp_enqueue_script_module()`) |
 | PHP | 8.0+ |
-| ACF PRO | wymagane (twarda zależność — bez niego motyw działa na wartościach domyślnych) |
+| ACF PRO | 6.2+ (twarda zależność — bez niego motyw działa na wartościach domyślnych; od 6.2, bo zapis grup pól z childa i modułów wraca do ich katalogów przez `acf/json/save_paths`) |
 | WooCommerce | opcjonalne (zależność miękka — bez niego funkcje sklepu wyłączają się same) |
 
 ## Instalacja
@@ -47,6 +49,22 @@ i obowiązkowa lektura przed każdą zmianą.
 
 Jeśli pozycja *Sync* się nie pojawia, sprawdź, czy `acf-json/` jest zapisywalny
 i czy motyw jest aktywny (ścieżki Local JSON rejestruje `inc/acf.php`).
+
+## Motyw potomny (strony klientów)
+
+Parenta nie edytuje się na stronie klienta. Wszystko, co jest specyficzne dla
+strony — CSS, nadpisane widoki, pola ACF, moduły — idzie do childa:
+
+1. Utwórz child z plików ze `docs/child-theme.md` (`style.css` z `Template: cyber-framework`,
+   `functions.php`, pusty katalog `acf-json/`, `CLAUDE.md`).
+2. Aktywuj child. Parent sam kolejkuje `style.css` childa i czyta jego `acf-json/`.
+3. Aktualizacja frameworka = podmiana katalogu `cyber-framework/` na nowy tag.
+   Sprawdź w `CLAUDE.md` parenta, czy wersja nie wymaga kroków w panelu
+   (np. Sync grupy pól).
+
+Elementy reużywalne (popup koszyka, pasek promocji) są **modułami** w
+`child/modules/<nazwa>/`, kopiowanymi z repozytorium `cyber-modules`. Format
+modułu i instalacja: `docs/child-theme.md`.
 
 ## Struktura
 

@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-11-08 (Global Options ma osiemnaście zakładek i 239 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
+Ostatnia aktualizacja: 2026-11-13 (wersja 1.0.0: motyw nadrzędny — Local JSON z childa i modułów, arkusz childa, filtry rejestrów, layouty sekcji z zewnątrz, akcje w widokach; patrz „Motyw nadrzędny: punkty rozszerzeń”. Global Options ma osiemnaście zakładek i 239 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
 
 ## Przepływ danych
 
@@ -2076,6 +2076,112 @@ rozstrzygnął się sam, gdy pojawiły się pierwsze widgety sklepu.
 > `widget_block`. Klasyczny ekran pokazuje je jako widget „Blok" z surowym
 > markupem w polu tekstowym — nic nie ginie, ale warto je podmienić na klasyczne
 > odpowiedniki.
+
+## Motyw nadrzędny: punkty rozszerzeń
+
+Od wersji 1.0.0 parent zakłada, że strona klienta używa motywu potomnego
+(CLAUDE.md sekcja 23). Warstwa widoków nadpisuje się bez żadnego kodu: każdy
+widok wchodzi przez `get_template_part()` albo przez filtry hierarchii
+zwracające ścieżki względne, więc WordPress bierze plik childa, gdy istnieje.
+Warstwa danych i rejestrów wymaga jawnych punktów zaczepienia — poniżej.
+
+### Local JSON z trzech źródeł (`inc/acf.php`)
+
+```
+odczyt:  parent/acf-json  →  child/acf-json  →  filtr cyber_acf_json_dirs (moduły)
+zapis:   grupa z plikiem  →  katalog, z którego została wczytana   (acf/json/save_paths)
+         grupa bez pliku  →  acf-json/ motywu AKTYWNEGO (child albo parent)
+```
+
+`cyber_acf_json_dirs()` zwraca tylko istniejące katalogi. `cyber_acf_json_save_paths()`
+pyta `acf_get_local_json_files()` o plik grupy po kluczu i kieruje zapis do jego
+katalogu — dzięki temu poprawka grupy parenta zrobiona w panelu strony klienta
+ląduje w parencie, a nie jako druga kopia w childzie. Filtr `acf/json/save_paths`
+istnieje od ACF 6.2; starsze ACF zapisują wszystko do `save_json`, czyli do childa.
+Gdy child nie ma zapisywalnego `acf-json/`, administrator dostaje `notice-warning`.
+
+### Arkusz childa (`inc/enqueue.php`)
+
+`cyber_enqueue_child_style()` kolejkuje `style.css` childa na priorytecie 99
+`wp_enqueue_scripts` z zależnością od `cyber-main` — jako ostatni arkusz w `<head>`,
+po sekcjach (priorytet 20). Reguła childa wygrywa z parentem przy tej samej
+specyficzności. Arkusze kolejkowane w trakcie renderowania (slider, galeria,
+licznik) wychodzą w stopce, czyli po childzie — nadpisanie ich wymaga wyższej
+specyficzności. Wersja z `filemtime()` pliku childa.
+
+### Rejestry z filtrem
+
+| Filtr | Funkcja | Kontrakt |
+|---|---|---|
+| `cyber_option_schema` | `cyber_option_schema()` | tablica `klucz => config` dokładana do schematu parenta; klucze parenta nie do nadpisania; nazwa pola ACF = `cyber_` + klucz; liczony raz na żądanie |
+| `cyber_section_types` | `cyber_section_types()` | `klucz => array( label, template, contexts )`; `template` to nazwa pliku w `template-parts/sections/` **albo ścieżka bezwzględna** (szablon w katalogu modułu, ładowany `load_template()`) |
+| `cyber_section_layouts` | `cyber_section_inject_layouts()` | `klucz => array( label, … )` doklejane do pola `field_cyber_sections` na `acf/load_field` z priorytetem **5**, zanim ACF rozdzieli pola do layoutów; layouty parenta nie do podmiany |
+| `cyber_icons` | `cyber_icons()` | `nazwa => wnętrze <svg viewBox="0 0 20 20">` |
+| `cyber_inline_css` | `cyber_print_inline_css()` | string deklaracji dopisywany do jedynego bloku `<style id="cyber-global-vars">` |
+| `cyber_acf_json_dirs` | `cyber_acf_json_dirs()` | lista katalogów Local JSON |
+
+### Sekcja z modułu — trzy kroki
+
+```php
+// 1. typ (render)
+add_filter( 'cyber_section_types', function ( $types ) {
+	$types['promo'] = array(
+		'label'    => 'Pasek promocji',
+		'template' => __DIR__ . '/template-parts/promo.php',
+		'contexts' => array( 'page' ),
+	);
+	return $types;
+} );
+
+// 2. layout w polu Sekcje
+add_filter( 'cyber_section_layouts', function ( $layouts ) {
+	$layouts['promo'] = array( 'label' => 'Pasek promocji' );
+	return $layouts;
+} );
+
+// 3. pola layoutu — parent to klucz pola Sekcje, parent_layout to klucz layoutu
+add_action( 'acf/include_fields', function () {
+	acf_add_local_field( array(
+		'key'           => 'field_mod_promo_settings',
+		'name'          => '',
+		'type'          => 'clone',
+		'clone'         => array( 'group_section_settings' ),
+		'display'       => 'seamless',
+		'parent'        => CYBER_SECTIONS_FIELD_KEY,
+		'parent_layout' => 'layout_cyber_section_promo',
+	) );
+	acf_add_local_field( array(
+		'key'           => 'field_mod_promo_text',
+		'name'          => 'mod_promo_text',
+		'label'         => 'Tekst',
+		'type'          => 'text',
+		'parent'        => CYBER_SECTIONS_FIELD_KEY,
+		'parent_layout' => 'layout_cyber_section_promo',
+	) );
+}, 20 );
+```
+
+Klucz layoutu bez jawnego `key` to `layout_cyber_section_<nazwa>`. Klon
+`group_section_settings` daje modułowi te same ustawienia wyglądu co layoutom
+parenta (tło, odstępy, animacja), więc `cyber_section_attributes()` działa bez
+zmian. Flexible Content jest jednym polem w jednej grupie, dlatego moduł nie
+może przynieść własnego JSON-a z layoutem — pola rejestruje w PHP i nie
+podlegają one synchronizacji w panelu.
+
+### Akcje w widokach
+
+| Akcja | Gdzie | Argumenty |
+|---|---|---|
+| `cyber_before_main` | `header.php`, przed `<main>` | — |
+| `cyber_after_main` | `footer.php`, po `</main>` | — |
+| `cyber_body_end` | `footer.php`, przed `wp_footer()` | — |
+| `cyber_before_sections`, `cyber_after_sections` | `cyber_render_sections()` | `$post_id`, `$rows` |
+| `cyber_section_before_render` | `cyber_render_section_row()` | `$type`, `$row`, `$attributes` |
+
+Parent niczego na tych akcjach nie wypisuje. Moduł kolejkuje assety na
+`cyber_section_before_render` (WordPress wypisze je w stopce) albo na
+`wp_enqueue_scripts` po własnym sprawdzeniu, czy wiersz z jego layoutem istnieje
+(`cyber_section_rows_expanded()`).
 
 ## Co jeszcze nie istnieje
 

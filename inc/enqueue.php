@@ -80,6 +80,35 @@ function cyber_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'cyber_enqueue_assets' );
 
 /**
+ * Kolejkuje style.css motywu potomnego.
+ *
+ * WordPress sam nie laduje arkusza childa — robi to parent, i to jako OSTATNI
+ * arkusz w <head> (priorytet 99, po sekcjach z priorytetu 20), zeby regula
+ * z childa wygrywala z parentem przy tej samej specyficznosci bez !important.
+ * Arkusze kolejkowane w trakcie renderowania (slider, galeria) trafiaja do
+ * stopki i wychodza po childzie — nadpisanie ich wymaga specyficznosci.
+ *
+ * Wersja z filemtime() pliku childa, nie parenta (CLAUDE.md sekcja 12).
+ *
+ * @return void
+ */
+function cyber_enqueue_child_style() {
+	if ( ! is_child_theme() ) {
+		return;
+	}
+
+	$file = get_stylesheet_directory() . '/style.css';
+
+	wp_enqueue_style(
+		'cyber-child',
+		get_stylesheet_uri(),
+		array( 'cyber-main' ),
+		file_exists( $file ) ? (string) filemtime( $file ) : CYBER_VERSION
+	);
+}
+add_action( 'wp_enqueue_scripts', 'cyber_enqueue_child_style', 99 );
+
+/**
  * Buduje CSS ze zmiennymi kontenera na podstawie Global Options.
  *
  * Funkcja jest celowo oddzielona od wypisywania — zwraca czysty string, wiec da
@@ -821,6 +850,16 @@ function cyber_print_inline_css() {
 		. cyber_page_header_css()
 		. cyber_animation_css()
 		. cyber_go_to_top_css();
+
+	/**
+	 * Zmienne CSS childa i modulow w tym samym bloku <style>.
+	 *
+	 * Child dokleja wlasny blok zbudowany przez cyber_css_root() — nie
+	 * rejestruje drugiego hooka na wp_head (CLAUDE.md sekcja 6 i 23).
+	 *
+	 * @param string $css Gotowe deklaracje :root{...} wszystkich modulow parenta.
+	 */
+	$css = (string) apply_filters( 'cyber_inline_css', $css );
 
 	/*
 	 * wp_strip_all_tags(), nie esc_html(). Kontekstem jest wnetrze <style>,

@@ -55,6 +55,14 @@ get_template_part(
 );
 ?>
 
+<?php
+/**
+ * Przed <main> — miejsce na elementy childa i modulow miedzy headerem
+ * a trescia (pasek promocji, komunikat). Parent niczego tu nie wypisuje.
+ */
+do_action( 'cyber_before_main' );
+?>
+
 <main id="cyber-main" class="cyber-main">
 
 <?php

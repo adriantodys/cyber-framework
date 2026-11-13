@@ -44,7 +44,7 @@ function cyber_social_platforms() {
  * @return array<string, string> Nazwa ikony => zawartosc znacznika <svg>.
  */
 function cyber_icons() {
-	return array(
+	$icons = array(
 		'facebook'  => '<path d="M12.4 19v-7.3h2.5l.4-2.9h-2.9V6.9c0-.8.2-1.4 1.4-1.4h1.6V2.9c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.1H6.8v2.9h2.5V19h3.1z"/>',
 		'instagram' => '<rect x="2.6" y="2.6" width="14.8" height="14.8" rx="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/>'
 			. '<circle cx="10" cy="10" r="3.5" fill="none" stroke="currentColor" stroke-width="1.7"/>'
@@ -92,6 +92,17 @@ function cyber_icons() {
 			. '<rect x="2.5" y="13" width="4" height="4" rx="1"/>'
 			. '<rect x="8.5" y="14.2" width="9" height="1.6" rx="0.8"/>',
 	);
+
+	/**
+	 * Ikony childa i modulow.
+	 *
+	 * Wartosc to WNETRZE <svg viewBox="0 0 20 20"> — same <path>/<rect>,
+	 * bez znacznika svg, w currentColor. Nazwa z prefiksem strony albo modulu
+	 * (np. 'mod-cartpopup-close'), zeby nie nadpisac ikony parenta.
+	 *
+	 * @param array<string, string> $icons Nazwa => markup wnetrza SVG.
+	 */
+	return apply_filters( 'cyber_icons', $icons );
 }
 
 /**
@@ -1295,7 +1306,20 @@ function cyber_option_schema() {
 	 * prawdy: dodanie elementu to jedna linia w cyber_product_elements(),
 	 * a nie trzy zmiany w trzech miejscach, ktore moga sie rozjechac.
 	 */
-	$cached = $schema + cyber_product_option_schema();
+	/**
+	 * Klucze Global Options dolozone przez child albo modul.
+	 *
+	 * Wpis ma te sama strukture co powyzej (type, default, nullable, choices,
+	 * min / max, pattern). Nazwa pola ACF to 'cyber_' . klucz, wiec pole na
+	 * Options Page musi nazywac sie np. cyber_mod_cartpopup_limit, a klucz
+	 * tutaj — mod_cartpopup_limit. Klucze parenta nie podlegaja nadpisaniu:
+	 * child nie moze zmienic typu ani domyslnej wartosci istniejacego pola.
+	 * Filtr liczy sie RAZ na zadanie (static cache).
+	 *
+	 * @param array<string, array<string, mixed>> $extra Klucz => konfiguracja.
+	 */
+	$extra  = (array) apply_filters( 'cyber_option_schema', array() );
+	$cached = $schema + cyber_product_option_schema() + $extra;
 
 	return $cached;
 }

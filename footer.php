@@ -14,6 +14,11 @@ defined( 'ABSPATH' ) || exit;
 </main>
 
 <?php
+/**
+ * Po </main>, przed stopka. Parent niczego tu nie wypisuje.
+ */
+do_action( 'cyber_after_main' );
+
 /*
  * Pasek Copyright renderuje sie WEWNATRZ <footer>, wiec jego dane ida do widoku
  * stopki, a nie osobnym get_template_part() obok niej. Inaczej pasek lezalby
@@ -36,6 +41,14 @@ get_template_part(
 );
 ?>
 
-<?php wp_footer(); ?>
+<?php
+/**
+ * Koniec <body>, przed wp_footer() — markup elementow nakladanych na strone
+ * (popup, modal, cookie bar) z childa i modulow. Parent niczego tu nie wypisuje.
+ */
+do_action( 'cyber_body_end' );
+
+wp_footer();
+?>
 </body>
 </html>

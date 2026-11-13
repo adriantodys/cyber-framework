@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Wersja motywu. Uzywana tylko jako metadana — wersjonowanie assetow opiera sie
  * na filemtime() (patrz inc/enqueue.php, CLAUDE.md sekcja 12).
  */
-define( 'CYBER_VERSION', '0.1.0' );
+define( 'CYBER_VERSION', '1.0.0' );
 
 /**
  * Sciezka bezwzgledna do katalogu motywu, bez koncowego ukosnika.
