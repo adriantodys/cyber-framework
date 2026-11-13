@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-11-13 (wersja 1.0.0: motyw nadrzędny — Local JSON z childa i modułów, arkusz childa, filtry rejestrów, layouty sekcji z zewnątrz, akcje w widokach; patrz „Motyw nadrzędny: punkty rozszerzeń”. Global Options ma osiemnaście zakładek i 239 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
+Ostatnia aktualizacja: 2026-11-13 (wersja 1.0.0: motyw nadrzędny — Local JSON z childa i modułów, arkusz childa, filtry rejestrów, layouty sekcji z zewnątrz, akcje w widokach; patrz „Motyw nadrzędny: punkty rozszerzeń”. Global Options ma dziewiętnaście zakładek i 242 pola; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
 
 ## Przepływ danych
 
@@ -71,7 +71,8 @@ tańszy w diagnozie niż cicha degradacja z mylącym objawem.
 | 36 | `inc/reviews.php` | Opinie: niepubliczny typ treści `cyber_review` (tylko panel), dopisanie do typów sekcji „Wpisy” filtrem `cyber_post_card_types`, karta opinii (`cyber_review_card_item()`). |
 | 37 | `inc/animations.php` | Animacje wejścia sekcji — **silnik wymienny**: rejestr animacji, atrybut `data-cyber-animate` przez filtr `cyber_section_attributes`, skrypt startowy w `<head>`, warunkowe assety. Usunięcie pliku wyłącza animacje bez błędu; dane zostają (`docs/components.md`, „Animacje wejścia sekcji”). |
 | 38 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
-| 39 | `inc/login.php` | Strona logowania: logo z `cyber_header_logo` zamiast logo WordPressa, link na stronę główną, nazwa witryny jako tekst linku. Arkusz `assets/css/login.css` tylko przy wgranym logo; bez loga zostaje logo WordPressa. Bez własnych pól. |
+| 39 | `inc/seo.php` | Zakładka SEO: trzy pola z kodem (GTM, gtag, piksele) wypisywane 1:1 na `wp_head` (priorytet 1), `wp_body_open` (1) i `wp_footer` (99). Typ schematu `code` bez sanitizacji — granica zaufania to `manage_options` + `unfiltered_html` (docs/security.md). |
+| 40 | `inc/login.php` | Strona logowania: logo z `cyber_header_logo` zamiast logo WordPressa, link na stronę główną, nazwa witryny jako tekst linku. Arkusz `assets/css/login.css` tylko przy wgranym logo; bez loga zostaje logo WordPressa. Bez własnych pól. |
 
 ## Stałe
 
