@@ -7150,6 +7150,102 @@
             "custom_palette_source": "",
             "palette_colors": "",
             "show_color_wheel": true
+        },
+        {
+            "key": "field_cyber_tab_seo",
+            "label": "SEO",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_seo_codes",
+            "label": "Kody śledzenia i skrypty",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Wklejasz tu gotowe fragmenty od dostawców: Google Tag Manager, Google Analytics, Meta Pixel, kody weryfikacji domeny, własne skrypty. Kod trafia na stronę dokładnie w takiej postaci, w jakiej go wkleisz — motyw niczego nie filtruje ani nie opakowuje, więc fragment musi zawierać własne znaczniki &lt;script&gt; \/ &lt;meta&gt; \/ &lt;noscript&gt;. Działa na każdej podstronie, dla wszystkich odwiedzających, także zalogowanych.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_seo_head_code",
+            "label": "Kod w &lt;head&gt;",
+            "name": "cyber_seo_head_code",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Wypisywany na początku &lt;head&gt;, przed arkuszami motywu. Tu idzie główny fragment Google Tag Manager, gtag.js, kody weryfikacji (&lt;meta name=\"google-site-verification\"&gt;) i wszystko, co dostawca każe umieścić „jak najwyżej w sekcji head”.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 8,
+            "placeholder": "<!-- Google Tag Manager -->\n<script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXXXXX');<\/script>\n<!-- End Google Tag Manager -->",
+            "new_lines": ""
+        },
+        {
+            "key": "field_cyber_seo_body_start_code",
+            "label": "Kod na początku &lt;body&gt;",
+            "name": "cyber_seo_body_start_code",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Wypisywany tuż po otwarciu &lt;body&gt;. Tu idzie fragment &lt;noscript&gt; Google Tag Managera i inne kody, które dostawca każe umieścić „zaraz po otwierającym znaczniku body”.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 8,
+            "placeholder": "<!-- Google Tag Manager (noscript) -->\n<noscript><iframe src=\"https:\/\/www.googletagmanager.com\/ns.html?id=GTM-XXXXXXX\" height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"><\/iframe><\/noscript>\n<!-- End Google Tag Manager (noscript) -->",
+            "new_lines": ""
+        },
+        {
+            "key": "field_cyber_seo_body_end_code",
+            "label": "Kod na końcu &lt;body&gt;",
+            "name": "cyber_seo_body_end_code",
+            "aria-label": "",
+            "type": "textarea",
+            "instructions": "Wypisywany przed zamknięciem &lt;\/body&gt;, po skryptach motywu. Tu idą czaty, widżety opinii, skrypty, które nie muszą blokować renderowania strony.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "maxlength": "",
+            "rows": 8,
+            "placeholder": "",
+            "new_lines": ""
         }
     ],
     "location": [
@@ -7173,5 +7269,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1794149542
+    "modified": 1794576937
 }

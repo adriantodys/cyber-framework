@@ -80,6 +80,7 @@ function cyber_load_modules() {
 		'inc/reviews.php',
 		'inc/animations.php',
 		'inc/go-to-top.php',
+		'inc/seo.php',
 		'inc/login.php',
 	);
 

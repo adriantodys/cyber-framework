@@ -10,8 +10,32 @@ Motyw nie zawiera endpointów REST. Powierzchnia ataku to:
 - wyświetlanie danych z ACF (rozwiązanie: escaping przy outputcie + walidacja w helperze),
 - strona ustawień ACF w adminie (rozwiązanie: `capability` = `manage_options`; nonce
   i zapis obsługuje ACF),
+- **trzy pola z surowym kodem** (zakładka SEO, `inc/seo.php`) — jedyne miejsce,
+  w którym motyw wypisuje wartość z bazy **bez escapowania i bez kses**, patrz niżej,
 - **dwa endpointy AJAX** — zmiana ilości pozycji koszyka na stronie zamówienia
   oraz doładowywanie kolejnych produktów na liście sklepu.
+
+### Pola z surowym kodem: zakładka SEO
+
+`inc/seo.php` wypisuje `cyber_seo_head_code`, `cyber_seo_body_start_code`
+i `cyber_seo_body_end_code` dokładnie tak, jak wpisał je administrator — to kody
+Google Tag Managera, gtag.js, pikseli i weryfikacji domeny, które **muszą**
+zawierać `<script>`. Escaping zamieniłby je w tekst, `wp_kses_post()` usunąłby.
+
+| Warstwa | Realizacja |
+|---|---|
+| Kto może wpisać | Options Page ma `capability` = `manage_options`; dodatkowo ACF ≥ 6.2.7 przy zapisie pola przepuszcza `<script>` wyłącznie użytkownikowi z `unfiltered_html` (na multisite: tylko super admin) — bez tej zdolności skrypt jest wycinany **przed** zapisem do bazy |
+| Walidacja w motywie | typ schematu `code` w `cyber_option_schema()`: tylko `trim()`, świadomie |
+| Output | `echo` z jawnym `phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped` i odnośnikiem tutaj |
+| Zakres | front, każdy odwiedzający, także zalogowani; w panelu nic się nie wypisuje |
+
+Model zaufania jest ten sam, co dla pola „Własny CSS” w Customizerze WordPressa
+i wtyczek typu „insert headers and footers”: **to, co może zrobić administrator
+z `unfiltered_html`, może zrobić także przez to pole** — i nic ponadto. Konto
+z `unfiltered_html` jest z definicji kontem zaufanym; ochrona tego konta
+(hasło, 2FA) jest poza motywem.
+
+**Nie dodawaj kolejnych pól typu `code`** bez tej samej analizy i wpisu tutaj.
 
 ### Endpoint AJAX: `cyber_checkout_qty`
 
