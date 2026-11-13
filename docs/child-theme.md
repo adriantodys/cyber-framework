@@ -75,6 +75,13 @@ add_filter( 'cyber_acf_json_dirs', 'klient_acf_json_dirs' );
 /**
  * Laduje logike strony i bootstrap kazdego modulu.
  *
+ * NA after_setup_theme, NIE przy ladowaniu pliku: WordPress wczytuje
+ * functions.php childa PRZED functions.php parenta, wiec w tym momencie
+ * zadna funkcja cyber_*() jeszcze nie istnieje. Na after_setup_theme
+ * (priorytet 0) parent jest juz zaladowany, a hooki ACF (acf/init,
+ * acf/include_fields) i enqueue jeszcze nie odpalily — modul zdazy sie
+ * wszedzie zarejestrowac.
+ *
  * Kolejnosc: najpierw inc/ (helpery strony), potem moduly — modul moze
  * korzystac z helperow strony, nie odwrotnie.
  *
@@ -89,8 +96,15 @@ function klient_load() {
 		require_once $file;
 	}
 }
-klient_load();
+add_action( 'after_setup_theme', 'klient_load', 0 );
 ```
+
+> **Dlaczego nie od razu.** `add_filter()` na poziomie pliku childa działa
+> (to WordPress, nie parent), ale wywołanie `cyber_*()` albo `CYBER_*` przy
+> ładowaniu `functions.php` childa kończy się błędem krytycznym — parent
+> jeszcze nie istnieje. Stąd `after_setup_theme`. Schemat opcji parenta
+> liczy się dopiero przy pierwszym `cyber_get_option()`, czyli po tej akcji,
+> więc filtr `cyber_option_schema` z modułu zdąży.
 
 ### `CLAUDE.md` childa
 
@@ -105,6 +119,9 @@ sekcja 23 opisuje podział parent / child. Przeczytaj go przed pracą:
 
 ## Reguły tej strony
 
+0. **Kolejność ładowania.** WordPress wczytuje `functions.php` childa przed
+   parentem. Kod, który woła `cyber_*()`, musi stać w funkcji podpiętej do
+   `after_setup_theme` (tak robi `klient_load()`), nigdy na poziomie pliku.
 1. **Każdy nowy plik, pole, styl i sekcja powstaje tutaj.** Edycja pliku
    w `../cyber-framework` jest błędem — jeśli parent naprawdę wymaga zmiany,
    zgłoś to i zatrzymaj się; zmiana idzie osobnym commitem do repozytorium

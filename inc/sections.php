@@ -163,11 +163,20 @@ function cyber_section_types() {
  * Wspolne ustawienia sekcji modul dostaje tak jak layouty parenta: polem
  * clone grupy group_section_settings (display 'seamless').
  *
+ * W EDYTORZE GRUP ACF i w narzedziach eksportu layouty NIE sa doklejane.
+ * Edytor renderuje pole z tego samego acf_get_field(), wiec doklejony layout
+ * pojawilby sie w formularzu grupy, a zapis grupy wpisalby go do
+ * group_sections.json parenta — modul przeciekalby do frameworka.
+ *
  * @param array $field Pole ACF w trakcie ladowania.
  * @return array
  */
 function cyber_section_inject_layouts( $field ) {
 	if ( empty( $field['key'] ) || CYBER_SECTIONS_FIELD_KEY !== $field['key'] || empty( $field['type'] ) || 'flexible_content' !== $field['type'] ) {
+		return $field;
+	}
+
+	if ( cyber_section_is_acf_editor() ) {
 		return $field;
 	}
 
@@ -216,6 +225,31 @@ function cyber_section_inject_layouts( $field ) {
 	return $field;
 }
 add_filter( 'acf/load_field', 'cyber_section_inject_layouts', 5 );
+
+/**
+ * Czy biezacy ekran panelu edytuje definicje pol ACF (grupa, narzedzia).
+ *
+ * Tylko tam doklejone layouty bylyby szkodliwe (patrz
+ * cyber_section_inject_layouts()). Ekran edycji wpisu z polem Sekcje
+ * ma post_type strony, nie grupy pol, wiec dostaje layouty normalnie.
+ *
+ * @return bool
+ */
+function cyber_section_is_acf_editor() {
+	if ( ! is_admin() || ! function_exists( 'get_current_screen' ) ) {
+		return false;
+	}
+
+	$screen = get_current_screen();
+
+	if ( ! $screen ) {
+		return false;
+	}
+
+	return 'acf-field-group' === $screen->post_type
+		|| 'acf-field-group' === $screen->id
+		|| false !== strpos( (string) $screen->id, 'acf-tools' );
+}
 
 /**
  * Dozwolone szerokosci wnetrza sekcji.

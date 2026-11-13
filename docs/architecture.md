@@ -2164,7 +2164,9 @@ add_action( 'acf/include_fields', function () {
 Klucz layoutu bez jawnego `key` to `layout_cyber_section_<nazwa>`. Klon
 `group_section_settings` daje modułowi te same ustawienia wyglądu co layoutom
 parenta (tło, odstępy, animacja), więc `cyber_section_attributes()` działa bez
-zmian. Flexible Content jest jednym polem w jednej grupie, dlatego moduł nie
+zmian. W edytorze grup pól ACF i w narzędziach eksportu layouty **nie są
+doklejane** (`cyber_section_is_acf_editor()`), bo zapis grupy w panelu
+wpisałby je do `group_sections.json` parenta. Flexible Content jest jednym polem w jednej grupie, dlatego moduł nie
 może przynieść własnego JSON-a z layoutem — pola rejestruje w PHP i nie
 podlegają one synchronizacji w panelu.
 
