@@ -16,6 +16,16 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function cyber_theme_setup() {
+	/*
+	 * Tlumaczenia motywu: languages/cyber-framework-{locale}.mo. Stringi
+	 * zrodlowe sa po polsku, wiec plik .mo jest potrzebny dopiero dla innego
+	 * jezyka witryny — bez niego nic sie nie dzieje. Rejestracja domeny jest
+	 * jednak obowiazkowa: bez niej WordPress 6.7+ probuje doladowac domene
+	 * "just in time" przy pierwszym __() i zglasza notice przy locale innym
+	 * niz en_US. Child laduje wlasna domene sam (docs/child-theme.md).
+	 */
+	load_theme_textdomain( 'cyber-framework', CYBER_DIR . '/languages' );
+
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'automatic-feed-links' );

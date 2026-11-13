@@ -2046,6 +2046,22 @@ a ścisłe `in_array( '80', ..., true )` w nie nie trafia — każda szerokość
 przed porównaniem. Błąd wyszedł na testach jednostkowych wartości, nie w kodzie
 z przeglądu.
 
+## Tłumaczenia
+
+Domena `cyber-framework` jest rejestrowana w `cyber_theme_setup()`
+(`after_setup_theme`) przez `load_theme_textdomain()` z katalogiem `languages/`.
+Stringi źródłowe są po polsku, więc katalog jest pusty, dopóki witryna nie
+potrzebuje innego języka (instrukcja: `languages/README.md`). Rejestracja jest
+mimo to obowiązkowa — bez niej WordPress 6.7+ zgłasza notice
+`_load_textdomain_just_in_time` przy locale innym niż `en_US`.
+
+Druga strona tej reguły: **żadne `__()` nie biegnie przy ładowaniu pliku**, przed
+`init`. Jedyny przypadek, który to łamał — rejestracja filtrów walidacji
+w `inc/contact.php` — ma teraz stałą listę kluczy
+(`cyber_contact_validated_fields()`), a komunikaty tłumaczą się dopiero
+w `cyber_contact_validate_value()`. Etykiety CPT i Options Page są tłumaczone
+w hookach `init` / `acf/init`, czyli poprawnie.
+
 ## Edytor treści
 
 Motyw używa **wyłącznie klasycznego edytora** (TinyMCE). Edytor blokowy jest wyłączony
@@ -2055,7 +2071,7 @@ dla wpisów, stron i każdego CPT — także tych rejestrowanych przez wtyczki.
 |---|---|
 | Wyłączenie bloków | `use_block_editor_for_post_type` → zawsze `false` (`inc/editor.php`). Filtr `gutenberg_can_edit_post_type` obsłużony tak samo, na wypadek instalacji wtyczki Gutenberg. |
 | Wtyczka Classic Editor | **Niepotrzebna.** Klasyczny edytor jest częścią rdzenia WordPressa — wystarczy odmówić użycia edytora blokowego. |
-| Style bloków na froncie | `wp-block-library`, `wp-block-library-theme`, `wp-components`, `global-styles` i `classic-theme-styles` są usuwane z kolejki na `wp_enqueue_scripts` (priorytet 100). |
+| Style bloków na froncie | `wp-block-library`, `wp-block-library-theme`, `wp-components`, `global-styles` i `classic-theme-styles` są usuwane z kolejki na `wp_enqueue_scripts` (priorytet 100). **To nie wystarcza dla `global-styles`** w WP 6.8+ (domyślnie w 7.x): przy ładowaniu assetów bloków na żądanie rdzeń kolejkuje je dopiero na `wp_footer` i przenosi do `<head>`, więc `cyber_remove_global_styles_actions()` (na `init`) odpina same akcje rdzenia: `wp_enqueue_global_styles` z `wp_enqueue_scripts` i `wp_footer`, `wp_enqueue_global_styles_custom_css`, `wp_enqueue_classic_theme_styles` i filtry SVG duotone. |
 | Edytor widgetów | Również klasyczny — `use_widgets_block_editor` → `false`. To **osobny przełącznik**, którego filtr `use_block_editor_for_post_type` nie obejmuje. |
 | Zakres | Globalny i bezwarunkowy. Wyjątek dla pojedynczego typu treści = zmiana wyłącznie w `cyber_disable_block_editor()`. |
 

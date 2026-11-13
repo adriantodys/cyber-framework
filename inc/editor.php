@@ -79,3 +79,33 @@ function cyber_dequeue_block_assets() {
 	wp_dequeue_style( 'classic-theme-styles' );
 }
 add_action( 'wp_enqueue_scripts', 'cyber_dequeue_block_assets', 100 );
+
+/**
+ * Odpina rdzenne akcje, ktore wypisuja style globalne (presety --wp--preset--*).
+ *
+ * Sam wp_dequeue_style( 'global-styles' ) na wp_enqueue_scripts NIE wystarcza:
+ * przy wp_should_load_block_assets_on_demand() (WP 6.8+, domyslnie w 7.x)
+ * rdzen kolejkuje global-styles dopiero na wp_footer (priorytet 1), czyli PO
+ * naszym dequeue, a potem przenosi je do <head>. Efekt: ok. 9 kB inline CSS
+ * z presetami na kazdej podstronie, mimo "zdjecia" uchwytu.
+ *
+ * Dlatego odpinamy same akcje rdzenia, w obu miejscach, gdzie je rejestruje
+ * (wp-includes/default-filters.php): wp_enqueue_scripts i wp_footer. Razem
+ * z nimi ida: custom CSS z theme.json (ktorego motyw nie ma), arkusz
+ * classic-theme-styles i filtry SVG duotone na wp_body_open. Dequeue wyzej
+ * zostaje jako zabezpieczenie na wypadek, gdyby wtyczka zakolejkowala uchwyt
+ * ponownie.
+ *
+ * Na init, nie przy ladowaniu pliku: default-filters.php jest juz wczytany,
+ * a zadna wtyczka nie zdazyla jeszcze nic zmienic w kolejnosci hookow.
+ *
+ * @return void
+ */
+function cyber_remove_global_styles_actions() {
+	remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles' );
+	remove_action( 'wp_footer', 'wp_enqueue_global_styles', 1 );
+	remove_action( 'wp_enqueue_scripts', 'wp_enqueue_global_styles_custom_css' );
+	remove_action( 'wp_enqueue_scripts', 'wp_enqueue_classic_theme_styles' );
+	remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
+}
+add_action( 'init', 'cyber_remove_global_styles_actions' );

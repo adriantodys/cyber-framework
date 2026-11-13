@@ -33,6 +33,22 @@ function cyber_contact_messages() {
 }
 
 /**
+ * Pola kontaktowe objete walidacja wzorcem.
+ *
+ * Stala lista BEZ tlumaczen — to ona rejestruje filtry przy ladowaniu
+ * pliku. Komunikaty z cyber_contact_messages() wolaja __(), a tlumaczenie
+ * przed akcja init konczy sie w WordPress 6.7+ notice'em
+ * "_load_textdomain_just_in_time" przy kazdym zadaniu (locale inne niz
+ * en_US). Dlatego komunikaty tlumacza sie dopiero w walidacji, a klucze
+ * stoja tutaj osobno — musza zgadzac sie z kluczami komunikatow.
+ *
+ * @return string[] Klucze opcji (bez prefiksu cyber_).
+ */
+function cyber_contact_validated_fields() {
+	return array( 'contact_phone', 'contact_nip', 'contact_krs', 'contact_regon' );
+}
+
+/**
  * Waliduje wartosc pola kontaktowego przy zapisie w panelu.
  *
  * Pusta wartosc jest zawsze poprawna — zadne z tych pol nie jest wymagane,
@@ -70,8 +86,10 @@ function cyber_contact_validate_value( $valid, $value, $field ) {
  * Filtr rejestrowany osobno dla kazdego pola — ACF udostepnia wariant
  * acf/validate_value/name={pole}, wiec nie ma potrzeby podpinac sie pod
  * walidacje wszystkich pol w calym panelu i filtrowac ich po nazwie.
+ * Lista kluczy jest stala (bez __()), bo ten kod biegnie przy ladowaniu
+ * pliku, przed init — patrz cyber_contact_validated_fields().
  */
-foreach ( array_keys( cyber_contact_messages() ) as $cyber_contact_field ) {
+foreach ( cyber_contact_validated_fields() as $cyber_contact_field ) {
 	add_filter(
 		'acf/validate_value/name=cyber_' . $cyber_contact_field,
 		'cyber_contact_validate_value',

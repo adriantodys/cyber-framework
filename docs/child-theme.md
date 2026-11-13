@@ -88,6 +88,9 @@ add_filter( 'cyber_acf_json_dirs', 'klient_acf_json_dirs' );
  * @return void
  */
 function klient_load() {
+	// Wlasna domena tlumaczen childa (Text Domain ze style.css), osobna od parenta.
+	load_child_theme_textdomain( 'klient', KLIENT_DIR . '/languages' );
+
 	foreach ( glob( KLIENT_DIR . '/inc/*.php' ) ?: array() as $file ) {
 		require_once $file;
 	}

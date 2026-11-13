@@ -82,6 +82,13 @@ cyber-framework/
 └── style.css          ← wyłącznie nagłówek motywu; style są w assets/css/
 ```
 
+## Tłumaczenia
+
+Stringi motywu są po polsku i opakowane w `__()` z domeną `cyber-framework`.
+Domena jest rejestrowana przez `load_theme_textdomain()`, a pliki `.mo` trafiają
+do `languages/` tylko wtedy, gdy witryna ma inny język niż polski — instrukcja
+w `languages/README.md`.
+
 ## Dokumentacja
 
 | Plik | Zawartość |
