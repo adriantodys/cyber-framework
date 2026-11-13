@@ -472,4 +472,17 @@ return array(
 	'totop_bg_hover'                          => '#333333',     // kolor          | Kolor tla po najechaniu
 	'totop_color_hover'                       => '#ffffff',     // kolor          | Kolor strzalki po najechaniu
 
+	/* ======================================================================
+	 * SEO
+	 * Kody sledzenia wklejane 1:1 (GTM, gtag, piksele). Wartosc to surowy
+	 * HTML / JS ze znacznikami <script>; wieloliniowy fragment wpisz jako
+	 * string PHP w pojedynczych cudzyslowach. Zwykle ustawia sie je w panelu
+	 * po uruchomieniu strony, bo identyfikatory (GTM-XXXX) zna klient.
+	 * ====================================================================== */
+
+	/* --- Kody -------------------------------------------------------------- */
+	'seo_head_code'                           => '',            // HTML/JS        | Kod w <head>
+	'seo_body_start_code'                     => '',            // HTML/JS        | Kod na poczatku <body>
+	'seo_body_end_code'                       => '',            // HTML/JS        | Kod na koncu <body>
+
 );

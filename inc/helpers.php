@@ -229,7 +229,9 @@ function cyber_header_variants() {
  *              headera i stopki; widok buduje <img> przez wp_get_attachment_image(),
  *              zeby dostac width / height / srcset), 'bool' (pole True/False),
  *              'text' / 'textarea' (tekst, opcjonalnie sprawdzany kluczem 'pattern'),
- *              'email', 'html' (tresc z pola WYSIWYG) albo 'link' (pole ACF Link,
+ *              'email', 'html' (tresc z pola WYSIWYG), 'code' (surowy HTML / JS
+ *              od administratora — kody sledzenia, wypisywany BEZ escapowania
+ *              i bez kses, patrz docs/security.md) albo 'link' (pole ACF Link,
  *              tablica url / title / target).
  * - default   : wartosc uzywana, gdy pole jest puste lub ACF nie jest dostepne.
  * - choices   : dozwolone wartosci dla typu 'choice'.
@@ -1287,6 +1289,23 @@ function cyber_option_schema() {
 			'type'    => 'color_alpha',
 			'default' => '#ffffff',
 		),
+
+		// --- SEO: kody sledzenia (inc/seo.php) ---
+		'seo_head_code'               => array(
+			'type'     => 'code',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'seo_body_start_code'         => array(
+			'type'     => 'code',
+			'default'  => '',
+			'nullable' => true,
+		),
+		'seo_body_end_code'           => array(
+			'type'     => 'code',
+			'default'  => '',
+			'nullable' => true,
+		),
 	);
 
 	/*
@@ -1849,6 +1868,20 @@ function cyber_validate_option_value( $value, array $config, $fallback ) {
 
 	if ( 'textarea' === $config['type'] ) {
 		$value = sanitize_textarea_field( (string) $value );
+
+		return ( '' === $value ) ? $fallback : $value;
+	}
+
+	if ( 'code' === $config['type'] ) {
+		/*
+		 * Surowy kod (GTM, gtag, piksele) — celowo bez sanitize_* i bez kses:
+		 * kazda z tych funkcji usunelaby <script>, czyli caly sens pola.
+		 * Granica zaufania lezy w uprawnieniach, nie w filtrze: pole edytuje
+		 * tylko manage_options, a ACF (>= 6.2.7) i tak przepuszcza <script>
+		 * przy zapisie wylacznie uzytkownikowi z unfiltered_html. Wypisanie
+		 * robi inc/seo.php, z jawnym phpcs:ignore (docs/security.md).
+		 */
+		$value = trim( (string) $value );
 
 		return ( '' === $value ) ? $fallback : $value;
 	}

@@ -6,8 +6,8 @@
 > powinien być generowany/aktualizowany automatycznie na podstawie `acf-json/`
 > (patrz sekcja "Utrzymanie" na końcu pliku).
 
-Ostatnia aktualizacja: 2026-11-12
-Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje” i „Przycisk do góry”.
+Ostatnia aktualizacja: 2026-11-13
+Moduły: **Global Options** — zakładki „Główne ustawienia strony”, „Ustawienia czcionki”, „Header Desktop”, „Header Mobile”, „Przyciski”, „Kolory”, „Kontakt”, „Social Media”, „Top Header”, „Footer”, „Copyright”, „Breadcrumb”, „Breadcrumb WooCommerce”, „WooCommerce”, „Blog”, „Page header”, „Animacje”, „Przycisk do góry” i „SEO”.
 Pozostałe grupy pól (18): **Sekcje** (`group_sections.json`) z grupami źródłowymi do klonowania (`group_section_*.json` — 12 plików), **Page header** pojedynczej strony (`group_page_header.json`), **Galeria** (`group_gallery.json`), **Opinia** (`group_review.json`), **Produkt** (`group_product.json`) i **Kategoria produktu** (`group_product_category.json`).
 
 ---
@@ -1326,6 +1326,34 @@ Pola poza wyłącznikiem pokazują się tylko przy włączonym przycisku.
 > **Odstęp od krawędzi pochodzi ze skali odstępów** (CLAUDE.md sekcja 6) — Select,
 > nie liczba. Rozmiar i zaokrąglenie to wymiary elementu, więc są polami liczbowymi.
 
+### Zakładka: „SEO”
+
+Kody śledzenia i skrypty zewnętrzne wklejane 1:1 — Google Tag Manager,
+gtag.js, Meta Pixel, kody weryfikacji domeny, czaty. Zastępuje wtyczki typu
+„insert headers and footers”. **3 pola.** Logika: `inc/seo.php`.
+
+| Field Label | Field Name | Typ | Default | Przeznaczenie |
+|---|---|---|---|---|
+| Kod w `<head>` | `cyber_seo_head_code` | Textarea (8 wierszy, bez autop) | *(puste)* | `wp_head` priorytet **1** — przed arkuszami motywu; główny fragment GTM, gtag, `<meta name="google-site-verification">` |
+| Kod na początku `<body>` | `cyber_seo_body_start_code` | Textarea | *(puste)* | `wp_body_open` priorytet 1 — fragment `<noscript>` GTM |
+| Kod na końcu `<body>` | `cyber_seo_body_end_code` | Textarea | *(puste)* | `wp_footer` priorytet 99 — po skryptach motywu; czaty, widżety |
+
+> **Typ schematu `code`** — jedyny typ, który **nie sanituje i nie escapuje**
+> wartości (tylko `trim()`), bo `sanitize_textarea_field()` i `wp_kses_post()`
+> usunęłyby `<script>`, czyli cały sens pola. Granica zaufania leży
+> w uprawnieniach: pole edytuje wyłącznie `manage_options`, a ACF (≥ 6.2.7)
+> przy zapisie przepuszcza `<script>` tylko użytkownikowi z `unfiltered_html`
+> (na multisite: super admin). Wypisanie w `inc/seo.php` ma jawny
+> `phpcs:ignore` z odnośnikiem do `docs/security.md`.
+
+> **Kod wychodzi dla każdego, także zalogowanych.** Wykluczenie
+> administratorów z analityki robi się w narzędziu (filtr IP, zmienna GTM),
+> nie w motywie. Osobny przełącznik „nie ładuj dla zalogowanych” wymaga
+> decyzji (CLAUDE.md sekcja 15).
+
+> **`default-acf.php`:** trzy klucze z pustym stringiem. W praktyce ustawia się
+> je w panelu po uruchomieniu strony — identyfikatory kontenerów zna klient.
+
 ### Zasada dostępu w kodzie
 
 Widoki **nie** wywołują `get_field( $key, 'option' )` bezpośrednio. Zawsze przez
@@ -1346,7 +1374,7 @@ Grupa pól jest już zapisana jako Local JSON: **`acf-json/group_global_options.
 Nie trzeba jej klikać w UI — wystarczy Sync (patrz README, sekcja „Instalacja”).
 
 > **Ta sekcja opisuje stan z v0.1.0 (2026-09-09) i nie była rozszerzana.**
-> Tabela kluczy niżej obejmuje 39 z 239 pól Global Options — zakładki
+> Tabela kluczy niżej obejmuje 39 z 242 pól Global Options — zakładki
 > „Główne ustawienia strony” i „Header Desktop” w ówczesnym kształcie. **Pełna
 > i aktualna lista kluczy (`field_cyber_*`) jest w `acf-json/group_global_options.json`**
 > — to on jest źródłem prawdy, nie ta tabela. Nazwy pól i ich przeznaczenie dla
@@ -2510,6 +2538,7 @@ nie ustawieniem globalnym.
 
 ## Historia zmian
 
+- 2026-11-13 — **Zakładka „SEO”.** Trzy pola Textarea na kody śledzenia (`cyber_seo_head_code`, `cyber_seo_body_start_code`, `cyber_seo_body_end_code`), wypisywane przez `inc/seo.php` na `wp_head` (1), `wp_body_open` (1) i `wp_footer` (99). Nowy typ schematu **`code`** — bez sanitizacji i kses, zaufanie przez `manage_options` + `unfiltered_html`. Global Options mają teraz **19 zakładek i 242 pola**. Trzy klucze w `default-acf.php`.
 - 2026-11-12 — **Zaokrąglenie rogów działa na przyciski.** `.btn` (`assets/css/main.css`), przycisk formularza CF7 w sekcji Kontakt i „Dodaj do koszyka” na stronie produktu mają `border-radius: var(--cyber-radius, 0)` zamiast wpisanego `0`. Pole `cyber_border_radius` steruje więc teraz przyciskami, sekcjami z wartością „Z ustawień globalnych” i pudełkami na stronie produktu. Bez nowych pól, bez zmian w `acf-json/` i `default-acf.php`.
 - 2026-11-08 — **Logo jako ID załącznika, autoload opcji.** `cyber_header_logo` i `cyber_footer_logo`: return format **`url` → `id`**, nowy typ schematu **`attachment`** (`absint()` + `wp_attachment_is_image()`, pusta wartość `0`). `<img>` buduje `wp_get_attachment_image()` (`width`/`height`/`srcset` — bez CLS), strona logowania (`inc/login.php`) bierze adres przez `wp_get_attachment_image_url()`. **Dane w bazie bez zmian** — ACF zawsze trzymał tam ID załącznika, return format steruje tylko odczytem; po Sync grupy *Global Options* niczego nie trzeba zapisywać ponownie. Format `url` zostaje dla pól, których wartość idzie do CSS albo `<video>` (tło i wideo page headera). `acf_add_options_page()` rejestruje Options Page z **`autoload => true`** — flaga działa przy zapisie, więc istniejące instalacje przełącza jedno kliknięcie „Zapisz ustawienia”; nowe mają autoload od pierwszego zapisu. Bez nowych pól — Global Options nadal **239 pól**. Pełna nazwa każdego pola w tabelach zakładek Blog, Page header i Przycisk do góry (wcześniej skróty z sufiksem w jednej komórce).
 

@@ -716,11 +716,11 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 urósł do **osiemnastu zakładek**:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **dziewiętnastu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
    Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
-   Animacje, Przycisk do góry — razem **239 pól**.
+   Animacje, Przycisk do góry, SEO — razem **242 pola**.
 
    Pięć ostatnich dołożyło się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
