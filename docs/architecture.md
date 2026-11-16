@@ -73,6 +73,7 @@ tańszy w diagnozie niż cicha degradacja z mylącym objawem.
 | 38 | `inc/go-to-top.php` | Przycisk „do góry”: dane dla widoku, wypisanie na `wp_footer`, warunkowe assety. Ustawienia: Global Options → Przycisk do góry (domyślnie wyłączony). |
 | 39 | `inc/seo.php` | Zakładka SEO: trzy pola z kodem (GTM, gtag, piksele) wypisywane 1:1 na `wp_head` (priorytet 1), `wp_body_open` (1) i `wp_footer` (99). Typ schematu `code` bez sanitizacji — granica zaufania to `manage_options` + `unfiltered_html` (docs/security.md). |
 | 40 | `inc/login.php` | Strona logowania: logo z `cyber_header_logo` zamiast logo WordPressa, link na stronę główną, nazwa witryny jako tekst linku. Arkusz `assets/css/login.css` tylko przy wgranym logo; bez loga zostaje logo WordPressa. Bez własnych pól. |
+| 41 | `inc/security.php` | Utwardzenie instalacji: REST `/wp/v2/users` tylko dla zalogowanych, archiwum autora i `?author=N` → 404 (bez przekierowania kanonicznego), oEmbed bez danych autora, brak wersji WP w generatorze i w `?ver=` assetów rdzenia na froncie. Lista i koszty: `docs/security.md`, „Utwardzenie instalacji”. Zastępuje `cyber_cleanup_head()` z `inc/setup.php`. |
 
 ## Stałe
 

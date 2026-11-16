@@ -75,13 +75,3 @@ function cyber_theme_setup() {
 	);
 }
 add_action( 'after_setup_theme', 'cyber_theme_setup' );
-
-/**
- * Usuwa generator meta tag — mniej informacji o wersji WP na zewnatrz.
- *
- * @return void
- */
-function cyber_cleanup_head() {
-	remove_action( 'wp_head', 'wp_generator' );
-}
-add_action( 'init', 'cyber_cleanup_head' );
