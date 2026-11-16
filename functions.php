@@ -82,6 +82,7 @@ function cyber_load_modules() {
 		'inc/go-to-top.php',
 		'inc/seo.php',
 		'inc/login.php',
+		'inc/security.php',
 	);
 
 	/*

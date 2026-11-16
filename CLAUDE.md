@@ -556,6 +556,10 @@ Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
 - **REST API**: `permission_callback` jest obowiązkowy. `__return_true` tylko dla
   endpointów jawnie i świadomie publicznych, z komentarzem wyjaśniającym dlaczego.
 - Zero zaufania do `$_POST` / `$_GET` / `$_REQUEST` bez sanitizacji i walidacji.
+- **Utwardzenie instalacji** (ukrycie loginów i wersji WP: REST users, archiwa
+  autorów, oEmbed, generator, `?ver=`) mieszka w **jednym pliku** `inc/security.php`,
+  z tabelą reguł i kosztów w `docs/security.md`. Nowa reguła = wpis tam, nie
+  luźny filtr w innym module.
 
 ## 10. Wydajność
 

@@ -119,6 +119,27 @@ Po zmianie żądanie bez pola `nonce` jest poprawne i zwraca listę.
 
 Checklisty poniżej obowiązują od momentu, w którym pojawi się pierwszy formularz.
 
+## Utwardzenie instalacji (`inc/security.php`)
+
+Ograniczenie rekonesansu, nie zabezpieczenie w sensie checklist niżej: utrudnia
+poznanie **loginów** i **wersji WordPressa**, od których zaczyna się każdy
+zautomatyzowany atak na `wp-login.php`. Działa tylko na froncie; panel i REST
+dla zalogowanych bez zmian. Dodane 2026-11-17.
+
+| Reguła | Co robi | Koszt / uwaga |
+|---|---|---|
+| REST `/wp/v2/users` | trasy listy i pojedynczego użytkownika usuwane dla niezalogowanych (`rest_endpoints`) | zalogowani i panel bez zmian; wtyczka, która czyta użytkowników z frontu bez logowania, dostanie 404 |
+| Archiwum autora | `is_author()` i `?author=N` → 404 na `template_redirect` (priorytet 1), do tego `redirect_canonical` nie przekierowuje `?author=N` na `/author/{login}/` | motyw **nie linkuje** do archiwum autora z żadnego widoku, więc nic nie znika; szablon `author` w `inc/blog.php` zostaje martwy |
+| oEmbed | `author_name` i `author_url` usuwane z odpowiedzi `/wp-json/oembed/1.0/embed` | osadzony wpis nie pokazuje autora |
+| Wersja WP | `the_generator` → pusty string, `wp_generator` zdjęte z `wp_head` | — |
+| `?ver=` rdzenia | parametr `ver` zdejmowany z adresów CSS/JS **tylko** gdy równa się wersji WP, tylko na froncie | po aktualizacji WP przeglądarka może przez czas cache trzymać stary plik rdzenia; assety motywu (`filemtime`) i wtyczek bez zmian |
+
+**Czego tu nie ma i dlaczego:** XML-RPC nie jest wyłączany w motywie (to decyzja
+hostingowa / wtyczkowa, a część aplikacji mobilnych go potrzebuje); logowanie
+nie jest limitowane (brak stanu w motywie, to rola wtyczki lub WAF); nagłówki
+HTTP bezpieczeństwa (CSP, HSTS) należą do serwera. Każda nowa reguła tego typu
+dopisuje się do tej tabeli z kosztem obok.
+
 ## Checklista: output (obowiązuje już teraz)
 
 - [ ] Każda zmienna w HTML przechodzi przez funkcję escapującą **dobraną do kontekstu**:
