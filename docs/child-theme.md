@@ -8,6 +8,52 @@ oraz format modułu w bibliotece `cyber-modules`. Docelowo oba żyją w osobnych
 repozytoriach (`cyber-framework-child`, `cyber-modules`); do tego czasu źródłem
 jest ten plik.
 
+## Prompt startowy
+
+Nowa strona = nowy child. Parent leży w `wp-content/themes/cyber-framework/`
+(na czas testów z gałęzi `feat/motyw-nadrzedny`, docelowo z taga `main`).
+Claude Code uruchamiasz w **`wp-content/themes/`**, czyli poziom wyżej niż
+parent — w tym katalogu nie wczytuje się automatycznie `CLAUDE.md` parenta
+(leży obok, nie nadrzędnie), dlatego prompt musi na niego wskazać.
+
+Zamień `KLIENT` / `klient` na nazwę strony. Reszta jest stała.
+
+**Wersja pełna** (pierwszy raz, albo gdy chcesz mieć wszystko wprost):
+
+```
+Utwórz motyw potomny dla strony KLIENT.
+
+Parent: ./cyber-framework. Zanim zaczniesz, przeczytaj
+./cyber-framework/CLAUDE.md (sekcja 23) i
+./cyber-framework/docs/child-theme.md — to jest wzorzec.
+
+Zrób dokładnie to, co opisuje starter:
+- katalog ./klient-child z style.css (Template: cyber-framework,
+  Text Domain: klient), functions.php, pustym acf-json/ z .gitkeep,
+  pustym modules/ z MODULES.md, katalogiem languages/,
+- CLAUDE.md childa z regułami ze startera; prefiks funkcji i pól: klient_,
+  pola na Options Page: cyber_klient_,
+- w CLAUDE.md wpisz wersję parenta z jego style.css,
+- zainicjuj repozytorium git w childzie z pierwszym commitem.
+
+Parenta nie edytuj. Jeśli czegoś ze startera nie da się zrobić, zatrzymaj
+się i napisz dlaczego. Na koniec wypisz, co mam kliknąć w panelu WordPress.
+```
+
+**Wersja skrócona** (cała specyfikacja jest w tym pliku, prompt tylko na nią
+wskazuje):
+
+```
+Nowy child dla strony KLIENT według cyber-framework/docs/child-theme.md.
+Katalog klient-child, prefiks klient_. Parent tylko do odczytu.
+```
+
+Co ma powstać w odpowiedzi: katalog childa z plikami ze startera dopasowanymi
+do nazwy, lista kroków w panelu (aktywacja childa, Sync grup ACF, Zapisz
+ustawienia, sprawdzenie zakładki `.htaccess`) i wersja parenta, z którą child
+został utworzony. Po utworzeniu dalszą pracę nad stroną prowadzisz z Claude
+**z katalogu childa** jako bieżącego — wtedy wczytuje się `CLAUDE.md` childa.
+
 ## Minimalny child
 
 ```
