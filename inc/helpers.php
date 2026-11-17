@@ -1306,6 +1306,40 @@ function cyber_option_schema() {
 			'default'  => '',
 			'nullable' => true,
 		),
+
+		// --- .htaccess (inc/htaccess.php) ---
+		'htaccess_enable'             => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_files'              => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_hsts'               => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_frame'              => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_nosniff'            => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_referrer'           => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_permissions'        => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
+		'htaccess_powered_by'         => array(
+			'type'    => 'bool',
+			'default' => true,
+		),
 	);
 
 	/*

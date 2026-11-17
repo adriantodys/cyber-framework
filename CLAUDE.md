@@ -560,6 +560,11 @@ Bezpieczeństwo ma pierwszeństwo przed wygodą i szybkością pisania kodu.
   autorów, oEmbed, generator, `?ver=`) mieszka w **jednym pliku** `inc/security.php`,
   z tabelą reguł i kosztów w `docs/security.md`. Nowa reguła = wpis tam, nie
   luźny filtr w innym module.
+- **Blok `.htaccess`** (blokada plików informacyjnych, nagłówki HTTP) utrzymuje
+  `inc/htaccess.php` przez `insert_with_markers()`, sterowany z Global Options →
+  .htaccess. Do bloku wchodzą **wyłącznie reguły bez znanego scenariusza
+  położenia strony** — `Options -Indexes` i `xmlrpc.php` są poza nim celowo.
+  Nowa dyrektywa = ten sam test: czy na hostingu bez `AllowOverride` daje 500.
 
 ## 10. Wydajność
 
@@ -720,11 +725,11 @@ wzorzec markupu i CSS**, zamiast tworzyć nowy.
 2. **Global Options** (moduł 1): rejestracja Options Page + pierwsza zakładka
    "Szerokość strony" (patrz `docs/acf-schema.md`).
 
-   **Stan: zakończone.** W praktyce moduł 1 urósł do **dziewiętnastu zakładek**:
+   **Stan: zakończone.** W praktyce moduł 1 urósł do **dwudziestu zakładek**:
    Główne ustawienia strony, Ustawienia czcionki, Header Desktop, Header Mobile,
    Przyciski, Kolory, Kontakt, Social Media, Top Header, Footer, Copyright,
    Breadcrumb, Breadcrumb WooCommerce, WooCommerce, Blog, Page header,
-   Animacje, Przycisk do góry, SEO — razem **242 pola**.
+   Animacje, Przycisk do góry, SEO, .htaccess — razem **250 pól**.
 
    Pięć ostatnich dołożyło się **po** tym, jak ten punkt uznano za zamknięty.
    Wniosek na przyszłość: Options Page nie jest listą, która się domyka —
