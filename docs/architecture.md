@@ -1,6 +1,6 @@
 # Architektura — Cyber Framework
 
-Ostatnia aktualizacja: 2026-11-13 (zakładka SEO z kodami śledzenia, `inc/seo.php`. Global Options ma dziewiętnaście zakładek i 242 pola; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
+Ostatnia aktualizacja: 2026-11-13 (zakładka SEO z kodami śledzenia, `inc/seo.php`. Global Options ma dwadzieścia zakładek i 250 pól; poza etapami 1–3 z CLAUDE.md sekcja 17 istnieje pełna warstwa WooCommerce: okruszki, koszyk, zamówienie, lista produktów i strona produktu. Poprawki z 2026-11-08: logo jako ID załącznika, `autoload` opcji, twarde `require_once` modułów, Script Modules API dla slidera, przycisk pauzy autoplay, cache page headera po akcji `wp`, losowanie wpisów bez `ORDER BY RAND()`, `cyber_shop_more` bez nonce).
 
 ## Przepływ danych
 
@@ -74,6 +74,7 @@ tańszy w diagnozie niż cicha degradacja z mylącym objawem.
 | 39 | `inc/seo.php` | Zakładka SEO: trzy pola z kodem (GTM, gtag, piksele) wypisywane 1:1 na `wp_head` (priorytet 1), `wp_body_open` (1) i `wp_footer` (99). Typ schematu `code` bez sanitizacji — granica zaufania to `manage_options` + `unfiltered_html` (docs/security.md). |
 | 40 | `inc/login.php` | Strona logowania: logo z `cyber_header_logo` zamiast logo WordPressa, link na stronę główną, nazwa witryny jako tekst linku. Arkusz `assets/css/login.css` tylko przy wgranym logo; bez loga zostaje logo WordPressa. Bez własnych pól. |
 | 41 | `inc/security.php` | Utwardzenie instalacji: REST `/wp/v2/users` tylko dla zalogowanych, archiwum autora i `?author=N` → 404 (bez przekierowania kanonicznego), oEmbed bez danych autora, brak wersji WP w generatorze i w `?ver=` assetów rdzenia na froncie. Lista i koszty: `docs/security.md`, „Utwardzenie instalacji”. Zastępuje `cyber_cleanup_head()` z `inc/setup.php`. |
+| 42 | `inc/htaccess.php` | Blok `# BEGIN Cyber Framework` w `.htaccess` (`insert_with_markers()`): blokada plików informacyjnych, nagłówki HTTP (HSTS tylko na https). Zapis przy aktywacji motywu, zapisie Global Options i zmianie treści bloku (skrót w opcji); usunięcie po wyłączeniu i zmianie motywu. Na serwerze bez `.htaccess` nagłówki z PHP (`send_headers`). Ustawienia: Global Options → .htaccess; reguły i koszty: `docs/security.md`. |
 
 ## Stałe
 
