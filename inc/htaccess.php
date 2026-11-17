@@ -52,6 +52,19 @@ const CYBER_HTACCESS_HASH_OPTION = 'cyber_htaccess_hash';
 const CYBER_HTACCESS_TIME_OPTION = 'cyber_htaccess_time';
 
 /**
+ * Opcja ze skrotem bloku, ktory czeka na sprawdzenie strony przez administratora
+ * ('' = nic nie czeka). Ustawiana po kazdym zapisie bloku o NOWEJ tresci,
+ * czyszczona przyciskiem "Sprawdzone" w polu Stan zakladki .htaccess.
+ * Dopoki czeka, nazwa zakladki w Global Options ma czerwony wykrzyknik.
+ */
+const CYBER_HTACCESS_PENDING_OPTION = 'cyber_htaccess_check_pending';
+
+/**
+ * Opcja z czasem ostatniego potwierdzenia "Sprawdzone" (unix timestamp).
+ */
+const CYBER_HTACCESS_CHECKED_OPTION = 'cyber_htaccess_checked';
+
+/**
  * Czy serwer czyta .htaccess (Apache albo LiteSpeed) w wersji z Require.
  *
  * $is_apache ustawia WordPress z SERVER_SOFTWARE. "Require all denied"
@@ -279,12 +292,86 @@ function cyber_htaccess_sync( $force = false ) {
 	}
 
 	if ( $ok ) {
+		$previous = (string) get_option( CYBER_HTACCESS_HASH_OPTION, '' );
+
 		update_option( CYBER_HTACCESS_HASH_OPTION, $hash, false );
 		update_option( CYBER_HTACCESS_TIME_OPTION, time(), false );
+
+		/*
+		 * Nowa tresc w pliku = strona wymaga sprawdzenia (okno prywatne,
+		 * /readme.html, naglowki). Flaga daje wykrzyknik przy zakladce
+		 * do klikniecia "Sprawdzone". Usuniecie bloku nie wymaga testu —
+		 * plik wraca do stanu sprzed motywu.
+		 */
+		if ( $lines && $hash !== $previous ) {
+			update_option( CYBER_HTACCESS_PENDING_OPTION, $hash, false );
+		} elseif ( ! $lines ) {
+			delete_option( CYBER_HTACCESS_PENDING_OPTION );
+		}
 	}
 
 	return (bool) $ok;
 }
+
+/**
+ * Czy blok czeka na sprawdzenie strony przez administratora.
+ *
+ * @return bool
+ */
+function cyber_htaccess_check_pending() {
+	return '' !== (string) get_option( CYBER_HTACCESS_PENDING_OPTION, '' );
+}
+
+/**
+ * Adres zakladki .htaccess w Global Options.
+ *
+ * @return string
+ */
+function cyber_htaccess_settings_url() {
+	return admin_url( 'admin.php?page=' . CYBER_OPTIONS_SLUG );
+}
+
+/**
+ * Czerwony wykrzyknik przy nazwie zakladki .htaccess, dopoki strona nie jest
+ * sprawdzona po zapisie bloku.
+ *
+ * Etykieta zakladki przechodzi w ACF przez kses, wiec znacznik <span> z
+ * kolorem moglby zostac wyciety — stad znak Unicode (U+2757, czerwony
+ * wykrzyknik w kazdym systemie), ktory jest zwyklym tekstem.
+ *
+ * @param array $field Pole Tab.
+ * @return array
+ */
+function cyber_htaccess_tab_label( $field ) {
+	if ( cyber_htaccess_check_pending() ) {
+		$field['label'] .= " \u{2757}";
+	}
+
+	return $field;
+}
+add_filter( 'acf/load_field/key=field_cyber_tab_htaccess', 'cyber_htaccess_tab_label' );
+
+/**
+ * Obsluga przycisku "Sprawdzone": nonce + capability, potem czyszczenie flagi.
+ *
+ * @return void
+ */
+function cyber_htaccess_confirm_checked() {
+	if ( ! isset( $_GET['cyber_htaccess_checked'] ) ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'manage_options' ) || ! check_admin_referer( 'cyber_htaccess_checked' ) ) {
+		return;
+	}
+
+	delete_option( CYBER_HTACCESS_PENDING_OPTION );
+	update_option( CYBER_HTACCESS_CHECKED_OPTION, time(), false );
+
+	wp_safe_redirect( cyber_htaccess_settings_url() );
+	exit;
+}
+add_action( 'admin_init', 'cyber_htaccess_confirm_checked', 5 );
 
 /**
  * Aktywacja motywu (parenta albo childa): blok od razu.
@@ -388,6 +475,16 @@ function cyber_htaccess_status_field( $field ) {
 	$path      = cyber_htaccess_path();
 	$lines     = cyber_htaccess_rules();
 	$time      = (int) get_option( CYBER_HTACCESS_TIME_OPTION, 0 );
+	$checked   = (int) get_option( CYBER_HTACCESS_CHECKED_OPTION, 0 );
+
+	if ( cyber_htaccess_check_pending() ) {
+		$verification = __( 'OCZEKUJE — sprawdz strone wg instrukcji nizej i kliknij "Sprawdzone" wyzej', 'cyber-framework' );
+	} elseif ( $checked ) {
+		/* translators: %s: data */
+		$verification = sprintf( __( 'potwierdzona %s', 'cyber-framework' ), wp_date( 'Y-m-d H:i', $checked ) );
+	} else {
+		$verification = __( 'blok nie byl jeszcze zapisywany', 'cyber-framework' );
+	}
 
 	$rows = array(
 		__( 'Serwer', 'cyber-framework' )  => $server_ok
@@ -398,9 +495,25 @@ function cyber_htaccess_status_field( $field ) {
 		__( 'Blok w pliku', 'cyber-framework' ) => cyber_htaccess_has_block() ? __( 'jest', 'cyber-framework' ) : __( 'brak', 'cyber-framework' ),
 		__( 'HSTS', 'cyber-framework' )    => cyber_htaccess_is_https() ? __( 'witryna na https — wpisywany', 'cyber-framework' ) : __( 'witryna na http — pomijany', 'cyber-framework' ),
 		__( 'Ostatni zapis', 'cyber-framework' ) => $time ? wp_date( 'Y-m-d H:i', $time ) : __( 'nigdy', 'cyber-framework' ),
+		__( 'Weryfikacja strony', 'cyber-framework' ) => $verification,
 	);
 
-	$html = '<table class="widefat striped" style="max-width:720px"><tbody>';
+	$html = '';
+
+	if ( cyber_htaccess_check_pending() ) {
+		$confirm_url = wp_nonce_url(
+			add_query_arg( 'cyber_htaccess_checked', '1', cyber_htaccess_settings_url() ),
+			'cyber_htaccess_checked'
+		);
+
+		$html .= '<div style="max-width:720px;margin:0 0 12px;padding:12px 16px;border-left:4px solid #d63638;background:#fcf0f1">'
+			. '<p style="margin:0 0 8px"><strong style="color:#d63638">' . esc_html__( 'Blok zostal zapisany do .htaccess — sprawdz, czy strona dziala.', 'cyber-framework' ) . '</strong></p>'
+			. '<p style="margin:0 0 8px">' . esc_html__( 'Kroki sa opisane nizej w "Jak sprawdzic, czy strona dziala". Po sprawdzeniu kliknij przycisk — wykrzyknik przy zakladce zniknie do czasu nastepnej zmiany bloku.', 'cyber-framework' ) . '</p>'
+			. '<p style="margin:0"><a class="button button-primary" href="' . esc_url( $confirm_url ) . '">' . esc_html__( 'Sprawdzone, strona dziala', 'cyber-framework' ) . '</a></p>'
+			. '</div>';
+	}
+
+	$html .= '<table class="widefat striped" style="max-width:720px"><tbody>';
 
 	foreach ( $rows as $label => $value ) {
 		$html .= '<tr><th scope="row" style="width:30%">' . esc_html( $label ) . '</th><td>' . esc_html( $value ) . '</td></tr>';

@@ -1364,7 +1364,7 @@ w całości, usuwany po wyłączeniu lub zmianie motywu. **8 pól.** Logika:
 
 | Field Label | Field Name | Typ | Default | Przeznaczenie |
 |---|---|---|---|---|
-| Stan | — (Message `field_cyber_msg_htaccess_status`) | Message | — | Wypełniany przez `cyber_htaccess_status_field()`: serwer, ścieżka, zapis, obecność bloku, HSTS, ostatni zapis, pełna treść bloku do ręcznego wklejenia |
+| Stan | — (Message `field_cyber_msg_htaccess_status`) | Message | — | Wypełniany przez `cyber_htaccess_status_field()`: czerwony baner z przyciskiem „Sprawdzone” gdy blok czeka na weryfikację, tabela (serwer, ścieżka, zapis, obecność bloku, HSTS, ostatni zapis, weryfikacja strony), pełna treść bloku do ręcznego wklejenia. Etykieta zakładki dostaje wtedy wykrzyknik (`cyber_htaccess_tab_label()`) |
 | Blok Cyber Framework w .htaccess | `cyber_htaccess_enable` | True/False | `true` | Wyłącznik; wyłączony = blok usunięty z pliku |
 | Blokada plików informacyjnych | `cyber_htaccess_files` | True/False | `true` | 403 dla `readme.html`, `license.txt`, `*.log`, `wp-links-opml.php` |
 | HSTS | `cyber_htaccess_hsts` | True/False | `true` | `Strict-Transport-Security: max-age=31536000` — wpisywany **tylko** gdy `wp_is_using_https()` |
