@@ -398,6 +398,7 @@ function cyber_htaccess_on_deactivate() {
 	}
 
 	delete_option( CYBER_HTACCESS_HASH_OPTION );
+	delete_option( CYBER_HTACCESS_PENDING_OPTION );
 }
 add_action( 'switch_theme', 'cyber_htaccess_on_deactivate' );
 
