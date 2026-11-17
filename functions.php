@@ -83,6 +83,7 @@ function cyber_load_modules() {
 		'inc/seo.php',
 		'inc/login.php',
 		'inc/security.php',
+		'inc/htaccess.php',
 	);
 
 	/*

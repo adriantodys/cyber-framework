@@ -7246,6 +7246,344 @@
             "rows": 8,
             "placeholder": "",
             "new_lines": ""
+        },
+        {
+            "key": "field_cyber_tab_htaccess",
+            "label": ".htaccess",
+            "name": "",
+            "aria-label": "",
+            "type": "tab",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "placement": "left",
+            "endpoint": 0,
+            "selected": 0
+        },
+        {
+            "key": "field_cyber_msg_htaccess_status",
+            "label": "Stan",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Stan jest wypełniany przez motyw (inc\/htaccess.php).",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_htaccess_enable",
+            "label": "Blok Cyber Framework w .htaccess",
+            "name": "cyber_htaccess_enable",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Motyw dopisuje do pliku .htaccess własny blok między znacznikami „# BEGIN Cyber Framework” i „# END Cyber Framework” — tak samo jak WordPress dopisuje swój. Blok jest podmieniany w całości przy zapisie tych ustawień, aktualizacji motywu i zmianie adresu witryny; po wyłączeniu albo zmianie motywu znika. Ręczne zmiany wewnątrz bloku są nadpisywane — własne reguły wpisuj poza znacznikami. Na serwerze innym niż Apache \/ LiteSpeed plik nie jest zapisywany, a nagłówki HTTP wysyła PHP.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_htaccess_files",
+            "label": "Pliki",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_htaccess_files",
+            "label": "Blokada plików informacyjnych",
+            "name": "cyber_htaccess_files",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Zwraca 403 dla readme.html, license.txt, plików *.log i wp-links-opml.php. Zdradzają wersję WordPressa i listę linków; żadna funkcja strony ich nie używa.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_htaccess_headers",
+            "label": "Nagłówki HTTP",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "Każdy nagłówek osobno. Wyłącz tylko ten, który koliduje z konkretną funkcją strony — opis przy każdym.",
+            "new_lines": "wpautop",
+            "esc_html": 0
+        },
+        {
+            "key": "field_cyber_htaccess_hsts",
+            "label": "HSTS (Strict-Transport-Security)",
+            "name": "cyber_htaccess_hsts",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Przeglądarka przez rok łączy się wyłącznie przez HTTPS. Wpisywany TYLKO, gdy adres witryny zaczyna się od https — na witrynie HTTP przełącznik nic nie robi.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_htaccess_frame",
+            "label": "Blokada osadzania w ramce",
+            "name": "cyber_htaccess_frame",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "X-Frame-Options: SAMEORIGIN i Content-Security-Policy: frame-ancestors 'self'. Chroni przed clickjackingiem. Wyłącz, jeśli strona ma być osadzona w ramce na innej domenie lub w aplikacji.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_htaccess_nosniff",
+            "label": "X-Content-Type-Options: nosniff",
+            "name": "cyber_htaccess_nosniff",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Przeglądarka nie zgaduje typu pliku. Bez skutków ubocznych.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_htaccess_referrer",
+            "label": "Referrer-Policy",
+            "name": "cyber_htaccess_referrer",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "strict-origin-when-cross-origin: przy przejściu na obcą stronę wysyłana jest tylko domena, bez pełnego adresu z parametrami. Bez skutków ubocznych.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_htaccess_permissions",
+            "label": "Permissions-Policy (kamera, mikrofon, lokalizacja)",
+            "name": "cyber_htaccess_permissions",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Wyłącza w przeglądarce dostęp do kamery, mikrofonu i geolokalizacji. Wyłącz, jeśli strona ma mapę z „pokaż moją pozycję” albo inną funkcję korzystającą z lokalizacji.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_htaccess_powered_by",
+            "label": "Ukryj X-Powered-By",
+            "name": "cyber_htaccess_powered_by",
+            "aria-label": "",
+            "type": "true_false",
+            "instructions": "Usuwa nagłówek z wersją PHP. Bez skutków ubocznych.",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "allow_in_bindings": 0,
+            "ui": 1,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_cyber_msg_htaccess_check",
+            "label": "Jak sprawdzić, czy strona działa",
+            "name": "",
+            "aria-label": "",
+            "type": "message",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_cyber_htaccess_enable",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "<ol><li><strong>Zapisz ustawienia<\/strong> i otwórz stronę główną oraz jedną podstronę w oknie prywatnym przeglądarki. Jeśli widzisz treść — blok nie zaszkodził. Jeśli widzisz „500 Internal Server Error” — wyłącz blok tym przełącznikiem wyżej i zapisz; gdyby panel też nie działał, usuń przez FTP w pliku .htaccess linie od „# BEGIN Cyber Framework” do „# END Cyber Framework”.<\/li><li><strong>Blokada plików:<\/strong> wejdź na adres witryny z dopiskiem <code>\/readme.html<\/code>. Poprawny wynik to błąd 403 „Forbidden”. Jeśli widzisz stronę WordPressa z opisem wersji, serwer nie czyta .htaccess — zobacz pole „Stan” wyżej.<\/li><li><strong>Nagłówki HTTP:<\/strong> wpisz adres witryny na <code>securityheaders.com<\/code>. Włączone tu nagłówki powinny być na zielono. Alternatywnie w przeglądarce: narzędzia deweloperskie (F12) → Network → pierwsze żądanie → Headers → Response Headers.<\/li><li><strong>Funkcje strony:<\/strong> jeśli strona ma mapę z lokalizacją użytkownika, sprawdź ją po włączeniu Permissions-Policy; jeśli ma być osadzana w ramce na innej domenie, sprawdź to po włączeniu blokady ramki. W razie problemu wyłącz tylko ten jeden przełącznik.<\/li><li><strong>HSTS:<\/strong> włącza się sam dopiero na witrynie https. Przed przejściem na https nic nie robi, więc nie ma czego sprawdzać.<\/li><\/ol>",
+            "new_lines": "wpautop",
+            "esc_html": 0
         }
     ],
     "location": [
@@ -7269,5 +7607,5 @@
     "display_title": "",
     "allow_ai_access": false,
     "ai_description": "",
-    "modified": 1794576937
+    "modified": 1794910384
 }

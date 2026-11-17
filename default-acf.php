@@ -485,4 +485,25 @@ return array(
 	'seo_body_start_code'                     => '',            // HTML/JS        | Kod na poczatku <body>
 	'seo_body_end_code'                       => '',            // HTML/JS        | Kod na koncu <body>
 
+	/* ======================================================================
+	 * .HTACCESS
+	 * Blok "# BEGIN Cyber Framework" w .htaccess: blokada plikow
+	 * informacyjnych i naglowki HTTP. Kazda regula osobno; wylacz tylko te,
+	 * ktora koliduje z funkcja strony (ramka na obcej domenie, geolokalizacja).
+	 * ====================================================================== */
+
+	/* --- Wlaczenie --------------------------------------------------------- */
+	'htaccess_enable'                         => true,          // tak/nie        | Blok Cyber Framework w .htaccess
+
+	/* --- Pliki ------------------------------------------------------------- */
+	'htaccess_files'                          => true,          // tak/nie        | Blokada plikow informacyjnych (readme, license, *.log, wp-links-opml)
+
+	/* --- Naglowki HTTP ----------------------------------------------------- */
+	'htaccess_hsts'                           => true,          // tak/nie        | HSTS (tylko na https)
+	'htaccess_frame'                          => true,          // tak/nie        | Blokada osadzania w ramce
+	'htaccess_nosniff'                        => true,          // tak/nie        | X-Content-Type-Options: nosniff
+	'htaccess_referrer'                       => true,          // tak/nie        | Referrer-Policy
+	'htaccess_permissions'                    => true,          // tak/nie        | Permissions-Policy (kamera, mikrofon, lokalizacja)
+	'htaccess_powered_by'                     => true,          // tak/nie        | Ukryj X-Powered-By
+
 );

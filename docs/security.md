@@ -136,9 +136,43 @@ dla zalogowanych bez zmian. Dodane 2026-11-17.
 
 **Czego tu nie ma i dlaczego:** XML-RPC nie jest wyłączany w motywie (to decyzja
 hostingowa / wtyczkowa, a część aplikacji mobilnych go potrzebuje); logowanie
-nie jest limitowane (brak stanu w motywie, to rola wtyczki lub WAF); nagłówki
-HTTP bezpieczeństwa (CSP, HSTS) należą do serwera. Każda nowa reguła tego typu
-dopisuje się do tej tabeli z kosztem obok.
+nie jest limitowane (brak stanu w motywie, to rola wtyczki lub WAF). Każda nowa
+reguła tego typu dopisuje się do tej tabeli z kosztem obok.
+
+## Blok `.htaccess` (`inc/htaccess.php`)
+
+Global Options → .htaccess. Motyw utrzymuje w `.htaccess` własny blok między
+`# BEGIN Cyber Framework` i `# END Cyber Framework` — tym samym mechanizmem co
+blok WordPressa (`insert_with_markers()`). Dodane 2026-11-17.
+
+| Reguła | Przełącznik | Co robi | Koszt / uwaga |
+|---|---|---|---|
+| Pliki informacyjne | `cyber_htaccess_files` | 403 dla `readme.html`, `license.txt`, `*.log`, `wp-links-opml.php` | brak — żadna funkcja ich nie używa |
+| HSTS | `cyber_htaccess_hsts` | `Strict-Transport-Security: max-age=31536000`, **tylko gdy witryna na https** | po włączeniu przeglądarka przez rok nie wróci na http — dlatego warunek https jest w kodzie, nie w panelu |
+| Ramka | `cyber_htaccess_frame` | `X-Frame-Options: SAMEORIGIN` + `CSP frame-ancestors 'self'` | strona nie da się osadzić w ramce na obcej domenie ani w aplikacji |
+| nosniff | `cyber_htaccess_nosniff` | `X-Content-Type-Options: nosniff` | brak |
+| Referrer | `cyber_htaccess_referrer` | `Referrer-Policy: strict-origin-when-cross-origin` | brak |
+| Permissions | `cyber_htaccess_permissions` | `camera=(), microphone=(), geolocation=()` | mapa z „pokaż moją pozycję” przestanie pytać o lokalizację — wyłączyć |
+| X-Powered-By | `cyber_htaccess_powered_by` | `Header always unset X-Powered-By` | brak |
+
+**Cykl życia bloku.** Zapis: aktywacja motywu (parenta lub childa), zapis Global
+Options, wejście do panelu gdy skrót treści bloku się zmienił (aktualizacja motywu,
+przejście na https, filtr `cyber_htaccess_rules` z childa). Usunięcie: wyłącznik
+w panelu, zmiana motywu na inny. Ręczna zmiana **wewnątrz** bloku znika przy
+następnym zapisie — własne reguły poza znacznikami albo przez filtr. Blok usunięty
+ręcznie wraca dopiero przy zmianie treści, nie na każdym żądaniu.
+
+**Zabezpieczenia przed położeniem strony.** Zapis tylko na Apache / LiteSpeed
+(`$is_apache`) w wersji ≥ 2.4 (dyrektywa `Require`); nagłówki w `<IfModule
+mod_headers.c>`; HSTS tylko na https; brak `Options -Indexes` (500 na hostingu
+bez `AllowOverride Options`) i `xmlrpc.php` (aplikacja mobilna, Jetpack). Gdy
+plik nie jest zapisywalny, pole „Stan” pokazuje gotowy blok do ręcznego wklejenia.
+Na serwerze bez `.htaccess` (nginx) nagłówki wysyła PHP na `send_headers`,
+a blokada plików wymaga konfiguracji serwera.
+
+**Nowa dyrektywa przechodzi ten sam test:** czy na hostingu współdzielonym
+z minimalnym `AllowOverride` da błąd 500. Jeśli tak — nie wchodzi, albo wchodzi
+jako przełącznik domyślnie wyłączony z opisem ryzyka.
 
 ## Checklista: output (obowiązuje już teraz)
 
