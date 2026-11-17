@@ -155,6 +155,15 @@ blok WordPressa (`insert_with_markers()`). Dodane 2026-11-17.
 | Permissions | `cyber_htaccess_permissions` | `camera=(), microphone=(), geolocation=()` | mapa z „pokaż moją pozycję” przestanie pytać o lokalizację — wyłączyć |
 | X-Powered-By | `cyber_htaccess_powered_by` | `Header always unset X-Powered-By` | brak |
 
+**Oznaczenie do sprawdzenia.** Po każdym zapisie bloku o **nowej** treści nazwa
+zakładki „.htaccess” w Global Options dostaje czerwony wykrzyknik (znak Unicode
+w etykiecie przez `acf/load_field`, bo kses mógłby wyciąć `<span>`), a pole „Stan”
+otwiera się czerwonym banerem z przyciskiem „Sprawdzone, strona działa” (nonce
++ capability). Kroki sprawdzenia stoją w tej samej zakładce. Wiersz „Weryfikacja
+strony” w Stanie: oczekuje / potwierdzona z datą. Celowo **bez** powiadomienia na
+całym panelu — administrator widzi oznaczenie tam, gdzie zmienia ustawienia.
+Usunięcie bloku nie wymaga testu i czyści flagę.
+
 **Cykl życia bloku.** Zapis: aktywacja motywu (parenta lub childa), zapis Global
 Options, wejście do panelu gdy skrót treści bloku się zmienił (aktualizacja motywu,
 przejście na https, filtr `cyber_htaccess_rules` z childa). Usunięcie: wyłącznik
